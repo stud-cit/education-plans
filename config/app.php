@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Kiev', // default UTC
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'uk', // default en
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'faker_locale' => 'en_US',
+    'faker_locale' => 'uk_UA', // default en_US
 
     /*
     |--------------------------------------------------------------------------
@@ -231,5 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    'asu_key' => env('ASU_KEY'),
 
 ];
