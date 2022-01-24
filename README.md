@@ -7,6 +7,19 @@
 - [chrome](https://chrome.google.com/webstore/detail/clockwork/dmggabnehkmmfmdffgajcflpdjlnoemp)
 - [mozilla](https://addons.mozilla.org/en-US/firefox/addon/clockwork-dev-tools/)
 
+## Testing
+
+- configuration testing environment need install sqlite.
+- `cp .env .env.testing` -- copy `.env` with new name `.env.testing`.
+- edit `.env.testing` db_connection && db_database.
+
+```
+DB_CONNECTION=sqlite
+DB_DATABASE=:memory:
+```
+
+Before run tests need run command `php artisan config:clear` <br/>
+After cleaning run `php artisan run test`
 
 ## About Laravel
 
