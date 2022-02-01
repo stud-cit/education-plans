@@ -15,6 +15,9 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'asu_id' => Str::random(10),
+            'faculty_id' => $this->faker->randomDigit(),
+            'role_id' => $this->faker->biasedNumberBetween(1,6),
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
