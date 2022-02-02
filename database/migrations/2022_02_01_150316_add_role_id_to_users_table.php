@@ -15,7 +15,8 @@ class AddRoleIdToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignIdFor(Role::class)->after('faculty_id');
+            // $table->foreignIdFor(Role::class)->after('faculty_id');
+            $table->foreignId('role_id')->constrained()->after('faculty_id');
         });
     }
 
