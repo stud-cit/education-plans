@@ -19,7 +19,7 @@ class CycleFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(),
-            'cycle_id' => $this->faker->randomDigit()
+            'cycle_id' => null
         ];
     }
 }

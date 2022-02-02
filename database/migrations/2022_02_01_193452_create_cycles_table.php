@@ -18,7 +18,8 @@ class CreateCyclesTable extends Migration
             $table->id();
             $table->string('title');
             // $table->unsignedBigInteger('cycle_id')->nullable()->default(null);
-            $table->foreignIdFor(Cycle::class)->nullable()->default(null);
+            // $table->foreignIdFor(Cycle::class)->nullable()->default(null);
+            $table->foreignId('cycle_id')->nullable()->default(null)->constrained('cycles');
             $table->timestamps();
         });
     }
