@@ -14,21 +14,13 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $roles = [
-            ['admin', 'Адміністратор'],
-            ['educational-department','Представник Навчально-методичного відділу'],
-            ['practice-department','Представник Відділу практики'],
-            ['training-department;', 'Представник Навчального відділу'],
-            ['faculty-institute', 'Представники Факультету / Інституту'],
-            ['department', 'Представники кафедр']
-        ];
-
-        foreach ($roles as $role) {
-            DB::table('roles')->insert([
-                'title' => $role[0],
-                'label' => $role[1]
-            ]);
-        }
-
+        DB::table('roles')->insert([
+            ['title' => 'admin', 'label' => 'Адміністратор'],
+            ['title' => 'educational-department', 'label' => 'Представник Навчально-методичного відділу'],
+            ['title' => 'practice-department', 'label' => 'Представник Відділу практики'],
+            ['title' => 'training-department', 'label' => 'Представник Навчального відділу'],
+            ['title' => 'faculty-institute', 'label' => 'Представники Факультету / Інституту'],
+            ['title' => 'department', 'label' => 'Представники кафедр']
+        ]);
     }
 }
