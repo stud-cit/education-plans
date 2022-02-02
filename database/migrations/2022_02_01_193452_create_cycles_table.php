@@ -17,7 +17,6 @@ class CreateCyclesTable extends Migration
         Schema::create('cycles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->double('number', 8, 2);
             // $table->unsignedBigInteger('cycle_id')->nullable()->default(null);
             $table->foreignIdFor(Cycle::class)->nullable()->default(null);
             $table->timestamps();
