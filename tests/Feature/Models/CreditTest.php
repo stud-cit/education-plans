@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CreditTest extends TestCase
 {
     use RefreshDatabase;
-    
+
     /**
      * A is model Credit Exists.
      *
