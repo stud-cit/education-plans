@@ -9,5 +9,5 @@ class Cycle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'cycle_id', 'credits'];
+    protected $fillable = ['title', 'cycle_id', 'credit'];
 }
