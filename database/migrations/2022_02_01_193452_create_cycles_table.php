@@ -21,11 +21,11 @@ class CreateCyclesTable extends Migration
                 ->constrained('cycles')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->foreignId('plan_id')
-                ->nullable(true)
-                ->constrained('plans')
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
+            // $table->foreignId('plan_id')
+            //     ->nullable(true)
+            //     ->constrained('plans')
+            //     ->cascadeOnUpdate()
+            //     ->nullOnDelete();
             $table->string('title');
             $table->integer('credit');
             $table->timestamps();
