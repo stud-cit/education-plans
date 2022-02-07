@@ -16,10 +16,18 @@ class CreateCyclesTable extends Migration
     {
         Schema::create('cycles', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('cycle_id')
+                ->nullable(true)
+                ->constrained('cycles')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+            $table->foreignId('plan_id')
+                ->nullable(true)
+                ->constrained('plans')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
             $table->string('title');
-            // $table->unsignedBigInteger('cycle_id')->nullable()->default(null);
-            // $table->foreignIdFor(Cycle::class)->nullable()->default(null);
-            $table->foreignId('cycle_id')->nullable()->default(null)->constrained('cycles');
+            $table->integer('credit');
             $table->timestamps();
         });
     }
@@ -30,7 +38,7 @@ class CreateCyclesTable extends Migration
      * @return void
      */
     public function down()
-    {
+    {      
         Schema::dropIfExists('cycles');
     }
 }

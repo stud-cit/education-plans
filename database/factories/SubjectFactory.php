@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Cycle;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class DisciplineFactory extends Factory
+class SubjectFactory extends Factory
 {
     /**
      * Define the model's default state.

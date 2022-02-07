@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDisciplinesTable extends Migration
+class CreateSubjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateDisciplinesTable extends Migration
      */
     public function up()
     {
-        Schema::create('disciplines', function (Blueprint $table) {
+        Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cycle_id')->constrained()->cascadeOnUpdate();
-            $table->string('asu_id', 60);
+            $table->foreignId('cycle_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('asu_id', 60)->nullable(true);
             $table->string('title');
             $table->integer('credits');
             $table->integer('hours')->nullable()->default(null);
