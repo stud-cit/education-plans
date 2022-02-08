@@ -28,6 +28,7 @@ class CreateCyclesTable extends Migration
             //     ->nullOnDelete();
             $table->string('title');
             $table->integer('credit');
+            $table->boolean('template')->default(false);
             $table->timestamps();
         });
     }
