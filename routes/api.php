@@ -19,4 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/cycles/subindex/{cycle}', [CycleController::class, 'subIndex'])->name('cycles.sub.index');
+Route::post('/cycles/sub-store', [CycleController::class, 'subStore'])->name('cycles.sub.store');
+Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate'])->name('cycles.sub.update');
 Route::apiResource('cycles', CycleController::class);
+
+

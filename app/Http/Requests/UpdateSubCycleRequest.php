@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCycleRequest extends FormRequest
+class UpdateSubCycleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class UpdateCycleRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'credit' => 'required|integer',
-            'cycle_id' => 'exists:App\Models\Cycle,id'
+            'cycle_id' => 'required|exists:App\Models\Cycle,id'
         ];
     }
 }

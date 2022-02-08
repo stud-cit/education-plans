@@ -135,7 +135,8 @@ return [
     'attributes' => [
         'new_password' => 'Новий пароль.',
         'title' => 'Назва',
-        'credit' => 'Кредити'
+        'credit' => 'Кредити',
+        'cycle_id' => 'Ідентифікатор категорії'
     ],
 
 ];
