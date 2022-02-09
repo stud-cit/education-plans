@@ -11,15 +11,61 @@ use App\Http\Requests\UpdateSubCycleRequest;
 
 class CycleController extends Controller
 {
+
+    public function tree($data) {
+        $prepareTree = [];
+        foreach ($data as $item) {
+            if (is_null($item['cycle_id'])) {
+                $prepareTree[] =  $item;
+            }
+            if (!is_null($item['cycle_id'])) {
+                foreach ($prepareTree as &$prop) {
+                    if ($prop['id'] == $item['cycle_id']) {
+                        $prop['child'][] = $item;
+                    }
+                }
+            }
+        }
+
+        return $prepareTree;
+    }
+
+    public function createTree($data)
+    {
+        $parents = [];
+        foreach ($data as $key => $item) {
+            $parents[$item['cycle_id']][$item['id']] = $item;
+        }
+
+        $treeElem = $parents[null];
+        $this->generateElemTree($treeElem, $parents);
+        return $treeElem;
+    }
+
+    private function generateElemTree(&$treeElem, $parents)
+    {
+        foreach ($treeElem as $key => $item){
+            if (!isset($item['children'])) {
+                $treeElem[$key]['children'] = [];
+            }
+
+            if (array_key_exists($key, $parents)) {
+                $treeElem[$key]['children'] = $parents[$key];
+                $this->generateElemTree($treeElem[$key]['children'], $parents);
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        // todo: try catch NotFoundHttpException
-        return CycleResource::collection(Cycle::whereNull('cycle_id')->get());
+    {
+        $category = Cycle::all();
+
+        return response()->json(['data' => $this->createTree($category->toArray())], 200);
     }
 
     /**
