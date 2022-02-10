@@ -27,5 +27,10 @@ Route::post('/cycles/sub-store', [CycleController::class, 'subStore'])->name('cy
 Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate'])->name('cycles.sub.update');
 Route::apiResource('cycles', CycleController::class);
 Route::apiResource('plans', PlanController::class);
+Route::get('/test', function (Request $request) {
+    $asu = new \App\ExternalServices\ASU();
+    $data = $asu->getFaculty();
+    return response()->json($data);
+});
 
 

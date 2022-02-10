@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Constant;
 use App\Http\Resources\PlanResource;
 use App\Models\Plan;
 use Illuminate\Http\Request;
@@ -16,7 +17,9 @@ class PlanController extends Controller
     public function index()
     {
         return PlanResource::collection(
-            Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')->paginate(20)
+            Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')->paginate(
+                Constant::PAGINATE
+            )
         );
     }
 
