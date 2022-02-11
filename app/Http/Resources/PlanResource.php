@@ -18,8 +18,8 @@ class PlanResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'year' => $this->year,
-            'faculty' => $this->faculty_id,
-            'department' => $this->department_id,
+            'faculty' => $this->faculty,
+            'department' => $this->department,
             'created_at' => $this->created_at,
         ];
     }

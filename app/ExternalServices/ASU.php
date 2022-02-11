@@ -69,13 +69,34 @@ class ASU
     }
 
 
+    /**
+     * @return Collection
+     */
     public function getFaculty() {
 
         $filtered = $this->getDepartments()->filter(function ($value) {
-            return $value['unit_type'] == self::ID_FACULTY && $value['faculty_id'] == '0';
+            return $value['unit_type'] == self::ID_FACULTY;
         });
 
-        return $filtered;
+        return $filtered->values();
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getNameFacultyById(int $id): string
+    {
+        return $this->getFaculty()->firstWhere('id', $id)['name'];
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getNameDepartmentById(int $id): string
+    {
+        return $this->getStructuralDepartment()->firstWhere('id', $id)['name'];
     }
 
     public function getStructuralDepartment()
@@ -84,7 +105,7 @@ class ASU
             return $value['unit_type'] == self::ID_DEPARTMENT;
         });
 
-        return $filtered;
+        return $filtered->values();
     }
 
     public function getDepartmentsByStructuralId($structuralId)
@@ -103,7 +124,7 @@ class ASU
             "ID_PAR" => "faculty_id",
             "KOD_TYPE" => "unit_type",
             "KOD_DIV" => "department_id",
-            "NAME_DIV" => "department",
+            "NAME_DIV" => "name",
         ];
 
         return  $this->getAsuData($this->url('getDivisions'), [], 'departments', $keys);
