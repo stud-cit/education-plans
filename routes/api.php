@@ -4,7 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     CycleController,
-    PlanController
+    FromStudyController,
+    PlanController,
 };
 
 /*
@@ -27,9 +28,10 @@ Route::post('/cycles/sub-store', [CycleController::class, 'subStore'])->name('cy
 Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate'])->name('cycles.sub.update');
 Route::apiResource('cycles', CycleController::class);
 Route::apiResource('plans', PlanController::class);
+Route::apiResource('form-studies', FromStudyController::class);
 Route::get('/test', function (Request $request) {
     $asu = new \App\ExternalServices\ASU();
-    $data = $asu->getFaculty();
+    $data = $asu->getNameFacultyById(414);
     return response()->json($data);
 });
 

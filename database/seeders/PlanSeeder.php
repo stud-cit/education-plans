@@ -15,7 +15,7 @@ class PlanSeeder extends Seeder
     public function run()
     {
         DB::table('plans')->insert([
-            // 'form_studies_id' => '',
+            'form_studies_id' => 1,
             'faculty_id' => 414,
             'department_id' => 325,
             'title' => 'Шаблон плану на 2022',
@@ -23,7 +23,7 @@ class PlanSeeder extends Seeder
             // 'education_level_id' => 13,
             // 'verification_status_id' => 1,
             // 'term_study_id' => 1,
-            'year' => 1,
+            'year' => 2022,
             'number_semesters' => 1,
             'specialization_id' => 1,
             'specialization' => 'Інформатика',
