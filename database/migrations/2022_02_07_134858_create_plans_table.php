@@ -16,8 +16,8 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
              // $table->foreignId('form_studies_id')->nullable(true)->constrained('form_studies');
-            $table->string('faculty_id', 60);
-            $table->string('department_id', 60);
+            $table->integer('faculty_id');
+            $table->integer('department_id');
             $table->integer('education_level_id')->nullable(true);
             // $table->foreignId('verification_status_id')->nullable(true)->constrained('verification_statuses');
             // $table->foreignId('term_study_id')->nullable(true)->constrained('term_studies');
