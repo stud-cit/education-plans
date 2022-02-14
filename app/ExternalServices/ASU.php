@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class ASU
 {
     private $asu_key;
-    private $timeSavedCache; // may be rename to expirationTime
+    private $expirationTime;
 
     private const HOST = 'https://asu.sumdu.edu.ua/api/';
     private const ID_INSTITUTE = 7;
@@ -24,7 +24,7 @@ class ASU
 
     function __construct() {
         $this->asu_key = config('app.asu_key');
-        $this->timeSavedCache = now()->addHours(24);
+        $this->expirationTime = now()->addHours(24);
     }
 
     private function url($method) : string
@@ -62,7 +62,7 @@ class ASU
         }
 
         if (!is_null($cacheName) && !Cache::has($cacheName)) {
-            Cache::put($cacheName, collect($results), $this->timeSavedCache);
+            Cache::put($cacheName, collect($results), $this->expirationTime);
         }
 
         return collect($results);
