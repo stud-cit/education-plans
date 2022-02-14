@@ -8,26 +8,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plan extends Model
 {
-
     use HasFactory;
-    protected $asu;
 
-    function __construct()
-    {
-        parent::__construct();
-        $this->asu = new \App\ExternalServices\ASU();
-    }
-    
+    protected $fillable = [
+        'title',
+        'faculty_id',
+        'department_id',
+        'year'
+    ];
 
     protected $casts = [
         // 'created_at' => 'datetime:Y-m-d',
         'year' => 'int'
     ];
-
-   protected $dates = [
-       'created_at',
-        'updated_at',
-   ];
 
     public function getCreatedAtAttribute($value)
     {
@@ -36,11 +29,13 @@ class Plan extends Model
 
     public function getFacultyAttribute()
     {
-        return $this->asu->getNameFacultyById($this->faculty_id);
+        $asu = new \App\ExternalServices\ASU();
+        return $asu->getNameFacultyById($this->faculty_id);
     }
 
     public function getDepartmentAttribute()
     {
-        return $this->asu->getNameDepartmentById($this->department_id);
+        $asu = new \App\ExternalServices\ASU();
+        return $asu->getNameDepartmentById($this->department_id);
     }
 }

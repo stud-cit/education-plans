@@ -65,6 +65,9 @@ class PlanController extends Controller
      */
     public function destroy(Plan $plan)
     {
-        //
+        clock($plan);
+
+        $plan->delete();
+        return response()->json(['message' => __('Deleted')], 204);
     }
 }
