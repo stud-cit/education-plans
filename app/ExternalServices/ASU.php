@@ -68,12 +68,8 @@ class ASU
         return collect($results);
     }
 
-
-    /**
-     * @return Collection
-     */
-    public function getFaculty() {
-
+    public function getFaculty(): Collection
+    {
         $filtered = $this->getDepartments()->filter(function ($value) {
             return $value['unit_type'] == self::ID_FACULTY;
         });
@@ -99,7 +95,7 @@ class ASU
         return $this->getStructuralDepartment()->firstWhere('id', $id)['name'];
     }
 
-    public function getStructuralDepartment()
+    public function getStructuralDepartment(): Collection
     {
         $filtered = $this->getDepartments()->filter(function ($value) {
             return $value['unit_type'] == self::ID_DEPARTMENT;
