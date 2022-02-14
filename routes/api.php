@@ -4,8 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     CycleController,
+    EducationLevelController,
     FromStudyController,
     PlanController,
+
 };
 
 /*
@@ -29,6 +31,8 @@ Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate']
 Route::apiResource('cycles', CycleController::class);
 Route::apiResource('plans', PlanController::class);
 Route::apiResource('form-studies', FromStudyController::class);
+Route::apiResource('education-levels', EducationLevelController::class);
+
 Route::get('/test', function (Request $request) {
     $asu = new \App\ExternalServices\ASU();
     $data = $asu->getNameFacultyById(414);
