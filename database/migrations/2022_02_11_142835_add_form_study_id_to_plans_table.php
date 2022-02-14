@@ -14,7 +14,7 @@ class AddFormStudyIdToPlansTable extends Migration
     public function up()
     {
         Schema::table('plans', function (Blueprint $table) {
-             $table->foreignId('form_studies_id')
+             $table->foreignId('form_study_id')
                 ->nullable(true)
                 ->after('id')
                 ->constrained('form_studies')
@@ -30,7 +30,7 @@ class AddFormStudyIdToPlansTable extends Migration
     public function down()
     {
         Schema::table('plans', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('form_studies_id');
+            $table->dropConstrainedForeignId('form_study_id');
         });
     }
 }
