@@ -32,7 +32,7 @@ class FormStudyRequestTest extends TestCase
         $faker = \Faker\Factory::create();
 
         $validatedTypeField = 'title';
-        $brockenRule = $faker->text(400);
+        $brockenRule = $faker->paragraph(20);
 
         $formStudy = FormStudy::factory()->make([$validatedTypeField => $brockenRule]);
 
