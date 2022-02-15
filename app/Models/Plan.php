@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\ExternalServices\ASU;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,13 +30,13 @@ class Plan extends Model
 
     public function getFacultyAttribute()
     {
-        $asu = new \App\ExternalServices\ASU();
+        $asu = new ASU();
         return $asu->getNameFacultyById($this->faculty_id);
     }
 
     public function getDepartmentAttribute()
     {
-        $asu = new \App\ExternalServices\ASU();
+        $asu = new ASU();
         return $asu->getNameDepartmentById($this->department_id);
     }
 }

@@ -20,4 +20,26 @@ class PlanTest extends TestCase
         $response->assertStatus(204);
         $this->assertDatabaseMissing('plans', $plan->toArray());
     }
+
+    public function testCanGetAllPlans()
+    {
+        $plan = Plan::factory()->create();
+        $response = $this->getJson('/api/plans');
+
+        $response->assertOk();
+
+        $response->assertJson([
+            'data' => [
+                [
+                    'id' => $plan->id,
+                    'title' => $plan->title,
+                    'faculty' => $plan->faculty,
+                    'department' => $plan->department,
+                    'year' => $plan->year,
+                    'created_at' => $plan->created_at,
+                ]
+            ]
+        ]);
+
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
@@ -35,7 +36,7 @@ Route::apiResource('education-levels', EducationLevelController::class);
 
 Route::get('/test', function (Request $request) {
     $asu = new \App\ExternalServices\ASU();
-    $data = $asu->getNameFacultyById(414);
+    $data = $asu->getNameFacultyById(0);
     return response()->json($data);
 });
 

@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ASU
 {
@@ -21,6 +22,7 @@ class ASU
     private const ID_DEPARTMENT = 2;
     private const REJECTED_UNITS = [1571, 1150, 382];
     private const REJECTED_DIVISIONS = [339, 380];
+    private const NOT_FOUND = 'Ідентифікатор не знайдено.';
 
     function __construct() {
         $this->asu_key = config('app.asu_key');
@@ -83,7 +85,9 @@ class ASU
      */
     public function getNameFacultyById(int $id): string
     {
-        return $this->getFaculty()->firstWhere('id', $id)['name'];
+        $faculties = $this->getFaculty();
+
+        return $this->getName($faculties, $id);
     }
 
     /**
@@ -92,7 +96,21 @@ class ASU
      */
     public function getNameDepartmentById(int $id): string
     {
-        return $this->getStructuralDepartment()->firstWhere('id', $id)['name'];
+        $departments = $this->getStructuralDepartment();
+
+        return $this->getName($departments, $id);
+    }
+
+    /**
+     * @param $collection
+     * @param $id
+     * @return string
+     */
+    private function getName($collection, $id): string
+    {
+        $isExists = $collection->contains($id);
+
+        return $isExists ? $collection->firstWhere('id', $id)['name'] : self::NOT_FOUND;
     }
 
     public function getStructuralDepartment(): Collection
