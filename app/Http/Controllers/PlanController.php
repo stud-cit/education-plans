@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Constant;
 use App\Http\Resources\PlanResource;
+use App\Http\Resources\PlanShowResource;
 use App\Models\Plan;
 use Illuminate\Http\Request;
 
@@ -42,7 +43,8 @@ class PlanController extends Controller
      */
     public function show(Plan $plan)
     {
-        //
+        $model = $plan->load(['formStudy', 'educationLevel']);
+        return new PlanShowResource($model);
     }
 
     /**

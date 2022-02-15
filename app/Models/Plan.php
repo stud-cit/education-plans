@@ -25,7 +25,7 @@ class Plan extends Model
 
     public function getCreatedAtAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        return Carbon::parse($value)->format('d.m.Y H:m');
     }
 
     public function getFacultyAttribute()
@@ -38,5 +38,15 @@ class Plan extends Model
     {
         $asu = new ASU();
         return $asu->getNameDepartmentById($this->department_id);
+    }
+
+    public function formStudy()
+    {
+        return $this->belongsTo(FormStudy::class);
+    }
+
+    public function educationLevel()
+    {
+        return $this->belongsTo(EducationLevel::class);
     }
 }
