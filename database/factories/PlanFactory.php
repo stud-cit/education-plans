@@ -19,7 +19,7 @@ class PlanFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => $this->faker->paragraph(2),
             'faculty_id' => $this->faker->randomDigit(),
             'department_id' => $this->faker->randomDigit(),
             'form_study_id' => FormStudy::factory(),
@@ -29,7 +29,11 @@ class PlanFactory extends Factory
             'number_semesters' => $this->faker->randomDigit(),
             'specialization_id' => $this->faker->randomDigit(),
             'specialization' => $this->faker->word(),
-            'plans.education_program_id' => $this->faker->randomDigit(),
+            'education_program_id' => $this->faker->randomDigit(),
+            'qualification_id' => $this->faker->randomDigit(),
+            'field_knowledge_id' => $this->faker->randomDigit(),
+            'count_hours' => $this->faker->numberBetween(20, 30),
+            'count_week' => $this->faker->numberBetween(1, 4),
         ];
     }
 }

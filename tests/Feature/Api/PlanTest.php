@@ -15,7 +15,7 @@ class PlanTest extends TestCase
     {
         $plan = Plan::factory()->create();
 
-        $response = $this->deleteJson(route('plans.destroy'), $plan->toArray());
+        $response = $this->deleteJson(route('plans.destroy', $plan));
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('plans', $plan->toArray());
