@@ -16,7 +16,7 @@ class AddEducatinLevelIdToPlansTable extends Migration
         Schema::table('plans', function (Blueprint $table) {
             $table->foreignId('education_level_id')
                 ->nullable(true)
-                ->after('form_studies_id')
+                ->after('form_study_id')
                 ->constrained('education_levels')
                 ->cascadeOnUpdate();
         });
