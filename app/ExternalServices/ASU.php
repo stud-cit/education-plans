@@ -108,7 +108,7 @@ class ASU
      */
     private function getName($collection, $id): string
     {
-        $isExists = $collection->contains($id);
+        $isExists = $collection->contains('id', $id);
 
         return $isExists ? $collection->firstWhere('id', $id)['name'] : self::NOT_FOUND;
     }
