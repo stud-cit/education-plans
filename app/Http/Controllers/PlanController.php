@@ -18,9 +18,9 @@ class PlanController extends Controller
     public function index()
     {
         return PlanResource::collection(
-            Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')->paginate(
-                request()->itemsPerPage ?? Constant::PAGINATE
-            )
+            Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
+                ->filterBy(request()->all())
+                ->paginate(request()->itemsPerPage ?? Constant::PAGINATE)
         );
     }
 
