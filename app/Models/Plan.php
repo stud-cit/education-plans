@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\ExternalServices\ASU;
+use App\Helpers\Filters\FilterBuilder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -56,5 +57,13 @@ class Plan extends Model
     public function educationLevel()
     {
         return $this->belongsTo(EducationLevel::class);
+    }
+
+    public function scopeFilterBy($query, $filters)
+    {
+        $namespace = 'App\Helpers\Filters\PlanFilters';
+        $filter = new FilterBuilder($query, $filters, $namespace);
+        
+        return $filter->apply(); 
     }
 }
