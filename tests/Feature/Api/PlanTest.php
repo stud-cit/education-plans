@@ -24,7 +24,8 @@ class PlanTest extends TestCase
     public function testCanGetAllPlans()
     {
         $plan = Plan::factory()->create();
-        $response = $this->getJson('/api/plans');
+
+        $response = $this->getJson(route('plans.index'));
 
         $response->assertOk();
 

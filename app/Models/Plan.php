@@ -20,7 +20,15 @@ class Plan extends Model
 
     protected $casts = [
         // 'created_at' => 'datetime:Y-m-d',
-        'year' => 'int'
+        'year' => 'int',
+        'specialization_id' => 'int',
+        'count_hours' => 'int',
+        'count_week' => 'int',
+        'credits' => 'int',
+        'number_semesters' => 'int',
+        'qualification_id' => 'int',
+        'education_program_id' => 'int',
+        'field_knowledge_id' => 'int'
     ];
 
     public function getCreatedAtAttribute($value)
