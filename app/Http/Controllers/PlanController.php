@@ -19,7 +19,7 @@ class PlanController extends Controller
     {
         return PlanResource::collection(
             Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')->paginate(
-                Constant::PAGINATE
+                request()->query()->itemsPerPage ?? Constant::PAGINATE
             )
         );
     }
