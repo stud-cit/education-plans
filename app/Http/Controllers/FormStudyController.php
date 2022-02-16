@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFormStudyRequest;
 use App\Models\FormStudy;
 use Illuminate\Http\Request;
-use App\Http\Resources\FromStudyResource;
+use App\Http\Resources\FormStudyResource;
 
-class FromStudyController extends Controller
+class FormStudyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class FromStudyController extends Controller
      */
     public function index()
     {
-        return FromStudyResource::collection(FormStudy::select('title')->get());
+        return FormStudyResource::collection(FormStudy::select('title')->get());
     }
 
     /**

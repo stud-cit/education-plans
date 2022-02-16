@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     CycleController,
     EducationLevelController,
-    FromStudyController,
+    FormStudyController,
     PlanController,
 
 };
@@ -30,7 +30,7 @@ Route::post('/cycles/sub-store', [CycleController::class, 'subStore'])->name('cy
 Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate'])->name('cycles.sub.update');
 Route::apiResource('cycles', CycleController::class);
 Route::apiResource('plans', PlanController::class);
-Route::apiResource('form-studies', FromStudyController::class);
+Route::apiResource('form-studies', FormStudyController::class);
 Route::apiResource('education-levels', EducationLevelController::class);
 
 Route::get('/test', function (Request $request) {
