@@ -72,4 +72,15 @@ class PlanTest extends TestCase
             ]
         ]);
     }
+
+    public function testCanCopyPlan()
+    {
+        $plan = Plan::factory()->create();
+
+        $response = $this->post(route('plans.copy', $plan));
+
+        $response->assertStatus(201);
+
+        //$this->assertDatabaseHas('plans', );
+    }
 }

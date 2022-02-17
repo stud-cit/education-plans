@@ -30,13 +30,14 @@ Route::prefix('v1')->group(function () {
     Route::post('/cycles/sub-store', [CycleController::class, 'subStore'])->name('cycles.sub.store');
     Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate'])->name('cycles.sub.update');
     Route::apiResource('cycles', CycleController::class);
+    Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
     Route::apiResource('plans', PlanController::class);
     Route::apiResource('form-studies', FormStudyController::class);
     Route::apiResource('education-levels', EducationLevelController::class);
 
     Route::get('/test', function (Request $request) {
-        $asu = new \App\ExternalServices\ASU();
-        $data = $asu->getNameFacultyById(414);
+        $model = App\Models\Plan::with('cycles')->find(18);
+        $data = $model->cycles;
         return response()->json($data);
     });
 });

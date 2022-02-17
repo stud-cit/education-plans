@@ -67,9 +67,14 @@ class PlanController extends Controller
      */
     public function destroy(Plan $plan)
     {
-        clock($plan);
-
         $plan->delete();
         return response()->json(['message' => __('Deleted')], 204);
+    }
+
+    public function copy(Plan $plan)
+    {
+        $plan->replicateRow();
+
+        return $this->sucsses(__('Copied'), 201);
     }
 }
