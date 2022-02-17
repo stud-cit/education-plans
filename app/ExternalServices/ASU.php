@@ -83,7 +83,7 @@ class ASU
      * @param int $id
      * @return string
      */
-    public function getNameFacultyById(int $id): string
+    public function getFacultyName(int $id): string
     {
         $faculties = $this->getFaculty();
 
@@ -94,11 +94,33 @@ class ASU
      * @param int $id
      * @return string
      */
-    public function getNameDepartmentById(int $id): string
+    public function getShortFacultyName(int $id): string
+    {
+        $faculties = $this->getFaculty();
+
+        return $this->getShortName($faculties, $id);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getDepartmentName(int $id): string
     {
         $departments = $this->getStructuralDepartment();
 
         return $this->getName($departments, $id);
+    }
+
+    /**
+     * @param int $id
+     * @return string
+     */
+    public function getShortDepartmentName(int $id): string
+    {
+        $departments = $this->getStructuralDepartment();
+
+        return $this->getShortName($departments, $id);
     }
 
     /**
@@ -111,6 +133,18 @@ class ASU
         $isExists = $collection->contains('id', $id);
 
         return $isExists ? $collection->firstWhere('id', $id)['name'] : self::NOT_FOUND;
+    }
+
+    /**
+     * @param $collection
+     * @param $id
+     * @return string
+     */
+    private function getShortName($collection, $id): string
+    {
+        $isExists = $collection->contains('id', $id);
+
+        return $isExists ? $collection->firstWhere('id', $id)['short_name'] : self::NOT_FOUND;
     }
 
     public function getStructuralDepartment(): Collection
@@ -139,6 +173,7 @@ class ASU
             "KOD_TYPE" => "unit_type",
             "KOD_DIV" => "department_id",
             "NAME_DIV" => "name",
+            "ABBR_DIV" => "short_name",
         ];
 
         return  $this->getAsuData($this->url('getDivisions'), [], 'departments', $keys);
