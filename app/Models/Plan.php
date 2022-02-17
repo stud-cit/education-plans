@@ -37,16 +37,28 @@ class Plan extends Model
         return Carbon::parse($value)->format('d.m.Y H:m');
     }
 
-    public function getFacultyAttribute()
+    public function getFacultyNameAttribute(): string
     {
         $asu = new ASU();
-        return $asu->getNameFacultyById($this->faculty_id);
+        return $asu->getFacultyName($this->faculty_id);
     }
 
-    public function getDepartmentAttribute()
+    public function getShortFacultyNameAttribute(): string
     {
         $asu = new ASU();
-        return $asu->getNameDepartmentById($this->department_id);
+        return $asu->getShortFacultyName($this->faculty_id);
+    }
+
+    public function getDepartmentNameAttribute(): string
+    {
+        $asu = new ASU();
+        return $asu->getDepartmentName($this->department_id);
+    }
+
+    public function getShortDepartmentNameAttribute(): string
+    {
+        $asu = new ASU();
+        return $asu->getShortDepartmentName($this->department_id);
     }
 
     public function formStudy()
@@ -63,7 +75,7 @@ class Plan extends Model
     {
         $namespace = 'App\Helpers\Filters\PlanFilters';
         $filter = new FilterBuilder($query, $filters, $namespace);
-        
-        return $filter->apply(); 
+
+        return $filter->apply();
     }
 }
