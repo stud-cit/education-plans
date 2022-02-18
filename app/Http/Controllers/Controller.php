@@ -20,4 +20,14 @@ class Controller extends BaseController
     {
         return response()->json(['message' => $message], $status);
     }
+
+    /**
+     * @param string $message
+     * @param int $status
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function error(string $message, int $status = 400): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(['error' => $message], $status);
+    }
 }

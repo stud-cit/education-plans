@@ -15,7 +15,7 @@ class CreateFormStudiesTable extends Migration
     {
         Schema::create('form_studies', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->timestamps();
         });
     }

@@ -9,11 +9,6 @@ use App\Http\Resources\FormStudyResource;
 
 class FormStudyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return FormStudyResource::collection(FormStudy::select('title')->get());
@@ -22,47 +17,55 @@ class FormStudyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  StoreFormStudyRequest  $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreFormStudyRequest $request)
+    public function store(StoreFormStudyRequest $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validated();
         FormStudy::create($validated);
-        return response()->json(['message' => __('Created')], 201);
+        return $this->success(__('messages.Created'), 201);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\FormStudy  $formStudy
-     * @return \Illuminate\Http\Response
+     * @return FormStudyResource
      */
-    public function show(FormStudy $formStudy)
+    public function show(FormStudy $formStudy): FormStudyResource
     {
-        //
+        return new FormStudyResource($formStudy);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreFormStudyRequest $request
      * @param  \App\Models\FormStudy  $formStudy
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, FormStudy $formStudy)
+    public function update(StoreFormStudyRequest $request, FormStudy $formStudy): \Illuminate\Http\JsonResponse
     {
-        //
+        $validated = $request->validated();
+        $formStudy->update($validated);
+        return $this->success(__('messages.Updated'), 202);
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\FormStudy  $formStudy
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(FormStudy $formStudy)
     {
-        //
+        try {
+            $formStudy->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error(__('messages.Cannot_delete'), 403);
+        }
+        return $this->success(__('messages.Deleted'), 204);
+
     }
 }
