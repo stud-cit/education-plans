@@ -16,7 +16,7 @@ class Controller extends BaseController
      * @param int $status
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function sucsses(string $message, int $status = 200): \Illuminate\Http\JsonResponse
+    protected function success(string $message, int $status = 200): \Illuminate\Http\JsonResponse
     {
         return response()->json(['message' => $message], $status);
     }
