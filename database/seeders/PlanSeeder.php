@@ -16,6 +16,7 @@ class PlanSeeder extends Seeder
     {
         DB::table('plans')->insert([
             'form_study_id' => 1,
+             'form_organization_id' => 1,
             'faculty_id' => 414,
             'department_id' => 325,
             'title' => 'Шаблон плану на 2022',
@@ -30,7 +31,6 @@ class PlanSeeder extends Seeder
             'education_program_id' => 1,
             'qualification_id' => 1,
             'field_knowledge_id' => 1,
-            // 'form_organization_id' => 1,
             'count_hours' => 1,
             'count_week' => 1,
             'created_at' => now()

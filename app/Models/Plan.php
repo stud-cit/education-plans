@@ -76,6 +76,11 @@ class Plan extends Model
         return $this->hasMany(Cycle::class);
     }
 
+    public function formOrganization()
+    {
+        return $this->belongsTo(FormOrganization::class);
+    }
+
     public function replicateRow()
     {
         $clone = $this->replicate();

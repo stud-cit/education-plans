@@ -17,10 +17,11 @@ class PlanShowResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'faculty' => $this->faculty,
-            'department' => $this->department,
+            'faculty' => $this->facultyName,
+            'department' => $this->departmentName,
             'year' => $this->year,
             'form_study' => $this->formStudy->title,
+            'form_organization' => $this->formOrganization->title,
             'education_level' => $this->educationLevel->title,
             'credits' => $this->credits,
             'number_semesters' => $this->number_semesters,

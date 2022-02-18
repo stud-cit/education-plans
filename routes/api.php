@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     CycleController,
@@ -36,8 +37,9 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('education-levels', EducationLevelController::class);
 
     Route::get('/test', function (Request $request) {
-        $model = App\Models\Plan::with('cycles')->find(18);
-        $data = $model->cycles;
+        $data = __('messages.Updated');
+        //$model = App\Models\Plan::with('cycles')->find(18);
+        //$data = $model->cycles;
         return response()->json($data);
     });
 });
