@@ -20,7 +20,7 @@ class Plan extends Model
     ];
 
     protected $casts = [
-        // 'created_at' => 'datetime:Y-m-d',
+//        'created_at' => 'datetime:Y-m-d h:m',
         'year' => 'int',
         'specialization_id' => 'int',
         'count_hours' => 'int',
@@ -29,12 +29,12 @@ class Plan extends Model
         'number_semesters' => 'int',
         'qualification_id' => 'int',
         'education_program_id' => 'int',
-        'field_knowledge_id' => 'int'
+        'field_knowledge_id' => 'int',
     ];
 
     public function getCreatedAtAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y H:m');
+        return Carbon::parse($value)->format('d.m.Y H:i');
     }
 
     public function getFacultyNameAttribute(): string
