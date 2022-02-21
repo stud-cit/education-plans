@@ -15,13 +15,25 @@ class PlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return PlanResource::collection(
-            Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
-                ->filterBy(request()->all())
-                ->paginate(request()->itemsPerPage ?? Constant::PAGINATE)
-        );
+        clock("column:", $request->sort_by, "how:", $request->sort_desc);
+
+        $input = filter_var($request->sort_desc, FILTER_VALIDATE_BOOLEAN);
+        $ordering = $input ? 'desc' :  'asc';
+
+
+        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
+            ->filterBy(request()->all())
+
+
+
+            ->paginate(request()->items_per_page ?? 15 )
+            ->sortBy([
+                ["$request->sort_by", $ordering]
+            ]);;
+
+        return PlanResource::collection($plans);
     }
 
     /**
