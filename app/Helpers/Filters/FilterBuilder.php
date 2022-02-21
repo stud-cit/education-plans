@@ -27,8 +27,6 @@ class FilterBuilder
 
             if (!empty($value)) {
                 (new $class($this->query))->handle($value);
-            } else {
-                (new $class($this->query))->handle();
             }
         }
 
