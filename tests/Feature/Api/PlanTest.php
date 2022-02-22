@@ -48,17 +48,18 @@ class PlanTest extends TestCase
     {
         $plan = Plan::factory()->create();
 
-        $response = $this->getJson(route('plans.show', $plan));
+        $response = $this->getJson(route('plans.show', $plan->id));
 
         $response->assertOk()->assertExactJson([
             'data' => [
                 'id' => $plan->id,
                 'title' => $plan->title,
-                'faculty' => $plan->faculty,
-                'department' => $plan->department,
+                'faculty' => $plan->facultyName,
+                'department' => $plan->departmentName,
                 'year' => $plan->year,
                 'form_study' => $plan->formStudy->title,
                 'education_level' => $plan->educationLevel->title,
+                'form_organization' => $plan->formOrganization->title,
                 'credits' => $plan->credits,
                 'number_semesters' => $plan->number_semesters,
                 'specialization_id' => $plan->specialization_id,

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\EducationLevel;
+use App\Models\FormOrganization;
 use App\Models\FormStudy;
 use App\Models\Plan;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,7 +20,7 @@ class PlanFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->paragraph(2),
+            'title' => $this->faker->paragraph(1),
             'faculty_id' => $this->faker->randomDigit(),
             'department_id' => $this->faker->randomDigit(),
             'form_study_id' => FormStudy::factory(),
@@ -34,6 +35,7 @@ class PlanFactory extends Factory
             'field_knowledge_id' => $this->faker->randomDigit(),
             'count_hours' => $this->faker->numberBetween(20, 30),
             'count_week' => $this->faker->numberBetween(1, 4),
+            'form_organization_id' => FormOrganization::factory(),
         ];
     }
 }

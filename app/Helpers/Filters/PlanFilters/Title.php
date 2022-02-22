@@ -9,6 +9,8 @@ class Title extends QueryFilter implements FilterContract
 {
     public function handle($value): void
     {
-        $this->query->where('title', 'like', "%$value%");
+        $this->query->when('title', function($query) use ($value) {
+            return $query->where('title', 'like', "%$value%");
+        });
     }
 }
