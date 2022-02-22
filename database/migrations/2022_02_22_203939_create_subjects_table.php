@@ -16,13 +16,14 @@ class CreateSubjectsTable extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cycle_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('selective_discipline_id')->constrained('selective_disciplines')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('asu_id', 60)->nullable(true);
             $table->string('title');
             $table->integer('credits');
             $table->integer('hours')->nullable()->default(null);
             $table->integer('practices')->nullable()->default(null);
             $table->integer('laboratories')->nullable()->default(null);
-            $table->timestamps();
+            
         });
     }
 
@@ -33,6 +34,6 @@ class CreateSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('disciplines');
+        Schema::dropIfExists('subjects');
     }
 }
