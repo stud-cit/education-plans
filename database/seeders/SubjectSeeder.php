@@ -16,6 +16,7 @@ class SubjectSeeder extends Seeder
     {
         DB::table('subjects')->insert([
             'cycle_id' => 1,
+            'selective_discipline_id' => 1,
             'title' => 'Іноземна мова',
             'credits' => 30,
             'hours' => 5,

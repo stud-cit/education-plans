@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             CycleSeeder::class,
+            SelectiveDisciplineSeeder::class,
             SubjectSeeder::class,
             FormStudySeeder::class,
             EducationLevelSeeder::class,
