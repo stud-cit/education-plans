@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Constant;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\PlanShowResource;
 use App\Models\Plan;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class PlanController extends Controller
 {
@@ -20,17 +18,11 @@ class PlanController extends Controller
 
     private function ordering($method): string
     {
+        $method = $method ?? 'false';
         $input = $this->stringToBoolean($method);
         return $input ? 'desc' : 'asc';
     }
 
-    public function paginateCollection($items, $perPage = 15, $page = null, $options = [])
-    {
-        $perPage = $perPage ?? 15; // if null given
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -38,17 +30,21 @@ class PlanController extends Controller
      */
     public function index(Request $request)
     {
-        $page = $request->page;
-        $perPage = $request->items_per_page;
+        $validator = Validator::make($request->all(), [
+            'page' => 'integer',
+            'items_per_page' => 'integer',
+            'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at'])],
+            'sort_desc' => ['nullable', Rule::in(['true', 'false'])],
+        ]);
+
+        $validated = $validator->validated();
 
         $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
             ->filterBy(request()->all())
-            ->get()
-            ->when($request->sort_by, function ($collection) use ($request) {
-                return $collection->sortBy([$request->sort_by, $this->ordering($request->sort_desc ?? false)]);
-            })->paginateCollection($perPage, $page);
-
-//        clock("sort_by: {$request->sort_by}, method: {$this->ordering($request->sort_desc)}");
+            ->when($validated['sort_by'], function ($query) use ($validated) {
+                return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));
+            })
+            ->paginate($validated['items_per_page']);
 
         return PlanResource::collection($plans);
     }
