@@ -23,7 +23,7 @@ class CreateHoursWeeksTable extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('forms_control_id')
+            $table->foreignId('form_control_id')
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');

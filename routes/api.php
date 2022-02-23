@@ -8,6 +8,12 @@ use App\Http\Controllers\{
     EducationLevelController,
     FormStudyController,
     PlanController,
+    SubjectController,
+    HoursWeekController,
+    FormControlController,
+    IndividualTaskController,
+    SelectiveDisciplineController
+
 
 };
 
@@ -35,6 +41,13 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('plans', PlanController::class);
     Route::apiResource('form-studies', FormStudyController::class);
     Route::apiResource('education-levels', EducationLevelController::class);
+    Route::apiResource('subjects', SubjectController::class);
+    Route::apiResource('form-controls', FormControlController::class);
+    Route::apiResource('individual-tasks', IndividualTaskController::class);
+    Route::apiResource('hours-weeks', HoursWeekController::class);
+    Route::apiResource('selective-discipline', SelectiveDisciplineController::class);
+
+    
 
     Route::get('/test', function (Request $request) {
         $data = __('messages.Updated');

@@ -11,12 +11,12 @@ class HoursWeek extends Model
 
     protected $fillable = ['hour'];
 
-    public function forms_control()
+    public function formControl()
     {
-        return $this->belongsTo(FormsControl::class);
+        return $this->belongsTo(FormControl::class);
     }
 
-    public function individual_task()
+    public function individualTask()
     {
         return $this->belongsTo(IndividualTask::class);
     }

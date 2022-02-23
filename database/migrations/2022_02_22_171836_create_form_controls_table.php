@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormsControlsTable extends Migration
+class CreateFormControlsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateFormsControlsTable extends Migration
      */
     public function up()
     {
-        Schema::create('forms_controls', function (Blueprint $table) {
+        Schema::create('form_controls', function (Blueprint $table) {
             $table->id();
             $table->string('title', 50);
         });
@@ -26,6 +26,6 @@ class CreateFormsControlsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('forms_controls');
+        Schema::dropIfExists('form_controls');
     }
 }

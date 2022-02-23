@@ -11,7 +11,7 @@ class Subject extends Model
 
     protected $fillable = ['title', 'asu_id', 'credits', 'hours', 'practices', 'laboratories'];
 
-    public function selective_discipline()
+    public function selectiveDiscipline()
     {
         return $this->belongsTo(SelectiveDisciline::class);
     }
@@ -21,7 +21,7 @@ class Subject extends Model
         return $this->belongsTo(Cycle::class);
     }
 
-    public function hours_weeks()
+    public function hoursWeeks()
     {
         return $this->hasMany(HoursWeek::class);
     }
