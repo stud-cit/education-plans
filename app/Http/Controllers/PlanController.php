@@ -30,7 +30,7 @@ class PlanController extends Controller
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
         $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
-            ->filterBy(request()->all())
+            ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
                 return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));
             })
