@@ -4,5 +4,5 @@ namespace App\Http;
 
 class Constant
 {
-    const PAGINATE = 20;
+    const PAGINATE = 15;
 }

@@ -35,6 +35,7 @@ class PlanTest extends TestCase
                     'id' => $plan->id,
                     'title' => $plan->title,
                     'faculty' => $plan->facultyName,
+                    'faculty_id' => $plan->faculty_id,
                     'short_faculty' => $plan->shortFacultyName,
                     'department' => $plan->departmentName,
                     'year' => $plan->year,

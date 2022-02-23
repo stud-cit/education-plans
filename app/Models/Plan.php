@@ -32,7 +32,7 @@ class Plan extends Model
         'field_knowledge_id' => 'int',
     ];
 
-    protected $appends = ['faculty', 'department'];
+//    protected $appends = ['faculty', 'department'];
 //    protected $visible = ['facultyName'];
 
     public function getCreatedAtAttribute($value)
@@ -45,11 +45,6 @@ class Plan extends Model
         $asu = new ASU();
         return $asu->getFacultyName($this->faculty_id);
     }
-    public function getFacultyAttribute(): string
-    {
-        $asu = new ASU();
-        return $asu->getFacultyName($this->faculty_id);
-    }
 
     public function getShortFacultyNameAttribute(): string
     {
@@ -58,12 +53,6 @@ class Plan extends Model
     }
 
     public function getDepartmentNameAttribute(): string
-    {
-        $asu = new ASU();
-        return $asu->getDepartmentName($this->department_id);
-    }
-
-    public function getDepartmentAttribute(): string
     {
         $asu = new ASU();
         return $asu->getDepartmentName($this->department_id);

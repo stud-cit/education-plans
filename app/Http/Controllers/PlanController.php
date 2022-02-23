@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Constant;
+use App\Http\Requests\indexPlanRequest;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\PlanShowResource;
 use App\Models\Plan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class PlanController extends Controller
 {
@@ -23,28 +23,18 @@ class PlanController extends Controller
         return $input ? 'desc' : 'asc';
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function index(IndexPlanRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'page' => 'integer',
-            'items_per_page' => 'integer',
-            'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at'])],
-            'sort_desc' => ['nullable', Rule::in(['true', 'false'])],
-        ]);
+        $validated = $request->validated();
 
-        $validated = $validator->validated();
+        $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
         $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
             ->filterBy(request()->all())
-            ->when($validated['sort_by'], function ($query) use ($validated) {
+            ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
                 return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));
             })
-            ->paginate($validated['items_per_page']);
+            ->paginate($perPage);
 
         return PlanResource::collection($plans);
     }
