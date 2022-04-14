@@ -59,15 +59,14 @@ class FormStudyTest extends TestCase
 
         $this->assertDatabaseHas('form_studies', $newFormStudy->toArray());
     }
-    // TODO: fix assert with message
-    public function testCanDeleteFormStudy()
+
+    public function testCanDeleteFormStudy(): void
     {
         $formStudy = FormStudy::factory()->create();
 
         $response = $this->deleteJson(route('form-studies.destroy', $formStudy));
 
-        $response->assertStatus(204);
-        //->assertJson(['message' => __('messages.Deleted')]);
+        $response->assertStatus(200)->assertJson(['message' => __('messages.Deleted')]);
 
         $this->assertDatabaseMissing('form_studies', $formStudy->toArray());
     }

@@ -65,7 +65,7 @@ class FormStudyController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return $this->error(__('messages.Cannot_delete'), 403);
         }
-        return $this->success(__('messages.Deleted'), 204);
+        return $this->success(__('messages.Deleted'), 200);
 
     }
 }
