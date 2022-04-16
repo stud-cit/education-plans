@@ -84,6 +84,11 @@ class Plan extends Model
         return $this->belongsTo(FormOrganization::class);
     }
 
+    public function termStudy()
+    {
+        return $this->belongsTo(TermStudy::class);
+    }
+
     public function replicateRow()
     {
         $clone = $this->replicate();

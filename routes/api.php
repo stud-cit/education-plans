@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     CycleController,
@@ -12,9 +11,8 @@ use App\Http\Controllers\{
     HoursWeekController,
     FormControlController,
     IndividualTaskController,
-    SelectiveDisciplineController
-
-
+    SelectiveDisciplineController,
+    TermStudyController
 };
 
 /*
@@ -46,7 +44,8 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('individual-tasks', IndividualTaskController::class);
     Route::apiResource('hours-weeks', HoursWeekController::class);
     Route::apiResource('selective-discipline', SelectiveDisciplineController::class);
-
+    Route::get('/term-studies/select', [TermStudyController::class, 'select'])->name('term-studies.select');
+    Route::apiResource('term-studies', TermStudyController::class);
     
 
     Route::get('/test', function (Request $request) {
