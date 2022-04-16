@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             EducationLevelSeeder::class,
             FormOrganizationSeeder::class,
             TermStudySeeder::class,
-            PlanSeeder::class
+            PlanSeeder::class,
+            SettingSeeder::class
         ]);
     }
 }

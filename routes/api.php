@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     FormControlController,
     IndividualTaskController,
     SelectiveDisciplineController,
+    SettingController,
     TermStudyController
 };
 
@@ -46,6 +47,7 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('selective-discipline', SelectiveDisciplineController::class);
     Route::get('/term-studies/select', [TermStudyController::class, 'select'])->name('term-studies.select');
     Route::apiResource('term-studies', TermStudyController::class);
+    Route::apiResource('settings', SettingController::class);
     
 
     Route::get('/test', function (Request $request) {
