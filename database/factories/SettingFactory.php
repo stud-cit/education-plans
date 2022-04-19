@@ -15,7 +15,7 @@ class SettingFactory extends Factory
     {
         return [
             'key' => $this->faker->uuid,
-            'title' => $this->faker->word(),
+            'title' => $this->faker->unique()->word(),
             'value' => $this->faker->randomDigit()
         ];
     }

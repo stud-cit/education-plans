@@ -2,10 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\StudyTerm;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TermStudyFactory extends Factory
+class StudyTermFactory extends Factory
 {
+
+    protected $model = StudyTerm::class;
     /**
      * Define the model's default state.
      *
@@ -14,11 +17,12 @@ class TermStudyFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->word(),
+            'title' => $this->faker->unique()->word(),
             'year' => $this->faker->randomDigit(),
             'month' => $this->faker->randomDigit(),
             'course' => $this->faker->randomDigit(),
             'module' => $this->faker->randomDigit(),
+            'number_semesters' => $this->faker->randomDigit(),
         ];
     }
 }

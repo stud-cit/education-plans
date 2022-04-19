@@ -6,7 +6,7 @@ use App\Models\EducationLevel;
 use App\Models\FormOrganization;
 use App\Models\FormStudy;
 use App\Models\Plan;
-use App\Models\TermStudy;
+use App\Models\StudyTerm;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PlanFactory extends Factory
@@ -37,7 +37,7 @@ class PlanFactory extends Factory
             'count_hours' => $this->faker->numberBetween(20, 30),
             'count_week' => $this->faker->numberBetween(1, 4),
             'form_organization_id' => FormOrganization::factory(),
-            'term_study_id' => TermStudy::factory(),
+            'study_term_id' => StudyTerm::factory(),
         ];
     }
 }

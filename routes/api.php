@@ -13,7 +13,7 @@ use App\Http\Controllers\{
     IndividualTaskController,
     SelectiveDisciplineController,
     SettingController,
-    TermStudyController
+    StudyTermController
 };
 
 /*
@@ -45,10 +45,10 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('individual-tasks', IndividualTaskController::class);
     Route::apiResource('hours-weeks', HoursWeekController::class);
     Route::apiResource('selective-discipline', SelectiveDisciplineController::class);
-    Route::get('/term-studies/select', [TermStudyController::class, 'select'])->name('term-studies.select');
-    Route::apiResource('term-studies', TermStudyController::class);
+    Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
+    Route::apiResource('study-terms', StudyTermController::class);
     Route::apiResource('settings', SettingController::class);
-    
+
 
     Route::get('/test', function (Request $request) {
         $data = __('messages.Updated');

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TermStudySeeder extends Seeder
+class StudyTermSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,12 +14,13 @@ class TermStudySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('term_studies')->insert([
+        DB::table('study_terms')->Insert([
             'title' => '3 роки 10 місяців',
             'year' => 3,
             'month' => 10,
             'course' => 4,
-            'module' => 8
+            'module' => 8,
+            'number_semesters' => 4,
         ]);
     }
 }

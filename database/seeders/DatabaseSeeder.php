@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
             FormStudySeeder::class,
             EducationLevelSeeder::class,
             FormOrganizationSeeder::class,
-            TermStudySeeder::class,
             PlanSeeder::class,
-            SettingSeeder::class
+            SettingSeeder::class,
+            StudyTermSeeder::class,
         ]);
     }
 }
