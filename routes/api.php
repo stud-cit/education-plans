@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{
+use App\Http\Controllers\{AsuController,
     CycleController,
     EducationLevelController,
     FormStudyController,
@@ -13,8 +13,7 @@ use App\Http\Controllers\{
     IndividualTaskController,
     SelectiveDisciplineController,
     SettingController,
-    StudyTermController
-};
+    StudyTermController};
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +47,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
     Route::apiResource('study-terms', StudyTermController::class);
     Route::apiResource('settings', SettingController::class);
-
+    Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
+    Route::get('/faculties', [AsuController::class, 'faculty'])->name('asu.faculty');
 
     Route::get('/test', function (Request $request) {
         $data = __('messages.Updated');

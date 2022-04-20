@@ -2,14 +2,11 @@
 
 namespace App\ExternalServices;
 
-use App\Http\Constant;
 use App\Helpers\Helpers;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ASU
 {
@@ -159,7 +156,7 @@ class ASU
     public function getDepartmentsByStructuralId($structuralId)
     {
         $filtered = $this->getDepartments()->filter(function ($value) use ($structuralId) {
-            return $value['structural_id'] == $structuralId && $value['unit_type'] == self::ID_DEPARTMENT;
+            return $value['faculty_id'] == $structuralId && $value['unit_type'] == self::ID_DEPARTMENT;
         });
 
         return $filtered->sortBy('department')->values();
