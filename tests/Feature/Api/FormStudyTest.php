@@ -17,16 +17,15 @@ class FormStudyTest extends TestCase
      */
     public function testCanGetAllFormStudies()
     {
-        $fromStudy = FormStudy::factory()->create();
+        FormStudy::factory()->count(3)->create();
 
         $response = $this->getJson(route('form-studies.index'));
 
-        $response->assertStatus(200);
-
-        $response->assertJson([
+        $response->assertStatus(200)->assertJsonStructure([
             'data' => [
-                [
-                    'title' => $fromStudy->title,
+                '*' => [
+                    'id',
+                    'title'
                 ]
             ]
         ]);
