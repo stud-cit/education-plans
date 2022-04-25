@@ -24,7 +24,7 @@ class UpdateSettingRequest extends FormRequest
     public function rules()
     {
         return [
-            'value' => 'required|numeric',
+            'value' => 'required|numeric|digits_between:1,3',
         ];
     }
 }
