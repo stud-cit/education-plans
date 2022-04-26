@@ -13,7 +13,9 @@ use App\Http\Controllers\{AsuController,
     IndividualTaskController,
     SelectiveDisciplineController,
     SettingController,
-    StudyTermController};
+    StudyTermController,
+    FormOrganizationController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +38,7 @@ Route::prefix('v1')->group(function () {
     Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate'])->name('cycles.sub.update');
     Route::apiResource('cycles', CycleController::class);
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
-    Route::apiResource('plans', PlanController::class);
+    Route::Resource('plans', PlanController::class);
     Route::apiResource('form-studies', FormStudyController::class);
     Route::apiResource('education-levels', EducationLevelController::class);
     Route::apiResource('subjects', SubjectController::class);
