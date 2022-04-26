@@ -16,6 +16,12 @@ class Plan extends Model
         'title',
         'faculty_id',
         'department_id',
+        'form_organization_id',
+        'credits',
+        'number_semesters',
+        'qualification_id',
+        'education_program_id',
+        'field_knowledge_id',
         'year'
     ];
 
@@ -30,6 +36,7 @@ class Plan extends Model
         'qualification_id' => 'int',
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
+        'form_organization_id' => 'int',
     ];
 
 //    protected $appends = ['faculty', 'department'];
