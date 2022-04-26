@@ -19,10 +19,11 @@ class EducationLevelTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJson([
+        $response->assertStatus(200)->assertJsonStructure([
             'data' => [
-                [
-                    'title' => $educationLevels->title
+                '*' => [
+                    'id',
+                    'title'
                 ]
             ]
         ]);

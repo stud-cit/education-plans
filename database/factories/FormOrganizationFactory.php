@@ -15,6 +15,8 @@ class FormOrganizationFactory extends Factory
      */
     public function definition()
     {
-        return ['title' => $this->faker->word()];
+        return [
+            'title' => $this->faker->unique()->word()
+        ];
     }
 }

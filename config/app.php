@@ -1,7 +1,7 @@
 <?php
 
 return [
-
+    
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -233,5 +233,6 @@ return [
     ],
 
     'asu_key' => env('ASU_KEY'),
+    'token' => env('MIX_APP_TOKEN'),
 
 ];
