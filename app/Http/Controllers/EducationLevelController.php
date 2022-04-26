@@ -15,7 +15,7 @@ class EducationLevelController extends Controller
      */
     public function index()
     {
-        return EducationLevelResource::collection(EducationLevel::select('title')->get());
+        return EducationLevelResource::collection(EducationLevel::select('id','title')->get());
     }
 
     /**
