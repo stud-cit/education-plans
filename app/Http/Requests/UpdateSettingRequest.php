@@ -24,9 +24,7 @@ class UpdateSettingRequest extends FormRequest
     public function rules()
     {
         return [
-            'key' => 'required|unique:settings|max:255',
-            'title' => 'required|string|max:255',
-            'value' => 'required|numeric',
+            'value' => 'required|numeric|digits_between:1,3',
         ];
     }
 }

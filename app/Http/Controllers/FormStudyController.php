@@ -11,7 +11,7 @@ class FormStudyController extends Controller
 {
     public function index()
     {
-        return FormStudyResource::collection(FormStudy::select('title')->get());
+        return FormStudyResource::collection(FormStudy::select('id' ,'title')->get());
     }
 
     /**
