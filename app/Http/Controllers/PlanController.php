@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\ExternalServices\ASU;
 use App\Http\Constant;
 use App\Http\Requests\indexPlanRequest;
+use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\PlanShowResource;
 use App\Models\Plan;
@@ -45,9 +47,36 @@ class PlanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGeneralPlanRequest $request)
     {
-        //
+        $validated = $request->validated();
+        dd('error'); //ToDO Store plan
+        Plan::create($validated);
+
+        return $this->success(__('messages.Created'), 201);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function create(ASU $asu, FormStudyController $formStudy,
+                           StudyTermController $studyTerm, FormOrganizationController $formOrganization,
+                           EducationLevelController $educationLevel)
+    {
+
+        $data = [
+            'faculties' => $asu->getFaculty(),
+            'specialities' => $formStudy->index(), //ToDo add methods get specialities with asu
+            'educational_programs' => $formStudy->index(), //ToDo add methods get educationalPrograms with asu
+            'qualifications' => $formStudy->index(), //ToDo add methods get qualifications with asu
+            'fields_knowledge' => $formStudy->index(), //ToDo add methods get qualifications with asu
+            'forms_study' => $formStudy->index(),
+            'terms_study' => $studyTerm->index(),
+            'forms_organizationStudy' => $formOrganization->index(),
+            'educations_level' => $educationLevel->index(),
+        ];
+
+        return response()->json($data);
     }
 
     /**
