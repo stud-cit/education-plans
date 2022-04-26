@@ -40,6 +40,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
     Route::Resource('plans', PlanController::class);
     Route::apiResource('form-studies', FormStudyController::class);
+    Route::apiResource('form-organization', FormOrganizationController::class);
     Route::apiResource('education-levels', EducationLevelController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('form-controls', FormControlController::class);
