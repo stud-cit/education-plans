@@ -27,6 +27,7 @@ class indexPlanRequest extends FormRequest
         return [
             'title' => 'string',
             'faculty' => 'integer',
+            'department' => 'integer',
             'page' => 'integer',
             'items_per_page' => 'integer',
             'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at'])],
