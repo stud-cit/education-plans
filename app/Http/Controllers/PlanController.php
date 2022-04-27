@@ -50,7 +50,7 @@ class PlanController extends Controller
     public function store(StoreGeneralPlanRequest $request)
     {
         $validated = $request->validated();
-        dd('error'); //ToDO Store plan
+
         Plan::create($validated);
 
         return $this->success(__('messages.Created'), 201);

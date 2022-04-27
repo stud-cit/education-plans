@@ -22,6 +22,8 @@ class Plan extends Model
         'qualification_id',
         'education_program_id',
         'field_knowledge_id',
+        'count_week',
+        'count_hours',
         'year'
     ];
 
