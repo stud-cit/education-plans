@@ -17,11 +17,12 @@ class UserResource extends JsonResource
         return [
             "id" => $this->id,
             "asu_id" => $this->asu_id,
+            "full_name" => $this->full_name,
             "department_id" => $this->department_id,
-            'faculty' => $this->facultyName,
-            'department' => $this->departmentName,
+            'department' => $this->department_name,
             "faculty_id" => $this->faculty_id,
-            "role_id" => $this->role_id,
+            'faculty' => $this->faculty_name,
+            "role_id" => $this->role_id
         ];
     }
 }
