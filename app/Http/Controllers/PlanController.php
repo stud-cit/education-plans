@@ -59,10 +59,13 @@ class PlanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function create(ASU $asu, FormStudyController $formStudy,
-                           StudyTermController $studyTerm, FormOrganizationController $formOrganization,
-                           EducationLevelController $educationLevel)
+    public function create()
     {
+        $asu = new ASU();
+        $formStudy = new  FormStudyController();
+        $studyTerm = new StudyTermController();
+        $formOrganization = new FormOrganizationController();
+        $educationLevel = new EducationLevelController();
 
         $data = [
             'faculties' => $asu->getFaculty(),
