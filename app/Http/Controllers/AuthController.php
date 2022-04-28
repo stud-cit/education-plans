@@ -57,8 +57,8 @@ class AuthController extends Controller
     function index(Request $request) {
 
     //   $this->mode($request);
-
-      $key = "";
+    $request->session()->forget('person');
+      $key = "QSGH8e6nh1DW6lFRiQkKmOLnimqr7x55EDQLp6HqAKwmh6L7fX78";
 
       if($request->key) {
         $key = $request->key;
@@ -78,7 +78,7 @@ class AuthController extends Controller
 
         $userModel = User::where("asu_id", $personCabinet['result']['guid']);
         $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
-
+        // dd($personDivisions);
         if($userModel->exists()) {
     
           $data = $userModel->first();
@@ -95,7 +95,9 @@ class AuthController extends Controller
             $userModel->update([
               'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
               'faculty_id' => $personDivisions['faculty_id'],
+              'faculty_name' => $personDivisions['faculty_name'],
               'department_id' => $personDivisions['department_id'],
+              'department_name' => $personDivisions['department_name'],
               'email' => $personCabinet['result']['email'],
               'remember_token' => $personCabinet['result']['token'],
             ]);
@@ -192,15 +194,17 @@ class AuthController extends Controller
             $departmentName = $departments[$divIndex]['name'];
             
 
+        } else {
+            $departmentName = $departments[$divIndex]['name'];
         }
 
         // dd($departmentName . ' ' . $facultyName);
 
         return [
             'department_id' => $departmentId,
-            'department_name' => $departmentId,
+            'department_name' => $departmentName,
             'faculty_id' => $facultyId,
-            'faculty_name' => $facultyId
+            'faculty_name' => $facultyName
         ];
         
     }
