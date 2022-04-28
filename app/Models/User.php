@@ -48,7 +48,7 @@ class User extends Model
     public function getFullNameAttribute(): string
     {
         $asu = new ASU();
-        return $asu->getFacultyName($this->faculty_id);
+        return $asu->getFullNameWorker($this->asu_id);
     }
 
     public function role()
