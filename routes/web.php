@@ -19,4 +19,5 @@ Route::get('/', function () {
 });
 
 // test auth
-Route::get('/auth', [AuthController::class, 'register'])->name('asu.faculty');
+Route::get('/register', [AuthController::class, 'register']);
+Route::get('/auth', [AuthController::class, 'index']);
