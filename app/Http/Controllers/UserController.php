@@ -81,10 +81,11 @@ class UserController extends Controller
 
     public function workers()
     {
+        $users = User::select('asu_id')->pluck('asu_id');
         $asu = new ASU();
         $_workers = $asu->getAllWorkers();
 
-        $workers = $_workers->map(function ($worker) {
+        $workers = $_workers->map(function ($worker) use ($users) {
 
             return [
                 'asu_id' => $worker['asu_id'],
@@ -93,6 +94,7 @@ class UserController extends Controller
                 'department' => $worker['department'],
                 'faculty_id' => $faculty['id'] ?? null,
                 'faculty' => $faculty['name'] ?? null,
+                'disabled' => $users->contains($worker['asu_id'])
             ];
         });
 
