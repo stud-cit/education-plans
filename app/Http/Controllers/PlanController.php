@@ -68,7 +68,7 @@ class PlanController extends Controller
         $educationLevel = new EducationLevelController();
 
         $data = [
-            'faculties' => $asu->getFaculty(),
+            'faculties' => $asu->getFaculties(),
             'specialities' => $formStudy->index(), //ToDo add methods get specialities with asu
             'educational_programs' => $formStudy->index(), //ToDo add methods get educationalPrograms with asu
             'qualifications' => $formStudy->index(), //ToDo add methods get qualifications with asu
