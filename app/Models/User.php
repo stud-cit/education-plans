@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\ExternalServices\ASU;
+use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
     use HasFactory;
+    use HasAsuDivisionsNameTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -42,6 +45,11 @@ class User extends Model
     // protected $casts = [
     //     'email_verified_at' => 'datetime',
     // ];
+    public function getFullNameAttribute(): string
+    {
+        $asu = new ASU();
+        return $asu->getFacultyName($this->faculty_id);
+    }
 
     public function role()
     {

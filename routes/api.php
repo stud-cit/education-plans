@@ -15,7 +15,8 @@ use App\Http\Controllers\{AsuController,
     SettingController,
     StudyTermController,
     FormOrganizationController,
-    RoleController
+    RoleController,
+    UserController
 };
 
 /*
@@ -49,6 +50,7 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('hours-weeks', HoursWeekController::class);
     Route::apiResource('selective-discipline', SelectiveDisciplineController::class);
     Route::apiResource('roles', RoleController::class);
+    Route::apiResource('users', UserController::class);
     Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
     Route::apiResource('study-terms', StudyTermController::class);
     Route::apiResource('settings', SettingController::class);

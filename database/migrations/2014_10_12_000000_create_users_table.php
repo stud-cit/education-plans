@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('faculty_id');
             $table->string('department_id');
             $table->integer('offices_id');
-            $table->string('email')->unique();
+            $table->string('email')->unique()->nullable();
             // $table->timestamp('email_verified_at')->nullable();
             // $table->string('password');
             $table->rememberToken();
