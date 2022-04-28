@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\ExternalServices\ASU;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRoleRequest;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\WorkersResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -24,9 +28,15 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $validated['offices_id'] = 1; //Todo unknown field
+
+        User::create($validated);
+
+        return $this->success(__('messages.Created'), 201);
     }
 
     /**
@@ -47,9 +57,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRoleRequest $request, User $user)
     {
-        //
+        $validated = $request->validated();
+
+        $user->update($validated);
+
+        return $this->success(__('messages.Updated'), 201);
     }
 
     /**
@@ -58,8 +72,42 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return response()->json(['message' => __('messages.Deleted')], 201);
+    }
+
+    public function workers()
+    {
+        $asu = new ASU();
+        $_workers = $asu->getAllWorkers();
+
+        $workers = $_workers->map(function ($worker) {
+
+            return [
+                'asu_id' => $worker['asu_id'],
+                'full_name' => $worker['last_name'] .' '. $worker['first_name'] .' '. $worker['patronymic'],
+                'department_id' => $worker['department_id'],
+                'department' => $worker['department'],
+                'faculty_id' => $faculty['id'] ?? null,
+                'faculty' => $faculty['name'] ?? null,
+            ];
+        });
+
+        return response()->json($workers->sortBy('full_name')->values());
+    }
+
+    public function getFacultyByWorker(Request $request) {
+        $asu = new ASU();
+
+        $validated = $request->validate([
+            'department_id' => 'required|numeric',
+        ]);
+
+        $faculty = $asu->searchFacultyByDepartmentId($validated['department_id']);
+
+        return response()->json($faculty);
     }
 }
