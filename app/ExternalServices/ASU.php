@@ -138,6 +138,18 @@ class ASU
     }
 
     /**
+     * @param int $id
+     * @return string
+     */
+
+    public function getDivisionName(int $id): string
+    {
+        $divisions = $this->getDepartments();
+
+        return $this->getName($divisions, $id);
+    }
+
+    /**
      * @param $collection
      * @param $id
      * @return string
