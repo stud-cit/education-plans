@@ -8,13 +8,12 @@ use App\Models\Cycle;
 use App\Http\Constant;
 use Illuminate\Http\Request;
 use App\ExternalServices\ASU;
-use App\Http\Requests\{StoreGeneralPlanRequest,
-    PlanResource,
-    indexPlanRequest,
-    StoreCycleRequest,
-    PlanShowResource,
-    UpdateCycleRequest
-};
+use App\Http\Requests\StoreGeneralPlanRequest;
+use App\Http\Resources\PlanResource;
+use App\Http\Requests\indexPlanRequest;
+use App\Http\Requests\StoreCycleRequest;
+use App\Http\Resources\PlanShowResource;
+use App\Http\Requests\UpdateCycleRequest;
 
 class PlanController extends Controller
 {
