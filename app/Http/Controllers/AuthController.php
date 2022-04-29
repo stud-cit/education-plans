@@ -25,21 +25,19 @@ class AuthController extends Controller
     }
 
     function register(Request $request) {
-        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . 'qSP80YkNzNmfY9LHUu8woUMECxIac3MmmUxeFP9W0MVIvy845Wf5' . '&token=' . $this->cabinet_service_token), true);
+
+        $key = 'QSGH8e6nh1DW6lFRiQkKmOLnimqr7x55EDQLp6HqAKwmh6L7fX78';
+        $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
         // $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
   
         if(!User::where("asu_id", $personCabinet['result']['guid'])->exists()) {
             
             $userModel = new User();
-            
-            $personDivisions = $this->getDivisionsId($personCabinet['result']);
-
-            
+            $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
 
             $userModel->create([
               'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
               'asu_id' => $personCabinet['result']['guid'],
-            //   'date_bth' => $personCabinet['result']['birthday'],
               'faculty_id' => $personDivisions['faculty_id'],
               'department_id' => $personDivisions['department_id'],
               'offices_id' => $personDivisions['department_id'],
@@ -56,90 +54,69 @@ class AuthController extends Controller
         }
     }
 
-    // function index(Request $request) {
+    function index(Request $request) {
+
     //   $this->mode($request);
+    $request->session()->forget('person');
+      $key = "QSGH8e6nh1DW6lFRiQkKmOLnimqr7x55EDQLp6HqAKwmh6L7fX78";
 
-    //   $key = "";
+      if($request->key) {
+        $key = $request->key;
+        $request->session()->put('key', $request->key);
+      }
 
-    //   if($request->key) {
-    //     $key = $request->key;
-    //     $request->session()->put('key', $request->key);
-    //   }
-
-    //   if($key == '' && $request->session()->get('key')) {
-    //     $key = $request->session()->get('key');
-    //   }
-
-    //   // $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
-
+      if($key == '' && $request->session()->get('key')) {
+        $key = $request->session()->get('key');
+      }
+      
+      
+      $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
+    //   dd($personCabinet);
     //   $personCabinet = json_decode(Storage::get('getPerson2.json'), true);
 
-    //   if ($personCabinet['status'] == 'OK') {
-    //     $userModel = User::withCount('notifications')->where("guid", $personCabinet['result']['guid']);
-    //     if($userModel->exists()) {
-    //       $divisions = $this->getAllDivision();
-    //       $data = $userModel->first();
-    //       $person = $this->registerUser($personCabinet['result'], clone $data, $divisions);
-    //       if(!$request->session()->get('person')) {
-    //         $person['test_data'] = json_encode($personCabinet['result']);
+      if($personCabinet['status'] == 'OK') {
 
-    //         if($key) {
-    //           $image = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonPhoto?key=' . $key . '&token=' . $this->cabinet_service_token);
-    //           Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');  
-    //         }
+        $userModel = User::where("asu_id", $personCabinet['result']['guid']);
+        $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
+        // dd($personDivisions);
+        if($userModel->exists()) {
+    
+          $data = $userModel->first();
+        
 
-    //         $userModel->update([
-    //           'name' => $person['name'],
-    //           'date_bth' => $person['date_bth'],
-    //           'job' => $person['job'],
-    //           'job_type_id' => $person['job_type_id'],
-    //           'faculty_code' => $person['faculty_code'],
-    //           'department_code' => $person['department_code'],
-    //           'name_div' => $person['name_div'],
-    //           'academic_code' => $person['academic_code'],
-    //           'categ_1' => $person['categ_1'],
-    //           'categ_2' => $person['categ_2'],
-    //           'kod_level' => $person['kod_level'],
-    //           'test_data' => $person['test_data']
-    //         ]);
-    //         $request->session()->put('person', $person);
-    //       }
-    //       $notificationText = "";
-    //       if(isset($person['name_div'])) {
-    //         $notificationText .= $this->notification($person, $data, "name_div", "факультет / кафедру");
-    //       }
-    //       if($notificationText != "" && $request->session()->get('person')) {
-    //         $notificationText = "Оновлено інформацію про автора <a href=\"/user/". $request->session()->get('person')['id'] ."\">" . $request->session()->get('person')['name'] . "</a>:<br>" . $notificationText;
-    //         Audit::create([
-    //           "text" => $notificationText
-    //         ]);
-    //       }
-    //       $access = Service::select('value')->where('key', 'access')->first();
-    //       return view('app', [
-    //         "status" => "register",
-    //         "user" => $person,
-    //         "access" => $access->value
-    //       ]);
-    //     } else {
-    //       $request->session()->forget('person');
-    //       return view('app', [
-    //         "status" => "login",
-    //         "user" => "{
-    //           name: \"". $personCabinet['result']['surname'] . ' ' . $personCabinet['result']['name'] . ' ' . $personCabinet['result']['patronymic'] ."\"
-    //         }",
-    //         "access" => ""
-    //       ]);
-    //     }
-    //   } else {
-    //     $request->session()->forget('key');
-    //     $request->session()->forget('person');
-    //     return view('app', [
-    //       "status" => "unauthorized",
-    //       "user" => "{}",
-    //       "access" => ""
-    //     ]);
-    //   }
-    // }
+          if(!$request->session()->get('person')) {
+            
+
+            // if($key) {
+            //   $image = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonPhoto?key=' . $key . '&token=' . $this->cabinet_service_token);
+            //   Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');  
+            // }
+
+            $userModel->update([
+              'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
+              'faculty_id' => $personDivisions['faculty_id'],
+              'faculty_name' => $personDivisions['faculty_name'],
+              'department_id' => $personDivisions['department_id'],
+              'department_name' => $personDivisions['department_name'],
+              'email' => $personCabinet['result']['email'],
+              'remember_token' => $personCabinet['result']['token'],
+            ]);
+            $request->session()->put('person', $personCabinet['result']);
+          }
+          
+          return response()->json('ok', 200);
+        } else {
+
+          $request->session()->forget('person');
+          return response()->json(['message' => 'Користувач не зареєстрований в системі']);
+        }
+      } else {
+
+        $request->session()->forget('key');
+        $request->session()->forget('person');
+        return response()->json(['message' => 'невірний ключ']);
+      }
+    }
 
     // function mode($request) {
     //     $info = 'Інформаційний сервіс «Наукові публікації» дозволить Вам зручно вести облік Ваших наукових та науково-методичних публікацій'; // Service description
@@ -167,26 +144,67 @@ class AuthController extends Controller
     // }
 
 
-    function getDivisionsId($userInfo){
+    function getDivisionsInfo($userInfo) {
+        
         $departments = $this->asu->getDepartments()->toArray();
-        $departmentId = null;
+        $typeFaculty = 9;
+        $typeInstitute = 7;
+        $typeDepartment = 2;
+        $departmentId = 0;
+        $departmentName = '';
+        $facultyName = '';
+
         if(isset($userInfo['info2'])){
-            foreach ($userInfo['info2'][0] as $k => $v) {
-                if($k == 'KOD_DIV'){
-                    $departmentId = $v;
+
+            foreach ($userInfo['info2'] as $k => $v) {
+
+                if(($v['KOD_STATE'] == 1) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
+
+                    $departmentId = $v['KOD_DIV'];
                 }
+                
             }
+
         } else {
+
             return response()->json([
                 "message" => "User is not sumdu worker"
             ]);
+
         }
-        $facultyKey = array_search($departmentId, array_column($departments, 'id'));
-        $facultyId = $departments[$facultyKey]['faculty_id'];
-        
+
+        $divIndex = array_search($departmentId, array_column($departments, 'id'));
+        $divType = $departments[$divIndex]['unit_type'];
+        $facultyId = $departments[$divIndex]['faculty_id'];
+
+        // dd($divType);
+
+        if($divType == $typeFaculty || $divType == $typeInstitute){
+
+            $facultyId = $departmentId;
+            $facultyName= $departments[$divIndex]['name'];
+            $departmentId = 0;
+
+        // } else if($divType == $typeDepartment) {
+        } else if($facultyId != 0) {
+
+            $facultyId = $departments[$divIndex]['faculty_id'];
+            $facultyIndex= array_search($facultyId, array_column($departments, 'id'));
+            $facultyName= $departments[$facultyIndex]['name'];
+            $departmentName = $departments[$divIndex]['name'];
+            
+
+        } else {
+            $departmentName = $departments[$divIndex]['name'];
+        }
+
+        // dd($departmentName . ' ' . $facultyName);
+
         return [
             'department_id' => $departmentId,
-            'faculty_id' => $facultyId
+            'department_name' => $departmentName,
+            'faculty_id' => $facultyId,
+            'faculty_name' => $facultyName
         ];
         
     }

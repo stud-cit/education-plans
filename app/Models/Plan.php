@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\ExternalServices\ASU;
 use App\Helpers\Filters\FilterBuilder;
+use App\Traits\HasAsuDivisionsNameTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,11 +11,20 @@ use Illuminate\Database\Eloquent\Model;
 class Plan extends Model
 {
     use HasFactory;
+    use HasAsuDivisionsNameTrait;
 
     protected $fillable = [
         'title',
         'faculty_id',
         'department_id',
+        'form_organization_id',
+        'credits',
+        'number_semesters',
+        'qualification_id',
+        'education_program_id',
+        'field_knowledge_id',
+        'count_week',
+        'count_hours',
         'year'
     ];
 
@@ -30,6 +39,7 @@ class Plan extends Model
         'qualification_id' => 'int',
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
+        'form_organization_id' => 'int',
     ];
 
 //    protected $appends = ['faculty', 'department'];
@@ -38,30 +48,6 @@ class Plan extends Model
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('d.m.Y H:i');
-    }
-
-    public function getFacultyNameAttribute(): string
-    {
-        $asu = new ASU();
-        return $asu->getFacultyName($this->faculty_id);
-    }
-
-    public function getShortFacultyNameAttribute(): string
-    {
-        $asu = new ASU();
-        return $asu->getShortFacultyName($this->faculty_id);
-    }
-
-    public function getDepartmentNameAttribute(): string
-    {
-        $asu = new ASU();
-        return $asu->getDepartmentName($this->department_id);
-    }
-
-    public function getShortDepartmentNameAttribute(): string
-    {
-        $asu = new ASU();
-        return $asu->getShortDepartmentName($this->department_id);
     }
 
     public function formStudy()

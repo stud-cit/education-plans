@@ -13,9 +13,9 @@ class AsuController extends Controller
         $this->asu  = new ASU;
     }
 
-    public function faculty()
+    public function faculties()
     {
-        return response()->json(['data' => $this->asu->getFaculty()]);
+        return response()->json(['data' => $this->asu->getFaculties()]);
     }
 
     public function departmentById(Request $request)

@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class indexPlanRequest extends FormRequest
+class UpdateUserRoleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +24,7 @@ class indexPlanRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'string',
-            'faculty' => 'integer',
-            'department' => 'integer',
-            'page' => 'integer',
-            'items_per_page' => 'integer',
-            'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at'])],
-            'sort_desc' => ['nullable', Rule::in(['true', 'false'])]
+            'role_id' => 'required|numeric'
         ];
     }
 }

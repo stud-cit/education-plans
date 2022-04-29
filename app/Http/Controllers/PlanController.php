@@ -7,11 +7,14 @@ use App\Helpers\Tree;
 use App\Models\Cycle;
 use App\Http\Constant;
 use Illuminate\Http\Request;
-use App\Http\Resources\PlanResource;
-use App\Http\Requests\indexPlanRequest;
-use App\Http\Requests\StoreCycleRequest;
-use App\Http\Resources\PlanShowResource;
-use App\Http\Requests\UpdateCycleRequest;
+use App\ExternalServices\ASU;
+use App\Http\Requests\{StoreGeneralPlanRequest,
+    PlanResource,
+    indexPlanRequest,
+    StoreCycleRequest,
+    PlanShowResource,
+    UpdateCycleRequest
+};
 
 class PlanController extends Controller
 {
@@ -49,9 +52,39 @@ class PlanController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreGeneralPlanRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        Plan::create($validated);
+
+        return $this->success(__('messages.Created'), 201);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function create()
+    {
+        $asu = new ASU();
+        $formStudy = new  FormStudyController();
+        $studyTerm = new StudyTermController();
+        $formOrganization = new FormOrganizationController();
+        $educationLevel = new EducationLevelController();
+
+        $data = [
+            'faculties' => $asu->getFaculties(),
+            'specialities' => $formStudy->index(), //ToDo add methods get specialities with asu
+            'educational_programs' => $formStudy->index(), //ToDo add methods get educationalPrograms with asu
+            'qualifications' => $formStudy->index(), //ToDo add methods get qualifications with asu
+            'fields_knowledge' => $formStudy->index(), //ToDo add methods get qualifications with asu
+            'forms_study' => $formStudy->index(),
+            'terms_study' => $studyTerm->index(),
+            'forms_organizationStudy' => $formOrganization->index(),
+            'educations_level' => $educationLevel->index(),
+        ];
+
+        return response()->json($data);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FormOrganizationResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,7 @@ class FormOrganizationResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title
+            'label' => $this->label
         ];
     }
 }

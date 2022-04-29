@@ -10,11 +10,14 @@ use App\Http\Controllers\{AsuController,
     SubjectController,
     HoursWeekController,
     FormControlController,
-    FormOrganizationController,
     IndividualTaskController,
     SelectiveDisciplineController,
     SettingController,
-    StudyTermController};
+    StudyTermController,
+    FormOrganizationController,
+    RoleController,
+    UserController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -37,20 +40,24 @@ Route::prefix('v1')->group(function () {
     Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
     Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
     Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
-    Route::apiResource('plans', PlanController::class);
+    Route::Resource('plans', PlanController::class);
     Route::apiResource('form-studies', FormStudyController::class);
-    Route::apiResource('form-organizations', FormOrganizationController::class);
+    Route::apiResource('form-organization', FormOrganizationController::class);
     Route::apiResource('education-levels', EducationLevelController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('form-controls', FormControlController::class);
     Route::apiResource('individual-tasks', IndividualTaskController::class);
     Route::apiResource('hours-weeks', HoursWeekController::class);
     Route::apiResource('selective-discipline', SelectiveDisciplineController::class);
+    Route::apiResource('roles', RoleController::class);
+    Route::get('workers', [UserController::class, 'workers'])->name('users.workers');
+    Route::get('faculty-by-worker', [UserController::class, 'getFacultyByWorker'])->name('users.faculty.worker');
+    Route::apiResource('users', UserController::class);
     Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
     Route::apiResource('study-terms', StudyTermController::class);
     Route::apiResource('settings', SettingController::class);
     Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
-    Route::get('/faculties', [AsuController::class, 'faculty'])->name('asu.faculty');
+    Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
 
     Route::get('/test', function (Request $request) {
         $data = __('messages.Updated');

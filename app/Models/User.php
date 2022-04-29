@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\ExternalServices\ASU;
+use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -42,6 +44,24 @@ class User extends Model
     // protected $casts = [
     //     'email_verified_at' => 'datetime',
     // ];
+
+    public function getFacultyNameAttribute(): string
+    {
+        $asu = new ASU();
+        return $asu->getDivisionName($this->faculty_id);
+    }
+
+    public function getDepartmentNameAttribute(): string
+    {
+        $asu = new ASU();
+        return $asu->getDivisionName($this->department_id);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        $asu = new ASU();
+        return $asu->getFullNameWorker($this->asu_id);
+    }
 
     public function role()
     {

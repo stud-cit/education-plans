@@ -19,7 +19,7 @@ class FormOrganizationController extends Controller
         $validated = $request->validated();
 
         FormOrganization::create($validated);
-        
+
         return $this->success(__('messages.Created'), 201);
     }
 
