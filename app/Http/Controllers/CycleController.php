@@ -16,9 +16,8 @@ class CycleController extends Controller
      */
     public function index()
     {
-        $category = Cycle::all();
-
-        return response()->json(['data' => $category], 200);
+        $data = Cycle::whereNull('cycle_id')->with('cycles', 'subjects')->get();
+        return response()->json($data, 200);
     }
 
     /**

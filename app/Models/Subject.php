@@ -13,7 +13,7 @@ class Subject extends Model
 
     public function selectiveDiscipline()
     {
-        return $this->belongsTo(SelectiveDisciline::class);
+        return $this->belongsTo(SelectiveDiscipline::class);
     }
 
     public function cycle()

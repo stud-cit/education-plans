@@ -42,7 +42,7 @@ Route::prefix('v1')->group(function () {
     Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
     Route::Resource('plans', PlanController::class);
     Route::apiResource('form-studies', FormStudyController::class);
-    Route::apiResource('form-organization', FormOrganizationController::class);
+    Route::apiResource('form-organizations', FormOrganizationController::class);
     Route::apiResource('education-levels', EducationLevelController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('form-controls', FormControlController::class);
