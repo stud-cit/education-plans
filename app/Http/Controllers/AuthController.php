@@ -39,7 +39,9 @@ class AuthController extends Controller
               'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
               'asu_id' => $personCabinet['result']['guid'],
               'faculty_id' => $personDivisions['faculty_id'],
+              'faculty_name' => $personDivisions['faculty_name'],
               'department_id' => $personDivisions['department_id'],
+              'department_name' => $personDivisions['department_name'],
               'offices_id' => $personDivisions['department_id'],
               'email' => $personCabinet['result']['email'],
               'remember_token' => $personCabinet['result']['token'],
@@ -58,14 +60,16 @@ class AuthController extends Controller
 
     //   $this->mode($request);
     $request->session()->forget('person');
-      $key = "QSGH8e6nh1DW6lFRiQkKmOLnimqr7x55EDQLp6HqAKwmh6L7fX78";
+    $key = "QSGH8e6nh1DW6lFRiQkKmOLnimqr7x55EDQLp6HqAKwmh6L7fX78";
 
       if($request->key) {
+
         $key = $request->key;
         $request->session()->put('key', $request->key);
       }
 
       if($key == '' && $request->session()->get('key')) {
+
         $key = $request->session()->get('key');
       }
       
