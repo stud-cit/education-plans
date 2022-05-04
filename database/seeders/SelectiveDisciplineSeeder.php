@@ -15,8 +15,9 @@ class SelectiveDisciplineSeeder extends Seeder
     public function run()
     {
         DB::table('selective_disciplines')->insert([
-            ['title' => 'математика'],
-            
+            ['title' => 'Вибіркові дисципліни (каталог)'],
+            ['title' => 'Вибіркові дисципліни за спеціальністю (каталог)'],
+            ['title' => 'Вибіркові дисципліни за освітньою програмою (каталог)'],
         ]);
     }
 }
