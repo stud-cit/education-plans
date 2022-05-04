@@ -16,6 +16,7 @@ class CreateSelectiveDisciplinesTable extends Migration
         Schema::create('selective_disciplines', function (Blueprint $table) {
             $table->id();
             $table->string('title', 150);
+            $table->timestamps();
         });
     }
 
