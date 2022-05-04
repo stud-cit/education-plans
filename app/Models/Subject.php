@@ -9,7 +9,9 @@ class Subject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'asu_id', 'credits', 'hours', 'practices', 'laboratories'];
+    public $timestamps = false;
+    
+    protected $fillable = ['title', 'asu_id', 'cycle_id', 'selective_discipline_id', 'credits', 'hours', 'practices', 'laboratories'];
 
     public function selectiveDiscipline()
     {
