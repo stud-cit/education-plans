@@ -54,7 +54,7 @@ class EducationLevelController extends Controller
     {
         $educationLevel->title = $request->title;
         $educationLevel->save();
-        return response()->json(['message' => __('Updated')], 202);
+        return response()->json(['message' => __('Updated')], 200);
     }
 
     /**

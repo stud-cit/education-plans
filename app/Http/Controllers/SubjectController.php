@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreSubjectRequest;
+use App\Models\Subject;
+use PhpParser\Node\Stmt\TryCatch;
 
 class SubjectController extends Controller
 {
@@ -29,12 +31,16 @@ class SubjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Http\Requests\StoreSubjectRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreSubjectRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        Subject::create($validated);
+
+        return $this->success(__('messages.Created'), 201);
     }
 
     /**
@@ -62,23 +68,32 @@ class SubjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  App\Http\Requests\StoreSubjectRequest  $request
+     * @param  App\Models\Subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreSubjectRequest $request, Subject $subject)
     {
-        //
+        $validated = $request->validated();
+
+        $subject->update($validated);
+
+        return $this->success(__('messages.Updated'), 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  App\Models\Subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Subject $subject)
     {
-        //
+        try {
+            $subject->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error($e->getMessage(), $e->getCode());
+        }
+        return $this->success(__('messages.Deleted'), 200);
     }
 }

@@ -49,7 +49,7 @@ class FormStudyController extends Controller
     {
         $validated = $request->validated();
         $formStudy->update($validated);
-        return $this->success(__('messages.Updated'), 202);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     /**

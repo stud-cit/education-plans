@@ -149,7 +149,7 @@ class PlanController extends Controller
             $cycle->update($validated);
         }
 
-        return $this->success(__('messages.Updated'), 202);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     public function cycleDestroy(Plan $plan, Cycle $cycle)

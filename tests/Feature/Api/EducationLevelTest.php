@@ -70,7 +70,7 @@ class EducationLevelTest extends TestCase
             ['title' => $newlyEducationLevel->title]
         );
 
-        $response->assertStatus(202);
+        $response->assertStatus(200);
     }
 
     public function  testCanDeleteEducationLevel(): void
