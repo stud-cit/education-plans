@@ -15,18 +15,66 @@ class CycleSeeder extends Seeder
     public function run()
     {
         DB::table('cycles')->insert([
-            ['title' => 'Цикл дисциплін загальної підготовки', 'cycle_id' => null, 'credit' => 30, 'template' => true],
-            ['title' => 'Обов\'язкові навчальні дисципліни', 'cycle_id' => 1, 'credit' => 1, 'template' => true],
-            ['title' => 'Вибіркові навчальні дисципліни','cycle_id' => 1, 'credit' => 0, 'template' => true],
-            ['title' => 'Цикл дисциплін професійної підготовки', 'cycle_id' => null, 'credit' => 20, 'template' => true],
-            ['title' => 'Обов\'язкові навчальні дисципліни', 'cycle_id' => 2, 'credit' => 0, 'template' => true],
-            ['title' => 'Обов\'язкові навчальні дисципліни за спеціальністю', 'cycle_id' => 5, 'credit' => 0, 'template' => true],
-            ['title' => 'Обов\'язкові навчальні дисципліни за освітньою програмою', 'cycle_id' => 5, 'credit' => 0, 'template' => true],
-            ['title' => 'Вибіркові навчальні дисципліни', 'cycle_id' => 2, 'credit' => 0, 'template' => true],
-            ['title' => 'Вибіркові навчальні дисципліни за спеціальністю', 'cycle_id' => 8, 'credit' => 0, 'template' => true],
-            ['title' => 'Вибіркові навчальні дисципліни за освітньою програмою', 'cycle_id' => 8, 'credit' => 0, 'template' => true],
-            ['title' => 'Цикл практичної підготовки', 'cycle_id' => null, 'credit' => 0, 'template' => true],
-            ['title' => 'Атестація', 'cycle_id' => null, 'credit' => 0, 'template' => true],
+            [
+              'title' => '1 Цикл дисциплін загальної підготовки', 
+              'cycle_id' => null, 
+              'credit' => 65
+            ],
+            [
+              'title' => '1.1 Обов\'язкові навчальні дисципліни', 
+              'cycle_id' => 1, 
+              'credit' => 50
+            ],
+            [
+              'title' => '1.2 Вибіркові навчальні дисципліни',
+              'cycle_id' => 1, 
+              'credit' => 15
+            ],
+            [
+              'title' => '2 Цикл дисциплін професійної підготовки', 
+              'cycle_id' => null, 
+              'credit' => 160
+            ],
+            [
+              'title' => '2.1 Обов\'язкові навчальні дисципліни', 
+              'cycle_id' => 4, 
+              'credit' => 115
+            ],
+            [
+              'title' => '2.1.1 Обов\'язкові навчальні дисципліни за спеціальністю', 
+              'cycle_id' => 5, 
+              'credit' => 55
+            ],
+            [
+              'title' => '2.1.2 Обов\'язкові навчальні дисципліни за освітньою програмою', 
+              'cycle_id' => 5, 
+              'credit' => 60
+            ],
+            [
+              'title' => '2.2 Вибіркові навчальні дисципліни', 
+              'cycle_id' => 4, 
+              'credit' => 45
+            ],
+            [
+              'title' => '2.2.1 Вибіркові навчальні дисципліни за спеціальністю', 
+              'cycle_id' => 8, 
+              'credit' => 10
+            ],
+            [
+              'title' => '2.2.2 Вибіркові навчальні дисципліни за освітньою програмою', 
+              'cycle_id' => 8, 
+              'credit' => 35
+            ],
+            [
+              'title' => '3 Цикл практичної підготовки', 
+              'cycle_id' => null, 
+              'credit' => 10
+            ],
+            [
+              'title' => '4 Атестація', 
+              'cycle_id' => null, 
+              'credit' => 5
+            ]
         ]);
     }
 }

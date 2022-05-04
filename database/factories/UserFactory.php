@@ -17,11 +17,13 @@ class UserFactory extends Factory
         return [
             'asu_id' => Str::random(10),
             'faculty_id' => $this->faker->randomDigit(),
+            'department_id' => $this->faker->randomDigit(),
+            'offices_id' => $this->faker->randomDigit(),
             'role_id' => $this->faker->biasedNumberBetween(1,6),
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            // 'email_verified_at' => now(),
+            // 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
         ];
     }

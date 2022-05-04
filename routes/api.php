@@ -35,14 +35,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function () {
-    Route::get('/cycles/subindex/{cycle}', [CycleController::class, 'subIndex'])->name('cycles.sub.index');
-    Route::post('/cycles/sub-store', [CycleController::class, 'subStore'])->name('cycles.sub.store');
-    Route::patch('/cycles/sub-update/{cycle}', [CycleController::class, 'subUpdate'])->name('cycles.sub.update');
     Route::apiResource('cycles', CycleController::class);
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
+    Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
+    Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
+    Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
     Route::Resource('plans', PlanController::class);
     Route::apiResource('form-studies', FormStudyController::class);
-    Route::apiResource('form-organization', FormOrganizationController::class);
+    Route::apiResource('form-organizations', FormOrganizationController::class);
     Route::apiResource('education-levels', EducationLevelController::class);
     Route::apiResource('subjects', SubjectController::class);
     Route::apiResource('form-controls', FormControlController::class);
