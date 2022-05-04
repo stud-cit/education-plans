@@ -57,7 +57,7 @@ class CycleController extends Controller
     {
         $cycle->update($request->validated());
 
-        return $this->success(__('messages.Updated'), 202);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     /**

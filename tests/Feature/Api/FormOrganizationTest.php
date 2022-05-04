@@ -55,7 +55,7 @@ class FormOrganizationTest extends TestCase
             ['title' => $newFormOrganization->title]
         );
 
-        $response->assertStatus(202)->assertJson(['message'=> __('messages.Updated')]);
+        $response->assertStatus(200)->assertJson(['message'=> __('messages.Updated')]);
 
         $this->assertDatabaseHas($this->table, $newFormOrganization->toArray());
     }

@@ -54,7 +54,7 @@ class FormStudyTest extends TestCase
             ['title' => $newFormStudy->title]
         );
 
-        $response->assertStatus(202)->assertJson(['message'=> __('messages.Updated')]);
+        $response->assertStatus(200)->assertJson(['message'=> __('messages.Updated')]);
 
         $this->assertDatabaseHas('form_studies', $newFormStudy->toArray());
     }

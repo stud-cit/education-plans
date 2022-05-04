@@ -52,7 +52,7 @@ class StudyTermTest extends TestCase
 
         $response = $this->putJson(route("{$this->route}update", $existStudyTerm->id), $studyTerm->toArray());
 
-        $response->assertStatus(202)
+        $response->assertStatus(200)
             ->assertJson(['message' => __('messages.Updated')]);
 
         $this->assertDatabaseHas($this->table, $studyTerm->toArray());
