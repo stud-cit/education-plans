@@ -55,9 +55,9 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
-        Plan::create($validated);
+        $plan = Plan::create($validated);
 
-        return $this->success(__('messages.Created'), 201);
+        return response()->json(['id' => $plan->id, 'message' => __('messages.Created')], 201);
     }
 
     /**
@@ -129,7 +129,7 @@ class PlanController extends Controller
         return $this->success(__('messages.Copied'), 201);
     }
 
-    
+
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
     {
         $validated = $request->validated();
@@ -149,7 +149,7 @@ class PlanController extends Controller
             $cycle->update($validated);
         }
 
-        return $this->success(__('messages.Updated'), 202);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     public function cycleDestroy(Plan $plan, Cycle $cycle)

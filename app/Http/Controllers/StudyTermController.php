@@ -73,7 +73,7 @@ class StudyTermController extends Controller
 
         $studyTerm->update($validated);
         
-        return $this->success(__('messages.Updated'), 202);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     /**

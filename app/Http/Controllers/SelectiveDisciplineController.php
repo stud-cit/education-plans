@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreSelectiveDisciplineRequest;
+use App\Http\Requests\UpdateSelectiveDisciplineRequest;
+use App\Http\Resources\SelectiveDisciplineResource;
+use App\Models\SelectiveDiscipline;
+
 
 class SelectiveDisciplineController extends Controller
 {
@@ -13,7 +17,9 @@ class SelectiveDisciplineController extends Controller
      */
     public function index()
     {
-        return response()->json('200');
+        $disciplines = SelectiveDiscipline::select('id', 'title')->get();
+
+        return SelectiveDisciplineResource::collection($disciplines);
     }
 
     /**
@@ -32,9 +38,13 @@ class SelectiveDisciplineController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreSelectiveDisciplineRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        SelectiveDiscipline::create($validated);
+
+        return $this->success(__('messages.Created'), 201);
     }
 
     /**
@@ -66,9 +76,13 @@ class SelectiveDisciplineController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateSelectiveDisciplineRequest $request, SelectiveDiscipline $selectiveDiscipline)
     {
-        //
+        $validated = $request->validated();
+
+        $selectiveDiscipline->update($validated);
+
+        return $this->success(__('messages.Updated'), 201);
     }
 
     /**
@@ -77,8 +91,10 @@ class SelectiveDisciplineController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(SelectiveDiscipline $selectiveDiscipline)
     {
-        //
+        $selectiveDiscipline->delete();
+
+        return response()->json(['message' => __('messages.Deleted')], 201);
     }
 }

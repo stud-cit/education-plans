@@ -61,7 +61,7 @@ class SettingTest extends TestCase
             route("{$this->route}update", $existSetting->id), $setting->toArray()
         );
         
-        $response->assertStatus(202)->assertJson(['message' => __('messages.Updated')]);
+        $response->assertStatus(200)->assertJson(['message' => __('messages.Updated')]);
     }
 
     public function testCanDeleteSetting(): void

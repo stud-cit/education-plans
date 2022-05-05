@@ -59,7 +59,7 @@ class SettingController extends Controller
 
         $setting->update($validated);
         
-        return $this->success(__('messages.Updated'), 202);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     /**
