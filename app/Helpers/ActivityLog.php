@@ -23,9 +23,10 @@ class ActivityLog
         }
 
         $userModel = User::where('asu_id', $user['guid'])->with('role')->first();
+       
         $log['asu_id'] = $userModel['asu_id'];
     	$log['user_name'] = $userModel['name'];
-    	$log['user_role'] = Request::fullUrl();
+    	$log['user_role'] = $userModel['role']['label'];
     	$log['operation'] = $operation;
     	$log['ip'] = Request::ip();
     	
