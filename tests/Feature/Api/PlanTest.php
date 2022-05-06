@@ -2,10 +2,9 @@
 
 namespace Tests\Feature\Api;
 
+use Tests\TestCase;
 use App\Models\Plan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 
 class PlanTest extends TestCase
 {
@@ -47,9 +46,9 @@ class PlanTest extends TestCase
 
     public function testCanShowPlan()
     {
-        $plan = Plan::factory()->create();
+        $plan = Plan::factory()->hasCycles(7)->create();
 
-        $response = $this->getJson(route('plans.show', $plan->id));
+        $response = $this->getJson(route('plans.show', $plan));
 
         $response->assertOk()->assertExactJson([
             'data' => [
@@ -68,6 +67,7 @@ class PlanTest extends TestCase
                 'education_program_id' => $plan->education_program_id,
                 'qualification_id' => $plan->qualification_id,
                 'field_knowledge_id' => $plan->field_knowledge_id,
+                'cycles' => \App\Helpers\Tree::makeTree($plan->cycles),
                 'count_hours' => $plan->count_hours,
                 'count_week' => $plan->count_week,
                 'created_at' => $plan->created_at,

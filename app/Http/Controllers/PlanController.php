@@ -8,12 +8,12 @@ use App\Models\Cycle;
 use App\Http\Constant;
 use Illuminate\Http\Request;
 use App\ExternalServices\ASU;
-use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Resources\PlanResource;
 use App\Http\Requests\indexPlanRequest;
 use App\Http\Requests\StoreCycleRequest;
 use App\Http\Resources\PlanShowResource;
 use App\Http\Requests\UpdateCycleRequest;
+use App\Http\Requests\StoreGeneralPlanRequest;
 
 class PlanController extends Controller
 {
@@ -94,7 +94,8 @@ class PlanController extends Controller
      */
     public function show(Plan $plan)
     {
-        $model = $plan->load(['formStudy', 'educationLevel', 'formOrganization']);
+        $model = $plan->load(['formStudy', 'educationLevel', 'formOrganization', 'cycles']);
+
         return new PlanShowResource($model);
     }
 
@@ -155,11 +156,26 @@ class PlanController extends Controller
     public function cycleDestroy(Plan $plan, Cycle $cycle)
     {
         try {
-            Cycle::where('id', $cycle->id )->where('plan_id', $plan->id)->delete();
-        } catch(\Illuminate\Database\QueryException $e) {
+            Cycle::where('id', $cycle->id)->where('plan_id', $plan->id)->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
             $this->error($e->getMessage(), $e->getCode());
         }
 
         return $this->success(__('messages.Deleted'), 200);
+    }
+
+    public function cyclesWithSubjects(Plan $plan)
+    {
+        $model = $plan->load('cycles');
+        
+        $cyclesWithSubjects = $model->cycles;
+        
+        if ($cyclesWithSubjects->isEmpty()) {
+            return $this->error(__('Circles_not_found'), 404);
+        }
+
+        $data = Tree::makeTree($cyclesWithSubjects);
+
+        return response()->json(['data' => $data], 200);
     }
 }

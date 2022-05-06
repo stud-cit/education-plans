@@ -29,7 +29,6 @@ class Plan extends Model
     ];
 
     protected $casts = [
-//        'created_at' => 'datetime:Y-m-d h:m',
         'year' => 'int',
         'specialization_id' => 'int',
         'count_hours' => 'int',
@@ -41,9 +40,6 @@ class Plan extends Model
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
     ];
-
-//    protected $appends = ['faculty', 'department'];
-//    protected $visible = ['facultyName'];
 
     public function getCreatedAtAttribute($value)
     {
@@ -62,7 +58,7 @@ class Plan extends Model
 
     public function cycles()
     {
-        return $this->hasMany(Cycle::class);
+        return $this->hasMany(Cycle::class)->with('subjects');
     }
 
     public function formOrganization()

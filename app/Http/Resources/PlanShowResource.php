@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\Tree;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanShowResource extends JsonResource
@@ -14,6 +15,8 @@ class PlanShowResource extends JsonResource
      */
     public function toArray($request)
     {
+        $cycles = Tree::makeTree($this->cycles);
+        
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -30,6 +33,7 @@ class PlanShowResource extends JsonResource
             'education_program_id' => $this->education_program_id,
             'qualification_id' => $this->qualification_id,
             'field_knowledge_id' => $this->field_knowledge_id,
+            'cycles' => $cycles,
             'count_hours' => $this->count_hours,
             'count_week' => $this->count_week,
             'created_at' => $this->created_at,

@@ -18,10 +18,11 @@ class Tree
 
         $treeElem = $parents[null];
         self::generateElemTree($treeElem, $parents);
+        
         return $treeElem;
     }
 
-    private static function generateElemTree(&$treeElem, $parents)
+    private static function generateElemTree(&$treeElem, $parents): void
     {
         foreach ($treeElem as $key => $item) {
             if (array_key_exists($key, $parents)) {
@@ -31,7 +32,7 @@ class Tree
         }
     }
 
-    private static function array_values_recursive($arr)
+    private static function array_values_recursive($arr): array
     {
         foreach ($arr as $key => $value) {
             if (is_array($value)) {
