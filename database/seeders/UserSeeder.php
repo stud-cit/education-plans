@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             'asu_id' => '044fd9f4-83c3-e511-867d-001a4be6d04a',
+            'name' => 'Adam',
             'faculty_id' => 414,
             'faculty_name' => 'Elit',
             'department_id' => 325,

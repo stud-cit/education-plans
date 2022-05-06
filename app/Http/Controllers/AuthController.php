@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\ExternalServices\Asu;
+use App\Helpers\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,10 +27,9 @@ class AuthController extends Controller
 
     function register(Request $request) {
 
-        $key = 'QSGH8e6nh1DW6lFRiQkKmOLnimqr7x55EDQLp6HqAKwmh6L7fX78';
+        $key = 'KEmv3uMQtr3kKeFHcbDEpvhAb0btnnnEFhUqFVvQ7VypJiQt5b6e';
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
-        // $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $request->session()->get('key') . '&token=' . $this->cabinet_service_token), true);
-  
+        
         if(!User::where("asu_id", $personCabinet['result']['guid'])->exists()) {
             
             $userModel = new User();
@@ -48,6 +48,7 @@ class AuthController extends Controller
               'role_id' => 1
              
             ]);  
+            
             return response()->json('ok', 200);
         } else {
             return response()->json([
@@ -60,7 +61,7 @@ class AuthController extends Controller
 
     //   $this->mode($request);
     $request->session()->forget('person');
-    $key = "QSGH8e6nh1DW6lFRiQkKmOLnimqr7x55EDQLp6HqAKwmh6L7fX78";
+    $key = "KEmv3uMQtr3kKeFHcbDEpvhAb0btnnnEFhUqFVvQ7VypJiQt5b6e";
 
       if($request->key) {
 
@@ -75,14 +76,12 @@ class AuthController extends Controller
       
       
       $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
-    //   dd($personCabinet);
-    //   $personCabinet = json_decode(Storage::get('getPerson2.json'), true);
-
+    
       if($personCabinet['status'] == 'OK') {
 
         $userModel = User::where("asu_id", $personCabinet['result']['guid']);
         $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
-        // dd($personDivisions);
+        
         if($userModel->exists()) {
     
           $data = $userModel->first();
@@ -107,7 +106,9 @@ class AuthController extends Controller
             ]);
             $request->session()->put('person', $personCabinet['result']);
           }
-          
+
+          ActivityLog::addToLog('add');
+
           return response()->json('ok', 200);
         } else {
 
@@ -181,7 +182,7 @@ class AuthController extends Controller
         $divType = $departments[$divIndex]['unit_type'];
         $facultyId = $departments[$divIndex]['faculty_id'];
 
-        // dd($divType);
+        
 
         if($divType == $typeFaculty || $divType == $typeInstitute){
 
@@ -189,7 +190,6 @@ class AuthController extends Controller
             $facultyName= $departments[$divIndex]['name'];
             $departmentId = 0;
 
-        // } else if($divType == $typeDepartment) {
         } else if($facultyId != 0) {
 
             $facultyId = $departments[$divIndex]['faculty_id'];
@@ -202,7 +202,6 @@ class AuthController extends Controller
             $departmentName = $departments[$divIndex]['name'];
         }
 
-        // dd($departmentName . ' ' . $facultyName);
 
         return [
             'department_id' => $departmentId,
