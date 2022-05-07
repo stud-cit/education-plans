@@ -9,13 +9,13 @@ class Cycle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'cycle_id', 'credit', 'template'];
+    protected $fillable = ['title', 'cycle_id', 'credit', 'plan_id'];
 
     protected $casts = [
         'credit' => 'int'
     ];
 
-    protected $hidden = ['created_at', 'updated_at', 'plan_id'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function subjects()
     {

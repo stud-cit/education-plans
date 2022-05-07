@@ -18,6 +18,7 @@ class CycleResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'credit' => $this->credit,
+            'plan_id' => $this->plan_id,
             'cycle_id' => $this->cycle_id
         ];
     }

@@ -25,8 +25,7 @@ class UpdateCycleRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'credit' => 'numeric|digits_between:1,3',
-            'cycle_id' => 'exists:App\Models\Cycle,id'
+            'credit' => 'numeric|digits_between:1,3'
         ];
     }
 }

@@ -26,7 +26,8 @@ class StoreCycleRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'credit' => 'numeric|digits_between:1,3',
-            'cycle_id' => 'exists:App\Models\Cycle,id'
+            'cycle_id' => 'exists:App\Models\Cycle,id',
+            'plan_id' => 'exists:App\Models\Plan,id'
             // 'cycle_id' => 'required_if:id,null|exists:App\Models\Cycle,id'
         ];
     }
