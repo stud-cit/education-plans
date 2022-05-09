@@ -25,7 +25,8 @@ class Plan extends Model
         'field_knowledge_id',
         'count_week',
         'count_hours',
-        'year'
+        'year',
+        'study_term_id'
     ];
 
     protected $casts = [

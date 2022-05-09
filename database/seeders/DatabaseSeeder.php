@@ -25,12 +25,12 @@ class DatabaseSeeder extends Seeder
             FormStudySeeder::class,
             EducationLevelSeeder::class,
             FormOrganizationSeeder::class,
+            StudyTermSeeder::class,
             PlanSeeder::class,
             CycleSeeder::class,
             SubjectSeeder::class,
             HoursWeekSeeder::class,
             SettingSeeder::class,
-            StudyTermSeeder::class,
         ]);
     }
 }
