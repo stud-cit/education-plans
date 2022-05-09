@@ -94,7 +94,7 @@ class PlanController extends Controller
      */
     public function show(Plan $plan)
     {
-        $model = $plan->load(['formStudy', 'educationLevel', 'formOrganization', 'cycles.cycles', 'cycles.subjects']);
+        $model = $plan->load(['formStudy', 'educationLevel', 'formOrganization', 'studyTerm', 'cycles.cycles', 'cycles.subjects']);
 
         return new PlanShowResource($model);
     }

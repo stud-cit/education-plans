@@ -66,10 +66,10 @@ class Plan extends Model
         return $this->belongsTo(FormOrganization::class);
     }
 
-    // public function studyTerm()
-    // {
-    //     return $this->belongsTo(StudyTerm::class);
-    // }
+    public function studyTerm()
+    {
+        return $this->belongsTo(StudyTerm::class);
+    }
 
     public function replicateRow()
     {
