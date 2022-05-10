@@ -36,7 +36,8 @@ class PlanShowResource extends JsonResource
             'cycles' => $this->cycles->whereNull('cycle_id')->toArray(),
             'count_hours' => $this->count_hours,
             'count_week' => $this->count_week,
-            'hours_week' => json_decode($this->hours_week),
+            // 'hours_week' => json_decode($this->hours_week),
+            'hours_week' => $this->hours_week,
             'created_at' => $this->created_at,
         ];
     }
