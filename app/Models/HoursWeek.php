@@ -9,7 +9,7 @@ class HoursWeek extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hour'];
+    protected $fillable = ['hour', 'subject_id'];
 
     public function formControl()
     {
