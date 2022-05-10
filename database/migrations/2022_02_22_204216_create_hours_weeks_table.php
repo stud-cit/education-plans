@@ -20,10 +20,12 @@ class CreateHoursWeeksTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreignId('individual_task_id')
+                ->nullable()
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->foreignId('form_control_id')
+                ->nullable()
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
