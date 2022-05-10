@@ -26,7 +26,8 @@ class Plan extends Model
         'count_week',
         'count_hours',
         'year',
-        'study_term_id'
+        'study_term_id',
+        'hours_week'
     ];
 
     protected $casts = [

@@ -31,6 +31,7 @@ class CreatePlansTable extends Migration
             // $table->foreignId('form_organization_id')->nullable(true);
             $table->integer('count_hours');
             $table->integer('count_week');
+            $table->json('hours_week')->nullable(true);
             $table->timestamps();
         });
     }
