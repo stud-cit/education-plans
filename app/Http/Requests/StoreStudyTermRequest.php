@@ -29,7 +29,7 @@ class StoreStudyTermRequest extends FormRequest
             'month' => 'required|numeric',
             'course' => 'required|numeric',
             'module' => 'required|numeric',
-            'number_semesters' => 'required|numeric',
+            'semesters' => 'required|numeric',
         ];
     }
 }

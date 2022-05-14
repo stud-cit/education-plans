@@ -20,7 +20,7 @@ class CreateStudyTermsTable extends Migration
             $table->integer('month');
             $table->integer('course');
             $table->integer('module');
-            $table->integer('number_semesters');
+            $table->integer('semesters');
             $table->timestamps();
         });
     }

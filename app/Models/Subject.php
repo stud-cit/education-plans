@@ -23,8 +23,8 @@ class Subject extends Model
         return $this->belongsTo(Cycle::class);
     }
 
-    public function hoursWeeks()
+    public function hoursModules()
     {
-        return $this->hasMany(HoursWeek::class);
+        return $this->hasMany(HoursModules::class);
     }
 }

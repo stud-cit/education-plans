@@ -22,7 +22,7 @@ class StudyTermFactory extends Factory
             'month' => $this->faker->randomDigit(),
             'course' => $this->faker->randomDigit(),
             'module' => $this->faker->randomDigit(),
-            'number_semesters' => $this->faker->randomDigit(),
+            'semesters' => $this->faker->randomDigit(),
         ];
     }
 }

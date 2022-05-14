@@ -21,7 +21,7 @@ class StudyTermSeeder extends Seeder
                 'month' => 10,
                 'course' => 4,
                 'module' => 8,
-                'number_semesters' => 8,
+                'semesters' => 8,
             ],
             [
                 'title' => '1 рік 10 місяців',
@@ -29,7 +29,7 @@ class StudyTermSeeder extends Seeder
                 'month' => 10,
                 'course' => 2,
                 'module' => 4,
-                'number_semesters' => 4,
+                'semesters' => 4,
             ],
             [
                 'title' => '1 рік 4 місяці',
@@ -37,7 +37,7 @@ class StudyTermSeeder extends Seeder
                 'month' => 4,
                 'course' => 2,
                 'module' => 3,
-                'number_semesters' => 3,
+                'semesters' => 3,
             ]
         ]);
     }

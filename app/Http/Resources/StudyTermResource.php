@@ -21,7 +21,7 @@ class StudyTermResource extends JsonResource
             'month' => $this->month,
             'course' => $this->course,
             'module' => $this->module,
-            'number_semesters' => $this->number_semesters,
+            'semesters' => $this->semesters,
         ];
     }
 }

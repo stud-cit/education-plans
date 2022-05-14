@@ -13,7 +13,7 @@ class CreateHoursWeeksTable extends Migration
      */
     public function up()
     {
-        Schema::create('hours_weeks', function (Blueprint $table) {
+        Schema::create('hours_modules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('subject_id')
                 ->constrained()
@@ -29,9 +29,10 @@ class CreateHoursWeeksTable extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->string('hour', 45);
-           
-            
+            $table->integer('hour');
+            $table->integer('course');
+            $table->integer('semester');
+            $table->integer('module');
         });
     }
 
