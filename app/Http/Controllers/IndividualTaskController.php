@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\IndividualTask;
+use App\Http\Resources\IndividualTaskResource;
 
 class IndividualTaskController extends Controller
 {
@@ -13,7 +15,7 @@ class IndividualTaskController extends Controller
      */
     public function index()
     {
-        return response()->json('200');
+      return IndividualTaskResource::collection(IndividualTask::all());
     }
 
     /**

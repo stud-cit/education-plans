@@ -24,6 +24,7 @@ class StoreSubjectRequest extends FormRequest
     public function rules()
     {
         return [
+            'title' => 'nullable', 
             'asu_id' => 'nullable', 
             'cycle_id' => 'required|exists:App\Models\Cycle,id',
             'credits' => 'required|numeric|digits_between:1,3',

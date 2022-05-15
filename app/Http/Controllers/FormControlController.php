@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\FormControl;
+use App\Http\Resources\FormControlResource;
 
 class FormControlController extends Controller
 {
@@ -13,7 +15,7 @@ class FormControlController extends Controller
      */
     public function index()
     {
-        return response()->json('200');
+      return FormControlResource::collection(FormControl::all());
     }
 
     /**
