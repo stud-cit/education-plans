@@ -13,9 +13,11 @@ class AuthController extends Controller
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
     protected $cabinet_service = "https://cabinet.sumdu.edu.ua/index/service/";
     protected $cabinet_service_token;
+    protected $cabinet_service_key;
 
     function __construct() {
       $this->cabinet_service_token = config('app.token');
+      $this->cabinet_service_token = config('app.service_key');
       $this->asu  = new ASU;
     }
 
@@ -27,7 +29,7 @@ class AuthController extends Controller
 
     function register(Request $request) {
 
-        $key = 'KEmv3uMQtr3kKeFHcbDEpvhAb0btnnnEFhUqFVvQ7VypJiQt5b6e';
+        $key = $this->$cabinet_service_key;
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
         
         if(!User::where("asu_id", $personCabinet['result']['guid'])->exists()) {
@@ -61,7 +63,7 @@ class AuthController extends Controller
 
     //   $this->mode($request);
     $request->session()->forget('person');
-    $key = "KEmv3uMQtr3kKeFHcbDEpvhAb0btnnnEFhUqFVvQ7VypJiQt5b6e";
+    $key = $this->$cabinet_service_key;
 
       if($request->key) {
 
