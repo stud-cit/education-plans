@@ -9,7 +9,18 @@ class HoursModules extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hour', 'subject_id'];
+    public $timestamps = false;
+
+    protected $fillable = [
+      'course',
+      'hour', 
+      'subject_id', 
+      'course', 
+      'form_control_id',
+      'individual_task_id',
+      'module',
+      'semester'
+    ];
 
     public function formControl()
     {

@@ -100,8 +100,8 @@ class PlanController extends Controller
           'formOrganization', 
           'studyTerm', 
           'cycles.cycles', 
-          'cycles.subjects.hoursModules.formControl', 
-          'cycles.subjects.hoursModules.individualTask'
+          // 'cycles.subjects.hoursModules.formControl', 
+          // 'cycles.subjects.hoursModules.individualTask'
         ]);
 
         return new PlanShowResource($model);
