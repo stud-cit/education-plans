@@ -17,7 +17,7 @@ class AuthController extends Controller
 
     function __construct() {
       $this->cabinet_service_token = config('app.token');
-      $this->cabinet_service_token = config('app.service_key');
+      $this->cabinet_service_key = config('app.service_key');
       $this->asu  = new ASU;
     }
 
@@ -29,7 +29,7 @@ class AuthController extends Controller
 
     function register(Request $request) {
 
-        $key = $this->$cabinet_service_key;
+        $key = $this->cabinet_service_key;
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
         
         if(!User::where("asu_id", $personCabinet['result']['guid'])->exists()) {
@@ -63,7 +63,7 @@ class AuthController extends Controller
 
     //   $this->mode($request);
     $request->session()->forget('person');
-    $key = $this->$cabinet_service_key;
+    $key = $this->cabinet_service_key;
 
       if($request->key) {
 
@@ -89,7 +89,7 @@ class AuthController extends Controller
           $data = $userModel->first();
         
 
-          if(!$request->session()->get('person')) {
+          if(!$request->session()->exists('person')) {
             
 
             // if($key) {
@@ -97,7 +97,7 @@ class AuthController extends Controller
             //   Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');  
             // }
 
-            $userModel->update([
+            $testData = $userModel->updateOrCreate([
               'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
               'faculty_id' => $personDivisions['faculty_id'],
               'faculty_name' => $personDivisions['faculty_name'],
@@ -111,7 +111,7 @@ class AuthController extends Controller
 
           ActivityLog::addToLog('add');
 
-          return response()->json('ok', 200);
+          return response()->json($testData, 200);
         } else {
 
           $request->session()->forget('person');
@@ -121,7 +121,7 @@ class AuthController extends Controller
 
         $request->session()->forget('key');
         $request->session()->forget('person');
-        return response()->json(['message' => 'невірний ключ']);
+        return response()->json(['message' => 'невірний ключ'], 401);
       }
     }
 

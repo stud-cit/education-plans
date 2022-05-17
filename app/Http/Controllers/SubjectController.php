@@ -92,15 +92,21 @@ class SubjectController extends Controller
 
         $subject->update($validated);
 
-        $hoursModules = collect($request['hours_modules']);
-
-        $hoursModules->transform(function ($item, $key) use ($subject) {
-            $item['subject_id'] = $subject->id;
-            return $item;
-        });
-
         HoursModules::where('subject_id', $subject->id)->delete();
-        HoursModules::insert($hoursModules->toArray());
+
+        $hoursModules = [];
+        foreach ($request['hours_modules'] as $key => $value) {
+          array_push($hoursModules, [
+            "course" => $value['course'],
+            "form_control_id" => $value['form_control_id'],
+            "hour" => $value['hour'],
+            "individual_task_id" => $value['individual_task_id'],
+            "module" => $value['module'],
+            "semester" => $value['semester'],
+            "subject_id" => $subject->id
+          ]);
+        }
+        HoursModules::insert($hoursModules);
 
         return $this->success(__('messages.Updated'), 200);
     }

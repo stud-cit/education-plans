@@ -8,10 +8,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Plan extends Model
 {
     use HasFactory;
     use HasAsuDivisionsNameTrait;
+    use \Bkwld\Cloner\Cloneable;
+
+    protected $cloneable_relations = ['cycles'];
 
     protected $fillable = [
         'title',

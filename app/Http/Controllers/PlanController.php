@@ -133,7 +133,7 @@ class PlanController extends Controller
 
     public function copy(Plan $plan)
     {
-        $plan->replicateRow();
+        $plan->duplicate();
 
         return $this->success(__('messages.Copied'), 201);
     }

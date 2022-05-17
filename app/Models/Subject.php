@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Subject extends Model
 {
     use HasFactory;
+    use \Bkwld\Cloner\Cloneable;
 
     public $timestamps = false;
+
+    protected $cloneable_relations = ['hoursModules'];
     
     protected $fillable = ['title', 'asu_id', 'cycle_id', 'selective_discipline_id', 'credits', 'hours', 'practices', 'laboratories'];
 
