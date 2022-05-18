@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSubjectRequest;
 use App\Models\Subject;
+use App\Models\HoursModules;
 use PhpParser\Node\Stmt\TryCatch;
 
 class SubjectController extends Controller
@@ -38,7 +39,20 @@ class SubjectController extends Controller
     {
         $validated = $request->validated();
 
-        Subject::create($validated);
+        if($request['selectiveDiscipline']) {
+          $validated['title'] = null;
+        }
+
+        $subject = Subject::create($validated);
+
+        $hoursModules = collect($request['hours_modules']);
+
+        $hoursModules->transform(function ($item, $key) use ($subject) {
+            $item['subject_id'] = $subject->id;
+            return $item;
+        });
+
+        HoursModules::insert($hoursModules->toArray());
 
         return $this->success(__('messages.Created'), 201);
     }
@@ -77,6 +91,22 @@ class SubjectController extends Controller
         $validated = $request->validated();
 
         $subject->update($validated);
+
+        HoursModules::where('subject_id', $subject->id)->delete();
+
+        $hoursModules = [];
+        foreach ($request['hours_modules'] as $key => $value) {
+          array_push($hoursModules, [
+            "course" => $value['course'],
+            "form_control_id" => $value['form_control_id'],
+            "hour" => $value['hour'],
+            "individual_task_id" => $value['individual_task_id'],
+            "module" => $value['module'],
+            "semester" => $value['semester'],
+            "subject_id" => $subject->id
+          ]);
+        }
+        HoursModules::insert($hoursModules);
 
         return $this->success(__('messages.Updated'), 200);
     }

@@ -5,11 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HoursWeek extends Model
+class HoursModules extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['hour'];
+    public $timestamps = false;
+
+    protected $fillable = [
+      'course',
+      'hour', 
+      'subject_id', 
+      'course', 
+      'form_control_id',
+      'individual_task_id',
+      'module',
+      'semester'
+    ];
 
     public function formControl()
     {

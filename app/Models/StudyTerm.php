@@ -17,7 +17,7 @@ class StudyTerm extends Model
         'month',
         'course',
         'module',
-        'number_semesters'
+        'semesters'
     ];
 
     public function getDescriptionAttribute(): string

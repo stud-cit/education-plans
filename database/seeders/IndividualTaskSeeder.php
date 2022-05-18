@@ -15,8 +15,13 @@ class IndividualTaskSeeder extends Seeder
     public function run()
     {
         DB::table('individual_tasks')->insert([
-            'title' => 'вправа 1',
-            
+          'title' => 'Контрольна робота',
+        ]);
+        DB::table('individual_tasks')->insert([
+          'title' => 'Курсова робота',
+        ]);
+        DB::table('individual_tasks')->insert([
+          'title' => 'Без завдання',
         ]);
     }
 }

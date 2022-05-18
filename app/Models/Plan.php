@@ -8,10 +8,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Plan extends Model
 {
     use HasFactory;
     use HasAsuDivisionsNameTrait;
+    use \Bkwld\Cloner\Cloneable;
 
     protected $fillable = [
         'title',
@@ -25,7 +27,9 @@ class Plan extends Model
         'field_knowledge_id',
         'count_week',
         'count_hours',
-        'year'
+        'year',
+        'study_term_id',
+        'hours_week'
     ];
 
     protected $casts = [
@@ -39,6 +43,7 @@ class Plan extends Model
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
+        'hours_week' => 'array',
     ];
 
     public function getCreatedAtAttribute($value)
@@ -66,10 +71,10 @@ class Plan extends Model
         return $this->belongsTo(FormOrganization::class);
     }
 
-    // public function studyTerm()
-    // {
-    //     return $this->belongsTo(StudyTerm::class);
-    // }
+    public function studyTerm()
+    {
+        return $this->belongsTo(StudyTerm::class);
+    }
 
     public function replicateRow()
     {

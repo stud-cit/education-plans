@@ -175,6 +175,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Bkwld\Cloner\ServiceProvider::class,
+
     ],
 
     /*
@@ -234,5 +236,6 @@ return [
 
     'asu_key' => env('ASU_KEY'),
     'token' => env('MIX_APP_TOKEN'),
+    'service_key' => env('SERVICE_KEY')
 
 ];

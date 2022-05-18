@@ -27,7 +27,7 @@ class StudyTermTest extends TestCase
                     'month',
                     'course',
                     'module',
-                    'number_semesters'
+                    'semesters'
                 ]
             ]
         ]);
@@ -78,7 +78,7 @@ class StudyTermTest extends TestCase
                 'month' => $studyTerm->month,
                 'course' => $studyTerm->course,
                 'module' => $studyTerm->module,
-                'number_semesters' => $studyTerm->number_semesters,
+                'semesters' => $studyTerm->semesters,
             ]
         ]);
     }
