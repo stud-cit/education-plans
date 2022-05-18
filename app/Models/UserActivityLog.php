@@ -10,6 +10,6 @@ class UserActivityLog extends Model
     use HasFactory;
 
     protected $fillable = [
-        'asu_id', 'user_name', 'user_role', 'operation', 'browser', 'ip',  
+        'asu_id', 'user_name', 'user_role', 'operation', 'ip',  
     ];
 }
