@@ -16,15 +16,21 @@ class PlanShowResource extends JsonResource
     public function toArray($request)
     {
         // $cycles = Tree::makeTree($this->cycles);
-        
+
         return [
             'id' => $this->id,
             'title' => $this->title,
             'faculty' => $this->facultyName,
+            'faculty_id' => $this->faculty_id,
+            'department_id' => $this->department_id,
             'department' => $this->departmentName,
+            'term_study_id' => $this->study_term_id,
             'year' => $this->year,
+            'form_study_id' => $this->formStudy ? $this->formStudy->id : null,
             'form_study' => $this->formStudy ? $this->formStudy->title : null,
+            'form_organization_id' => $this->formOrganization ? $this->formOrganization->id : null,
             'form_organization' => $this->formOrganization ? $this->formOrganization->title : null,
+            'education_level_id' => $this->educationLevel ? $this->educationLevel->id : null,
             'education_level' => $this->educationLevel ? $this->educationLevel->title : null,
             'credits' => $this->credits,
             'number_semesters' => $this->number_semesters,
