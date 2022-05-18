@@ -109,7 +109,7 @@ class AuthController extends Controller
             $request->session()->put('person', $personCabinet['result']);
           }
 
-          ActivityLog::addToLog('add');
+          // ActivityLog::addToLog('Auth User, update users data table');
 
           return response()->json($testData, 200);
         } else {
