@@ -8,9 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Cycle extends Model
 {
     use HasFactory;
-    use \Bkwld\Cloner\Cloneable;
-
-    protected $cloneable_relations = ['subjects', 'cycles'];
 
     protected $fillable = ['title', 'cycle_id', 'credit', 'plan_id'];
 

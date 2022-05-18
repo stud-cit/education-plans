@@ -15,8 +15,6 @@ class Plan extends Model
     use HasAsuDivisionsNameTrait;
     use \Bkwld\Cloner\Cloneable;
 
-    protected $cloneable_relations = ['cycles'];
-
     protected $fillable = [
         'title',
         'faculty_id',

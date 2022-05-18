@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Plan;
 use App\Helpers\Tree;
 use App\Models\Cycle;
+use App\Models\Subject;
 use App\Http\Constant;
 use Illuminate\Http\Request;
 use App\ExternalServices\ASU;
@@ -133,9 +134,40 @@ class PlanController extends Controller
 
     public function copy(Plan $plan)
     {
-        $plan->duplicate();
+      $model = $plan->load([
+        'cycles.cycles', 
+        'cycles.subjects'
+      ]);
+      $clonePlan = $plan->duplicate();
+      foreach ($model->cycles as $cycle) {
+        if($cycle['cycle_id'] == null) {
+          $this->createCycle($cycle, $clonePlan->id);
+        }
+      }
+      return $this->success(__('messages.Copied'), 201);
+    }
 
-        return $this->success(__('messages.Copied'), 201);
+    function createCycle($cycle, $plan_id, $cycleId = null) {
+      $cloneCycle = Cycle::create([
+        "title" => $cycle['title'],
+        "cycle_id" => $cycleId,
+        "credit" => $cycle['credit'],
+        "plan_id" => $plan_id
+      ]);
+      foreach ($cycle['subjects'] as $subject) {
+        Subject::create([
+          "title" => $subject['title'],
+          "cycle_id" => $cloneCycle->id,
+          "selective_discipline_id" => $subject['selective_discipline_id'],
+          "credits" => $subject['credits'],
+          "hours" => $subject['hours'],
+          "practices" => $subject['practices'],
+          "laboratories" => $subject['laboratories']
+        ]);
+      }
+      foreach ($cycle['cycles'] as $v) {
+        $this->createCycle($v, $plan_id, $cloneCycle->id);
+      }
     }
 
 
