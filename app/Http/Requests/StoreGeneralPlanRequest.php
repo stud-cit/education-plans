@@ -32,7 +32,7 @@ class StoreGeneralPlanRequest extends FormRequest
             'study_term_id' => 'required|numeric',
             'year' => 'required|numeric|date_format:Y',
             'number_semesters' => 'required|numeric',
-            'specialization_id' => 'required|numeric', //specialityId todo
+            'speciality_id' => 'required|numeric',
             'specialization' => 'max:255',
             'education_program_id' => 'required|numeric',
             'qualification_id' => 'required|numeric',

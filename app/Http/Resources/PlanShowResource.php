@@ -28,7 +28,7 @@ class PlanShowResource extends JsonResource
             'education_level' => $this->educationLevel ? $this->educationLevel->title : null,
             'credits' => $this->credits,
             'number_semesters' => $this->number_semesters,
-            'specialization_id' => $this->specialization_id,
+            'speciality_id' => $this->speciality_id,
             'specialization' => $this->specialization,
             'education_program_id' => $this->education_program_id,
             'qualification_id' => $this->qualification_id,

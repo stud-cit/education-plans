@@ -30,7 +30,7 @@ class Plan extends Model
 
     protected $casts = [
         'year' => 'int',
-        'specialization_id' => 'int',
+        'speciality_id' => 'int',
         'count_hours' => 'int',
         'count_week' => 'int',
         'credits' => 'int',

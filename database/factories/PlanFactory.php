@@ -29,7 +29,7 @@ class PlanFactory extends Factory
             'year' => $this->faker->year(now()),
             'credits' => $this->faker->randomDigit(),
             'number_semesters' => $this->faker->randomDigit(),
-            'specialization_id' => $this->faker->randomDigit(),
+            'speciality_id' => $this->faker->randomDigit(),
             'specialization' => $this->faker->word(),
             'education_program_id' => $this->faker->randomDigit(),
             'qualification_id' => $this->faker->randomDigit(),

@@ -62,7 +62,7 @@ class PlanTest extends TestCase
                 'form_organization' => $plan->formOrganization->title,
                 'credits' => $plan->credits,
                 'number_semesters' => $plan->number_semesters,
-                'specialization_id' => $plan->specialization_id,
+                'speciality_id' => $plan->speciality_id,
                 'specialization' => $plan->specialization,
                 'education_program_id' => $plan->education_program_id,
                 'qualification_id' => $plan->qualification_id,
