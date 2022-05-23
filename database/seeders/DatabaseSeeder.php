@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             PlanSeeder::class,
             CycleSeeder::class,
             SubjectSeeder::class,
-            HoursWeekSeeder::class,
+            // HoursWeekSeeder::class,
             SettingSeeder::class,
         ]);
     }

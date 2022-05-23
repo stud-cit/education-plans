@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HoursModules extends Model
+class SemestersCredits extends Model
 {
     use HasFactory;
 
@@ -13,23 +13,10 @@ class HoursModules extends Model
 
     protected $fillable = [
       'course',
-      'hour', 
+      'credit', 
       'subject_id', 
-      'form_control_id',
-      'individual_task_id',
-      'module',
       'semester'
     ];
-
-    public function formControl()
-    {
-        return $this->belongsTo(FormControl::class);
-    }
-
-    public function individualTask()
-    {
-        return $this->belongsTo(IndividualTask::class);
-    }
 
     public function subject()
     {

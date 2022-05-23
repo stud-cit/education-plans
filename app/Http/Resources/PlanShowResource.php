@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\SemestersCredits;
+use App\Models\HoursModules;
 
 class PlanShowResource extends JsonResource
 {
@@ -43,7 +45,48 @@ class PlanShowResource extends JsonResource
             // 'hours_week' => json_decode($this->hours_week),
             'hours_week' => $this->hours_week,
             'created_at' => $this->created_at,
-            'schedule_education_process' => json_decode($this->schedule_education_process)
+            'schedule_education_process' => json_decode($this->schedule_education_process),
+            'sum_semesters_credits' => $this->getSumSemestersCredits(),
+            'count_exams' => $this->getCountExams(),
+            'count_coursework' => $this->getCountCoursework(),
         ];
+    }
+
+    function getSumSemestersCredits() {
+      $planId = $this->id;
+      $result = [];
+      $semestersWithCredits = SemestersCredits::select('semester', 'credit', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+          $queryCycle->where('plan_id', $planId);
+        });
+      })->get();
+      foreach ($semestersWithCredits as $value) {
+        if(isset($result[$value['semester']])) {
+          $result[$value['semester']] += $value['credit'];
+        } else {
+          $result += [$value['semester'] => $value['credit']];
+        }
+      }
+      return $result;
+    }
+
+    function getCountExams() {
+      $planId = $this->id;
+      $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+          $queryCycle->where('plan_id', $planId);
+        });
+      })->where('individual_task_id', 2)->count();
+      return $count;
+    }
+
+    function getCountCoursework() {
+      $planId = $this->id;
+      $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+          $queryCycle->where('plan_id', $planId);
+        });
+      })->where('form_control_id', 3)->count();
+      return $count;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSubjectRequest;
 use App\Models\Subject;
 use App\Models\HoursModules;
+use App\Models\SemestersCredits;
 use PhpParser\Node\Stmt\TryCatch;
 
 class SubjectController extends Controller
@@ -46,13 +47,20 @@ class SubjectController extends Controller
         $subject = Subject::create($validated);
 
         $hoursModules = collect($request['hours_modules']);
+        $semestersCredits = collect($request['semesters_credits']);
 
         $hoursModules->transform(function ($item, $key) use ($subject) {
             $item['subject_id'] = $subject->id;
             return $item;
         });
 
+        $semestersCredits->transform(function ($item, $key) use ($subject) {
+          $item['subject_id'] = $subject->id;
+          return $item;
+        });
+
         HoursModules::insert($hoursModules->toArray());
+        SemestersCredits::insert($semestersCredits->toArray());
 
         return $this->success(__('messages.Created'), 201);
     }
@@ -93,8 +101,10 @@ class SubjectController extends Controller
         $subject->update($validated);
 
         HoursModules::where('subject_id', $subject->id)->delete();
+        SemestersCredits::where('subject_id', $subject->id)->delete();
 
         $hoursModules = [];
+        $semestersCredits = [];
         foreach ($request['hours_modules'] as $key => $value) {
           array_push($hoursModules, [
             "course" => $value['course'],
@@ -106,7 +116,16 @@ class SubjectController extends Controller
             "subject_id" => $subject->id
           ]);
         }
+        foreach ($request['semesters_credits'] as $key => $value) {
+          array_push($semestersCredits, [
+            "course" => $value['course'],
+            "credit" => $value['credit'],
+            "semester" => $value['semester'],
+            "subject_id" => $subject->id
+          ]);
+        }
         HoursModules::insert($hoursModules);
+        SemestersCredits::insert($semestersCredits);
 
         return $this->success(__('messages.Updated'), 200);
     }

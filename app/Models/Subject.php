@@ -27,4 +27,9 @@ class Subject extends Model
     {
         return $this->hasMany(HoursModules::class);
     }
+
+    public function semestersCredits()
+    {
+        return $this->hasMany(SemestersCredits::class);
+    }
 }
