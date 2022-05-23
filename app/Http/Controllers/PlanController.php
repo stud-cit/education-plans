@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FacultiesResource;
 use App\Models\Plan;
 use App\Helpers\Tree;
 use App\Models\Cycle;
@@ -73,7 +74,7 @@ class PlanController extends Controller
         $educationLevel = new EducationLevelController();
 
         $data = [
-            'faculties' => $asu->getFaculties(),
+            'faculties' => FacultiesResource::collection($asu->getFaculties()),
             'specialities' => $formStudy->index(), //ToDo add methods get specialities with asu
             'educational_programs' => $formStudy->index(), //ToDo add methods get educationalPrograms with asu
             'qualifications' => $formStudy->index(), //ToDo add methods get qualifications with asu
@@ -207,9 +208,9 @@ class PlanController extends Controller
     public function cyclesWithSubjects(Plan $plan)
     {
         $model = $plan->load('cycles');
-        
+
         $cyclesWithSubjects = $model->cycles;
-        
+
         if ($cyclesWithSubjects->isEmpty()) {
             return $this->error(__('Circles_not_found'), 404);
         }

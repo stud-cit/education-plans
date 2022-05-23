@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ExternalServices\ASU;
+use App\Http\Resources\DepartmentsResource;
 use Illuminate\Http\Request;
 
 class AsuController extends Controller
@@ -21,6 +22,7 @@ class AsuController extends Controller
     public function departmentById(Request $request)
     {
         $data = $this->asu->getDepartmentsByStructuralId($request->id);
-        return response()->json(['data' => $data]);
+
+        return DepartmentsResource::collection($data);
     }
 }

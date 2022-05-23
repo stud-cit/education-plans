@@ -30,12 +30,17 @@ class Plan extends Model
         'year',
         'study_term_id',
         'hours_week',
-        'schedule_education_process'
+        'schedule_education_process',
+        'form_term_id',
+        'education_level_id',
+        'speciality_id',
+        'specialization',
+        'form_study_id',
     ];
 
     protected $casts = [
         'year' => 'int',
-        'specialization_id' => 'int',
+        'speciality_id' => 'int',
         'count_hours' => 'int',
         'count_week' => 'int',
         'credits' => 'int',

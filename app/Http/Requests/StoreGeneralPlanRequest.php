@@ -32,7 +32,7 @@ class StoreGeneralPlanRequest extends FormRequest
             'study_term_id' => 'required|numeric',
             'year' => 'required|numeric|date_format:Y',
             'number_semesters' => 'required|numeric',
-            'specialization_id' => 'required|numeric', //specialityId todo
+            'speciality_id' => 'required|numeric',
             'specialization' => 'max:255',
             'education_program_id' => 'required|numeric',
             'qualification_id' => 'required|numeric',
@@ -41,7 +41,8 @@ class StoreGeneralPlanRequest extends FormRequest
             'credits' => 'required|numeric',
             'count_hours' => 'required|numeric',
             'count_week' => 'required|numeric',
-            'schedule_education_process' => 'nullable|json'
+            'schedule_education_process' => 'nullable|json',
+            'hours_week' => 'required|json'
         ];
     }
 }
