@@ -29,7 +29,8 @@ class Plan extends Model
         'count_hours',
         'year',
         'study_term_id',
-        'hours_week'
+        'hours_week',
+        'schedule_education_process'
     ];
 
     protected $casts = [
@@ -44,6 +45,7 @@ class Plan extends Model
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
         'hours_week' => 'array',
+        // 'schedule_education_process' => 'object'
     ];
 
     public function getCreatedAtAttribute($value)

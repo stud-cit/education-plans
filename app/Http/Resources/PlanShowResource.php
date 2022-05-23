@@ -39,6 +39,7 @@ class PlanShowResource extends JsonResource
             // 'hours_week' => json_decode($this->hours_week),
             'hours_week' => $this->hours_week,
             'created_at' => $this->created_at,
+            'schedule_education_process' => json_decode($this->schedule_education_process)
         ];
     }
 }

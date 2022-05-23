@@ -32,6 +32,7 @@ class CreatePlansTable extends Migration
             $table->integer('count_hours');
             $table->integer('count_week');
             $table->json('hours_week')->nullable(true);
+            $table->json('schedule_education_process')->nullable(true);
             $table->timestamps();
         });
     }

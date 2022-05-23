@@ -41,6 +41,7 @@ class StoreGeneralPlanRequest extends FormRequest
             'credits' => 'required|numeric',
             'count_hours' => 'required|numeric',
             'count_week' => 'required|numeric',
+            'schedule_education_process' => 'nullable|json'
         ];
     }
 }
