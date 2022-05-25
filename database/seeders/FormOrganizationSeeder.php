@@ -15,8 +15,14 @@ class FormOrganizationSeeder extends Seeder
     public function run()
     {
         DB::table('form_organizations')->insert([
-            ['title' => 'Модульно-циклова'],
-            ['title' => 'Семестрова'],
+            [
+              'id' => 1,
+              'title' => 'Модульно-циклова'
+            ],
+            [
+              'id' => 3,
+              'title' => 'Семестрова'
+            ],
         ]);
     }
 }

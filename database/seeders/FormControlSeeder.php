@@ -15,15 +15,19 @@ class FormControlSeeder extends Seeder
     public function run()
     {
         DB::table('form_controls')->insert([
-          'title' => 'Залік',
-        ]);
-        DB::table('form_controls')->insert([
-          'title' => 'Диференційний залік',
-        ]);
-        DB::table('form_controls')->insert([
+          'id' => 1,
           'title' => 'Іспит',
         ]);
         DB::table('form_controls')->insert([
+          'id' => 2,
+          'title' => 'Диференційний залік',
+        ]);
+        DB::table('form_controls')->insert([
+          'id' => 3,
+          'title' => 'Залік',
+        ]);
+        DB::table('form_controls')->insert([
+          'id' => 10,
           'title' => 'Без атестацій',
         ]);
     }
