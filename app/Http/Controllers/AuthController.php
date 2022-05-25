@@ -8,6 +8,7 @@ use App\Helpers\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+
 class AuthController extends Controller
 {
     protected $cabinet_api = "https://cabinet.sumdu.edu.ua/api/";
@@ -57,6 +58,20 @@ class AuthController extends Controller
                 "message" => "Користувач вже зареєстрований в системі"
             ]);
         }
+    }
+
+    function checkAuth(Request $request) {
+      $person = $request->session()->exists('person');
+
+      if($person) {
+        return response('ok', 200);
+      }
+
+      else{ 
+        return response('not authorized', 401);
+      }
+      
+
     }
 
     function index(Request $request) {
@@ -110,7 +125,7 @@ class AuthController extends Controller
           }
 
           // ActivityLog::addToLog('Auth User, update users data table');
-
+          // dd($request->session()->get('person'));
           return response()->json($testData, 200);
         } else {
 
