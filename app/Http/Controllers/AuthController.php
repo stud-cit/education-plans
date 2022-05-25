@@ -61,13 +61,16 @@ class AuthController extends Controller
     }
 
     function checkAuth(Request $request) {
-      $person = $request->session();
-      
+      $person = $request->session()->exists('person');
+
       if($person) {
-        return response()->json('ok');
+        return response('ok', 200);
       }
 
-      return response()->json('error');
+      else{ 
+        return response('not authorized', 401);
+      }
+      
 
     }
 
@@ -122,7 +125,7 @@ class AuthController extends Controller
           }
 
           // ActivityLog::addToLog('Auth User, update users data table');
-
+          // dd($request->session()->get('person'));
           return response()->json($testData, 200);
         } else {
 
