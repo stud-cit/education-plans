@@ -37,7 +37,7 @@ class PlanFactory extends Factory
             'count_hours' => $this->faker->numberBetween(20, 30),
             'count_week' => $this->faker->numberBetween(1, 4),
             'form_organization_id' => FormOrganization::factory(),
-            'term_study_id' => StudyTerm::factory(),
+            'study_term_id' => StudyTerm::factory(),
             'hours_week'=> json_encode(["key" => $this->faker->randomNumber()] )
         ];
     }

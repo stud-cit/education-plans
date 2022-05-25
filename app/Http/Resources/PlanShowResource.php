@@ -24,7 +24,7 @@ class PlanShowResource extends JsonResource
             'faculty_id' => $this->faculty_id,
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
-            'term_study_id' => $this->term_study_id,
+            'study_term_id' => $this->study_term_id,
             'year' => $this->year,
             'form_study' => $this->formStudy,
             'form_organization' => $this->formOrganization,

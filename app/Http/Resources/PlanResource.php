@@ -18,7 +18,7 @@ class PlanResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'year' => $this->year,
-            'term_study_id' => $this->term_study_id,
+            'study_term_id' => $this->study_term_id,
             'faculty_id' => $this->faculty_id,
             'faculty' => $this->facultyName,
             'short_faculty' => $this->shortFacultyName,
