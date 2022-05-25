@@ -29,8 +29,7 @@ class CreatePlansTable extends Migration
             $table->integer('qualification_id');
             $table->integer('field_knowledge_id');
             // $table->foreignId('form_organization_id')->nullable(true);
-            $table->integer('count_hours');
-            $table->integer('count_week');
+            $table->json('max_hours_semesters')->nullable(true);
             $table->json('hours_week')->nullable(true);
             $table->json('schedule_education_process')->nullable(true);
             $table->timestamps();

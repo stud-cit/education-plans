@@ -25,9 +25,8 @@ class Plan extends Model
         'qualification_id',
         'education_program_id',
         'field_knowledge_id',
-        'count_week',
-        'count_hours',
         'year',
+        'max_hours_semesters',
         'study_term_id',
         'hours_week',
         'schedule_education_process',
@@ -50,6 +49,7 @@ class Plan extends Model
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
         'hours_week' => 'array',
+        'max_hours_semesters' => 'array',
         // 'schedule_education_process' => 'object'
     ];
 
