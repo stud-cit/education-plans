@@ -29,7 +29,7 @@ class StoreGeneralPlanRequest extends FormRequest
             'department_id' => 'required|numeric',
             'education_level_id' => 'required|numeric',
             'form_study_id' => 'required|numeric',
-            'study_term_id' => 'required|numeric',
+            'term_study_id' => 'required|numeric',
             'year' => 'required|numeric|date_format:Y',
             'number_semesters' => 'required|numeric',
             'speciality_id' => 'required|numeric',

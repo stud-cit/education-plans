@@ -27,7 +27,7 @@ class Plan extends Model
         'field_knowledge_id',
         'year',
         'max_hours_semesters',
-        'study_term_id',
+        'term_study_id',
         'hours_week',
         'schedule_education_process',
         'form_term_id',
