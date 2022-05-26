@@ -50,7 +50,7 @@ class Plan extends Model
         'form_organization_id' => 'int',
         'hours_week' => 'array',
         'max_hours_semesters' => 'array',
-        // 'schedule_education_process' => 'object'
+        // 'schedule_education_process' => 'json'
     ];
 
     public function getCreatedAtAttribute($value)

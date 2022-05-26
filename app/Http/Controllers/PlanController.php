@@ -17,6 +17,7 @@ use App\Http\Requests\StoreCycleRequest;
 use App\Http\Resources\PlanShowResource;
 use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
+use App\Http\Requests\UpdatePlanRequest;
 
 class PlanController extends Controller
 {
@@ -98,13 +99,13 @@ class PlanController extends Controller
     public function show(Plan $plan)
     {
         $model = $plan->load([
-          'formStudy', 
-          'educationLevel', 
-          'formOrganization', 
-          'studyTerm', 
-          'cycles.cycles', 
+          'formStudy',
+          'educationLevel',
+          'formOrganization',
+          'studyTerm',
+          'cycles.cycles',
           'cycles.subjects.semestersCredits',
-          'cycles.subjects.hoursModules.formControl', 
+          'cycles.subjects.hoursModules.formControl',
           'cycles.subjects.hoursModules.individualTask'
         ]);
 
@@ -114,13 +115,17 @@ class PlanController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdatePlanRequest  $request
      * @param  \App\Models\Plan  $plan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Plan $plan)
+    public function update(UpdatePlanRequest $request, Plan $plan)
     {
-        //
+        $validated = $request->validated();
+
+        $plan->save($validated);
+
+        $this->success(__('messages.Updated'), 200);
     }
 
     /**
@@ -138,7 +143,7 @@ class PlanController extends Controller
     public function copy(Plan $plan)
     {
       $model = $plan->load([
-        'cycles.cycles', 
+        'cycles.cycles',
         'cycles.subjects'
       ]);
       $clonePlan = $plan->duplicate();
