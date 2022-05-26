@@ -28,8 +28,6 @@ class UpdatePlanRequest extends FormRequest
             'faculty_id' => 'required|numeric',
             'department_id' => 'required|numeric',
             'education_level_id' => 'required|numeric',
-            'form_study_id' => 'required|numeric|exists:App\Model\FormStudy,id',
-            'study_term_id' => 'required|numeric|exists:App\Model\StudyTerm,id',
             'year' => 'required|numeric|date_format:Y',
             'number_semesters' => 'required|numeric',
             'speciality_id' => 'required|numeric',
