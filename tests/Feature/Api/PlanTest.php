@@ -68,8 +68,6 @@ class PlanTest extends TestCase
                 'qualification_id' => $plan->qualification_id,
                 'field_knowledge_id' => $plan->field_knowledge_id,
                 'cycles' => \App\Helpers\Tree::makeTree($plan->cycles),
-                'count_hours' => $plan->count_hours,
-                'count_week' => $plan->count_week,
                 'created_at' => $plan->created_at,
             ]
         ]);

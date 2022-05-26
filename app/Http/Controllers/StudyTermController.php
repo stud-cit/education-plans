@@ -31,22 +31,10 @@ class StudyTermController extends Controller
     {
 
         $validated = $request->validated();
-        
+
         StudyTerm::create($validated);
-        
+
         return $this->success(__('messages.Created'), 201);
-
-        $validated = $request->validated();
-        // dd($validated);
-        $model = new StudyTerm;
-        $model->title = $validated['title'];
-        $model->year = $validated['year'];
-        $model->month = $validated['month'];
-        $model->course = $validated['course'];
-
-        $model->save($validated);
-        
-        return $this->success(__('messages.Created') , 201);
     }
 
     /**
@@ -72,7 +60,7 @@ class StudyTermController extends Controller
         $validated = $request->validated();
 
         $studyTerm->update($validated);
-        
+
         return $this->success(__('messages.Updated'), 200);
     }
 

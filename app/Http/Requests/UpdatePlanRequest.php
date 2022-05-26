@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreGeneralPlanRequest extends FormRequest
+class UpdatePlanRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,6 @@ class StoreGeneralPlanRequest extends FormRequest
             'faculty_id' => 'required|numeric',
             'department_id' => 'required|numeric',
             'education_level_id' => 'required|numeric',
-            'form_study_id' => 'required|numeric',
-            'study_term_id' => 'required|numeric',
             'year' => 'required|numeric|date_format:Y',
             'number_semesters' => 'required|numeric',
             'speciality_id' => 'required|numeric',
@@ -40,7 +38,7 @@ class StoreGeneralPlanRequest extends FormRequest
             'form_organization_id' => 'required|numeric',
             'credits' => 'required|numeric',
             'max_hours_semesters' => 'required|json',
-            'schedule_education_process' => 'nullable|json',
+            'schedule_education_process' => 'required|json',
             'hours_week' => 'required|json'
         ];
     }

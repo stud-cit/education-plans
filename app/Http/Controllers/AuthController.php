@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\ExternalServices\Asu;
+use App\ExternalServices\ASU;
 use App\Helpers\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -32,9 +32,9 @@ class AuthController extends Controller
 
         $key = $this->cabinet_service_key;
         $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
-        
+
         if(!User::where("asu_id", $personCabinet['result']['guid'])->exists()) {
-            
+
             $userModel = new User();
             $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
 
@@ -49,9 +49,9 @@ class AuthController extends Controller
               'email' => $personCabinet['result']['email'],
               'remember_token' => $personCabinet['result']['token'],
               'role_id' => 1
-             
-            ]);  
-            
+
+            ]);
+
             return response()->json('ok', 200);
         } else {
             return response()->json([
@@ -68,12 +68,12 @@ class AuthController extends Controller
         $userData = User::where("asu_id", $person['guid'])->first();
         return response()->json($userData, 200);
       }
-
       else{ 
         
         return response()->json('not authorized', 401);
+
       }
-      
+
 
     }
 
@@ -93,26 +93,26 @@ class AuthController extends Controller
 
         $key = $request->session()->get('key');
       }
-      
-      
+
+
       $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
-    
+
       if($personCabinet['status'] == 'OK') {
 
         $userModel = User::where("asu_id", $personCabinet['result']['guid']);
         $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
-        
+
         if($userModel->exists()) {
-    
+
           $data = $userModel->first();
-        
+
 
           if(!$request->session()->exists('person')) {
-            
+
 
             // if($key) {
             //   $image = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonPhoto?key=' . $key . '&token=' . $this->cabinet_service_token);
-            //   Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');  
+            //   Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');
             // }
 
             $testData = $userModel->updateOrCreate([
@@ -170,7 +170,7 @@ class AuthController extends Controller
 
 
     function getDivisionsInfo($userInfo) {
-        
+
         $departments = $this->asu->getDepartments()->toArray();
         $typeFaculty = 9;
         $typeInstitute = 7;
@@ -187,7 +187,7 @@ class AuthController extends Controller
 
                     $departmentId = $v['KOD_DIV'];
                 }
-                
+
             }
 
         } else {
@@ -202,7 +202,7 @@ class AuthController extends Controller
         $divType = $departments[$divIndex]['unit_type'];
         $facultyId = $departments[$divIndex]['faculty_id'];
 
-        
+
 
         if($divType == $typeFaculty || $divType == $typeInstitute){
 
@@ -216,7 +216,7 @@ class AuthController extends Controller
             $facultyIndex= array_search($facultyId, array_column($departments, 'id'));
             $facultyName= $departments[$facultyIndex]['name'];
             $departmentName = $departments[$divIndex]['name'];
-            
+
 
         } else {
             $departmentName = $departments[$divIndex]['name'];
@@ -229,6 +229,6 @@ class AuthController extends Controller
             'faculty_id' => $facultyId,
             'faculty_name' => $facultyName
         ];
-        
+
     }
 }
