@@ -18,7 +18,7 @@ class CreatePlansTable extends Migration
             $table->integer('faculty_id');
             $table->integer('department_id');
             // $table->foreignId('verification_status_id')->nullable(true)->constrained('verification_statuses');
-            // $table->foreignId('term_study_id')->nullable(true)->constrained('term_studies');
+            // $table->foreignId('study_term_id')->nullable(true)->constrained('term_studies');
             $table->string('title');
             $table->integer('credits');
             $table->year('year');

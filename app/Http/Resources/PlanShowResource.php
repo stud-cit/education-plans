@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\SemestersCredits;
 use App\Models\HoursModules;
+use App\Models\Subject;
 
 class PlanShowResource extends JsonResource
 {
@@ -23,7 +24,7 @@ class PlanShowResource extends JsonResource
             'faculty_id' => $this->faculty_id,
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
-            'term_study_id' => $this->study_term_id,
+            'study_term_id' => $this->study_term_id,
             'year' => $this->year,
             'form_study' => $this->formStudy,
             'form_organization' => $this->formOrganization,
@@ -48,6 +49,7 @@ class PlanShowResource extends JsonResource
             'sum_semesters_credits' => $this->getSumSemestersCredits(),
             'count_exams' => $this->getCountExams(),
             'count_coursework' => $this->getCountCoursework(),
+            'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
         ];
     }
 
@@ -85,7 +87,15 @@ class PlanShowResource extends JsonResource
         $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
           $queryCycle->where('plan_id', $planId);
         });
-      })->where('form_control_id', 3)->count();
+      })->where('form_control_id', 1)->count();
       return $count;
+    }
+
+    function getCountCreditsSelectiveDiscipline() {
+      $planId = $this->id;
+      $count = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+          $queryCycle->where('plan_id', $planId);
+      })->sum('credits');
+      return intval($count);
     }
 }
