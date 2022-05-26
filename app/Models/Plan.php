@@ -35,6 +35,7 @@ class Plan extends Model
         'speciality_id',
         'specialization',
         'form_study_id',
+        'published'
     ];
 
     protected $casts = [
@@ -48,9 +49,6 @@ class Plan extends Model
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
-        'hours_week' => 'array',
-        'max_hours_semesters' => 'array',
-        // 'schedule_education_process' => 'json'
     ];
 
     public function getCreatedAtAttribute($value)

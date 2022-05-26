@@ -32,6 +32,7 @@ class CreatePlansTable extends Migration
             $table->json('max_hours_semesters')->nullable(true);
             $table->json('hours_week')->nullable(true);
             $table->json('schedule_education_process')->nullable(true);
+            $table->boolean('published')->default(false);
             $table->timestamps();
         });
     }
