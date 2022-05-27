@@ -61,14 +61,17 @@ class AuthController extends Controller
     }
 
     function checkAuth(Request $request) {
-      $person = $request->session()->exists('person');
-
-      if($person) {
-        return response('ok', 200);
+      $checkPerson = $request->session()->exists('person');
+      
+      if($checkPerson) {
+        $person = $request->session()->get('person');
+        $userData = User::where("asu_id", $person['guid'])->first();
+        return response()->json($userData, 200);
       }
+      else{ 
+        
+        return response()->json('not authorized', 401);
 
-      else{
-        return response('not authorized', 401);
       }
 
 
