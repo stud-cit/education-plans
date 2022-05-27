@@ -127,9 +127,9 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
-        $plan->save($validated);
+        $plan->update($validated);
 
-        $this->success(__('messages.Updated'), 200);
+        return response()->json(['message' => __('messages.Updated')], 201);
     }
 
     /**
