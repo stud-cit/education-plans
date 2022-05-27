@@ -37,9 +37,8 @@ class UpdatePlanRequest extends FormRequest
             'field_knowledge_id' => 'required|numeric',
             'form_organization_id' => 'required|numeric',
             'credits' => 'required|numeric',
-            'max_hours_semesters' => 'required|json',
             'schedule_education_process' => 'required|json',
-            'hours_week' => 'required|json'
+            'hours_weeks_semesters' => 'required|json'
         ];
     }
 }
