@@ -16,6 +16,7 @@ class Plan extends Model
     use \Bkwld\Cloner\Cloneable;
 
     protected $fillable = [
+        'guid',
         'title',
         'faculty_id',
         'department_id',
@@ -50,6 +51,26 @@ class Plan extends Model
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
     ];
+
+    public function getStatus() {
+      $data = array_column($this->verification->toArray(), 'status');
+      if(count($this->filterStatus($data, 1)) == 4) {
+        $result = 'success';
+      } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
+        $result = 'warning';
+      } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
+        $result = 'error';
+      } else {
+        $result = '';
+      }
+      return $result;
+    }
+
+    private function filterStatus($data, $id) {
+      return array_filter($data, function($val) use ($id) {
+        return $val == $id;
+      });
+    }
 
     public function getCreatedAtAttribute($value)
     {
@@ -101,5 +122,10 @@ class Plan extends Model
         $filter = new FilterBuilder($query, $filters, $namespace);
 
         return $filter->apply();
+    }
+
+    public function verification()
+    {
+        return $this->hasMany(PlanVerification::class);
     }
 }

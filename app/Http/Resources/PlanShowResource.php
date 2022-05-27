@@ -45,6 +45,7 @@ class PlanShowResource extends JsonResource
             // 'hours_week' => json_decode($this->hours_week),
             'hours_week' => $this->hours_week,
             'created_at' => $this->created_at,
+            'verification' => $this->verification,
             'schedule_education_process' => json_decode($this->schedule_education_process),
             'sum_semesters_credits' => $this->getSumSemestersCredits(),
             'count_exams' => $this->getCountExams(),

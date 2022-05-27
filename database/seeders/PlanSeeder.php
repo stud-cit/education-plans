@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PlanSeeder extends Seeder
 {
@@ -15,6 +16,7 @@ class PlanSeeder extends Seeder
     public function run()
     {
         DB::table('plans')->insert([
+            'guid' => Str::uuid(),
             'form_study_id' => 1,
             'form_organization_id' => 3,
             'faculty_id' => 414,

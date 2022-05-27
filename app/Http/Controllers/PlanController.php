@@ -8,6 +8,7 @@ use App\Helpers\Tree;
 use App\Models\Cycle;
 use App\Models\Subject;
 use App\Models\HoursModules;
+use App\Models\PlanVerification;
 use App\Http\Constant;
 use Illuminate\Http\Request;
 use App\ExternalServices\ASU;
@@ -18,6 +19,8 @@ use App\Http\Resources\PlanShowResource;
 use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Requests\UpdatePlanRequest;
+use App\Http\Requests\StorePlanVerificationRequest;
+use Illuminate\Support\Str;
 
 class PlanController extends Controller
 {
@@ -58,7 +61,7 @@ class PlanController extends Controller
     public function store(StoreGeneralPlanRequest $request)
     {
         $validated = $request->validated();
-
+        $validated['guid'] = Str::uuid();
         $plan = Plan::create($validated);
 
         return response()->json(['id' => $plan->id, 'message' => __('messages.Created')], 201);
@@ -99,6 +102,7 @@ class PlanController extends Controller
     public function show(Plan $plan)
     {
         $model = $plan->load([
+          'verification',
           'formStudy',
           'educationLevel',
           'formOrganization',
@@ -189,6 +193,22 @@ class PlanController extends Controller
       }
     }
 
+    public function verification(StorePlanVerificationRequest $request, Plan $plan)
+    {
+      $validated = $request->validated();
+      $plan->verification()->updateOrCreate(
+        [
+          "plan_id" => $plan->id,
+          'verification_statuses_id' => $validated['verification_statuses_id']
+        ],
+        [
+          'user_id' => 1, // to do
+          'comment' => isset($validated['comment']) ? $validated['comment'] : null,
+          'status' => $validated['status']
+        ]
+      );
+      $this->success(__('messages.Updated'), 200);
+    }
 
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
     {
