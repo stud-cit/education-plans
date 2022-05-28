@@ -101,20 +101,6 @@ class Plan extends Model
         return $this->belongsTo(StudyTerm::class);
     }
 
-    public function replicateRow()
-    {
-        $clone = $this->replicate();
-        $clone->created_at = now();
-        $clone->push();
-
-        foreach($this->cycles as $cycle)
-        {
-            $clone->cycles()->create($cycle->toArray());
-        }
-
-        $clone->save();
-    }
-
     public function scopeFilterBy($query, $filters)
     {
         $namespace = 'App\Helpers\Filters\PlanFilters';
