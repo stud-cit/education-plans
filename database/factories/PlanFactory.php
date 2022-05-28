@@ -36,6 +36,7 @@ class PlanFactory extends Factory
             'field_knowledge_id' => $this->faker->randomDigit(),
             'form_organization_id' => FormOrganization::factory(),
             'study_term_id' => StudyTerm::factory(),
+            'guid' => $this->faker->uuid()
         ];
     }
 }

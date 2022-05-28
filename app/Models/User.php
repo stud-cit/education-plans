@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\ExternalServices\ASU;
+use App\ExternalServices\Asu\Department;
+use App\ExternalServices\Asu\Worker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,19 +49,19 @@ class User extends Model
 
     public function getFacultyNameAttribute(): string
     {
-        $asu = new ASU();
+        $asu = new Department();
         return $asu->getDivisionName($this->faculty_id);
     }
 
     public function getDepartmentNameAttribute(): string
     {
-        $asu = new ASU();
+        $asu = new Department();
         return $asu->getDivisionName($this->department_id);
     }
 
     public function getFullNameAttribute(): string
     {
-        $asu = new ASU();
+        $asu = new Worker();
         return $asu->getFullNameWorker($this->asu_id);
     }
 

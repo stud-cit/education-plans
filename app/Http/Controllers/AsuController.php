@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\ExternalServices\ASU;
+use App\ExternalServices\Asu\Department;
 use App\Http\Resources\DepartmentsResource;
 use Illuminate\Http\Request;
 
@@ -11,7 +11,7 @@ class AsuController extends Controller
     private $asu;
 
     function __construct() {
-        $this->asu  = new ASU;
+        $this->asu  = new Department();
     }
 
     public function faculties()

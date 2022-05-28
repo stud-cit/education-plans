@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\ExternalServices\ASU;
+use App\ExternalServices\Asu\Department;
+use App\ExternalServices\Asu\Worker;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRoleRequest;
 use App\Http\Resources\UserResource;
@@ -82,8 +83,8 @@ class UserController extends Controller
     public function workers()
     {
         $users = User::select('asu_id')->pluck('asu_id');
-        $asu = new ASU();
-        $_workers = $asu->getAllWorkers();
+        $worker = new Worker();
+        $_workers = $worker->getAllWorkers();
 
         $workers = $_workers->map(function ($worker) use ($users) {
 
@@ -102,13 +103,13 @@ class UserController extends Controller
     }
 
     public function getFacultyByWorker(Request $request) {
-        $asu = new ASU();
+        $department = new Department();
 
         $validated = $request->validate([
             'department_id' => 'required|numeric',
         ]);
 
-        $faculty = $asu->searchFacultyByDepartmentId($validated['department_id']);
+        $faculty = $department->searchFacultyByDepartmentId($validated['department_id']);
 
         return response()->json($faculty);
     }

@@ -23,6 +23,6 @@ class PlanRequestTest extends TestCase
         $this->putJson(
             route("{$this->route}update", $plan),
             $newPlan->toArray()
-        )->assertJsonMissingValidationErrors($validatedTypeField);
+        )->assertJsonValidationErrors($validatedTypeField);
     }
 }

@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FacultiesResource;
-use App\Models\Plan;
+use App\ExternalServices\Asu\Department;
 use App\Helpers\Tree;
-use App\Models\Cycle;
-use App\Models\Subject;
-use App\Models\HoursModules;
-use App\Models\PlanVerification;
 use App\Http\Constant;
-use Illuminate\Http\Request;
-use App\ExternalServices\ASU;
-use App\Http\Resources\PlanResource;
 use App\Http\Requests\indexPlanRequest;
 use App\Http\Requests\StoreCycleRequest;
-use App\Http\Resources\PlanShowResource;
-use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
-use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
+use App\Http\Requests\UpdateCycleRequest;
+use App\Http\Requests\UpdatePlanRequest;
+use App\Http\Resources\FacultiesResource;
+use App\Http\Resources\PlanResource;
+use App\Http\Resources\PlanShowResource;
+use App\Models\Cycle;
+use App\Models\HoursModules;
+use App\Models\Plan;
+use App\Models\Subject;
 use Illuminate\Support\Str;
 
 class PlanController extends Controller
@@ -72,7 +70,7 @@ class PlanController extends Controller
      */
     public function create()
     {
-        $asu = new ASU();
+        $asu = new Department();
         $formStudy = new  FormStudyController();
         $studyTerm = new StudyTermController();
         $formOrganization = new FormOrganizationController();

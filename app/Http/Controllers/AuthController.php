@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\ExternalServices\Asu\Department;
 use App\Models\User;
-use App\ExternalServices\ASU;
-use App\Helpers\ActivityLog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 
 class AuthController extends Controller
@@ -19,7 +17,7 @@ class AuthController extends Controller
     function __construct() {
       $this->cabinet_service_token = config('app.token');
       $this->cabinet_service_key = config('app.service_key');
-      $this->asu  = new ASU;
+      $this->asu  = new Department();
     }
 
     function logout(Request $request) {
@@ -62,14 +60,14 @@ class AuthController extends Controller
 
     function checkAuth(Request $request) {
       $checkPerson = $request->session()->exists('person');
-      
+
       if($checkPerson) {
         $person = $request->session()->get('person');
         $userData = User::where("asu_id", $person['guid'])->first();
         return response()->json($userData, 200);
       }
-      else{ 
-        
+      else{
+
         return response()->json('not authorized', 401);
 
       }
