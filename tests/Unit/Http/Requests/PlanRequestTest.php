@@ -20,8 +20,8 @@ class PlanRequestTest extends TestCase
         $plan = Plan::factory()->create();
         $newPlan = Plan::factory()->make([$validatedTypeField => $brokenRule]);
 
-        $this->putJson(
-            route("{$this->route}update", $plan),
+        $this->patchJson(
+            route("{$this->route}schedule-education-process.update", $plan),
             $newPlan->toArray()
         )->assertJsonValidationErrors($validatedTypeField);
     }
