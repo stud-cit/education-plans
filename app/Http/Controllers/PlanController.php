@@ -16,6 +16,7 @@ use App\Http\Resources\PlanResource;
 use App\Http\Resources\PlanShowResource;
 use App\Models\Cycle;
 use App\Models\HoursModules;
+use App\Models\SemestersCredits;
 use App\Models\Plan;
 use App\Models\Subject;
 use Illuminate\Support\Str;
@@ -146,7 +147,8 @@ class PlanController extends Controller
     {
       $model = $plan->load([
         'cycles.cycles',
-        'cycles.subjects'
+        'cycles.subjects.semestersCredits',
+        'cycles.subjects.hoursModules',
       ]);
       $clonePlan = $plan->duplicate();
       foreach ($model->cycles as $cycle) {
@@ -174,15 +176,23 @@ class PlanController extends Controller
           "practices" => $subject['practices'],
           "laboratories" => $subject['laboratories']
         ]);
-        foreach ($subject['hours_modules'] as $hoursModules) {
+        foreach ($subject->hoursModules as $hoursModule) {
           HoursModules::create([
-            "course" => $hoursModules['course'],
-            "hour" => $hoursModules['hour'],
+            "course" => $hoursModule['course'],
+            "hour" => $hoursModule['hour'],
             "subject_id" => $cloneSubject->id,
-            "form_control_id" => $hoursModules['form_control_id'],
-            "individual_task_id" => $hoursModules['individual_task_id'],
-            "module" => $hoursModules['module'],
-            "semester" => $hoursModules['semester']
+            "form_control_id" => $hoursModule['form_control_id'],
+            "individual_task_id" => $hoursModule['individual_task_id'],
+            "module" => $hoursModule['module'],
+            "semester" => $hoursModule['semester']
+          ]);
+        }
+        foreach ($subject->semestersCredits as $semestersCredit) {
+          SemestersCredits::create([
+            "course" => $semestersCredit['course'],
+            "subject_id" => $cloneSubject->id,
+            "credit" => $semestersCredit['credit'],
+            "semester" => $semestersCredit['semester']
           ]);
         }
       }

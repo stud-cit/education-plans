@@ -16,7 +16,10 @@ class FormStudySeeder extends Seeder
     {
         DB::table('form_studies')->insert([
             ['title' => 'Денна', 'created_at' => now()],
-            ['title' => 'Заочна', 'created_at' => now()]
+            ['title' => 'Заочна', 'created_at' => now()],
+            ['title' => 'Дистанційна', 'created_at' => now()],
+            ['title' => 'Екстернатна', 'created_at' => now()],
+            ['title' => 'Вечірня', 'created_at' => now()]
         ]);
     }
 }
