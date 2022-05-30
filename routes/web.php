@@ -20,6 +20,6 @@ Route::get('/', function () {
 
 // test auth
 Route::get('/register', [AuthController::class, 'register']);
-Route::get('/auth', [AuthController::class, 'index']);
-Route::get('/logout', [AuthController::class, 'logout']);
-Route::get('/check-auth', [AuthController::class, 'checkAuth']);
+// Route::get('/auth', [AuthController::class, 'index']);
+// Route::get('/logout', [AuthController::class, 'logout']);
+

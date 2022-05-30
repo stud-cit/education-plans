@@ -39,7 +39,8 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('cycles', CycleController::class);
 
     
-    Route::get('/check-auth', [AuthController::class, 'checkAuth']);
+    
+    Route::get('/auth', [AuthController::class, 'index']);
     
     
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
