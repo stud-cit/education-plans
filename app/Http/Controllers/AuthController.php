@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\ExternalServices\Asu\Department;
 use App\Models\User;
-use App\ExternalServices\ASU;
-use App\Helpers\ActivityLog;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 
 class AuthController extends Controller
@@ -19,7 +17,7 @@ class AuthController extends Controller
     function __construct() {
       $this->cabinet_service_token = config('app.token');
       $this->cabinet_service_key = config('app.service_key');
-      $this->asu  = new ASU;
+      $this->asu  = new Department();
     }
 
     function logout(Request $request) {

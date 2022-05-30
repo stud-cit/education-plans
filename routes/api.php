@@ -17,7 +17,8 @@ use App\Http\Controllers\{AsuController,
     StudyTermController,
     FormOrganizationController,
     RoleController,
-    UserController
+    UserController,
+    VerificationController
 };
 
 /*
@@ -38,18 +39,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::apiResource('cycles', CycleController::class);
 
-    
-    
     Route::get('/auth', [AuthController::class, 'index']);
-    
-    
+        
+    Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
     Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
     Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
     Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
     Route::get('/plans/cycles/{plan}', [PlanController::class, 'cyclesWithSubjects'])->name('plans.cycles.subjects');
     Route::Resource('plans', PlanController::class);
-    
+
+    Route::apiResource('verifications', VerificationController::class);
     Route::apiResource('form-studies', FormStudyController::class);
     Route::apiResource('form-organizations', FormOrganizationController::class);
     Route::apiResource('education-levels', EducationLevelController::class);

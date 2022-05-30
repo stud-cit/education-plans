@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\FacultiesResource;
-use App\Models\Plan;
+use App\ExternalServices\Asu\Department;
 use App\Helpers\Tree;
-use App\Models\Cycle;
-use App\Models\Subject;
-use App\Models\HoursModules;
 use App\Http\Constant;
-use Illuminate\Http\Request;
-use App\ExternalServices\ASU;
-use App\Http\Resources\PlanResource;
 use App\Http\Requests\indexPlanRequest;
 use App\Http\Requests\StoreCycleRequest;
-use App\Http\Resources\PlanShowResource;
-use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
+use App\Http\Requests\StorePlanVerificationRequest;
+use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Requests\UpdatePlanRequest;
+use App\Http\Resources\FacultiesResource;
+use App\Http\Resources\PlanResource;
+use App\Http\Resources\PlanShowResource;
+use App\Models\Cycle;
+use App\Models\HoursModules;
+use App\Models\SemestersCredits;
+use App\Models\Plan;
+use App\Models\Subject;
+use Illuminate\Support\Str;
 
 class PlanController extends Controller
 {
@@ -58,7 +60,7 @@ class PlanController extends Controller
     public function store(StoreGeneralPlanRequest $request)
     {
         $validated = $request->validated();
-
+        $validated['guid'] = Str::uuid();
         $plan = Plan::create($validated);
 
         return response()->json(['id' => $plan->id, 'message' => __('messages.Created')], 201);
@@ -69,7 +71,7 @@ class PlanController extends Controller
      */
     public function create()
     {
-        $asu = new ASU();
+        $asu = new Department();
         $formStudy = new  FormStudyController();
         $studyTerm = new StudyTermController();
         $formOrganization = new FormOrganizationController();
@@ -99,6 +101,7 @@ class PlanController extends Controller
     public function show(Plan $plan)
     {
         $model = $plan->load([
+          'verification',
           'formStudy',
           'educationLevel',
           'formOrganization',
@@ -123,9 +126,9 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
-        $plan->save($validated);
+        $plan->update($validated);
 
-        $this->success(__('messages.Updated'), 200);
+        return $this->success( __('messages.Updated'), 201);
     }
 
     /**
@@ -144,7 +147,8 @@ class PlanController extends Controller
     {
       $model = $plan->load([
         'cycles.cycles',
-        'cycles.subjects'
+        'cycles.subjects.semestersCredits',
+        'cycles.subjects.hoursModules',
       ]);
       $clonePlan = $plan->duplicate();
       foreach ($model->cycles as $cycle) {
@@ -172,15 +176,23 @@ class PlanController extends Controller
           "practices" => $subject['practices'],
           "laboratories" => $subject['laboratories']
         ]);
-        foreach ($subject['hours_modules'] as $hoursModules) {
+        foreach ($subject->hoursModules as $hoursModule) {
           HoursModules::create([
-            "course" => $hoursModules['course'],
-            "hour" => $hoursModules['hour'],
+            "course" => $hoursModule['course'],
+            "hour" => $hoursModule['hour'],
             "subject_id" => $cloneSubject->id,
-            "form_control_id" => $hoursModules['form_control_id'],
-            "individual_task_id" => $hoursModules['individual_task_id'],
-            "module" => $hoursModules['module'],
-            "semester" => $hoursModules['semester']
+            "form_control_id" => $hoursModule['form_control_id'],
+            "individual_task_id" => $hoursModule['individual_task_id'],
+            "module" => $hoursModule['module'],
+            "semester" => $hoursModule['semester']
+          ]);
+        }
+        foreach ($subject->semestersCredits as $semestersCredit) {
+          SemestersCredits::create([
+            "course" => $semestersCredit['course'],
+            "subject_id" => $cloneSubject->id,
+            "credit" => $semestersCredit['credit'],
+            "semester" => $semestersCredit['semester']
           ]);
         }
       }
@@ -189,6 +201,22 @@ class PlanController extends Controller
       }
     }
 
+    public function verification(StorePlanVerificationRequest $request, Plan $plan)
+    {
+      $validated = $request->validated();
+      $plan->verification()->updateOrCreate(
+        [
+          "plan_id" => $plan->id,
+          'verification_statuses_id' => $validated['verification_statuses_id']
+        ],
+        [
+          'user_id' => 1, // to do
+          'comment' => isset($validated['comment']) ? $validated['comment'] : null,
+          'status' => $validated['status']
+        ]
+      );
+      $this->success(__('messages.Updated'), 200);
+    }
 
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
     {

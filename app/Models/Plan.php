@@ -16,6 +16,7 @@ class Plan extends Model
     use \Bkwld\Cloner\Cloneable;
 
     protected $fillable = [
+        'guid',
         'title',
         'faculty_id',
         'department_id',
@@ -26,9 +27,8 @@ class Plan extends Model
         'education_program_id',
         'field_knowledge_id',
         'year',
-        'max_hours_semesters',
         'study_term_id',
-        'hours_week',
+        'hours_weeks_semesters',
         'schedule_education_process',
         'form_term_id',
         'education_level_id',
@@ -50,6 +50,26 @@ class Plan extends Model
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
     ];
+
+    public function getStatus() {
+      $data = array_column($this->verification->toArray(), 'status');
+      if(count($this->filterStatus($data, 1)) == 4) {
+        $result = 'success';
+      } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
+        $result = 'warning';
+      } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
+        $result = 'error';
+      } else {
+        $result = '';
+      }
+      return $result;
+    }
+
+    private function filterStatus($data, $id) {
+      return array_filter($data, function($val) use ($id) {
+        return $val == $id;
+      });
+    }
 
     public function getCreatedAtAttribute($value)
     {
@@ -81,25 +101,16 @@ class Plan extends Model
         return $this->belongsTo(StudyTerm::class);
     }
 
-    public function replicateRow()
-    {
-        $clone = $this->replicate();
-        $clone->created_at = now();
-        $clone->push();
-
-        foreach($this->cycles as $cycle)
-        {
-            $clone->cycles()->create($cycle->toArray());
-        }
-
-        $clone->save();
-    }
-
     public function scopeFilterBy($query, $filters)
     {
         $namespace = 'App\Helpers\Filters\PlanFilters';
         $filter = new FilterBuilder($query, $filters, $namespace);
 
         return $filter->apply();
+    }
+
+    public function verification()
+    {
+        return $this->hasMany(PlanVerification::class);
     }
 }

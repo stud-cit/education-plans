@@ -19,6 +19,7 @@ class PlanShowResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'guid' => $this->guid,
             'title' => $this->title,
             'faculty' => $this->facultyName,
             'faculty_id' => $this->faculty_id,
@@ -41,10 +42,9 @@ class PlanShowResource extends JsonResource
             'qualification_id' => $this->qualification_id,
             'field_knowledge_id' => $this->field_knowledge_id,
             'cycles' => $this->cycles->whereNull('cycle_id')->toArray(),
-            'max_hours_semesters' => $this->max_hours_semesters,
-            // 'hours_week' => json_decode($this->hours_week),
-            'hours_week' => $this->hours_week,
+            'hours_weeks_semesters' => json_decode($this->hours_weeks_semesters),
             'created_at' => $this->created_at,
+            'verification' => $this->verification,
             'schedule_education_process' => json_decode($this->schedule_education_process),
             'sum_semesters_credits' => $this->getSumSemestersCredits(),
             'count_exams' => $this->getCountExams(),
