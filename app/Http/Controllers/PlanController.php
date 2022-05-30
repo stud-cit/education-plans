@@ -8,7 +8,6 @@ use App\Http\Constant;
 use App\Http\Requests\indexPlanRequest;
 use App\Http\Requests\StoreCycleRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
-use App\Http\Requests\UpdateScheduleEducationProcessPlanRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Requests\UpdatePlanRequest;
@@ -129,15 +128,6 @@ class PlanController extends Controller
         $plan->update($validated);
 
         return $this->success( __('messages.Updated'), 201);
-    }
-
-    public function updateScheduleEducationProcess(UpdateScheduleEducationProcessPlanRequest $request, Plan $plan)
-    {
-        $validated = $request->validated();
-
-        $plan->update($validated);
-
-        return $this->success(__('messages.Updated'), 201);
     }
 
     /**

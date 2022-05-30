@@ -42,9 +42,6 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/check-auth', [AuthController::class, 'checkAuth']);
 
-    Route::patch('/plans/schedule-education-process/{plan}', [
-        PlanController::class, 'updateScheduleEducationProcess'
-    ])->name('plans.schedule-education-process.update');
     Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
     Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
