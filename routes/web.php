@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,6 @@ Route::get('/', function () {
 
 // test auth
 Route::get('/register', [AuthController::class, 'register']);
-Route::get('/auth', [AuthController::class, 'index']);
-Route::get('/logout', [AuthController::class, 'logout']);
-Route::get('/check-auth', [AuthController::class, 'checkAuth']);
+Route::get('/get-program', [PlanController::class, 'getProgramsOP']);
+// Route::get('/logout', [AuthController::class, 'logout']);
+

@@ -23,7 +23,6 @@ class User extends Model
         'faculty_name',
         'department_id',
         'department_name',
-        'offices_id',
         'email',
         'role_id',
     ];

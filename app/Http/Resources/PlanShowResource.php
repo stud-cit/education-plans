@@ -45,12 +45,32 @@ class PlanShowResource extends JsonResource
             'hours_weeks_semesters' => json_decode($this->hours_weeks_semesters),
             'created_at' => $this->created_at,
             'verification' => $this->verification,
+            'published' => $this->published,
             'schedule_education_process' => json_decode($this->schedule_education_process),
             'sum_semesters_credits' => $this->getSumSemestersCredits(),
+            'sum_semesters_hours' => $this->getSumSemestersHours(),
             'count_exams' => $this->getCountExams(),
             'count_coursework' => $this->getCountCoursework(),
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
         ];
+    }
+
+    function getSumSemestersHours() {
+      $planId = $this->id;
+      $result = [];
+      $semestersWithHours = HoursModules::select('semester', 'hour', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+          $queryCycle->where('plan_id', $planId);
+        });
+      })->get();
+      foreach ($semestersWithHours as $value) {
+        if(isset($result[$value['semester']])) {
+          $result[$value['semester']] += $value['hour'];
+        } else {
+          $result += [$value['semester'] => $value['hour']];
+        }
+      }
+      return $result;
     }
 
     function getSumSemestersCredits() {

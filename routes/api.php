@@ -40,9 +40,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::apiResource('cycles', CycleController::class);
 
-
-    Route::get('/check-auth', [AuthController::class, 'checkAuth']);
-
+    Route::get('/auth', [AuthController::class, 'index']);
+        
     Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
     Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');

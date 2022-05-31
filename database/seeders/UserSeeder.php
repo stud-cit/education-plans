@@ -23,10 +23,18 @@ class UserSeeder extends Seeder
             'faculty_name' => 'Elit',
             'department_id' => 325,
             'department_name' => 'Komp nauk',
-            'offices_id' => 1,
             'role_id' => 1,
-            'email' => Str::random(10).'@gmail.com',
-            // 'password' => Hash::make('password'),
+            'email' => Str::random(10).'@gmail.com'
         ]);
+        DB::table('users')->insert([
+            'asu_id' => '22e6106c-c580-e711-8194-001a4be6d04a',
+            'name' => 'Adam 2',
+            'faculty_id' => 414,
+            'faculty_name' => 'Elit',
+            'department_id' => 325,
+            'department_name' => 'Komp nauk',
+            'role_id' => 2,
+            'email' => Str::random(10).'@gmail.com'
+      ]);
     }
 }

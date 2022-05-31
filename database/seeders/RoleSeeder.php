@@ -16,9 +16,9 @@ class RoleSeeder extends Seeder
     {
         DB::table('roles')->insert([
             ['title' => 'admin', 'label' => 'Адміністратор'],
-            ['title' => 'educational-department', 'label' => 'Представник Навчально-методичного відділу'],
-            ['title' => 'practice-department', 'label' => 'Представник Відділу практики'],
             ['title' => 'training-department', 'label' => 'Представник Навчального відділу'],
+            ['title' => 'practice-department', 'label' => 'Представник Відділу практики'],
+            ['title' => 'educational-department', 'label' => 'Представник Навчально-методичного відділу'],
             ['title' => 'faculty-institute', 'label' => 'Представники Факультету / Інституту'],
             ['title' => 'department', 'label' => 'Представники кафедр']
         ]);

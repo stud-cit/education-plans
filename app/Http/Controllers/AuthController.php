@@ -43,7 +43,6 @@ class AuthController extends Controller
               'faculty_name' => $personDivisions['faculty_name'],
               'department_id' => $personDivisions['department_id'],
               'department_name' => $personDivisions['department_name'],
-              'offices_id' => $personDivisions['department_id'],
               'email' => $personCabinet['result']['email'],
               'remember_token' => $personCabinet['result']['token'],
               'role_id' => 1
@@ -58,42 +57,13 @@ class AuthController extends Controller
         }
     }
 
-    function checkAuth(Request $request) {
-      $checkPerson = $request->session()->exists('person');
-
-      if($checkPerson) {
-        $person = $request->session()->get('person');
-        $userData = User::where("asu_id", $person['guid'])->first();
-        return response()->json($userData, 200);
-      }
-      else{
-
-        return response()->json('not authorized', 401);
-
-      }
-
-
-    }
+    
 
     function index(Request $request) {
 
-    //   $this->mode($request);
-    $request->session()->forget('person');
-    $key = $this->cabinet_service_key;
-
-      if($request->key) {
-
-        $key = $request->key;
-        $request->session()->put('key', $request->key);
-      }
-
-      if($key == '' && $request->session()->get('key')) {
-
-        $key = $request->session()->get('key');
-      }
-
-
-      $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
+   
+    $key = $request->key;
+    $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
 
       if($personCabinet['status'] == 'OK') {
 
@@ -101,42 +71,25 @@ class AuthController extends Controller
         $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
 
         if($userModel->exists()) {
-
-          $data = $userModel->first();
-
-
-          if(!$request->session()->exists('person')) {
-
-
-            // if($key) {
-            //   $image = file_get_contents('https://cabinet.sumdu.edu.ua/api/getPersonPhoto?key=' . $key . '&token=' . $this->cabinet_service_token);
-            //   Storage::disk('local')->put('public/' . $personCabinet['result']['guid'] . '.png', $image, 'public');
-            // }
-
-            $testData = $userModel->updateOrCreate([
-              'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
-              'faculty_id' => $personDivisions['faculty_id'],
-              'faculty_name' => $personDivisions['faculty_name'],
-              'department_id' => $personDivisions['department_id'],
-              'department_name' => $personDivisions['department_name'],
-              'email' => $personCabinet['result']['email'],
-              'remember_token' => $personCabinet['result']['token'],
-            ]);
-            $request->session()->put('person', $personCabinet['result']);
+          $testData = $userModel->update([
+            'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
+            'faculty_id' => $personDivisions['faculty_id'],
+            'faculty_name' => $personDivisions['faculty_name'],
+            'department_id' => $personDivisions['department_id'],
+            'department_name' => $personDivisions['department_name'],
+            'email' => $personCabinet['result']['email'],
+            'remember_token' => $personCabinet['result']['token'],
+          ]);
+          if($testData) {
+            $userData = User::where("asu_id", $personCabinet['result']['guid'])->first();
+            return response()->json($userData, 200);
+          } else {
+            return response()->json("error update user", 401);
           }
-
-          // ActivityLog::addToLog('Auth User, update users data table');
-          // dd($request->session()->get('person'));
-          return response()->json($testData, 200);
         } else {
-
-          $request->session()->forget('person');
-          return response()->json(['message' => 'Користувач не зареєстрований в системі']);
+          return response()->json(['message' => 'Користувач не зареєстрований в системі'], 401);
         }
       } else {
-
-        $request->session()->forget('key');
-        $request->session()->forget('person');
         return response()->json(['message' => 'невірний ключ'], 401);
       }
     }

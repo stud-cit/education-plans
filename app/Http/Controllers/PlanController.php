@@ -212,7 +212,7 @@ class PlanController extends Controller
           'verification_statuses_id' => $validated['verification_statuses_id']
         ],
         [
-          'user_id' => 1, // to do
+          'user_id' => $validated['user_id'],
           'comment' => isset($validated['comment']) ? $validated['comment'] : null,
           'status' => $validated['status']
         ]
@@ -266,5 +266,10 @@ class PlanController extends Controller
         $data = Tree::makeTree($cyclesWithSubjects);
 
         return response()->json(['data' => $data], 200);
+    }
+
+    function getProgramsOP() {
+      $data = json_decode(file_get_contents('https://op.sumdu.edu.ua/get-programs'), true);
+      return response()->json($data, 200);
     }
 }

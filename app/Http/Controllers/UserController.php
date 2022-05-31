@@ -32,9 +32,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
-
-        $validated['offices_id'] = 1; //Todo unknown field
-
+        
         User::create($validated);
 
         return $this->success(__('messages.Created'), 201);
