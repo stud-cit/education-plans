@@ -5,7 +5,7 @@ namespace App\ExternalServices\Asu;
 use App\Helpers\Helpers;
 use Illuminate\Support\Collection;
 
-class Professions extends ASU
+class Profession extends ASU
 {
     protected const SPECIALITY_ID = 2; // СПЕЦІАЛЬНІСТЬ
     protected const SPECIALIZATION_ID = 3; // СПЕЦІАЛІЗАЦІЯ

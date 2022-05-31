@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\ExternalServices\Asu\Professions;
+use App\ExternalServices\Asu\Profession;
 use App\Helpers\Filters\FilterBuilder;
 use App\Traits\HasAsuDivisionsNameTrait;
 use Carbon\Carbon;
@@ -79,25 +79,25 @@ class Plan extends Model
 
     public function getSpecialityIdNameAttribute(): string
     {
-        $professions = new Professions();
+        $professions = new Profession();
         return $professions->getTitle($this->speciality_id);
     }
 
     public function getSpecializationIdNameAttribute(): string
     {
-        $professions = new Professions();
+        $professions = new Profession();
         return $professions->getTitle($this->specialization_id);
     }
 
     public function getFieldKnowledgeIdNameAttribute(): string
     {
-        $professions = new Professions();
+        $professions = new Profession();
         return $professions->getTitle($this->field_knowlege_id);
     }
 
     public function getEducationProgramIdNameAttribute(): string
     {
-        $professions = new Professions();
+        $professions = new Profession();
         return $professions->getTitle($this->education_program_id);
     }
 

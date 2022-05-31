@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\ExternalServices\Asu\Department;
-use App\ExternalServices\Asu\Professions;
+use App\ExternalServices\Asu\Profession;
+use App\ExternalServices\Asu\Subject;
 use App\Http\Resources\DepartmentsResource;
 use Illuminate\Http\Request;
 
@@ -29,8 +30,13 @@ class AsuController extends Controller
 
     public function getSpecialization(Request $request, $id)
     {
-        $professions = new Professions();
+        $professions = new Profession();
 
         return response()->json(['data' => $professions->getSpecialization($id)]);
+    }
+    public function getSubjects()
+    {
+        $subjects = new Subject();
+        return response()->json(['data' => $subjects->getSubjects()]);
     }
 }

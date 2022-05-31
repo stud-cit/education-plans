@@ -1,6 +1,6 @@
 <?php
 
-use App\ExternalServices\Asu\Professions;
+use App\ExternalServices\Asu\Profession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AsuController,
@@ -69,14 +69,16 @@ Route::prefix('v1')->group(function () {
     Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
     Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
     Route::get('/specialization/{id}', [AsuController::class, 'getSpecialization'])->name('asu.specialization');
+    Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
 
     Route::get('/test', function (Request $request) {
-        $model = new Professions();
+        $model = new \App\ExternalServices\Asu\Qualification();
         // 319
         // 427
 //         $data = $model->getSpecialty();
-         $data = $model->getSpecialization(319);
+//         $data = $model->getSpecialization(319);
 //         $data = $model->getFieldKnowledge();
+         $data = $model->getQualifications();
 
         return response()->json($data);
     });
