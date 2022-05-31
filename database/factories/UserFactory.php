@@ -18,7 +18,6 @@ class UserFactory extends Factory
             'asu_id' => Str::random(10),
             'faculty_id' => $this->faker->randomDigit(),
             'department_id' => $this->faker->randomDigit(),
-            'offices_id' => $this->faker->randomDigit(),
             'role_id' => $this->faker->biasedNumberBetween(1,6),
             'email' => $this->faker->unique()->safeEmail(),
             // 'email_verified_at' => now(),

@@ -43,7 +43,6 @@ class AuthController extends Controller
               'faculty_name' => $personDivisions['faculty_name'],
               'department_id' => $personDivisions['department_id'],
               'department_name' => $personDivisions['department_name'],
-              'offices_id' => $personDivisions['department_id'],
               'email' => $personCabinet['result']['email'],
               'remember_token' => $personCabinet['result']['token'],
               'role_id' => 1
@@ -72,34 +71,25 @@ class AuthController extends Controller
         $personDivisions = $this->getDivisionsInfo($personCabinet['result']);
 
         if($userModel->exists()) {
-
-          $data = $userModel->first();
-
-            $testData = $userModel->update([
-              'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
-              'faculty_id' => $personDivisions['faculty_id'],
-              'faculty_name' => $personDivisions['faculty_name'],
-              'department_id' => $personDivisions['department_id'],
-              'department_name' => $personDivisions['department_name'],
-              'email' => $personCabinet['result']['email'],
-              'remember_token' => $personCabinet['result']['token'],
-            ]);
-            
-            
-          if($testData){
+          $testData = $userModel->update([
+            'name' => $personCabinet['result']['surname'] . " " . $personCabinet['result']['name'] . " " . $personCabinet['result']['patronymic'],
+            'faculty_id' => $personDivisions['faculty_id'],
+            'faculty_name' => $personDivisions['faculty_name'],
+            'department_id' => $personDivisions['department_id'],
+            'department_name' => $personDivisions['department_name'],
+            'email' => $personCabinet['result']['email'],
+            'remember_token' => $personCabinet['result']['token'],
+          ]);
+          if($testData) {
             $userData = User::where("asu_id", $personCabinet['result']['guid'])->first();
             return response()->json($userData, 200);
           } else {
             return response()->json("error update user", 401);
           }
-
-          
         } else {
-
           return response()->json(['message' => 'Користувач не зареєстрований в системі'], 401);
         }
       } else {
-
         return response()->json(['message' => 'невірний ключ'], 401);
       }
     }

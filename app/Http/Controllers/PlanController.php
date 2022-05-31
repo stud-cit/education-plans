@@ -210,7 +210,7 @@ class PlanController extends Controller
           'verification_statuses_id' => $validated['verification_statuses_id']
         ],
         [
-          'user_id' => 1, // to do
+          'user_id' => $validated['user_id'],
           'comment' => isset($validated['comment']) ? $validated['comment'] : null,
           'status' => $validated['status']
         ]
