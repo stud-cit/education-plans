@@ -27,10 +27,10 @@ class AsuController extends Controller
         return DepartmentsResource::collection($data);
     }
 
-    public function getSpecialization(Request $request)
+    public function getSpecialization(Request $request, $id)
     {
         $professions = new Professions();
 
-        return response()->json(['data' => $professions->getSpecialization($request->id)]);
+        return response()->json(['data' => $professions->getSpecialization($id)]);
     }
 }
