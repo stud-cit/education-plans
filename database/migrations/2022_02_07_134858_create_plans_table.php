@@ -24,7 +24,7 @@ class CreatePlansTable extends Migration
             $table->year('year');
             $table->integer('number_semesters');
             $table->integer('speciality_id')->nullable(true);
-            $table->string('specialization')->nullable(true);
+            $table->string('specialization_id')->nullable(true);
             $table->integer('education_program_id');
             $table->integer('qualification_id');
             $table->integer('field_knowledge_id');

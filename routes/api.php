@@ -1,5 +1,6 @@
 <?php
 
+use App\ExternalServices\Asu\Professions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AsuController,
@@ -70,9 +71,13 @@ Route::prefix('v1')->group(function () {
     Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
 
     Route::get('/test', function (Request $request) {
-        $data = __('messages.Updated');
-        //$model = App\Models\Plan::with('cycles')->find(18);
-        //$data = $model->cycles;
+        $model = new Professions();
+        // 319
+        // 427
+//         $data = $model->getSpecialty();
+         $data = $model->getSpecialization(319);
+//         $data = $model->getFieldKnowledge();
+
         return response()->json($data);
     });
 });

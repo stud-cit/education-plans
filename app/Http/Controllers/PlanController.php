@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ExternalServices\Asu\Department;
+use App\ExternalServices\Asu\Professions;
 use App\Helpers\Tree;
 use App\Http\Constant;
 use App\Http\Requests\indexPlanRequest;
@@ -72,6 +73,7 @@ class PlanController extends Controller
     public function create()
     {
         $asu = new Department();
+        $professions = new Professions();
         $formStudy = new  FormStudyController();
         $studyTerm = new StudyTermController();
         $formOrganization = new FormOrganizationController();
@@ -79,10 +81,10 @@ class PlanController extends Controller
 
         $data = [
             'faculties' => FacultiesResource::collection($asu->getFaculties()),
-            'specialities' => $formStudy->index(), //ToDo add methods get specialities with asu
-            'educational_programs' => $formStudy->index(), //ToDo add methods get educationalPrograms with asu
+            'specialities' => $professions->getSpecialty(),
+            'educational_programs' => $professions->getEducationPrograms(),
             'qualifications' => $formStudy->index(), //ToDo add methods get qualifications with asu
-            'fields_knowledge' => $formStudy->index(), //ToDo add methods get qualifications with asu
+            'fields_knowledge' => $professions->getFieldKnowledge(), //ToDo add methods get qualifications with asu
             'forms_study' => $formStudy->index(),
             'terms_study' => $studyTerm->index(),
             'forms_organizationStudy' => $formOrganization->index(),

@@ -29,7 +29,7 @@ class PlanSeeder extends Seeder
             'year' => 2022,
             'number_semesters' => 1,
             'speciality_id' => 1,
-            'specialization' => 'Інформатика',
+            'specialization_id' => 370,
             'education_program_id' => 1,
             'qualification_id' => 1,
             'field_knowledge_id' => 1,

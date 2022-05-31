@@ -20,11 +20,6 @@ class ASU
     protected const REJECTED_UNITS = [1571, 1150, 382];
     protected const REJECTED_DIVISIONS = [339, 380];
     protected const NOT_FOUND = 'Ідентифікатор не знайдено.';
-    protected const WORKERS_TYPES = [
-        'EMPLOYEE' => 2,
-        'SUPERVISORS' => 4,
-        'MANAGERS' => 8,
-    ];
 
     public function __construct() {
         $this->asu_key = config('app.asu_key');

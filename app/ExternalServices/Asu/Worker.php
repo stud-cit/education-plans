@@ -6,6 +6,12 @@ use Illuminate\Support\Collection;
 
 class Worker extends ASU
 {
+    protected const WORKERS_TYPES = [
+        'EMPLOYEE' => 2,
+        'SUPERVISORS' => 4,
+        'MANAGERS' => 8,
+    ];
+    
     /**
      * @param string $type
      * @param bool $full
