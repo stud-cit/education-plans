@@ -265,4 +265,9 @@ class PlanController extends Controller
 
         return response()->json(['data' => $data], 200);
     }
+
+    function getProgramsOP() {
+      $data = json_decode(file_get_contents('https://op.sumdu.edu.ua/get-programs'), true);
+      return response()->json($data, 200);
+    }
 }
