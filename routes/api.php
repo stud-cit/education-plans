@@ -41,7 +41,7 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('cycles', CycleController::class);
 
     Route::get('/auth', [AuthController::class, 'index']);
-        
+
     Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
     Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
     Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
@@ -68,6 +68,7 @@ Route::prefix('v1')->group(function () {
     Route::apiResource('settings', SettingController::class);
     Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
     Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
+    Route::get('/specialization/{id}', [AsuController::class, 'getSpecialization'])->name('asu.specialization');
 
     Route::get('/test', function (Request $request) {
         $model = new Professions();

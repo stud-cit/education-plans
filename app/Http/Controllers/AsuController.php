@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ExternalServices\Asu\Department;
+use App\ExternalServices\Asu\Professions;
 use App\Http\Resources\DepartmentsResource;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,7 @@ class AsuController extends Controller
 {
     private $asu;
 
-    function __construct() {
+    public function __construct() {
         $this->asu  = new Department();
     }
 
@@ -24,5 +25,12 @@ class AsuController extends Controller
         $data = $this->asu->getDepartmentsByStructuralId($request->id);
 
         return DepartmentsResource::collection($data);
+    }
+
+    public function getSpecialization(Request $request)
+    {
+        $professions = new Professions();
+
+        return response()->json(['data' => $professions->getSpecialization($request->id)]);
     }
 }
