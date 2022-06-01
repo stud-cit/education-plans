@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ASU
@@ -50,7 +51,8 @@ class ASU
 
         $response = Http::retry(3, 100)->get($url, $this->setQueryParams($queryParams));
 
-        if ($response['status'] === 'ERROR_API') {
+        if ($response['status'] === 'ERROR_API' || $response['status'] === 'ERROR_CABINET') {
+            Log::error('ASU: '. $response['result']);
             throw new HttpException ( 500,
                 'ASU: '. $response['result']
             );
