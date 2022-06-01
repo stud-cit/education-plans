@@ -26,7 +26,7 @@ class Profession extends ASU
         return $this->getFiltered(self::SPECIALITY_ID);
     }
 
-    public function getSpecialization(int $id): array
+    public function getSpecializations(int $id): array
     {
         return $this->getFiltered(self::SPECIALIZATION_ID, $id);
     }
