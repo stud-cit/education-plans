@@ -41,7 +41,7 @@ class SubjectController extends Controller
         $validated = $request->validated();
 
         if($request['selectiveDiscipline']) {
-          $validated['title'] = null;
+          $validated['asu_id'] = null;
         }
 
         $subject = Subject::create($validated);
@@ -97,6 +97,10 @@ class SubjectController extends Controller
     public function update(StoreSubjectRequest $request, Subject $subject)
     {
         $validated = $request->validated();
+
+        if($request['selectiveDiscipline']) {
+          $validated['asu_id'] = null;
+        }
 
         $subject->update($validated);
 

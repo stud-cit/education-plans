@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ExternalServices\Asu\Department;
 use App\ExternalServices\Asu\Profession;
-use App\ExternalServices\Asu\Subject;
+use App\ExternalServices\Asu\Subjects;
 use App\Http\Resources\DepartmentsResource;
 use Illuminate\Http\Request;
 
@@ -36,7 +36,7 @@ class AsuController extends Controller
     }
     public function getSubjects()
     {
-        $subjects = new Subject();
+        $subjects = new Subjects();
         return response()->json(['data' => $subjects->getSubjects()]);
     }
 }

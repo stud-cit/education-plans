@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\ExternalServices\Asu\Subjects;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +13,17 @@ class Subject extends Model
 
     public $timestamps = false;
     
-    protected $fillable = ['title', 'asu_id', 'cycle_id', 'selective_discipline_id', 'credits', 'hours', 'practices', 'laboratories'];
+    protected $fillable = [
+      'asu_id', 
+      'cycle_id', 
+      'selective_discipline_id', 
+      'credits', 
+      'hours', 
+      'practices', 
+      'laboratories'
+    ];
+
+    protected $appends = ['title'];
 
     public function selectiveDiscipline()
     {
@@ -31,5 +43,11 @@ class Subject extends Model
     public function semestersCredits()
     {
         return $this->hasMany(SemestersCredits::class);
+    }
+
+    public function getTitleAttribute(): string
+    {
+        $subjects = new Subjects();
+        return $subjects->getTitle($this->asu_id);
     }
 }

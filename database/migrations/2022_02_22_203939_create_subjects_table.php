@@ -17,8 +17,8 @@ class CreateSubjectsTable extends Migration
             $table->id();
             $table->foreignId('cycle_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('selective_discipline_id')->nullable()->constrained('selective_disciplines')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('asu_id', 60)->nullable(true);
-            $table->string('title')->nullable();
+            $table->integer('asu_id')->nullable(true);
+            // $table->string('title')->nullable();
             $table->integer('credits');
             $table->integer('hours')->nullable()->default(null);
             $table->integer('practices')->nullable()->default(null);

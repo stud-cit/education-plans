@@ -16,7 +16,8 @@ class SubjectSeeder extends Seeder
     {
       DB::table('subjects')->insert([
         'cycle_id' => 2,
-        'title' => 'Іноземна мова',
+        'asu_id' => 1,
+        // 'title' => 'Іноземна мова',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -24,7 +25,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 2,
-        'title' => 'Українознавство зі змістовим модулем "Комунікативний курс української мови"',
+        'asu_id' => 2,
+        // 'title' => 'Українознавство зі змістовим модулем "Комунікативний курс української мови"',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -32,7 +34,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 2,
-        'title' => 'Філософія',
+        'asu_id' => 3,
+        // 'title' => 'Філософія',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -41,7 +44,8 @@ class SubjectSeeder extends Seeder
      
       DB::table('subjects')->insert([
         'cycle_id' => 7,
-        'title' => 'Іноземна мова',
+        'asu_id' => 4,
+        // 'title' => 'Іноземна мова',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -49,7 +53,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 3,
-        'title' => 'Фізичне виховання (вибір форм рухової активності)',
+        'asu_id' => 5,
+        // 'title' => 'Фізичне виховання (вибір форм рухової активності)',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -57,7 +62,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 3,
-        'title' => 'Вибіркові дисципліни гуманітарного спрямування (додаток 1)',
+        'asu_id' => 6,
+        // 'title' => 'Вибіркові дисципліни гуманітарного спрямування (додаток 1)',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -65,7 +71,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 3,
-        'title' => 'Вибіркові дисципліни інших спеціальностей  (додаток 2)',
+        'asu_id' => 7,
+        // 'title' => 'Вибіркові дисципліни інших спеціальностей  (додаток 2)',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -73,7 +80,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 3,
-        'title' => 'Іноземна мова',
+        'asu_id' => 8,
+        // 'title' => 'Іноземна мова',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -97,7 +105,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 11,
-        'title' => 'Практика',
+        'asu_id' => 9,
+        // 'title' => 'Практика',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
@@ -105,7 +114,8 @@ class SubjectSeeder extends Seeder
       ]);
       DB::table('subjects')->insert([
         'cycle_id' => 12,
-        'title' => 'Кваліфікаційна робота бакалавра',
+        'asu_id' => 10,
+        // 'title' => 'Кваліфікаційна робота бакалавра',
         'credits' => 0,
         'hours' => 0,
         'practices' => 0,
