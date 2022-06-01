@@ -28,7 +28,7 @@ class AsuController extends Controller
         return DepartmentsResource::collection($data);
     }
 
-    public function getSpecialization(Request $request, $id)
+    public function getSpecializations(Request $request, $id)
     {
         $professions = new Profession();
 
