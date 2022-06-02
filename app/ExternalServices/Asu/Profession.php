@@ -7,10 +7,11 @@ use Illuminate\Support\Collection;
 
 class Profession extends ASU
 {
+    protected const FIELD_KNOWLEDGE_ID = 5; // ГАЛУЗЬ ЗНАЬ
     protected const SPECIALITY_ID = 2; // СПЕЦІАЛЬНІСТЬ
     protected const SPECIALIZATION_ID = 3; // СПЕЦІАЛІЗАЦІЯ
-    protected const FIELD_KNOWLEDGE_ID = 5; // ГАЛУЗЬ ЗНАЬ
     protected const EDUCATION_PROGRAM_ID = 9; // 9 Освітня програма
+
     private const REMOVE_KEYS = ['parent_id', 'label_id', 'label'];
 
     // TODO: DUPLICATE CODE LIKE getName
@@ -21,14 +22,14 @@ class Profession extends ASU
         return $isExists ? $this->getProfessions()->firstWhere('id', $id)['title'] : self::NOT_FOUND;
     }
 
-    public function getSpecialty(): array
-    {
-        return $this->getFiltered(self::SPECIALITY_ID);
-    }
-
     public function getSpecializations(int $id): array
     {
         return $this->getFiltered(self::SPECIALIZATION_ID, $id);
+    }
+
+    public function getSpecialties(int $id): array
+    {
+        return $this->getFiltered(self::SPECIALITY_ID, $id);
     }
 
     public function getFieldKnowledge(): array
@@ -36,9 +37,9 @@ class Profession extends ASU
         return $this->getFiltered(self::FIELD_KNOWLEDGE_ID);
     }
 
-    public function getEducationPrograms(): array
+    public function getEducationPrograms(int $id = null): array
     {
-        $filtered = collect($this->getFiltered(self::EDUCATION_PROGRAM_ID));
+        $filtered = collect($this->getFiltered(self::EDUCATION_PROGRAM_ID, $id = null));
 
         $currentLocale = setlocale(LC_ALL, NULL);
         setlocale(LC_ALL,'uk_UA.utf8');

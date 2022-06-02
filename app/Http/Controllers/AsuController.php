@@ -10,30 +10,42 @@ use Illuminate\Http\Request;
 
 class AsuController extends Controller
 {
-    private $asu;
-
-    public function __construct() {
-        $this->asu  = new Department();
-    }
-
     public function faculties()
     {
-        return response()->json(['data' => $this->asu->getFaculties()]);
+        $department = new Department();
+
+        return response()->json(['data' => $department->getFaculties()]);
     }
 
     public function departmentById(Request $request)
     {
-        $data = $this->asu->getDepartmentsByStructuralId($request->id);
+        $department = new Department();
+
+        $data = $department->getDepartmentsByStructuralId($request->id);
 
         return DepartmentsResource::collection($data);
     }
 
-    public function getSpecializations(Request $request, $id)
+    public function getSpecializations(Request $request, int $id)
+    {
+        $professions = new Profession();
+        return response()->json(['data' => $professions->getSpecializations($id)]);
+    }
+
+    public function getSpecialties(Request $request, $id)
     {
         $professions = new Profession();
 
-        return response()->json(['data' => $professions->getSpecializations($id)]);
+        return response()->json(['data' => $professions->getSpecialties($id)]);
     }
+
+    public function getEducationPrograms(Request $request, $id)
+    {
+        $professions = new Profession();
+
+        return response()->json(['data' => $professions->getEducationPrograms($id)]);
+    }
+
     public function getSubjects()
     {
         $subjects = new Subjects();

@@ -83,10 +83,8 @@ class PlanController extends Controller
 
         $data = [
             'faculties' => FacultiesResource::collection($asu->getFaculties()),
-            'specialities' => $professions->getSpecialty(),
-            'educational_programs' => $professions->getEducationPrograms(),
-            'qualifications' => $qualifications->getQualifications(), //ToDo add methods get qualifications with asu
-            'fields_knowledge' => $professions->getFieldKnowledge(), //ToDo add methods get qualifications with asu
+            'fields_knowledge' => $professions->getFieldKnowledge(),
+            'qualifications' => $qualifications->getQualifications(),
             'forms_study' => $formStudy->index(),
             'terms_study' => $studyTerm->index(),
             'forms_organizationStudy' => $formOrganization->index(),

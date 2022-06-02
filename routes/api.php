@@ -66,19 +66,23 @@ Route::prefix('v1')->group(function () {
     Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
     Route::apiResource('study-terms', StudyTermController::class);
     Route::apiResource('settings', SettingController::class);
+
     Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
     Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
-    Route::get('/specializations/{id}', [AsuController::class, 'getSpecializations'])->name('asu.specialization');
+    Route::get('/specialties/{id}', [AsuController::class, 'getSpecialties'])->name('asu.specialties');
+    Route::get('/specializations/{id}', [AsuController::class, 'getSpecializations'])->name('asu.specializations');
+    Route::get('/education-programs/{id}', [AsuController::class, 'getEducationPrograms'])->name('asu.education-programs');
+
     Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
 
     Route::get('/test', function (Request $request) {
-        $model = new \App\ExternalServices\Asu\Qualification();
+        $model = new \App\ExternalServices\Asu\Profession();
         // 319
         // 427
-//         $data = $model->getSpecialty();
+         $data = $model->getFieldKnowledge();
 //         $data = $model->getSpecialization(319);
 //         $data = $model->getFieldKnowledge();
-         $data = $model->getQualifications();
+    //     $data = $model->getQualifications();
 
         return response()->json($data);
     });
