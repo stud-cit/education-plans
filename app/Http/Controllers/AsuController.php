@@ -32,7 +32,7 @@ class AsuController extends Controller
         return response()->json(['data' => $professions->getSpecializations($id)]);
     }
 
-    public function getSpecialties(Request $request, $id)
+    public function getSpecialities(Request $request, $id)
     {
         $professions = new Profession();
 
