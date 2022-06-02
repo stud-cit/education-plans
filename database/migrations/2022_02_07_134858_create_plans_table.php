@@ -24,10 +24,10 @@ class CreatePlansTable extends Migration
             $table->year('year');
             $table->integer('number_semesters');
             $table->integer('speciality_id')->nullable(true);
-            $table->string('specialization_id')->nullable(true);
-            $table->integer('education_program_id');
+            $table->integer('specialization_id')->nullable(true);
+            $table->integer('education_program_id')->nullable(true);
             $table->integer('qualification_id');
-            $table->integer('field_knowledge_id');
+            $table->integer('field_knowledge_id')->nullable(true);
             // $table->foreignId('form_organization_id')->nullable(true);
             $table->json('hours_weeks_semesters')->nullable(true);
             $table->json('schedule_education_process')->nullable(true);
