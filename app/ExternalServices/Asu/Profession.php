@@ -37,9 +37,9 @@ class Profession extends ASU
         return $this->getFiltered(self::FIELD_KNOWLEDGE_ID);
     }
 
-    public function getEducationPrograms(int $id = null): array
+    public function getEducationPrograms(int $id): array
     {
-        $filtered = collect($this->getFiltered(self::EDUCATION_PROGRAM_ID, $id = null));
+        $filtered = collect($this->getFiltered(self::EDUCATION_PROGRAM_ID, $id));
 
         $currentLocale = setlocale(LC_ALL, NULL);
         setlocale(LC_ALL,'uk_UA.utf8');
