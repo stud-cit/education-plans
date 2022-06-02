@@ -34,7 +34,7 @@ class Plan extends Model
         'form_term_id',
         'education_level_id',
         'speciality_id',
-        'specialization',
+        'specialization_id',
         'form_study_id',
         'published'
     ];

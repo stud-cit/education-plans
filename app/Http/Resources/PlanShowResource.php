@@ -37,7 +37,7 @@ class PlanShowResource extends JsonResource
             'credits' => $this->credits,
             'number_semesters' => $this->number_semesters,
             'speciality_id' => $this->speciality_id,
-            'specialization' => $this->specialization,
+            'specialization_id' => $this->specialization_id,
             'education_program_id' => $this->education_program_id,
             'qualification_id' => $this->qualification_id,
             'field_knowledge_id' => $this->field_knowledge_id,

@@ -16,6 +16,7 @@ use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Resources\FacultiesResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\PlanShowResource;
+use App\Http\Resources\ProfessionsResource;
 use App\Models\Cycle;
 use App\Models\HoursModules;
 use App\Models\SemestersCredits;
@@ -83,8 +84,8 @@ class PlanController extends Controller
 
         $data = [
             'faculties' => FacultiesResource::collection($asu->getFaculties()),
-            'fields_knowledge' => $professions->getFieldKnowledge(),
-            'qualifications' => $qualifications->getQualifications(),
+            'fields_knowledge' => ProfessionsResource::collection($professions->getFieldKnowledge()),
+            'qualifications' => ProfessionsResource::collection($qualifications->getQualifications()),
             'forms_study' => $formStudy->index(),
             'terms_study' => $studyTerm->index(),
             'forms_organizationStudy' => $formOrganization->index(),
