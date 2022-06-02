@@ -24,7 +24,8 @@ class UserSeeder extends Seeder
             'department_id' => 325,
             'department_name' => 'Komp nauk',
             'role_id' => 1,
-            'email' => Str::random(10).'@gmail.com'
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('password')
         ]);
         DB::table('users')->insert([
             'asu_id' => '22e6106c-c580-e711-8194-001a4be6d04a',
@@ -34,7 +35,8 @@ class UserSeeder extends Seeder
             'department_id' => 325,
             'department_name' => 'Komp nauk',
             'role_id' => 2,
-            'email' => Str::random(10).'@gmail.com'
+            'email' => Str::random(10).'@gmail.com',
+            'password' => Hash::make('password')
       ]);
     }
 }
