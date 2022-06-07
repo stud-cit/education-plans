@@ -18,9 +18,10 @@ class ASU
     protected const ID_INSTITUTE = 7;
     protected const ID_FACULTY = 9;
     protected const ID_DEPARTMENT = 2;
-    protected const REJECTED_UNITS = [1571, 1150, 382];
-    protected const REJECTED_DIVISIONS = [339, 380];
+    // protected const REJECTED_UNITS = [1571, 1150, 382];
+    // protected const REJECTED_DIVISIONS = [339, 380];
     protected const NOT_FOUND = 'Ідентифікатор не знайдено.';
+    protected const ASU_ERRORS = ['ERROR_API', 'ERROR_CABINET'];
 
     public function __construct() {
         $this->asu_key = config('app.asu_key');
@@ -50,17 +51,16 @@ class ASU
         }
 
         $response = Http::retry(3, 100)->get($url, $this->setQueryParams($queryParams));
-
-        if ($response['status'] === 'ERROR_API' || $response['status'] === 'ERROR_CABINET') {
-            Log::error('ASU: '. $response['result']);
-            throw new HttpException ( 500,
-                'ASU: '. $response['result']
-            );
-        }
-
+        $status = $response['status'];
         $results = $response['result'];
 
-        if (!empty($replaceKeys)) {
+        if (in_array($status, self::ASU_ERRORS)) {
+            $message = "ASU: $results";
+            Log::error($message);
+            throw new HttpException ( 500, $message);
+        }
+
+        if (!empty($replaceKeys) && $status == 'ok') {
             $results = Helpers::replaceKeysInArray($results, $replaceKeys);
         }
 
