@@ -60,7 +60,7 @@ class ASU
             throw new HttpException ( 500, $message);
         }
 
-        if (!empty($replaceKeys) && $status == 'ok') {
+        if (!empty($replaceKeys) && $status === 'OK') {
             $results = Helpers::replaceKeysInArray($results, $replaceKeys);
         }
 
