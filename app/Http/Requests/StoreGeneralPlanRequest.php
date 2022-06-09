@@ -32,15 +32,16 @@ class StoreGeneralPlanRequest extends FormRequest
             'study_term_id' => 'required|numeric',
             'year' => 'required|numeric|date_format:Y',
             'number_semesters' => 'required|numeric',
-            'speciality_id' => 'required|numeric',
-            'specialization' => 'max:255',
-            'education_program_id' => 'required|numeric',
+            'speciality_id' => 'numeric',
+            'specialization_id' => 'numeric',
+            'education_program_id' => 'numeric',
             'qualification_id' => 'required|numeric',
-            'field_knowledge_id' => 'required|numeric',
+            'field_knowledge_id' => 'numeric',
             'form_organization_id' => 'required|numeric',
             'credits' => 'required|numeric',
             'schedule_education_process' => 'nullable|json',
-            'hours_weeks_semesters' => 'required|json'
+            'hours_weeks_semesters' => 'nullable|json',
+            'published' => 'required'
         ];
     }
 }
