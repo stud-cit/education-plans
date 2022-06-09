@@ -11,7 +11,13 @@ class Worker extends ASU
         'SUPERVISORS' => 4,
         'MANAGERS' => 8,
     ];
-    
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->asu_key = config('app.asu_key_scipub');
+    }
+
     /**
      * @param string $type
      * @param bool $full

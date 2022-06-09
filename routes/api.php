@@ -20,7 +20,8 @@ use App\Http\Controllers\{AsuController,
     RoleController,
     UserController,
     VerificationController,
-    LoginController
+    LoginController,
+    PositionController
 };
 
 /*
@@ -64,6 +65,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
         Route::apiResource('study-terms', StudyTermController::class);
         Route::apiResource('settings', SettingController::class);
+        Route::apiResource('positions', PositionController::class);
 
         Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
         Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
