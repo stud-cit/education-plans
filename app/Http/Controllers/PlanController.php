@@ -14,6 +14,7 @@ use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Resources\FacultiesResource;
+use App\Http\Resources\PlanEditResource;
 use App\Http\Resources\PlanResource;
 use App\Http\Resources\PlanShowResource;
 use App\Http\Resources\ProfessionsResource;
@@ -116,6 +117,28 @@ class PlanController extends Controller
         ]);
 
         return new PlanShowResource($model);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Plan $plan
+     * @return PlanEditResource
+     */
+    public function edit(Plan $plan)
+    {
+        $model = $plan->load([
+            'formStudy',
+            'educationLevel',
+            'formOrganization',
+            'studyTerm',
+            'cycles.cycles',
+            'cycles.subjects.semestersCredits',
+            'cycles.subjects.hoursModules.formControl',
+            'cycles.subjects.hoursModules.individualTask'
+        ]);
+
+        return new PlanEditResource($model);
     }
 
     /**
