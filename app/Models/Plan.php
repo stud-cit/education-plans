@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\ExternalServices\Asu\Profession;
+use App\ExternalServices\Asu\Qualification;
 use App\Helpers\Filters\FilterBuilder;
 use App\Traits\HasAsuDivisionsNameTrait;
 use Carbon\Carbon;
@@ -83,6 +84,12 @@ class Plan extends Model
         return $professions->getTitle($this->speciality_id);
     }
 
+    public function getQualificationIdNameAttribute(): string
+    {
+        $qualifications = new Qualification();
+        return $qualifications->getTitle($this->qualification_id);
+    }
+
     public function getSpecializationIdNameAttribute(): string
     {
         $professions = new Profession();
@@ -92,7 +99,7 @@ class Plan extends Model
     public function getFieldKnowledgeIdNameAttribute(): string
     {
         $professions = new Profession();
-        return $professions->getTitle($this->field_knowlege_id);
+        return $professions->getTitle($this->field_knowledge_id);
     }
 
     public function getEducationProgramIdNameAttribute(): string
