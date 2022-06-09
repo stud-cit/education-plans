@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ASU
 {
-    private $asu_key;
+    protected $asu_key;
     private $expirationTime;
 
     private const HOST = 'https://asu.sumdu.edu.ua/api/';
