@@ -25,6 +25,10 @@ class Subject extends Model
 
     protected $appends = ['title'];
 
+    protected $casts = [
+      'asu_id' => 'string'
+    ];
+
     public function selectiveDiscipline()
     {
         return $this->belongsTo(SelectiveDiscipline::class);
