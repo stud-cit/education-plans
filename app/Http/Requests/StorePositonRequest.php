@@ -24,7 +24,7 @@ class StorePositonRequest extends FormRequest
     public function rules()
     {
         return [
-            'position' => 'required|unique:positions|max:255'
+            'position' => 'required|unique:App\Models\Position,position|max:255'
         ];
     }
 }
