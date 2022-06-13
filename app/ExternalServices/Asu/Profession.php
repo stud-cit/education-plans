@@ -4,6 +4,7 @@ namespace App\ExternalServices\Asu;
 
 use App\Helpers\Helpers;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class Profession extends ASU
 {
@@ -14,12 +15,12 @@ class Profession extends ASU
 
     private const REMOVE_KEYS = ['parent_id', 'label_id', 'label'];
 
-    // TODO: DUPLICATE CODE LIKE getName
-    public function getTitle($id): string
+    // TODO: DUPLICATE CODE LIKE getName. How do better?
+    public function getTitle($id, $key): string
     {
         $isExists = $this->getProfessions()->contains('id', $id);
 
-        return $isExists ? $this->getProfessions()->firstWhere('id', $id)['title'] : self::NOT_FOUND;
+        return $isExists ? $this->getProfessions()->firstWhere('id', $id)[$key] : self::NOT_FOUND;
     }
 
     public function getSpecializations(int $id): array
@@ -29,12 +30,30 @@ class Profession extends ASU
 
     public function getSpecialties(int $id): array
     {
-        return $this->getFiltered(self::SPECIALITY_ID, $id);
+        $filtered = $this->getFiltered(self::SPECIALITY_ID, $id);
+
+        $collection = collect($filtered)->map(function ($item) {
+            return [
+                'id' => (int) $item['id'],
+                'title' => "{$item['code']} {$item['title']}"
+            ];
+        });
+
+        return $collection->values()->all();
     }
 
     public function getFieldKnowledge(): array
     {
-        return $this->getFiltered(self::FIELD_KNOWLEDGE_ID);
+        $fieldKnowledge = $this->getFiltered(self::FIELD_KNOWLEDGE_ID);
+        $collectWithCode = collect($fieldKnowledge)->map(function ($item) {
+            $ucFirstTitle = Str::ucfirst($item['title']);
+            return [
+                'id' => (int) $item['id'],
+                'title' => "{$item['code']} $ucFirstTitle",
+            ];
+        });
+
+        return $collectWithCode->values()->all();
     }
 
     public function getEducationPrograms(int $id): array
@@ -76,7 +95,8 @@ class Profession extends ASU
             'ID_PAR' => 'parent_id',
             'NAME_PROF' => 'title',
             'KOD_INCL' => 'label_id', // 'Код вида' from documentation
-            'NAME_INCL' => 'label'
+            'NAME_INCL' => 'label',
+            'CODE_PROF' => 'code'
         ];
         return  $this->getAsuData($url, [], 'professions', $keys);
     }

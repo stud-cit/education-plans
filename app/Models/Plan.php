@@ -81,7 +81,9 @@ class Plan extends Model
     public function getSpecialityIdNameAttribute(): string
     {
         $professions = new Profession();
-        return $professions->getTitle($this->speciality_id);
+
+        $code = $professions->getTitle($this->speciality_id, 'code');
+        return "{$code} {$professions->getTitle($this->speciality_id, 'title')}";
     }
 
     public function getQualificationIdNameAttribute(): string
@@ -93,19 +95,21 @@ class Plan extends Model
     public function getSpecializationIdNameAttribute(): string
     {
         $professions = new Profession();
-        return $professions->getTitle($this->specialization_id);
+        return $professions->getTitle($this->specialization_id, 'title');
     }
 
     public function getFieldKnowledgeIdNameAttribute(): string
     {
         $professions = new Profession();
-        return $professions->getTitle($this->field_knowledge_id);
+
+        $code = $professions->getTitle($this->field_knowledge_id, 'code');
+        return "{$code} {$professions->getTitle($this->field_knowledge_id, 'title')}";
     }
 
     public function getEducationProgramIdNameAttribute(): string
     {
         $professions = new Profession();
-        return $professions->getTitle($this->education_program_id);
+        return $professions->getTitle($this->education_program_id, 'title');
     }
 
     public function formStudy()
