@@ -15,6 +15,8 @@ class StudyTermTest extends TestCase
 
     public function testCanGetAllStudyTerm(): void
     {
+        $this->actingAsUser();
+
         StudyTerm::factory()->count(3)->create();
 
         $response = $this->getJson(route("{$this->route}index"));
@@ -35,18 +37,22 @@ class StudyTermTest extends TestCase
 
     public function testCanStoreStudyTerm(): void
     {
+        $this->actingAsUser();
+
         $studyTerm = StudyTerm::factory()->make();
 
         $response = $this->postJson(route("{$this->route}store"), $studyTerm->toArray());
 
         $response->assertCreated()
-            ->assertJson(['message'=> __('messages.Created')]);
+            ->assertJson(['message' => __('messages.Created')]);
 
         $this->assertDatabaseHas($this->table, $studyTerm->toArray());
     }
 
     public function testCanUpdateTermStudy(): void
     {
+        $this->actingAsUser();
+
         $existStudyTerm = StudyTerm::factory()->create();
         $studyTerm = StudyTerm::factory()->make();
 
@@ -60,16 +66,12 @@ class StudyTermTest extends TestCase
 
     public function testCanShowTermStudy(): void
     {
+        $this->actingAsUser();
+
         $studyTerm = StudyTerm::factory()->create();
 
         $response = $this->getJson(route("{$this->route}show", $studyTerm->id));
 
-//         $singularOrPluralYearWord = $studyTerm->year == 1 ? 'рік' : 'роки';
-//         $singularOrPluralMonthWord = $studyTerm->month == 1 ? 'місяць' : 'місяців';
-
-//         $description =
-//             "{$studyTerm->year} {$singularOrPluralYearWord} {$studyTerm->month} {$singularOrPluralMonthWord} ({$studyTerm->title})";
-// dd($description);
         $response->assertOk()->assertExactJson([
             'data' => [
                 'id' => $studyTerm->id,
@@ -85,6 +87,8 @@ class StudyTermTest extends TestCase
 
     public function testCanDeleteStudyTerm(): void
     {
+        $this->actingAsUser();
+
         $studyTerm = StudyTerm::factory()->create();
 
         $response = $this->deleteJson(route("{$this->route}destroy", $studyTerm));
@@ -97,6 +101,8 @@ class StudyTermTest extends TestCase
 
     public function testCanGetTermStudyList(): void
     {
+        $this->actingAsUser();
+
         StudyTerm::factory()->count(3)->create();
 
         $response = $this->getJson(route("{$this->route}select"));

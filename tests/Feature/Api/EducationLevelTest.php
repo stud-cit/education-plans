@@ -13,6 +13,8 @@ class EducationLevelTest extends TestCase
 
     public function testCanGetAllEducationLevels(): void
     {
+        $this->actingAsUser();
+
         $educationLevels = EducationLevel::factory()->create();
 
         $response = $this->get(route('education-levels.index'));
@@ -31,6 +33,8 @@ class EducationLevelTest extends TestCase
 
     public function testCanStoreEducationLevel(): void
     {
+        $this->actingAsUser();
+
         $educationLevel = EducationLevel::factory()->make();
 
         $response = $this->postJson(
@@ -45,6 +49,8 @@ class EducationLevelTest extends TestCase
 
     public function testCanShowEducationLevel(): void
     {
+        $this->actingAsUser();
+
         $educationLevel = EducationLevel::factory()->create();
 
         $response = $this->getJson(
@@ -62,6 +68,8 @@ class EducationLevelTest extends TestCase
 
     public function testCanUpdateEducationLevel(): void
     {
+        $this->actingAsUser();
+
         $educationLevel = EducationLevel::factory()->create();
         $newlyEducationLevel = EducationLevel::factory()->make();
 
@@ -75,6 +83,8 @@ class EducationLevelTest extends TestCase
 
     public function  testCanDeleteEducationLevel(): void
     {
+        $this->actingAsUser();
+
         $educationLevel = EducationLevel::factory()->create();
 
         $response = $this->deleteJson(

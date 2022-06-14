@@ -15,8 +15,10 @@ class CycleTest extends TestCase
 
     public function testCanStoreCycle()
     {
+        $this->actingAsUser();
+
         $cycle = Cycle::factory()->make();
-        
+
         $response = $this->postJson(route("{$this->route}store", $cycle->toArray()));
 
         $response->assertStatus(201)->assertJsonStructure([

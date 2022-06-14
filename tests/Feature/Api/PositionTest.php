@@ -3,9 +3,6 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Position;
-use App\Models\User;
-use Illuminate\Contracts\Auth\Authenticatable as UserContract;
-use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -72,13 +69,5 @@ class PositionTest extends TestCase
         $response->assertOk()->assertJson(['message' => __('messages.Deleted')]);
 
         $this->assertDatabaseMissing($this->table, $position->toArray());
-    }
-
-    private function actingAsUser()
-    {
-        Sanctum::actingAs(
-            User::factory()->create(),
-            ['*']
-        );
     }
 }

@@ -15,6 +15,7 @@ class SubjectTest extends TestCase
 
     public function testCanStoreSubject()
     {
+        $this->actingAsUser();
         $subject = Subject::factory()->make();
 
         $response = $this->postJson(route("{$this->route}store"), $subject->toArray());
@@ -24,16 +25,20 @@ class SubjectTest extends TestCase
 
     public function testCanUpdateSubject(): void
     {
+        $this->actingAsUser();
+
         $subject = Subject::factory()->make();
         $existsSubject = Subject::factory()->create();
 
         $response = $this->putJson(route("{$this->route}update", $existsSubject->id), $subject->toArray());
-        
+
         $response->assertStatus(200)->assertJson(['message' => __('messages.Updated')]);
     }
 
     public function testCanDelete()
     {
+        $this->actingAsUser();
+
         $subject = Subject::factory()->create();
 
         $response = $this->deleteJson(route("{$this->route}destroy", $subject->id));

@@ -18,6 +18,8 @@ class UserTest extends TestCase
      */
     public function testCreateUser()
     {
+        $this->actingAsUser();
+
         $this->seed(RoleSeeder::class);
 
         $user = User::factory()->create();

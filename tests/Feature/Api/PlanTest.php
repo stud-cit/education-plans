@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use App\Models\Plan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,6 +14,8 @@ class PlanTest extends TestCase
 
     public function testCanDeletePlan()
     {
+        $this->actingAsUser();
+
         $plan = Plan::factory()->create();
 
         $response = $this->deleteJson(route('plans.destroy', $plan));
@@ -22,6 +26,8 @@ class PlanTest extends TestCase
 
     public function testCanGetAllPlans()
     {
+        $this->actingAsUser();
+
         $plan = Plan::factory()->create();
 
         $response = $this->getJson(route('plans.index'));
@@ -46,6 +52,8 @@ class PlanTest extends TestCase
 
     public function testCanShowPlan()
     {
+        $this->actingAsUser();
+
         $plan = Plan::factory()->hasCycles(7)->create();
 
         $response = $this->getJson(route('plans.show', $plan));
@@ -67,9 +75,10 @@ class PlanTest extends TestCase
                 'education_program_id' => $plan->education_program_id,
                 'qualification_id' => $plan->qualification_id,
                 'field_knowledge_id' => $plan->field_knowledge_id,
-                'cycles' => \App\Helpers\Tree::makeTree($plan->cycles),
+                //'cycles' => \App\Helpers\Tree::makeTree($plan->cycles),
                 'created_at' => $plan->created_at,
             ]
         ]);
     }
+
 }

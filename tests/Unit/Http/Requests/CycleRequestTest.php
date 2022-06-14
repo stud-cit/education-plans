@@ -14,9 +14,11 @@ class CycleRequestTest extends TestCase
 
     public function testTitleIsRequired()
     {
+        $this->actingAsUser();
+
         $validatedTypeField = 'title';
         $brokenRule = null;
-        
+
         $cycle = Cycle::factory()->make([$validatedTypeField => $brokenRule]);
 
         $this->postJson(
@@ -27,10 +29,11 @@ class CycleRequestTest extends TestCase
         // update
         $existCycle = Cycle::factory()->create();
         $newCycle = Cycle::factory()->make([$validatedTypeField => $brokenRule]);
-        
+
         $this->patchJson(
             route($this->route . 'update', $existCycle),
             $newCycle->toArray()
         )->assertJsonValidationErrors($validatedTypeField);
     }
+
 }

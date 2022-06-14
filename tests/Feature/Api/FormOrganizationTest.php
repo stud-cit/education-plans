@@ -18,6 +18,8 @@ class FormOrganizationTest extends TestCase
      */
     public function testCanGetAllFormOrganization()
     {
+        $this->actingAsUser();
+
         FormOrganization::factory()->count(3)->create();
 
         $response = $this->getJson(route("{$this->route}index"));
@@ -34,6 +36,8 @@ class FormOrganizationTest extends TestCase
 
     public function testCanStoreFormOrganization()
     {
+        $this->actingAsUser();
+
         $newFormOrganization = FormOrganization::factory()->make();
 
         $response = $this->postJson(route("{$this->route}store"), $newFormOrganization->toArray());
@@ -47,6 +51,8 @@ class FormOrganizationTest extends TestCase
 
     public function testCanUpdateFormOrganization(): void
     {
+        $this->actingAsUser();
+
         $formOrganization = FormOrganization::factory()->create();
         $newFormOrganization = FormOrganization::factory()->make();
 
@@ -62,6 +68,8 @@ class FormOrganizationTest extends TestCase
 
     public function testCanDeleteFormOrganization(): void
     {
+        $this->actingAsUser();
+
         $formOrganization = FormOrganization::factory()->create();
 
         $response = $this->deleteJson(route("{$this->route}destroy", $formOrganization));
@@ -70,4 +78,5 @@ class FormOrganizationTest extends TestCase
 
         $this->assertDatabaseMissing($this->table, $formOrganization->toArray());
     }
+
 }

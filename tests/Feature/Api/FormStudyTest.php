@@ -17,6 +17,7 @@ class FormStudyTest extends TestCase
      */
     public function testCanGetAllFormStudies()
     {
+        $this->actingAsUser();
         FormStudy::factory()->count(3)->create();
 
         $response = $this->getJson(route('form-studies.index'));
@@ -33,6 +34,7 @@ class FormStudyTest extends TestCase
 
     public function testCanStoreFormStudy()
     {
+        $this->actingAsUser();
         $newFormStudy = FormStudy::factory()->make();
 
         $response = $this->postJson(route('form-studies.store'), $newFormStudy->toArray());
@@ -46,6 +48,7 @@ class FormStudyTest extends TestCase
 
     public function testCanUpdateFormStudy()
     {
+        $this->actingAsUser();
         $formStudy = FormStudy::factory()->create();
         $newFormStudy = FormStudy::factory()->make();
 
@@ -61,6 +64,7 @@ class FormStudyTest extends TestCase
 
     public function testCanDeleteFormStudy(): void
     {
+        $this->actingAsUser();
         $formStudy = FormStudy::factory()->create();
 
         $response = $this->deleteJson(route('form-studies.destroy', $formStudy));
@@ -69,4 +73,5 @@ class FormStudyTest extends TestCase
 
         $this->assertDatabaseMissing('form_studies', $formStudy->toArray());
     }
+
 }

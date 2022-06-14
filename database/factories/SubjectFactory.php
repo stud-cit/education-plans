@@ -23,7 +23,6 @@ class SubjectFactory extends Factory
             'asu_id' => $this->faker->uuid,
             'cycle_id' => Cycle::factory(),
             'selective_discipline_id' => SelectiveDiscipline::factory(),
-            'title' => $this->faker->text(255),
             'credits' => $this->faker->randomDigitNotZero(),
             'hours' => $this->faker->randomDigitNotZero(),
             'practices' => $this->faker->randomDigitNotZero(),

@@ -14,6 +14,8 @@ class SettingRequestTest extends TestCase
 
     public function testKeyUpdateNotRequired()
     {
+        $this->actingAsUser();
+
         $validatedTypeField = 'key';
 
         $existSetting = Setting::factory()->create();
@@ -27,27 +29,31 @@ class SettingRequestTest extends TestCase
 
     public function testKeyTitleValueIsRequiredWhenStore()
     {
+        $this->actingAsUser();
+
         $validatedTypeFields = ['key', 'title', 'value'];
         $brokenRule = null;
         $brokenArray = array_fill_keys($validatedTypeFields, $brokenRule);
 
         $Setting = Setting::factory()->make($brokenArray);
-        
+
         $this->postJson(route("{$this->route}store", $Setting->toArray()))
             ->assertJsonValidationErrors($validatedTypeFields);
     }
 
     public function testValueMax3chars()
     {
+        $this->actingAsUser();
+
         $validatedTypeField = 'value';
         $brokenRule = random_int(1000, 9999);
-        
+
         $Setting = Setting::factory()->make([$validatedTypeField => $brokenRule]);
         $existSetting = Setting::factory()->create();
 
         $this->postJson(route("{$this->route}store", $Setting->toArray()))
             ->assertJsonValidationErrors($validatedTypeField);
-        
+
         // update
         $this->putJson(route("{$this->route}update", $existSetting->id), [$validatedTypeField => $brokenRule])
             ->assertJsonValidationErrors($validatedTypeField);
