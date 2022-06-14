@@ -149,4 +149,9 @@ class Plan extends Model
     {
         return $this->hasMany(PlanVerification::class);
     }
+
+    public function signatures()
+    {
+        return $this->hasMany(Signature::class);
+    }
 }

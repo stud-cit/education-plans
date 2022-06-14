@@ -9,6 +9,7 @@ use App\Http\Controllers\{AsuController,
     EducationLevelController,
     FormStudyController,
     PlanController,
+    SignatureController,
     SubjectController,
     HoursWeekController,
     FormControlController,
@@ -21,8 +22,7 @@ use App\Http\Controllers\{AsuController,
     UserController,
     VerificationController,
     LoginController,
-    PositionController
-};
+    PositionController};
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +66,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('study-terms', StudyTermController::class);
         Route::apiResource('settings', SettingController::class);
         Route::apiResource('positions', PositionController::class);
+        Route::apiResource('signatures', SignatureController::class)
+            ->only('store', 'update', 'destroy');
 
         Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
         Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
