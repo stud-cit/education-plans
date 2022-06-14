@@ -2,13 +2,19 @@
 
 namespace Tests\Unit\Services;
 
+use App\ExternalServices\Asu\ASU;
 use Tests\TestCase;
 
 class AsuTest extends TestCase
 {
-    // TODO: implement
     public function testHasAPIKey()
     {
-        // $this->assertTrue(true);
+        $asu = new ASU();
+        $key = $asu->getAsuKey();
+
+        $keyNotEmpty = !(strlen($key) !== 32);
+
+        $this->assertIsString($key);
+        $this->assertTrue($keyNotEmpty);
     }
 }

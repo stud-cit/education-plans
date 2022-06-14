@@ -28,6 +28,14 @@ class ASU
         $this->expirationTime = now()->addHours(24);
     }
 
+    /**
+     * @return string
+     */
+    public function getAsuKey(): string
+    {
+        return $this->asu_key;
+    }
+
     protected function url($method) : string
     {
         return self::HOST . $method;
