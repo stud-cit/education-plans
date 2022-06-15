@@ -101,6 +101,8 @@ class SubjectController extends Controller
 
         if($request['selectiveDiscipline']) {
           $validated['asu_id'] = null;
+        } else {
+          $validated['selective_discipline_id'] = null;
         }
 
         $subject->update($validated);
