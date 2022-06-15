@@ -50,8 +50,9 @@ class SubjectController extends Controller
         $semestersCredits = collect($request['semesters_credits']);
 
         $hoursModules->transform(function ($item, $key) use ($subject) {
-            $item['subject_id'] = $subject->id;
-            return $item;
+          unset($item['checkHour']);
+          $item['subject_id'] = $subject->id;
+          return $item;
         });
 
         $semestersCredits->transform(function ($item, $key) use ($subject) {
