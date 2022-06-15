@@ -30,7 +30,8 @@ class StoreSubjectRequest extends FormRequest
             'credits' => 'required|numeric|digits_between:1,3',
             'hours' => 'numeric',
             'practices' => 'numeric',
-            'laboratories' => 'numeric'
+            'laboratories' => 'numeric',
+            'selective_discipline_id' => 'nullable'
         ];
     }
 }

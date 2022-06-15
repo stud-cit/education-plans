@@ -27,6 +27,10 @@ class FormControlSeeder extends Seeder
           'title' => 'Залік',
         ]);
         DB::table('form_controls')->insert([
+          'id' => 8,
+          'title' => 'Захист',
+        ]);
+        DB::table('form_controls')->insert([
           'id' => 10,
           'title' => 'Без атестацій',
         ]);
