@@ -24,9 +24,9 @@ class StoreSignatureRequest extends FormRequest
     public function rules()
     {
         return [
-            'plan_id' => 'required|exists:App\Models\Plan,id',
-            'position_id' => 'required|exists:App\Models\Position,id',
-            'asu_id' => 'required|max:60'
+            '*.plan_id' => 'required|exists:App\Models\Plan,id',
+            '*.position_id' => 'required|exists:App\Models\Position,id',
+            '*.asu_id' => 'required|max:60'
         ];
     }
 }
