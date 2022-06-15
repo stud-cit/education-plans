@@ -37,8 +37,10 @@ class PlanEditResource extends JsonResource
             'qualification' => $this->qualification_id_name,
             'field_knowledge' => $this->field_knowledge_id_name,
             'cycles' => $this->cycles->whereNull('cycle_id')->toArray(),
-            'hours_weeks_semesters' => json_decode($this->hours_weeks_semesters),
-            'schedule_education_process' => json_decode($this->schedule_education_process),
+            'hours_weeks_semesters' => $this->hours_weeks_semesters ?
+                json_decode($this->hours_weeks_semesters) : null,
+            'schedule_education_process' => $this->schedule_education_process ?
+                json_decode($this->schedule_education_process) : null,
 //            'sum_semesters_credits' => $this->getSumSemestersCredits(),
 //            'sum_semesters_hours' => $this->getSumSemestersHours(),
 //            'count_exams' => $this->getCountExams(),

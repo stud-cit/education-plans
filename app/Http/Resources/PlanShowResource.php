@@ -42,16 +42,19 @@ class PlanShowResource extends JsonResource
             'qualification_id' => $this->qualification_id,
             'field_knowledge_id' => $this->field_knowledge_id,
             'cycles' => $this->cycles->whereNull('cycle_id')->toArray(),
-            'hours_weeks_semesters' => json_decode($this->hours_weeks_semesters),
+            'hours_weeks_semesters' => $this->hours_weeks_semesters ?
+                json_decode($this->hours_weeks_semesters) : null,
             'created_at' => $this->created_at,
             'verification' => $this->verification,
             'published' => $this->published,
-            'schedule_education_process' => json_decode($this->schedule_education_process),
+            'schedule_education_process' => $this->schedule_education_process ?
+                json_decode($this->schedule_education_process) : null,
             'sum_semesters_credits' => $this->getSumSemestersCredits(),
             'sum_semesters_hours' => $this->getSumSemestersHours(),
             'count_exams' => $this->getCountExams(),
             'count_coursework' => $this->getCountCoursework(),
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
+            'signatures' => $this->signatures,
         ];
     }
 
