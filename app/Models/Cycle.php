@@ -24,11 +24,12 @@ class Cycle extends Model
 
     public function cycles()
     {
-        return $this->hasMany(Cycle::class, 'cycle_id')->with(
-          'cycles', 
-          'subjects.semestersCredits', 
-          'subjects.hoursModules.formControl', 
+        return $this->hasMany(Cycle::class, 'cycle_id')->with([
+          'cycles',
+          'subjects.semestersCredits',
+          'subjects.hoursModules.formControl',
+          'subjects.exams',
           'subjects.hoursModules.individualTask'
-        );
+        ]);
     }
 }

@@ -111,6 +111,7 @@ class PlanController extends Controller
             'studyTerm',
             'cycles.cycles',
             'cycles.subjects.semestersCredits',
+            'cycles.subjects.exams',
             'cycles.subjects.hoursModules.formControl',
             'cycles.subjects.hoursModules.individualTask'
         ]);
