@@ -17,8 +17,9 @@ class SignatureController extends Controller
     public function store(StoreSignatureRequest $request)
     {
         $validated = $request->validated();
-
-        Signature::create($validated);
+        clock($validated);
+        // TODO: FIX NOT WORKS
+        Signature::upsert($validated, ['plan_id'], ['position_id', 'asu_id']);
 
         return $this->success(__('messages.Created'), 201);
     }
