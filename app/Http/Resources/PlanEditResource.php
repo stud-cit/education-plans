@@ -54,7 +54,7 @@ class PlanEditResource extends JsonResource
             'count_exams' => $this->getCountExams(),
             'count_coursework' => $this->getCountCoursework(),
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
-//            'signatures' => $this->signatures,
+            'signatures' => SignatureResource::collection($this->signatures),
         ];
     }
 
