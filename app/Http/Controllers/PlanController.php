@@ -105,15 +105,14 @@ class PlanController extends Controller
     public function show(Plan $plan)
     {
         $model = $plan->load([
-          'verification',
-          'formStudy',
-          'educationLevel',
-          'formOrganization',
-          'studyTerm',
-          'cycles.cycles',
-          'cycles.subjects.semestersCredits',
-          'cycles.subjects.hoursModules.formControl',
-          'cycles.subjects.hoursModules.individualTask'
+            'formStudy',
+            'educationLevel',
+            'formOrganization',
+            'studyTerm',
+            'cycles.cycles',
+            'cycles.subjects.semestersCredits',
+            'cycles.subjects.hoursModules.formControl',
+            'cycles.subjects.hoursModules.individualTask'
         ]);
 
         return new PlanShowResource($model);
@@ -128,6 +127,7 @@ class PlanController extends Controller
     public function edit(Plan $plan)
     {
         $model = $plan->load([
+            'verification',
             'formStudy',
             'educationLevel',
             'formOrganization',
