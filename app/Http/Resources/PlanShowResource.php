@@ -36,7 +36,7 @@ class PlanShowResource extends JsonResource
             'education_program' => $this->education_program_id_name,
             'qualification' => $this->qualification_id_name,
             'field_knowledge' => $this->field_knowledge_id_name,
-            'cycles' => $this->cycles->whereNull('cycle_id')->toArray(),
+            'cycles' => CycleShowResource::collection($this->cycles->whereNull('cycle_id')),
             'hours_weeks_semesters' => $this->hours_weeks_semesters ?
                 json_decode($this->hours_weeks_semesters) : null,
             'schedule_education_process' => $this->schedule_education_process ?
