@@ -149,9 +149,11 @@ return [
         'study_term_id' => 'Ідентифікатор терміну навчання',
         'number_semesters' => 'Кількість семестрів',
         'speciality_id' => 'Ідентифікатор спеціальності',
-        'education_level_id' => 'Ідентифікатор Освітнього (Освітньо-наукового) рівеня',
+        'education_level_id' => 'Ідентифікатор Освітнього (Освітньо-наукового) рівня',
         'max_hours_semesters' => 'Максимум годин на семестр',
-        'schedule_education_process' => 'Графік навчального процесу,'
+        'schedule_education_process' => 'Графік навчального процесу,',
+        'specialization_id' => 'Спеціалізація',
+        'education_program_id' => 'Освітня програма',
     ],
 
 ];
