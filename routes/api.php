@@ -77,7 +77,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
 
         Route::get('/user', function (Request $request) {
-            return $request->user();
+            return $request->user()->makeHidden(['asu_id','created_at','updated_at']);
         });
         Route::get('/userName', function (Request $request) {
             return response()->json(['userName' => $request->user()->name]);
