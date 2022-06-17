@@ -18,7 +18,7 @@ class SignatureController extends Controller
     {
         $validated = $request->validated();
 
-        Signature::create($validated);
+        Signature::upsert($validated, ['id', 'plan_id'], ['position_id', 'asu_id']);
 
         return $this->success(__('messages.Created'), 201);
     }

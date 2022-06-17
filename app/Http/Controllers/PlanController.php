@@ -115,10 +115,11 @@ class PlanController extends Controller
             'cycles.subjects.test',
             'cycles.subjects.individualTasks',
             'cycles.subjects.hoursModules.formControl',
-            'cycles.subjects.hoursModules.individualTask'
+            'cycles.subjects.hoursModules.individualTask',
+            'signatures'
         ]);
 
-        return new PlanShowResource($model);
+        return new PlanEditResource($model);
     }
 
     /**
@@ -138,7 +139,8 @@ class PlanController extends Controller
             'cycles.cycles',
             'cycles.subjects.semestersCredits',
             'cycles.subjects.hoursModules.formControl',
-            'cycles.subjects.hoursModules.individualTask'
+            'cycles.subjects.hoursModules.individualTask',
+            'signatures'
         ]);
 
         return new PlanEditResource($model);
