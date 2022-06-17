@@ -9,5 +9,9 @@ class Position extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['position'];
+    protected $fillable = ['position', 'agreed'];
+
+    protected $casts = [
+        'agreed' => 'boolean'
+    ];
 }

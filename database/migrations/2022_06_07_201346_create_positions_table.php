@@ -15,6 +15,7 @@ class CreatePositionsTable extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
             $table->id();
+            $table->boolean('agreed')->default(false);
             $table->string('position')->unique();
             $table->timestamps();
         });

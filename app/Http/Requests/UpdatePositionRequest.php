@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePositonRequest extends FormRequest
+class UpdatePositionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,12 @@ class StorePositonRequest extends FormRequest
     public function rules()
     {
         return [
-            'position' => 'required|unique:App\Models\Position,position|max:255'
+            'agreed' => 'nullable|boolean',
+            'position' => [
+                'required',
+                Rule::unique('positions')->ignore($this->position, 'position'),
+                'max:255'
+            ],
         ];
     }
 }

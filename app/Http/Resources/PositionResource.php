@@ -16,6 +16,7 @@ class PositionResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'agreed' => $this->agreed,
             'position' => $this->position,
             'edit' => false
         ];

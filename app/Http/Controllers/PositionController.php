@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePositonRequest;
+use App\Http\Requests\{ StorePositionRequest, UpdatePositionRequest };
 use App\Http\Resources\PositionResource;
 use App\Models\Position;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ class PositionController extends Controller
 {
     public function index()
     {
-        return PositionResource::collection(Position::select('id', 'position')->get());
+        return PositionResource::collection(Position::select('id', 'position', 'agreed')->get());
     }
 
     /**
@@ -20,7 +20,7 @@ class PositionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StorePositonRequest $request)
+    public function store(StorePositionRequest $request)
     {
         $validated = $request->validated();
 
@@ -36,7 +36,7 @@ class PositionController extends Controller
      * @param  \App\Models\Position  $position
      * @return \Illuminate\Http\Response
      */
-    public function update(StorePositonRequest $request, Position $position)
+    public function update(UpdatePositionRequest $request, Position $position)
     {
         $validated = $request->validated();
 
