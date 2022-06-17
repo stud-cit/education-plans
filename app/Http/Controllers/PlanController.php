@@ -119,7 +119,7 @@ class PlanController extends Controller
             'signatures'
         ]);
 
-        return new PlanEditResource($model);
+        return new PlanShowResource($model);
     }
 
     /**
