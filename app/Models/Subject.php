@@ -7,6 +7,7 @@ use App\ExternalServices\Asu\Subjects;
 use App\Http\Constant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subject extends Model
 {
@@ -47,12 +48,23 @@ class Subject extends Model
 
     public function exams()
     {
-        return $this->hoursModules()
-            ->select(['subject_id'])
-            ->selectRaw('(GROUP_CONCAT(DISTINCT semester)) as semester')
-            ->where('form_control_id', Constant::FORM_CONTROL['EXAM'])
-            ->groupBy('subject_id');
+        return $this->getSemestersOnFormControl(Constant::FORM_CONTROL['EXAM']);
     }
+
+    public function test()
+    {
+        return $this->getSemestersOnFormControl(Constant::FORM_CONTROL['TEST']);
+    }
+
+    public function individualTasks()
+    {
+        return $this->getSemestersOnFormControl(Constant::FORM_CONTROL['PROTECTION'])
+                ->orWhereIn('individual_task_id', [
+                        Constant::INDIVIDUAL_TASKS['CONTROL_WORK'],
+                        Constant::INDIVIDUAL_TASKS['COURSE_WORK']
+                ]);
+    }
+
 
     public function semestersCredits()
     {
@@ -63,5 +75,14 @@ class Subject extends Model
     {
         $subjects = new Subjects();
         return $subjects->getTitle($this->asu_id);
+    }
+
+    private function getSemestersOnFormControl(int $form_control_id): HasMany
+    {
+        return $this->hoursModules()
+            ->select(['subject_id'])
+            ->selectRaw('(GROUP_CONCAT(DISTINCT semester)) as semester')
+            ->where('form_control_id', $form_control_id)
+            ->groupBy('subject_id');
     }
 }

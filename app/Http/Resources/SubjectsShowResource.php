@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Constant;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SubjectsShowResource extends JsonResource
@@ -28,6 +29,9 @@ class SubjectsShowResource extends JsonResource
             "semesters_credits" => $this->whenLoaded('semestersCredits'),
             "hours_modules" => $this->whenLoaded('hoursModules'),
             "exams" => count($this->exams) ? $this->exams->first()->semester : '',
+            "test" => count($this->test) ? $this->test->first()->semester : '',
+            "individual_tasks" => count($this->individualTasks) ? $this->individualTasks->first()->semester : '',
+            "total_volume_hour" => $this->credits * Constant::NUMBER_HOURS_IN_CREDIT,
         ];
     }
 }

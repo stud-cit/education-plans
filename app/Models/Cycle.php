@@ -29,6 +29,8 @@ class Cycle extends Model
           'subjects.semestersCredits',
           'subjects.hoursModules.formControl',
           'subjects.exams',
+          'subjects.test',
+          'subjects.individualTasks',
           'subjects.hoursModules.individualTask'
         ]);
     }
