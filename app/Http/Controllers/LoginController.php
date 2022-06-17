@@ -24,7 +24,11 @@ class LoginController extends Controller
             ]);
         }
 
-        return ['token' => $user->createToken('admin')->plainTextToken];
+        return [
+            'token' => $user->createToken('admin')->plainTextToken,
+            'user' => $user->makeHidden(['asu_id','created_at','updated_at'])
+        ];
+
     }
 
     public function logout(Request $request)
