@@ -17,6 +17,8 @@ class Plan extends Model
     use HasAsuDivisionsNameTrait;
     use \Bkwld\Cloner\Cloneable;
 
+    protected $cloneable_relations = ['signatures'];
+
     protected $fillable = [
         'guid',
         'title',
