@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             // HoursWeekSeeder::class,
             SettingSeeder::class,
             PositionSeeder::class,
+            NoteSeeder::class,
         ]);
     }
 }

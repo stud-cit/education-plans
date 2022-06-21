@@ -22,6 +22,7 @@ use App\Http\Controllers\{AsuController,
     UserController,
     VerificationController,
     LoginController,
+    NoteController,
     PositionController};
 
 /*
@@ -68,6 +69,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('positions', PositionController::class);
         Route::apiResource('signatures', SignatureController::class)
             ->only('store', 'update', 'destroy');
+        Route::get('notes/rules', [NoteController::class, 'rules'])->name('notes.rules');
+        Route::apiResource('notes', NoteController::class)->except('show');
 
         Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
         Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
