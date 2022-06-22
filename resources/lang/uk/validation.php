@@ -154,6 +154,7 @@ return [
         'schedule_education_process' => 'Графік навчального процесу,',
         'specialization_id' => 'Спеціалізація',
         'education_program_id' => 'Освітня програма',
+        'value' => 'Значення',
     ],
 
 ];
