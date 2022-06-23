@@ -28,11 +28,21 @@ class PlanSeeder extends Seeder
             'study_term_id' => 1,
             'year' => 2022,
             'number_semesters' => 1,
-            'speciality_id' => 1,
-            'specialization_id' => 370,
-            'education_program_id' => 1,
+            'speciality_id' => null,
+            'specialization_id' => null,
+            'education_program_id' => null,
             'qualification_id' => 1,
-            'field_knowledge_id' => 1,
+            'field_knowledge_id' => 115,
+            'hours_weeks_semesters' => json_encode([
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 1, "semester" => 1],
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 1, "semester" => 2],
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 2, "semester" => 3],
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 2, "semester" => 4],
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 3, "semester" => 5],
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 3, "semester" => 6],
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 4, "semester" => 7],
+                ["hour" => 0, "week" => 3, "index" => 1, "course" => 4, "semester" => 8]
+            ]),
             'created_at' => now()
         ]);
     }
