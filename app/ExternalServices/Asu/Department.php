@@ -9,7 +9,7 @@ class Department extends ASU
     public function getFaculties(): Collection
     {
         $filtered = $this->getDepartments()->filter(function ($value) {
-            return $value['unit_type'] == self::ID_FACULTY;
+            return $value['unit_type'] == self::ID_FACULTY || $value['unit_type'] == self::ID_INSTITUTE;
         });
 
         return $filtered->values();
