@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             FormOrganizationSeeder::class,
             StudyTermSeeder::class,
             PlanSeeder::class,
+            ListCycleSeeder::class,
             CycleSeeder::class,
             SubjectSeeder::class,
             // HoursWeekSeeder::class,

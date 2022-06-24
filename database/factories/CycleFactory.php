@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Cycle;
+use App\Models\ListCycle;
 
 class CycleFactory extends Factory
 {
@@ -18,8 +19,9 @@ class CycleFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->sentence(),
+            // 'title' => $this->faker->sentence(),
             'cycle_id' => null,
+            'list_cycle_id' => ListCycle::factory(),
             'credit' => $this->faker->randomDigit(),
         ];
     }

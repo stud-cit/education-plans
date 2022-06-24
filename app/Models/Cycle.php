@@ -9,13 +9,17 @@ class Cycle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'cycle_id', 'credit', 'plan_id'];
+    protected $fillable = ['cycle_id', 'list_cycle_id', 'credit', 'plan_id'];
 
     protected $casts = [
         'credit' => 'int'
     ];
 
+    protected $appends = ['title'];
+
     protected $hidden = ['created_at', 'updated_at'];
+
+    protected $touches = ['listCycle'];
 
     public function subjects()
     {
@@ -33,5 +37,15 @@ class Cycle extends Model
           'subjects.individualTasks',
           'subjects.hoursModules.individualTask'
         ]);
+    }
+
+    public function listCycle()
+    {
+        return $this->belongsTo(ListCycle::class);
+    }
+
+    public function getTitleAttribute()
+    {
+        return $this->listCycle->title;
     }
 }

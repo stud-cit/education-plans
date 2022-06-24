@@ -21,7 +21,8 @@ class CreateCyclesTable extends Migration
                 ->constrained('cycles')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
-            $table->string('title');
+            $table->foreignId('list_cycle_id')->constant();
+            // $table->string('title');
             $table->integer('credit')->nullable(true);
             $table->timestamps();
         });
@@ -33,7 +34,7 @@ class CreateCyclesTable extends Migration
      * @return void
      */
     public function down()
-    {      
+    {
         Schema::dropIfExists('cycles');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CycleResource extends JsonResource
+class ListCycleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,7 @@ class CycleResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
-            'credit' => $this->credit,
-            'plan_id' => $this->plan_id,
-            'cycle_id' => $this->cycle_id,
-            'list_cycle_id' => $this->listCycle->cycle_id
+            'title' => $this->title
         ];
     }
 }

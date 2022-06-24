@@ -24,8 +24,8 @@ class CycleTest extends TestCase
         $response->assertStatus(201)->assertJsonStructure([
             'data' => [
                 'id',
-                'title',
                 'credit',
+                'list_cycle_id',
                 'cycle_id'
             ]
         ]);

@@ -1,6 +1,5 @@
 <?php
 
-use App\ExternalServices\Asu\Profession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AsuController,
@@ -23,7 +22,9 @@ use App\Http\Controllers\{AsuController,
     VerificationController,
     LoginController,
     NoteController,
-    PositionController};
+    PositionController,
+    ListCycleController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,7 @@ Route::prefix('v1')->group(function () {
             ->only('store', 'update', 'destroy');
         Route::get('notes/rules', [NoteController::class, 'rules'])->name('notes.rules');
         Route::apiResource('notes', NoteController::class)->except('show');
+        Route::apiResource('list-cycles', ListCycleController::class)->only('index');
 
         Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
         Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');

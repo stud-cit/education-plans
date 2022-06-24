@@ -194,6 +194,7 @@ class PlanController extends Controller
       $cloneCycle = Cycle::create([
         "title" => $cycle['title'],
         "cycle_id" => $cycleId,
+        "list_cycle_id" => $cycle['list_cycle_id'],
         "credit" => $cycle['credit'],
         "plan_id" => $plan_id
       ]);
