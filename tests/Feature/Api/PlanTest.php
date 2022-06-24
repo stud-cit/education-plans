@@ -2,10 +2,11 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\User;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use App\Models\Plan;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+use App\Http\Resources\CycleShowResource;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PlanTest extends TestCase
@@ -65,18 +66,24 @@ class PlanTest extends TestCase
                 'faculty' => $plan->facultyName,
                 'department' => $plan->departmentName,
                 'year' => $plan->year,
-                'form_study' => $plan->formStudy->title,
-                'education_level' => $plan->educationLevel->title,
-                'form_organization' => $plan->formOrganization->title,
+                'form_study' => $plan->formStudy,
+                'form_organization' => $plan->formOrganization,
+                'education_level' => $plan->educationLevel,
+                'study_term' => $plan->studyTerm,
+                'form_organization_id' => $plan->formOrganization ? $plan->formOrganization->id : null,
                 'credits' => $plan->credits,
                 'number_semesters' => $plan->number_semesters,
-                'speciality_id' => $plan->speciality_id,
-                'specialization' => $plan->specialization,
-                'education_program_id' => $plan->education_program_id,
-                'qualification_id' => $plan->qualification_id,
-                'field_knowledge_id' => $plan->field_knowledge_id,
-                //'cycles' => \App\Helpers\Tree::makeTree($plan->cycles),
-                'created_at' => $plan->created_at,
+                'speciality' => $plan->speciality_id_name,
+                'specialization' => $plan->specialization_id_name,
+                'education_program' => $plan->education_program_id_name,
+                'qualification' => $plan->qualification_id_name,
+                'field_knowledge' => $plan->field_knowledge_id_name,
+                'cycles' => CycleShowResource::collection($plan->cycles->whereNull('cycle_id')),
+                'hours_weeks_semesters' => $plan->hours_weeks_semesters ?
+                    json_decode($plan->hours_weeks_semesters) : null,
+                'schedule_education_process' => $plan->schedule_education_process ?
+                    json_decode($plan->schedule_education_process) : null,
+
             ]
         ]);
     }

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Plan;
 use App\Models\Position;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SignatureFactory extends Factory
@@ -18,7 +19,7 @@ class SignatureFactory extends Factory
         return [
             'plan_id' => Plan::factory(),
             'position_id' => Position::factory(),
-            'asu_id' => $this->faker->uuid(),
+            'asu_id' => Str::uuid(),
         ];
     }
 }
