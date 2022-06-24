@@ -30,8 +30,26 @@ class SubjectsShowResource extends JsonResource
             "hours_modules" => $this->whenLoaded('hoursModules'),
             "exams" => count($this->exams) ? $this->exams->first()->semester : '',
             "test" => count($this->test) ? $this->test->first()->semester : '',
-            "individual_tasks" => count($this->individualTasks) ? $this->individualTasks->first()->semester : '',
+//            "individual_tasks" => count($this->individualTasks) ? $this->individualTasks->first()->semester : '',
+            "individual_tasks" => $this->getIndividualTasks($this->whenLoaded('hoursModules')),
             "total_volume_hour" => $this->credits * Constant::NUMBER_HOURS_IN_CREDIT,
         ];
+    }
+
+    private function getIndividualTasks($hours_modules)
+    {
+        $individual_tasks = '';
+        $hours_modules->groupBy('individualTask.id')->map( function ($individual_task, $key) use (&$individual_tasks) {
+            if (in_array($key, [
+                Constant::INDIVIDUAL_TASKS['COURSE_WORK'],
+                Constant::INDIVIDUAL_TASKS['CONTROL_WORK']
+                ])
+            ) {
+                $individual_tasks .=
+                    Constant::INDIVIDUAL_TASKS_SHORT[$key] . '('.
+                    $individual_task->pluck('semester')->join(',') . ') ';
+            }
+        });
+        return trim($individual_tasks);
     }
 }
