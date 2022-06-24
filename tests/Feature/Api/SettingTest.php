@@ -24,7 +24,7 @@ class SettingTest extends TestCase
 
         $response->assertOk()->assertJsonStructure([
             'data' => [
-                '*' => ['title', 'key', 'value']
+                '*' => ['title', 'key', 'value', 'edit']
             ]
         ]);
     }
@@ -56,6 +56,7 @@ class SettingTest extends TestCase
                 'key' => $existSetting->key,
                 'title' => $existSetting->title,
                 'value' => $existSetting->value,
+                'edit' => false,
             ]
         ]);
     }
