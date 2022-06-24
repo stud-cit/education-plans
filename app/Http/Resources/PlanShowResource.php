@@ -41,6 +41,7 @@ class PlanShowResource extends JsonResource
                 json_decode($this->hours_weeks_semesters) : null,
             'schedule_education_process' => $this->schedule_education_process ?
                 json_decode($this->schedule_education_process) : null,
+            'signatures' => SignatureShowResource::collection($this->signatures)
         ];
     }
 
