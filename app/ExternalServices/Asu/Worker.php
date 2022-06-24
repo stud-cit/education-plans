@@ -58,11 +58,7 @@ class Worker extends ASU
 
     public function getFullNameWorker($asu_id): String
     {
-        $workers = $this->getAllWorkers();
-
-        $worker = $workers->first(function ($item) use ($asu_id) {
-            return $item['asu_id'] === $asu_id;
-        });
+        $worker = $this->getWorker($asu_id);
 
         if (empty($worker)) {
             return self::NOT_FOUND;
@@ -70,4 +66,37 @@ class Worker extends ASU
 
         return $worker['last_name'] .' '. $worker['first_name'] .' '. $worker['patronymic'];
     }
+
+    /**
+     * @param $asu_id
+     * @return Collection
+     */
+
+    public function getWorker($asu_id): array
+    {
+        $workers = $this->getAllWorkers();
+
+        $worker = $workers->first(function ($item) use ($asu_id) {
+            return $item['asu_id'] === $asu_id;
+        });
+
+        return $worker ?? [];
+    }
+
+    /**
+     * @param $asu_id
+     * @param $attribute
+     * @return string
+     */
+    public function getWorkerAttribute($asu_id, $attribute = 'asu_id'): string
+    {
+        $worker = $this->getWorker($asu_id);
+
+        if (empty($worker)) {
+            return self::NOT_FOUND;
+        }
+
+        return $worker[$attribute];
+    }
+
 }
