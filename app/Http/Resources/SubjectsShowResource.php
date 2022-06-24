@@ -26,7 +26,7 @@ class SubjectsShowResource extends JsonResource
             "laboratories" => $this->laboratories,
             "title" => $this->title,
             "selective_discipline" => $this->whenLoaded('selectiveDiscipline'),
-            "semesters_credits" => $this->whenLoaded('semestersCredits'),
+            "semesters_credits" => $this->whenLoaded('semestersCredits')->pluck('credit','semester'),
             "hours_modules" => $this->whenLoaded('hoursModules'),
             "exams" => count($this->exams) ? $this->exams->first()->semester : '',
             "test" => count($this->test) ? $this->test->first()->semester : '',
