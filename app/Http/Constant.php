@@ -21,4 +21,9 @@ class Constant
         'COURSE_WORK' => 2,
         'NO_TASK' => 3,
     ];
+    const INDIVIDUAL_TASKS_SHORT = [
+        self::INDIVIDUAL_TASKS['CONTROL_WORK'] => 'кр',
+        self::INDIVIDUAL_TASKS['COURSE_WORK'] => 'КР',
+        self::INDIVIDUAL_TASKS['NO_TASK'] => 'БЗ'
+    ];
 }
