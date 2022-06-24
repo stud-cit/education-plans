@@ -80,7 +80,7 @@ class Plan extends Model
         return Carbon::parse($value)->format('d.m.Y H:i');
     }
 
-    public function getSpecialityIdNameAttribute(): string|null
+    public function getSpecialityIdNameAttribute()
     {
         if (!$this->speciality_id) return null;
 
@@ -96,7 +96,7 @@ class Plan extends Model
         return $qualifications->getTitle($this->qualification_id);
     }
 
-    public function getSpecializationIdNameAttribute(): string|null
+    public function getSpecializationIdNameAttribute()
     {
         if (!$this->specialization_id) return null;
 
@@ -104,7 +104,7 @@ class Plan extends Model
         return $professions->getTitle($this->specialization_id, 'title');
     }
 
-    public function getFieldKnowledgeIdNameAttribute(): string|null
+    public function getFieldKnowledgeIdNameAttribute()
     {
         if (!$this->field_knowledge_id) return null;
 
@@ -114,7 +114,7 @@ class Plan extends Model
         return "{$code} {$professions->getTitle($this->field_knowledge_id, 'title')}";
     }
 
-    public function getEducationProgramIdNameAttribute(): string|null
+    public function getEducationProgramIdNameAttribute()
     {
         if (!$this->education_program_id) return null;
 
