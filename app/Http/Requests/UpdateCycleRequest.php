@@ -25,7 +25,8 @@ class UpdateCycleRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
-            'credit' => 'numeric|digits_between:1,3'
+            'credit' => 'numeric|digits_between:1,3',
+            'has_discipline' => 'required'
         ];
     }
 }

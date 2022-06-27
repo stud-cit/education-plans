@@ -21,6 +21,5 @@ Route::get('/', function () {
 
 // test auth
 Route::get('/register', [AuthController::class, 'register']);
-Route::get('/get-program', [PlanController::class, 'getProgramsOP']);
 // Route::get('/logout', [AuthController::class, 'logout']);
 

@@ -23,8 +23,8 @@ use App\Http\Controllers\{AsuController,
     LoginController,
     NoteController,
     PositionController,
-    ListCycleController
-};
+    ListCycleController,
+    OpController};
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +41,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
     Route::get('/auth', [AuthController::class, 'index']);
 
-    Route::middleware('auth:sanctum')->group(function () {
+    // Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
+        Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])->name('plans.verificationOP.store');
         Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
         Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
         Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
@@ -80,6 +81,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/specializations/{id}', [AsuController::class, 'getSpecializations'])->name('asu.specializations');
         Route::get('/education-programs/{id}', [AsuController::class, 'getEducationPrograms'])->name('asu.education-programs');
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
+        Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
         Route::get('/user', function (Request $request) {
             return $request->user()->makeHidden(['asu_id','created_at','updated_at']);
@@ -88,7 +90,7 @@ Route::prefix('v1')->group(function () {
             return response()->json(['userName' => $request->user()->name]);
         });
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-    });
+    // });
     Route::get('/test', function (Request $request) {
         $model = new \App\ExternalServices\Asu\Profession();
         // 319

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ExternalServices\Asu\Department;
 use App\ExternalServices\Asu\Profession;
 use App\ExternalServices\Asu\Qualification;
+use App\ExternalServices\Op\OP;
 use App\Helpers\Tree;
 use App\Http\Constant;
 use App\Http\Requests\indexPlanRequest;
@@ -24,6 +25,7 @@ use App\Models\SemestersCredits;
 use App\Models\Plan;
 use App\Models\Subject;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class PlanController extends Controller
 {
@@ -196,17 +198,20 @@ class PlanController extends Controller
         "cycle_id" => $cycleId,
         "list_cycle_id" => $cycle['list_cycle_id'],
         "credit" => $cycle['credit'],
-        "plan_id" => $plan_id
+        "plan_id" => $plan_id,
+        "has_discipline" => $cycle['has_discipline']
       ]);
       foreach ($cycle['subjects'] as $subject) {
         $cloneSubject = Subject::create([
-          "title" => $subject['title'],
+          "asu_id" => $subject['asu_id'],
           "cycle_id" => $cloneCycle->id,
           "selective_discipline_id" => $subject['selective_discipline_id'],
           "credits" => $subject['credits'],
           "hours" => $subject['hours'],
           "practices" => $subject['practices'],
-          "laboratories" => $subject['laboratories']
+          "laboratories" => $subject['laboratories'],
+          "faculty_id" => $subject['faculty_id'],
+          "department_id" => $subject['department_id']
         ]);
         foreach ($subject->hoursModules as $hoursModule) {
           HoursModules::create([
@@ -248,6 +253,90 @@ class PlanController extends Controller
         ]
       );
       $this->success(__('messages.Updated'), 200);
+    }
+
+    public function verificationOP(Request $request, Plan $plan) {
+      $modelOP = new OP();
+      $planId = $plan->id;
+      $errors = 0;
+      $comment = 'Не відповідає освітній програмі:<br>';
+      $control_form = [
+        1 => 'іспит', 
+        2 => 'диф. залік',
+        3 => 'залік', 
+        8 => 'захист'
+      ];
+      
+      $model = Subject::with('hoursModules', 'cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+        $queryCycle->where('plan_id', $planId);
+      })->get();
+
+      $program = $modelOP->getProgramId($request->program_op_id);
+
+      $components = array_filter($program['component'], function($value) {
+        return in_array($value['group_id'], [7, 8, 9, 10]);
+      });
+
+      foreach ($model as $value) {
+        foreach($components as $item) {
+          if ($item['subject'] == $value['title']) {
+            if(intval($item['credit_col']) != $value['credits']) {
+              Subject::find($value['id'])->update(['verification' => 0]);
+              $errors++;
+              $comment .= 'Не вірна кількість кредитів в дисципліні ' . $item['subject'] . ';<br>';
+            } elseif($control_form[$this->getLastFormControl($value['hoursModules'])] != $item['control_form']) {
+              Subject::find($value['id'])->update(['verification' => 0]);
+              $errors++;
+              $comment .= 'Не вірна остання форма контролю в дисципліні ' . $item['subject'] . ';<br>';
+            } else {
+              Subject::find($value['id'])->update(['verification' => 1]);
+            }
+          }
+        }
+      }
+
+      if(count($model) != count($components)) {
+        $errors++;
+        $comment .= 'Не вірна кількість дисциплін.';
+      }
+
+      if($errors > 0) {
+        $data = [
+          'user_id' => $request['user_id'],
+          'comment' => $comment,
+          'status' => false
+        ];
+      } else {
+        $data = [
+          'user_id' => $request['user_id'],
+          'comment' => null,
+          'status' => true
+        ];
+      }
+
+      $plan->verification()->updateOrCreate(
+        [
+          "plan_id" => $plan->id,
+          'verification_statuses_id' => 1
+        ],
+        $data
+      );
+
+      $plan->update([
+        "program_op_id" => $request->program_op_id
+      ]);
+ 
+      return $this->success(__('messages.Updated'), 200);
+    }
+    
+    public function getLastFormControl($hoursModules) {
+      $result = null;
+      foreach ($hoursModules as $value) {
+        if(in_array($value['form_control_id'], [1, 2, 3, 8])) {
+          $result = $value['form_control_id'];
+        }
+      }
+      return $result;
     }
 
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
@@ -296,10 +385,5 @@ class PlanController extends Controller
         $data = Tree::makeTree($cyclesWithSubjects);
 
         return response()->json(['data' => $data], 200);
-    }
-
-    function getProgramsOP() {
-      $data = json_decode(file_get_contents('https://op.sumdu.edu.ua/get-programs'), true);
-      return response()->json($data, 200);
     }
 }

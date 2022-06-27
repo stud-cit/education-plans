@@ -6,6 +6,7 @@ use App\Http\Requests\StoreSubjectRequest;
 use App\Models\Subject;
 use App\Models\HoursModules;
 use App\Models\SemestersCredits;
+use App\Models\PlanVerification;
 use PhpParser\Node\Stmt\TryCatch;
 
 class SubjectController extends Controller
@@ -133,6 +134,8 @@ class SubjectController extends Controller
         }
         HoursModules::insert($hoursModules);
         SemestersCredits::insert($semestersCredits);
+
+        PlanVerification::where("plan_id", $request['plan_id'])->delete();
 
         return $this->success(__('messages.Updated'), 200);
     }

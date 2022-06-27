@@ -24,6 +24,7 @@ class CreateCyclesTable extends Migration
             $table->foreignId('list_cycle_id')->constant();
             // $table->string('title');
             $table->integer('credit')->nullable(true);
+            $table->boolean('has_discipline')->default(true);
             $table->timestamps();
         });
     }

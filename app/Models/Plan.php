@@ -39,7 +39,8 @@ class Plan extends Model
         'speciality_id',
         'specialization_id',
         'form_study_id',
-        'published'
+        'published',
+        'program_op_id'
     ];
 
     protected $casts = [

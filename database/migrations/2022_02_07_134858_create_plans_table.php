@@ -26,6 +26,7 @@ class CreatePlansTable extends Migration
             $table->integer('speciality_id')->nullable(true);
             $table->integer('specialization_id')->nullable(true);
             $table->integer('education_program_id')->nullable(true);
+            $table->integer('program_op_id')->nullable(true);
             $table->integer('qualification_id');
             $table->integer('field_knowledge_id')->nullable(true);
             // $table->foreignId('form_organization_id')->nullable(true);

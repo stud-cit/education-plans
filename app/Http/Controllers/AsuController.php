@@ -7,6 +7,7 @@ use App\ExternalServices\Asu\Profession;
 use App\ExternalServices\Asu\Subjects;
 use App\Http\Resources\DepartmentsResource;
 use App\Http\Resources\ProfessionsResource;
+use App\Http\Resources\FacultiesResource;
 use Illuminate\Http\Request;
 
 class AsuController extends Controller
@@ -14,8 +15,8 @@ class AsuController extends Controller
     public function faculties()
     {
         $department = new Department();
-
-        return response()->json(['data' => $department->getFaculties()]);
+        
+        return FacultiesResource::collection($department->getFaculties());
     }
 
     public function departmentById(Request $request)

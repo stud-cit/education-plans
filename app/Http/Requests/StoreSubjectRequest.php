@@ -23,15 +23,16 @@ class StoreSubjectRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            // 'title' => 'nullable', 
+        return [ 
             'asu_id' => 'nullable', 
             'cycle_id' => 'required|exists:App\Models\Cycle,id',
             'credits' => 'required|numeric|digits_between:1,3',
             'hours' => 'numeric',
             'practices' => 'numeric',
             'laboratories' => 'numeric',
-            'selective_discipline_id' => 'nullable'
+            'selective_discipline_id' => 'nullable',
+            'faculty_id' => 'nullable',
+            'department_id' => 'nullable'
         ];
     }
 }

@@ -55,6 +55,7 @@ class PlanEditResource extends JsonResource
             'count_coursework' => $this->getCountCoursework(),
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
             'signatures' => SignatureResource::collection($this->signatures),
+            'program_op_id' => $this->program_op_id
         ];
     }
 
@@ -100,7 +101,7 @@ class PlanEditResource extends JsonResource
         $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
           $queryCycle->where('plan_id', $planId);
         });
-      })->where('individual_task_id', 2)->count();
+      })->where('form_control_id', 1)->count();
       return $count;
     }
 
@@ -110,7 +111,7 @@ class PlanEditResource extends JsonResource
         $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
           $queryCycle->where('plan_id', $planId);
         });
-      })->where('form_control_id', 1)->count();
+      })->where('individual_task_id', 2)->count();
       return $count;
     }
 

@@ -9,10 +9,11 @@ class Cycle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cycle_id', 'list_cycle_id', 'credit', 'plan_id'];
+    protected $fillable = ['cycle_id', 'list_cycle_id', 'credit', 'plan_id', 'has_discipline'];
 
     protected $casts = [
-        'credit' => 'int'
+        'credit' => 'int',
+        'has_discipline' => 'boolean'
     ];
 
     protected $appends = ['title'];

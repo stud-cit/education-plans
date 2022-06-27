@@ -22,7 +22,10 @@ class Subject extends Model
       'credits',
       'hours',
       'practices',
-      'laboratories'
+      'laboratories',
+      'verification',
+      'faculty_id',
+      'department_id'
     ];
 
     protected $appends = ['title'];

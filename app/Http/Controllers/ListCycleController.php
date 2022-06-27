@@ -15,7 +15,7 @@ class ListCycleController extends Controller
      */
     public function index()
     {
-        return ListCycleResource::collection(ListCycle::select('id', 'title')->get());
+        return ListCycleResource::collection(ListCycle::select('id', 'title', 'general')->get());
     }
 
     /**
