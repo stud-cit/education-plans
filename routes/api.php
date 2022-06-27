@@ -84,7 +84,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
         Route::get('/user', function (Request $request) {
-            return $request->user()->makeHidden(['asu_id','created_at','updated_at']);
+            return \Illuminate\Support\Facades\Auth::user();
         });
         Route::get('/userName', function (Request $request) {
             return response()->json(['userName' => $request->user()->name]);

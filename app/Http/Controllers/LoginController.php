@@ -26,13 +26,14 @@ class LoginController extends Controller
 
         return [
             'token' => $user->createToken('admin')->plainTextToken,
-            'user' => $user->makeHidden(['asu_id','created_at','updated_at'])
+            'user' => $user,
         ];
 
     }
 
     public function logout(Request $request)
     {
+        if (!$request->user()) return;
         $request->user()->currentAccessToken()->delete();
         return [
             'message' => __('auth.logout'),
