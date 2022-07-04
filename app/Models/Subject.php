@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\ExternalServices\Asu\Subjects;
-
+use App\Traits\HasAsuDivisionsNameTrait;
 use App\Http\Constant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Subject extends Model
 {
     use HasFactory;
+    use HasAsuDivisionsNameTrait;
 
     public $timestamps = false;
 
