@@ -41,7 +41,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
     Route::get('/auth', [AuthController::class, 'index']);
 
-    // Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])->name('plans.verificationOP.store');
@@ -90,7 +90,7 @@ Route::prefix('v1')->group(function () {
             return response()->json(['userName' => $request->user()->name]);
         });
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-    // });
+    });
     Route::get('/test', function (Request $request) {
         $model = new \App\ExternalServices\Asu\Profession();
         // 319
