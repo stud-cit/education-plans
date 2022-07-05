@@ -236,7 +236,5 @@ return [
 
     'asu_key' => env('ASU_KEY'),
     'asu_key_scipub' => env('ASU_KEY_SCIPUB'),
-    'token' => env('MIX_APP_TOKEN'),
-    'service_key' => env('SERVICE_KEY')
-
+    'cabinet_app_token' => env('CABINET_APP_TOKEN'),
 ];

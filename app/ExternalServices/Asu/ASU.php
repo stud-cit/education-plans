@@ -21,7 +21,7 @@ class ASU
     // protected const REJECTED_UNITS = [1571, 1150, 382];
     // protected const REJECTED_DIVISIONS = [339, 380];
     protected const NOT_FOUND = 'Ідентифікатор не знайдено.';
-    protected const ASU_ERRORS = ['ERROR_API', 'ERROR_CABINET'];
+    protected const ASU_ERRORS = ['ERROR_API', 'ERROR_CABINET']; // TODO: MOVE TO SINGLE FILE?
 
     public function __construct() {
         $this->asu_key = config('app.asu_key');

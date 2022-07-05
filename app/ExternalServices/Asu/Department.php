@@ -128,6 +128,49 @@ class Department extends ASU
         }
     }
 
+    public function getDepartmentInfoByUser($user): array
+    {
+        $departments = $this->getDepartments()->toArray();
+        $departmentId = 0;
+        $departmentName = '';
+        $facultyName = '';
+        // TODO: KOD_SYMP 1,5
+
+        if(isset($user['info2'])){
+            foreach ($user['info2'] as $k => $v) {
+                if(($v['KOD_STATE'] == 1) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
+                    $departmentId = $v['KOD_DIV'];
+                }
+            }
+        } else {
+            return response()->json(['message' => 'User is not sumdu worker']);
+        }
+
+        $divIndex = array_search($departmentId, array_column($departments, 'id'));
+        $divType = $departments[$divIndex]['unit_type'];
+        $facultyId = $departments[$divIndex]['faculty_id'];
+
+        if($divType == self::ID_FACULTY || $divType == self::ID_INSTITUTE){
+            $facultyId = $departmentId;
+            $facultyName = $departments[$divIndex]['name'];
+            $departmentId = 0;
+        } else if($facultyId != 0) {
+            $facultyId = $departments[$divIndex]['faculty_id'];
+            $facultyIndex = array_search($facultyId, array_column($departments, 'id'));
+            $facultyName = $departments[$facultyIndex]['name'];
+            $departmentName = $departments[$divIndex]['name'];
+        } else {
+            $departmentName = $departments[$divIndex]['name'];
+        }
+
+        return [
+            'department_id' => $departmentId,
+            'department_name' => $departmentName,
+            'faculty_id' => $facultyId,
+            'faculty_name' => $facultyName
+        ];
+    }
+
     public function getDepartments(): Collection
     {
         $keys = [

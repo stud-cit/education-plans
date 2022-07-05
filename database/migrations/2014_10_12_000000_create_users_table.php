@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('asu_id')->unique();
-            $table->string('faculty_id');
+            $table->string('faculty_id')->nullable();
             $table->string('department_id');
             $table->string('faculty_name')->nullable();
             $table->string('department_name')->nullable();

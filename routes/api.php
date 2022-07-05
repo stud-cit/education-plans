@@ -38,10 +38,11 @@ use App\Http\Controllers\{AsuController,
 */
 
 Route::prefix('v1')->group(function () {
-    Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
-    Route::get('/auth', [AuthController::class, 'index']);
+    // Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
+    //Route::get('/auth', [AuthController::class, 'index']);
 
     // Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('cabinetAuth')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])->name('plans.verificationOP.store');
@@ -86,22 +87,17 @@ Route::prefix('v1')->group(function () {
         Route::get('/user', function (Request $request) {
             return \Illuminate\Support\Facades\Auth::user();
         });
+
         Route::get('/userName', function (Request $request) {
             return response()->json(['userName' => $request->user()->name]);
         });
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-    // });
-    Route::get('/test', function (Request $request) {
-        $model = new \App\ExternalServices\Asu\Profession();
-        // 319
-        // 427
-         $data = $model->getFieldKnowledge();
-//         $data = $model->getSpecialization(319);
-//         $data = $model->getFieldKnowledge();
-    //     $data = $model->getQualifications();
-
-        return response()->json($data);
     });
+
+    // Route::get('/user', function (Request $request) {
+    //     return \Illuminate\Support\Facades\Auth::user();
+    // })->middleware('cabinetAuth');
+
+    Route::get('/login-cabinet', [AuthController::class, 'login']);
+    Route::get('/err', [AuthController::class, 'err']);
 });
-
-

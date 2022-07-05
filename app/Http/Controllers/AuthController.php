@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\ExternalServices\Asu\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\ExternalServices\Asu\Department;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 class AuthController extends Controller
@@ -57,11 +58,11 @@ class AuthController extends Controller
         }
     }
 
-    
+
 
     function index(Request $request) {
 
-   
+
     $key = $request->key;
     $personCabinet = json_decode(file_get_contents($this->cabinet_api . 'getPersonInfo?key=' . $key . '&token=' . $this->cabinet_service_token), true);
 
@@ -181,5 +182,17 @@ class AuthController extends Controller
             'faculty_name' => $facultyName
         ];
 
+    }
+
+    public function login(Request $request)
+    {
+        clock($request);
+        return response()->json($request->toArray());
+    }
+
+    public function err(Request $request)
+    {
+        clock($request);
+        return abort(401);
     }
 }
