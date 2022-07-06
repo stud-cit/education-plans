@@ -55,14 +55,18 @@ class User extends Authenticatable
     //     'email_verified_at' => 'datetime',
     // ];
 
-    public function getFacultyNameAttribute(): string
+    public function getFacultyNameAttribute()
     {
+        if (!$this->faculty_id) return null;
+
         $asu = new Department();
         return $asu->getDivisionName($this->faculty_id);
     }
 
-    public function getDepartmentNameAttribute(): string
+    public function getDepartmentNameAttribute()
     {
+        if (!$this->department_id) return null;
+
         $asu = new Department();
         return $asu->getDivisionName($this->department_id);
     }

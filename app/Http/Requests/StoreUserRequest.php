@@ -25,8 +25,8 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'asu_id' => 'required|unique:users,asu_id',
-            'faculty_id' => 'required|numeric',
-            'department_id' => 'required|numeric',
+            'faculty_id' => 'nullable|numeric',
+            'department_id' => 'nullable|numeric',
             'role_id' => 'required|numeric'
         ];
     }
