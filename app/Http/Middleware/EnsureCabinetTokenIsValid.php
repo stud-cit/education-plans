@@ -38,7 +38,8 @@ class EnsureCabinetTokenIsValid
             $user = $response['result'];
 
             $model = User::where("asu_id", $user['guid'])->first();
-            clock("model", $model->toArray());
+
+            clock("model", $model ? $model->toArray() : 'user not found');
 
             if($model) {
                 $asu = new Department();
