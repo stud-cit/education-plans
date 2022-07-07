@@ -5,10 +5,8 @@ namespace App\Models;
 use App\ExternalServices\Asu\Department;
 use App\ExternalServices\Asu\Worker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-
 class User extends Authenticatable
 {
     use HasFactory, HasApiTokens;
@@ -57,12 +55,14 @@ class User extends Authenticatable
 
     public function getFacultyNameAttribute(): string
     {
+        return '';
         $asu = new Department();
         return $asu->getDivisionName($this->faculty_id);
     }
 
     public function getDepartmentNameAttribute(): string
     {
+        return '';
         $asu = new Department();
         return $asu->getDivisionName($this->department_id);
     }

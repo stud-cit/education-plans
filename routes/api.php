@@ -42,7 +42,7 @@ Route::prefix('v1')->group(function () {
     //Route::get('/auth', [AuthController::class, 'index']);
 
     // Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware('cabinetAuth')->group(function () {
+    Route::middleware('customAuth')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])->name('plans.verificationOP.store');
@@ -84,9 +84,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
-        Route::get('/user', function (Request $request) {
-            return \Illuminate\Support\Facades\Auth::user();
-        });
+        // Route::get('/user', function (Request $request) {
+        //     return \Illuminate\Support\Facades\Auth::user();
+        // });
 
         Route::get('/userName', function (Request $request) {
             return response()->json(['userName' => $request->user()->name]);
@@ -94,9 +94,14 @@ Route::prefix('v1')->group(function () {
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     });
 
-    // Route::get('/user', function (Request $request) {
-    //     return \Illuminate\Support\Facades\Auth::user();
-    // })->middleware('cabinetAuth');
+    Route::get('/user', function (Request $request) {
+        $key = $request->session()->get($request->header('Authorization'));
+        if ($key) {
+            clock()->info("key: $key");
+            return \App\Models\User::where('id',(int)$key)->first();
+        }
+        //return \Illuminate\Support\Facades\Auth::user();
+    })->middleware('cabinetAuth');
 
     Route::get('/login-cabinet', [AuthController::class, 'login']);
     Route::get('/err', [AuthController::class, 'err']);

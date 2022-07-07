@@ -30,6 +30,10 @@ class EnsureCabinetTokenIsValid
         clock("Authorization: {$params['key']}");
         clock("Token: {$params['token']}");
 
+        if ($params['key'] == null) {
+            return response(['message' => 'token empty'])->statusCode(500);
+        }
+
         $response = Http::retry(3, 100)->get('https://cabinet.sumdu.edu.ua/api/getPersonInfo', $params)->json();
         clock($response);
 
@@ -42,6 +46,9 @@ class EnsureCabinetTokenIsValid
             clock("model", $model ? $model->toArray() : 'user not found');
 
             if($model) {
+                clock()->info(
+                    "model: $model->name"
+                );
                 $asu = new Department();
                 $divisions = $asu->getDepartmentInfoByUser($user);
 
@@ -59,8 +66,14 @@ class EnsureCabinetTokenIsValid
                     $model->refresh();
                 }
 
+                //$request->session()->regenerate();
                 Auth::check() ?: Auth::login($model);
-                clock('cabinet', (bool)Auth::check());
+                if ( !session($params['key'])) {
+
+                    $request->session()->put($params['key'], $model->id);
+                }
+
+               // clock('cabinet', (bool)Auth::check());
 
                 return $next($request);
             } else {

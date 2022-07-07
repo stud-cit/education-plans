@@ -17,10 +17,18 @@ class CustomAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        clock(Auth::check());
-        if(!Auth::check()) {
-            return abort(403); //$next($request);
+        $key = $request->header('Authorization');
+
+        clock("custom auth has key: $key");
+
+        if (!$request->session()->get($key)) {
+            return abort(403);
         }
+
+        // if(!Auth::check()) {
+        //     //return abort(403); //$next($request);
+        //     clock('if', !Auth::check()); //$next($request);
+        // }
         return $next($request);
     }
 }
