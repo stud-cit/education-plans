@@ -3,7 +3,6 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{AsuController,
-    AuthController,
     CycleController,
     EducationLevelController,
     FormStudyController,
@@ -39,7 +38,6 @@ use App\Http\Controllers\{AsuController,
 
 Route::prefix('v1')->group(function () {
     // Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
-    //Route::get('/auth', [AuthController::class, 'index']);
 
     // Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('customAuth')->group(function () {
@@ -93,16 +91,4 @@ Route::prefix('v1')->group(function () {
         });
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
     });
-
-    Route::get('/user', function (Request $request) {
-        $key = $request->session()->get($request->header('Authorization'));
-        if ($key) {
-            clock()->info("key: $key");
-            return \App\Models\User::where('id',(int)$key)->first();
-        }
-        //return \Illuminate\Support\Facades\Auth::user();
-    })->middleware('cabinetAuth');
-
-    Route::get('/login-cabinet', [AuthController::class, 'login']);
-    Route::get('/err', [AuthController::class, 'err']);
 });
