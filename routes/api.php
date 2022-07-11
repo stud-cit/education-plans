@@ -39,8 +39,8 @@ use App\Http\Controllers\{AsuController,
 Route::prefix('v1')->group(function () {
     // Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
 
-    // Route::middleware('auth:sanctum')->group(function () {
-    Route::middleware('customAuth')->group(function () {
+    //     Route::middleware('auth:sanctum')->group(function () {
+     Route::middleware('cabinetAuth')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])->name('plans.verificationOP.store');
@@ -82,9 +82,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
-        // Route::get('/user', function (Request $request) {
-        //     return \Illuminate\Support\Facades\Auth::user();
-        // });
+         Route::get('/user', function (Request $request) {
+             return $request->user()->makeHidden('asu_id');
+         });
 
         Route::get('/userName', function (Request $request) {
             return response()->json(['userName' => $request->user()->name]);

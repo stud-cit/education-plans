@@ -34,12 +34,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $request->session()->forget($request->header('Authorization'));
-        //Auth::logout();
-        // if (!$request->user()) return;
-        // $request->user()->currentAccessToken()->delete();
-        // return [
-        //     'message' => __('auth.logout'),
-        // ];
+        Auth::logout();
+//         $request->user()->currentAccessToken()->delete();
     }
 }
