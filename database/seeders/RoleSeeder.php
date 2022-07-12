@@ -20,7 +20,8 @@ class RoleSeeder extends Seeder
             ['title' => 'practice-department', 'label' => 'Представник Відділу практики'],
             ['title' => 'educational-department', 'label' => 'Представник Навчально-методичного відділу'],
             ['title' => 'faculty-institute', 'label' => 'Представники Факультету / Інституту'],
-            ['title' => 'department', 'label' => 'Представники кафедр']
+            ['title' => 'department', 'label' => 'Представники кафедр'],
+            ['title' => 'root', 'label' => 'Розробник']
         ]);
     }
 }
