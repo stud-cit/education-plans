@@ -24,7 +24,6 @@ class PlanSeeder extends Seeder
             'title' => 'Шаблон плану на 2022',
             'credits' => 30,
             'education_level_id' => 1,
-            // 'verification_status_id' => 1,
             'study_term_id' => 1,
             'year' => 2022,
             'number_semesters' => 1,
@@ -43,6 +42,7 @@ class PlanSeeder extends Seeder
                 ["hour" => 0, "week" => 3, "index" => 1, "course" => 4, "semester" => 7],
                 ["hour" => 0, "week" => 3, "index" => 1, "course" => 4, "semester" => 8]
             ]),
+            'author_id' => 1,
             'created_at' => now()
         ]);
     }

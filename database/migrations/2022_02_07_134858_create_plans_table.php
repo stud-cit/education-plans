@@ -16,6 +16,8 @@ class CreatePlansTable extends Migration
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
             $table->string('guid');
+            $table->foreignId('author_id')->constrained('users', 'id');
+            $table->foreignId('parent_id')->nullable()->constrained('plans', 'id');
             $table->integer('faculty_id');
             $table->integer('department_id');
             // $table->foreignId('study_term_id')->nullable(true)->constrained('term_studies');
@@ -33,6 +35,7 @@ class CreatePlansTable extends Migration
             $table->json('hours_weeks_semesters')->nullable(true);
             $table->json('schedule_education_process')->nullable(true);
             $table->boolean('published')->default(false);
+
             $table->timestamps();
         });
     }

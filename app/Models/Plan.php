@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use App\ExternalServices\Asu\Profession;
-use App\ExternalServices\Asu\Qualification;
-use App\Helpers\Filters\FilterBuilder;
-use App\Traits\HasAsuDivisionsNameTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
+use App\ExternalServices\Asu\Profession;
+use App\Traits\HasAsuDivisionsNameTrait;
+use App\ExternalServices\Asu\Qualification;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Plan extends Model
@@ -21,6 +22,7 @@ class Plan extends Model
 
     protected $fillable = [
         'guid',
+        'parent_id',
         'title',
         'faculty_id',
         'department_id',
@@ -164,5 +166,12 @@ class Plan extends Model
     public function signatures()
     {
         return $this->hasMany(Signature::class);
+    }
+
+    protected static function booted()
+    {
+        static::replicating(function ($plan) {
+            $plan->author_id = Auth::id();
+        });
     }
 }

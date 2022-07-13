@@ -178,18 +178,23 @@ class PlanController extends Controller
 
     public function copy(Plan $plan)
     {
-      $model = $plan->load([
-        'cycles.cycles',
-        'cycles.subjects.semestersCredits',
-        'cycles.subjects.hoursModules',
-      ]);
-      $clonePlan = $plan->duplicate();
-      foreach ($model->cycles as $cycle) {
-        if($cycle['cycle_id'] == null) {
-          $this->createCycle($cycle, $clonePlan->id);
+        $model = $plan->load([
+            'cycles.cycles',
+            'cycles.subjects.semestersCredits',
+            'cycles.subjects.hoursModules',
+        ]);
+
+        $clonePlan = $plan->duplicate();
+
+        $clonePlan->parent_id = $plan->id;
+        $clonePlan->update();
+
+        foreach ($model->cycles as $cycle) {
+            if ($cycle['cycle_id'] == null) {
+                $this->createCycle($cycle, $clonePlan->id);
+            }
         }
-      }
-      return $this->success(__('messages.Copied'), 201);
+        return $this->success(__('messages.Copied'), 201);
     }
 
     function createCycle($cycle, $plan_id, $cycleId = null) {
@@ -261,12 +266,12 @@ class PlanController extends Controller
       $errors = 0;
       $comment = 'Не відповідає освітній програмі:<br>';
       $control_form = [
-        1 => 'іспит', 
+        1 => 'іспит',
         2 => 'диф. залік',
-        3 => 'залік', 
+        3 => 'залік',
         8 => 'захист'
       ];
-      
+
       $model = Subject::with('hoursModules', 'cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
         $queryCycle->where('plan_id', $planId);
       })->get();
@@ -325,10 +330,10 @@ class PlanController extends Controller
       $plan->update([
         "program_op_id" => $request->program_op_id
       ]);
- 
+
       return $this->success(__('messages.Updated'), 200);
     }
-    
+
     public function getLastFormControl($hoursModules) {
       $result = null;
       foreach ($hoursModules as $value) {
