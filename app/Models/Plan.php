@@ -170,6 +170,10 @@ class Plan extends Model
 
     protected static function booted()
     {
+        static::creating(function ($plan) {
+            $plan->author_id = Auth::id();
+        });
+
         static::replicating(function ($plan) {
             $plan->author_id = Auth::id();
         });
