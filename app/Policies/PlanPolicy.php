@@ -54,6 +54,7 @@ class PlanPolicy
      */
     public function update(User $user, Plan $plan)
     {
+        return true;
         //TODO: prepare possibility
         // if ($user->possibility(User::PRIVILEGED_ROLES)) {
         //     return Response::allow();
