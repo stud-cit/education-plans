@@ -96,22 +96,34 @@ class PlanEditResource extends JsonResource
     }
 
     function getCountExams() {
-      $planId = $this->id;
-      $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
-        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-          $queryCycle->where('plan_id', $planId);
-        });
-      })->where('form_control_id', 1)->count();
-      return $count;
+      $result = [];
+      for ($i = 0; $i < $this->studyTerm->semesters; $i++) { 
+        if($this->form_organization_id == 1) {
+          array_push($result, '');
+        }
+        array_push($result, $this->getCountWorks(['form_control_id' => 1], $i + 1));
+      }
+      return $result;
     }
 
     function getCountCoursework() {
+      $result = [];
+      for ($i=0; $i < $this->studyTerm->semesters; $i++) { 
+        if($this->form_organization_id == 1) {
+          array_push($result, '');
+        }
+        array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
+      }
+      return $result;
+    }
+
+    function getCountWorks($work, $semester) {
       $planId = $this->id;
       $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
         $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
           $queryCycle->where('plan_id', $planId);
         });
-      })->where('individual_task_id', 2)->count();
+      })->where($work)->where('semester', $semester)->count();
       return $count;
     }
 

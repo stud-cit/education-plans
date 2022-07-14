@@ -25,7 +25,10 @@ class VerificationStatusesSeeder extends Seeder
               'title' => 'Відділ практики',
           ],
           [
-              'title' => 'Навчально-методичний відділ',
+              'title' => 'Заступник НМВ',
+          ],
+          [
+              'title' => 'Начальник НМВ',
           ]
       ]);
     }

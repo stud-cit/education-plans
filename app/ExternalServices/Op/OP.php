@@ -37,7 +37,14 @@ class OP
     {
         $results = Http::retry(3, 100)->get($url, $this->setQueryParams($queryParams))->json();
 
-        return collect($results);
+        $collection = collect($results)->map(function ($item) {
+          return [
+              'program_id' => (int) $item['program_id'],
+              'education_program_name' => "{$item['education_program_name']}, {$item['year']}, {$item['educational_degree']}"
+          ];
+        });
+
+        return $collection;
     }
 
     public function getPrograms($request): Collection
