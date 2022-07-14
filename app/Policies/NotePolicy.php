@@ -18,7 +18,7 @@ class NotePolicy
      */
     public function viewAny(User $user)
     {
-        return in_array($user->role_id, User::ROLE_LIST);
+        return $user->possibility();
     }
 
     /**
@@ -41,7 +41,7 @@ class NotePolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === User::ADMIN || User::ROOT;
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -53,7 +53,7 @@ class NotePolicy
      */
     public function update(User $user, Note $note)
     {
-        return $user->role_id === User::ADMIN || User::ROOT;
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -65,7 +65,7 @@ class NotePolicy
      */
     public function delete(User $user, Note $note)
     {
-        return $user->role_id === User::ADMIN || User::ROOT;
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**

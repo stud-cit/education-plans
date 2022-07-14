@@ -64,7 +64,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::get('workers', [UserController::class, 'workers'])->name('users.workers');
         Route::get('faculty-by-worker', [UserController::class, 'getFacultyByWorker'])->name('users.faculty.worker');
-        Route::apiResource('users', UserController::class)->middleware('can:manage_users');
+        Route::apiResource('users', UserController::class);
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
         Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage_study_terms');
         Route::apiResource('settings', SettingController::class);

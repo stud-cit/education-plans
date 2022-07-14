@@ -2,11 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\ListCycle;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ListCyclePolicy
+class UserPolicy
 {
     use HandlesAuthorization;
 
@@ -18,17 +17,17 @@ class ListCyclePolicy
      */
     public function viewAny(User $user)
     {
-        return $user->possibility();
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, ListCycle $listCycle)
+    public function view(User $user, User $model)
     {
         //
     }
@@ -48,23 +47,31 @@ class ListCyclePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, ListCycle $listCycle)
+    public function update(User $user, User $model)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        return env('APP_DEBUG') ? true : $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, ListCycle $listCycle)
+    public function delete(User $user, User $model)
     {
+        if ($user->role_id === User::ADMIN && $model->role_id === User::ROOT) {
+            return false;
+        }
+
+        if ($user->id === $model->id) {
+            return false;
+        }
+
         return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
@@ -72,10 +79,10 @@ class ListCyclePolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, ListCycle $listCycle)
+    public function restore(User $user, User $model)
     {
         //
     }
@@ -84,10 +91,10 @@ class ListCyclePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, ListCycle $listCycle)
+    public function forceDelete(User $user, User $model)
     {
         //
     }

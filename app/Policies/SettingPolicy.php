@@ -18,7 +18,7 @@ class SettingPolicy
      */
     public function viewAny(User $user)
     {
-        return in_array($user->role_id, User::ROLE_LIST);
+        return $user->possibility();
     }
 
     /**
@@ -41,7 +41,7 @@ class SettingPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === User::ROOT;
+        return $user->possibility(User::ROOT);
     }
 
     /**
@@ -53,7 +53,7 @@ class SettingPolicy
      */
     public function update(User $user, Setting $setting)
     {
-        return in_array($user->role_id, User::PRIVILEGED_ROLES);
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -65,7 +65,7 @@ class SettingPolicy
      */
     public function delete(User $user, Setting $setting)
     {
-        return $user->role_id === User::ROOT;
+        return $user->possibility(User::ROOT);
     }
 
     /**

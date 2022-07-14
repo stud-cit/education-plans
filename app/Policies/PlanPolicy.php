@@ -2,11 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\ListCycle;
+use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
-class ListCyclePolicy
+class PlanPolicy
 {
     use HandlesAuthorization;
 
@@ -25,12 +26,12 @@ class ListCyclePolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\Plan  $plan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, ListCycle $listCycle)
+    public function view(User $user, Plan $plan)
     {
-        //
+        return $user->possibility();
     }
 
     /**
@@ -48,34 +49,50 @@ class ListCyclePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\Plan  $plan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, ListCycle $listCycle)
+    public function update(User $user, Plan $plan)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        //TODO: prepare possibility
+        // if ($user->possibility(User::PRIVILEGED_ROLES)) {
+        //     return Response::allow();
+        // }
+
+        // if ($user->possibility(User::DEPARTMENTS_ROLES) && $plan->isNotTemplate()) {
+        //     return Response::allow();
+        // }
+
+        // return Response::deny();
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\Plan  $plan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, ListCycle $listCycle)
+    public function delete(User $user, Plan $plan)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        if ($user->possibility(User::PRIVILEGED_ROLES)) {
+            return Response::allow();
+        }
+
+        if ($user->possibility(User::DEPARTMENTS_ROLES) && $plan->isNotTemplate() ) {
+            return Response::allow();
+        }
+        return Response::deny();
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\Plan  $plan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, ListCycle $listCycle)
+    public function restore(User $user, Plan $plan)
     {
         //
     }
@@ -84,10 +101,10 @@ class ListCyclePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\ListCycle  $listCycle
+     * @param  \App\Models\Plan  $plan
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, ListCycle $listCycle)
+    public function forceDelete(User $user, Plan $plan)
     {
         //
     }

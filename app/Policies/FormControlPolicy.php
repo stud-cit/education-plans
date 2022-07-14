@@ -18,9 +18,7 @@ class FormControlPolicy
      */
     public function viewAny(User $user)
     {
-        clock('FormControlPolicy viewAny');
-        //return $user->role_id === 2;
-        return in_array($user->role_id, User::ROLE_LIST);
+        return $user->possibility(User::ALL_ROLES);
     }
 
     /**
@@ -32,7 +30,7 @@ class FormControlPolicy
      */
     public function view(User $user, FormControl $formControl)
     {
-        clock('FormControlPolicy view');
+        //
     }
 
     /**
@@ -43,7 +41,7 @@ class FormControlPolicy
      */
     public function create(User $user)
     {
-        clock('FormControlPolicy create');
+        //
     }
 
     /**

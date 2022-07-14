@@ -168,6 +168,23 @@ class Plan extends Model
         return $this->hasMany(Signature::class);
     }
 
+    public function scopeOfUserType($query, $type)
+    {
+        if ($type === User::ADMIN) {
+            return $query;
+        }
+        // if () {
+
+        // }
+
+        return $query;
+
+    }
+
+    public function isNotTemplate() {
+        return $this->parent_id !== null ? true : false;
+    }
+
     protected static function booted()
     {
         static::creating(function ($plan) {

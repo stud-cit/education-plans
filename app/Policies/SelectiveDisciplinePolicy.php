@@ -18,7 +18,7 @@ class SelectiveDisciplinePolicy
      */
     public function viewAny(User $user)
     {
-        return in_array($this->user->role_id, User::ROLE_LIST);
+        return $user->possibility();
     }
 
     /**
@@ -41,7 +41,7 @@ class SelectiveDisciplinePolicy
      */
     public function create(User $user)
     {
-        return in_array($this->user->role_id, User::PRIVILEGED_ROLES);
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -53,7 +53,7 @@ class SelectiveDisciplinePolicy
      */
     public function update(User $user, SelectiveDiscipline $selectiveDiscipline)
     {
-        return in_array($this->user->role_id, User::PRIVILEGED_ROLES);
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -65,7 +65,7 @@ class SelectiveDisciplinePolicy
      */
     public function delete(User $user, SelectiveDiscipline $selectiveDiscipline)
     {
-        return in_array($this->user->role_id, User::PRIVILEGED_ROLES);
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**

@@ -2,33 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\ExternalServices\Asu\Department;
-use App\ExternalServices\Asu\Profession;
-use App\ExternalServices\Asu\Qualification;
-use App\ExternalServices\Op\OP;
-use App\Helpers\Tree;
-use App\Http\Constant;
-use App\Http\Requests\indexPlanRequest;
-use App\Http\Requests\StoreCycleRequest;
-use App\Http\Requests\StoreGeneralPlanRequest;
-use App\Http\Requests\StorePlanVerificationRequest;
-use App\Http\Requests\UpdateCycleRequest;
-use App\Http\Requests\UpdatePlanRequest;
-use App\Http\Resources\FacultiesResource;
-use App\Http\Resources\PlanEditResource;
-use App\Http\Resources\PlanResource;
-use App\Http\Resources\PlanShowResource;
-use App\Http\Resources\ProfessionsResource;
-use App\Models\Cycle;
-use App\Models\HoursModules;
-use App\Models\SemestersCredits;
 use App\Models\Plan;
+use App\Helpers\Tree;
+use App\Models\Cycle;
+use App\Http\Constant;
 use App\Models\Subject;
 use Illuminate\Support\Str;
+use App\Models\HoursModules;
 use Illuminate\Http\Request;
+use App\ExternalServices\Op\OP;
+use App\Models\SemestersCredits;
+use App\Http\Resources\PlanResource;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\indexPlanRequest;
+use App\ExternalServices\Asu\Department;
+use App\ExternalServices\Asu\Profession;
+use App\Http\Requests\StoreCycleRequest;
+use App\Http\Requests\UpdatePlanRequest;
+use App\Http\Resources\PlanEditResource;
+use App\Http\Resources\PlanShowResource;
+use App\Http\Requests\UpdateCycleRequest;
+use App\Http\Resources\FacultiesResource;
+use App\ExternalServices\Asu\Qualification;
+use App\Http\Resources\ProfessionsResource;
+use App\Http\Requests\StoreGeneralPlanRequest;
+use App\Http\Requests\StorePlanVerificationRequest;
 
 class PlanController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Plan::class);
+    }
+
     private function stringToBoolean(string $string): bool
     {
         return filter_var($string, FILTER_VALIDATE_BOOLEAN);
@@ -47,7 +53,10 @@ class PlanController extends Controller
 
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
+        $role_id = Auth::user()->role_id;
+
         $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
+            ->ofUserType($role_id)
             ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
                 return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));

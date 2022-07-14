@@ -31,12 +31,11 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage_users', fn(User $user) => $user->role_id === User::ADMIN || User::ROOT);
         Gate::define('manage_study_terms', fn(User $user) => $user->role_id === User::ADMIN);
 
         // TODO: NEED TO CHECK DEPARTMENT FACULTY
         Gate::define('copy_plan', function(User $user) {
-            return in_array($user->role_id, User::ROLE_LIST);
+            return in_array($user->role_id, User::ALL_ROLES);
         });
     }
 }
