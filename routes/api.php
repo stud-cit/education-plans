@@ -44,7 +44,8 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])->name('plans.verificationOP.store');
-        Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
+        Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy')
+            ->middleware('can:copy_plan');
         Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
         Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
         Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
@@ -63,9 +64,9 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::get('workers', [UserController::class, 'workers'])->name('users.workers');
         Route::get('faculty-by-worker', [UserController::class, 'getFacultyByWorker'])->name('users.faculty.worker');
-        Route::apiResource('users', UserController::class);
+        Route::apiResource('users', UserController::class)->middleware('can:manage_users');
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
-        Route::apiResource('study-terms', StudyTermController::class);
+        Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage_study_terms');
         Route::apiResource('settings', SettingController::class);
         Route::apiResource('positions', PositionController::class);
         Route::apiResource('signatures', SignatureController::class)

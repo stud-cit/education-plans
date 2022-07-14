@@ -8,6 +8,11 @@ use App\Http\Resources\ListCycleResource;
 
 class ListCycleController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(ListCycle::class);
+    }
+
     /**
      * Display a listing of the resource.
      *

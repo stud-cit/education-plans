@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class PositionController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Position::class);
+    }
+
     public function index()
     {
         return PositionResource::collection(Position::select('id', 'position', 'agreed')->get());

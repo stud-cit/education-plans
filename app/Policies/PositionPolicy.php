@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Setting;
+use App\Models\Position;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SettingPolicy
+class PositionPolicy
 {
     use HandlesAuthorization;
 
@@ -18,17 +18,17 @@ class SettingPolicy
      */
     public function viewAny(User $user)
     {
-        return in_array($user->role_id, User::ROLE_LIST);
+        return in_array($this->user->role_id, User::ROLE_LIST);
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\Position  $position
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Setting $setting)
+    public function view(User $user, Position $position)
     {
         //
     }
@@ -41,41 +41,41 @@ class SettingPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === User::ROOT;
+        return in_array($this->user->role_id, User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\Position $position
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Setting $setting)
+    public function update(User $user, Position $position)
     {
-        return in_array($user->role_id, User::PRIVILEGED_ROLES);
+        return in_array($this->user->role_id, User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\Position $position
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Setting $setting)
+    public function delete(User $user, Position $position)
     {
-        return $user->role_id === User::ROOT;
+        return in_array($this->user->role_id, User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\Position $position
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Setting $setting)
+    public function restore(User $user, Position $position)
     {
         //
     }
@@ -84,10 +84,10 @@ class SettingPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\Position $position
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Setting $setting)
+    public function forceDelete(User $user, Position $position)
     {
         //
     }

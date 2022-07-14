@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
-use Illuminate\Http\Request;
 use App\Http\Resources\NoteResource;
 use App\Http\Requests\{ StoreNoteRequest, UpdateNoteRequest };
 
 class NoteController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Note::class);
+    }
+
     /**
      * Display a listing of the resource.
      *

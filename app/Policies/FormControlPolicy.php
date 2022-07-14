@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Setting;
 use App\Models\User;
+use App\Models\FormControl;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SettingPolicy
+class FormControlPolicy
 {
     use HandlesAuthorization;
 
@@ -18,6 +18,8 @@ class SettingPolicy
      */
     public function viewAny(User $user)
     {
+        clock('FormControlPolicy viewAny');
+        //return $user->role_id === 2;
         return in_array($user->role_id, User::ROLE_LIST);
     }
 
@@ -25,12 +27,12 @@ class SettingPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormControl  $formControl
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Setting $setting)
+    public function view(User $user, FormControl $formControl)
     {
-        //
+        clock('FormControlPolicy view');
     }
 
     /**
@@ -41,41 +43,41 @@ class SettingPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === User::ROOT;
+        clock('FormControlPolicy create');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormControl  $formControl
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Setting $setting)
+    public function update(User $user, FormControl $formControl)
     {
-        return in_array($user->role_id, User::PRIVILEGED_ROLES);
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormControl  $formControl
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Setting $setting)
+    public function delete(User $user, FormControl $formControl)
     {
-        return $user->role_id === User::ROOT;
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormControl  $formControl
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Setting $setting)
+    public function restore(User $user, FormControl $formControl)
     {
         //
     }
@@ -84,10 +86,10 @@ class SettingPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormControl  $formControl
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Setting $setting)
+    public function forceDelete(User $user, FormControl $formControl)
     {
         //
     }

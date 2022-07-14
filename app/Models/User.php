@@ -44,25 +44,45 @@ class User extends Authenticatable
      */
     protected $appends = ['full_name'];
 
-    // /**
-    //  * The attributes that should be cast.
-    //  *
-    //  * @var array<string, string>
-    //  */
-    // protected $casts = [
-    //     'email_verified_at' => 'datetime',
-    // ];
+    public const ADMIN = 1;
+    public const TRAINING_DEPARTMENT = 2;
+    public const PRACTICE_DEPARTMENT = 3;
+    public const EDUCATIONAL_DEPARTMENT = 4;
+    public const FACULTY_INSTITUTE = 5;
+    public const DEPARTMENT = 6;
+    public const ROOT = 7;
+
+    public const ROLE_LIST = [
+        self::ADMIN,
+        self::TRAINING_DEPARTMENT,
+        self::PRACTICE_DEPARTMENT,
+        self::EDUCATIONAL_DEPARTMENT,
+        self::FACULTY_INSTITUTE,
+        self::DEPARTMENT,
+        self::ROOT
+    ];
+
+    public const PRIVILEGED_ROLES = [
+        self::ADMIN,
+        self::ROOT
+    ];
 
     public function getFacultyNameAttribute(): string
     {
-        return '';
+        if ($this->faculty_id === null) {
+            return '';
+        }
+
         $asu = new Department();
         return $asu->getDivisionName($this->faculty_id);
     }
 
     public function getDepartmentNameAttribute(): string
     {
-        return '';
+        if ($this->department_id === null) {
+            return '';
+        };
+
         $asu = new Department();
         return $asu->getDivisionName($this->department_id);
     }
@@ -82,4 +102,5 @@ class User extends Authenticatable
     {
         return $this->role()->associate($role)->save();
     }
+
 }

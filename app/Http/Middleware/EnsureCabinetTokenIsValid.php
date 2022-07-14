@@ -32,7 +32,16 @@ class EnsureCabinetTokenIsValid
         if($response['status'] === 'OK') {
             $user = $response['result'];
 
-            $model = User::where("asu_id", $user['guid'])->first();
+            $model = User::select(
+                'id',
+                'asu_id',
+                'name',
+                'faculty_id',
+                'faculty_name',
+                'department_id',
+                'department_name',
+                'email'
+            )->where("asu_id", $user['guid'])->first(); //TODO: TO LONG
 
             if($model) {
                 $asu = new Department();
@@ -47,7 +56,11 @@ class EnsureCabinetTokenIsValid
                     'email' => $user['email'],
                 ];
 
-                if ($this->isArrayDiffByKey($model->toArray(), $new, array_keys($new)))  {
+                if ($this->isArrayDiffByKey($model->toArray(), $new, array_keys($new))) {
+
+                    // clock('model', $model->toArray());
+                    // clock('new' , $new);
+                    // clock('update');
                     $model->update($new);
                     $model->refresh();
                 }
@@ -56,12 +69,14 @@ class EnsureCabinetTokenIsValid
 
                 return $next($request);
             } else {
+
               return response(['message' => __('auth.not_allowed_user')], 403);
             }
           } else if (in_array($response['status'], Constant::ASU_ERRORS) ) {
+
             return response(['message' => "Cabinet: {$response['result']}"], 401);
         } else {
-            throw new HttpException ( 500, $response);
+            throw new HttpException (500, $response);
         }
     }
 

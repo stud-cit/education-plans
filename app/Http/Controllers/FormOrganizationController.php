@@ -9,6 +9,11 @@ use App\Http\Requests\StoreFormOrganizationRequest;
 
 class FormOrganizationController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(FormOrganization::class);
+    }
+
     public function index()
     {
         return FormOrganizationResource::collection(FormOrganization::select('id', 'title')->get());

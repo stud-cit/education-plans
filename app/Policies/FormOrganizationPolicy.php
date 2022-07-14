@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Setting;
+use App\Models\FormOrganization;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SettingPolicy
+class FormOrganizationPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class SettingPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormOrganization  $formOrganization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Setting $setting)
+    public function view(User $user, FormOrganization $formOrganization)
     {
         //
     }
@@ -41,17 +41,17 @@ class SettingPolicy
      */
     public function create(User $user)
     {
-        return $user->role_id === User::ROOT;
+        return in_array($user->role_id, User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormOrganization  $formOrganization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Setting $setting)
+    public function update(User $user, FormOrganization $formOrganization)
     {
         return in_array($user->role_id, User::PRIVILEGED_ROLES);
     }
@@ -60,22 +60,22 @@ class SettingPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormOrganization  $formOrganization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Setting $setting)
+    public function delete(User $user, FormOrganization $formOrganization)
     {
-        return $user->role_id === User::ROOT;
+        return in_array($user->role_id, User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormOrganization  $formOrganization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Setting $setting)
+    public function restore(User $user, FormOrganization $formOrganization)
     {
         //
     }
@@ -84,10 +84,10 @@ class SettingPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\FormOrganization  $formOrganization
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Setting $setting)
+    public function forceDelete(User $user, FormOrganization $formOrganization)
     {
         //
     }
