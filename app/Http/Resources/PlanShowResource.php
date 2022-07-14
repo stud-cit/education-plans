@@ -45,12 +45,13 @@ class PlanShowResource extends JsonResource
             'count_exams' => $this->getCountExams(),
             'count_tests' => $this->getCountTests(),
             'count_coursework' => $this->getCountCoursework(),
+            'status' => $this->status
         ];
     }
 
     function getCountExams() {
       $result = [];
-      for ($i = 0; $i < $this->studyTerm->semesters; $i++) { 
+      for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
         if($this->form_organization_id == 1) {
           array_push($result, '');
         }
@@ -61,7 +62,7 @@ class PlanShowResource extends JsonResource
 
     function getCountTests() {
       $result = [];
-      for ($i=0; $i < $this->studyTerm->semesters; $i++) { 
+      for ($i=0; $i < $this->studyTerm->semesters; $i++) {
         if($this->form_organization_id == 1) {
           array_push($result, '');
         }
@@ -72,7 +73,7 @@ class PlanShowResource extends JsonResource
 
     function getCountCoursework() {
       $result = [];
-      for ($i=0; $i < $this->studyTerm->semesters; $i++) { 
+      for ($i=0; $i < $this->studyTerm->semesters; $i++) {
         if($this->form_organization_id == 1) {
           array_push($result, '');
         }

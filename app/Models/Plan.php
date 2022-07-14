@@ -56,7 +56,7 @@ class Plan extends Model
         'form_organization_id' => 'int',
     ];
 
-    public function getStatus() 
+    public function getStatusAttribute()
     {
       $data = array_column($this->verification->toArray(), 'status');
       if(count($this->filterStatus($data, 1)) == 4) {
@@ -71,7 +71,7 @@ class Plan extends Model
       return $result;
     }
 
-    private function filterStatus($data, $id) 
+    private function filterStatus($data, $id)
     {
       return array_filter($data, function($val) use ($id) {
         return $val == $id;
