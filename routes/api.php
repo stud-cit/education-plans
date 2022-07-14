@@ -50,6 +50,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
         Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
         Route::get('/plans/cycles/{plan}', [PlanController::class, 'cyclesWithSubjects'])->name('plans.cycles.subjects');
+        Route::get('plans/additional-data', [PlanController::class, 'additionalDataActionsPlan']);
         Route::Resource('plans', PlanController::class);
 
         Route::apiResource('verifications', VerificationController::class);

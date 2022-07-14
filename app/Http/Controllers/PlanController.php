@@ -86,6 +86,16 @@ class PlanController extends Controller
      */
     public function create()
     {
+
+    }
+
+    /**
+     * Returns additional data for creating or editing a plan.
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function additionalDataActionsPlan()
+    {
         $asu = new Department();
         $professions = new Profession();
         $qualifications = new Qualification();
@@ -106,6 +116,7 @@ class PlanController extends Controller
 
         return response()->json($data);
     }
+
 
     /**
      * Display the specified resource.
