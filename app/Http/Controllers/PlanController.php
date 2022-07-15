@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Plan;
+use App\Models\User;
 use App\Helpers\Tree;
 use App\Models\Cycle;
 use App\Http\Constant;
@@ -53,10 +54,9 @@ class PlanController extends Controller
 
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
-        $role_id = Auth::user()->role_id;
-
-        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
-            ->ofUserType($role_id)
+        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'published', 'created_at')
+            ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn($query) => $query->published())
+            ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
                 return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));

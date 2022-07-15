@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -170,15 +171,29 @@ class Plan extends Model
 
     public function scopeOfUserType($query, $type)
     {
-        if ($type === User::ADMIN) {
-            return $query;
+        switch ($type) {
+            case User::ADMIN:
+                return $query;
+
+            case User::FACULTY_INSTITUTE:
+                return $query->whereNull('parent_id')
+                    ->orWhere('faculty_id', '=', Auth::user()->faculty_id);
+
+            case User::DEPARTMENT:
+                return $query->whereNull('parent_id')
+                    ->orWhere(function($query) {
+                        $query->where('department_id', '=', Auth::user()->department_id)->whereNotNull('parent_id');
+                    });
+
+            default:
+                return $query;
         }
-        // if () {
 
-        // }
+    }
 
-        return $query;
-
+    public function scopePublished($query)
+    {
+        $query->where('published', 1);
     }
 
     public function isNotTemplate() {
@@ -192,7 +207,15 @@ class Plan extends Model
         });
 
         static::replicating(function ($plan) {
-            $plan->author_id = Auth::id();
+            $user = Auth::user();
+
+            $plan->author_id = $user->id;
+            $plan->faculty_id = $user->faculty_id;
+            $plan->guid = Str::uuid();
+
+            if ($user->role_id === User::DEPARTMENT) {
+                $plan->department_id = $user->department_id;
+            }
         });
     }
 }
