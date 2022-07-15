@@ -36,6 +36,7 @@ use App\Http\Controllers\{AsuController,
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('/cabinet-service', \App\Http\Controllers\CabinetServiceController::class);
 
 Route::prefix('v1')->group(function () {
     Route::post('/login', [LoginController::class, 'authenticate'])->name('login');
