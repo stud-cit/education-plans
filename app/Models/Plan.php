@@ -172,9 +172,6 @@ class Plan extends Model
     public function scopeOfUserType($query, $type)
     {
         switch ($type) {
-            case User::ADMIN:
-                return $query;
-
             case User::FACULTY_INSTITUTE:
                 return $query->whereNull('parent_id')
                     ->orWhere('faculty_id', '=', Auth::user()->faculty_id);
