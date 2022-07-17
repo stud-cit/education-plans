@@ -80,7 +80,7 @@ class PlanPolicy
             return Response::allow();
         }
 
-        if ($user->possibility(User::DEPARTMENTS_ROLES) && $plan->isNotTemplate() ) {
+        if ($user->possibility(User::DEPARTMENTS_ROLES) && $plan->author_id === $user->id ) {
             return Response::allow();
         }
         return Response::deny();
