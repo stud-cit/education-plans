@@ -75,10 +75,22 @@ class NoteController extends Controller
 
     public function rules()
     {
+        return response()->json(['data' => $this->getNotes()]);
+    }
+
+    /**
+     * @param
+     * @return array
+     */
+
+    public function getNotes(): array
+    {
         $notes = Note::select('id', 'abbreviation', 'explanation')->get()->toArray();
 
         $att = array_column($notes, 'abbreviation');
+
         $rule = implode(',', $att);
+
 
         $arrayNotes = array_reduce($notes, function($result, $item) {
             $result [] = "{$item['abbreviation']} – {$item['explanation']}";
@@ -87,11 +99,9 @@ class NoteController extends Controller
 
         $listNotes = implode('; ', $arrayNotes) . '.';
 
-        return response()->json([
-            'data' => [
-                'rule' => $rule,
-                'notes' => $listNotes
-            ]
-        ], 200);
+        return [
+            'rule' => $rule,
+            'notes' => $listNotes
+        ];
     }
 }

@@ -25,7 +25,7 @@ class UpdatePlanRequest extends FormRequest
     {
         return [
             'title' => 'required|max:255',
-            'faculty_id' => 'required|numeric',
+            'faculty_id' => 'nullable|numeric',
             'form_study_id' => 'required|numeric',
             'department_id' => 'nullable|numeric',
             'education_level_id' => 'required|numeric',
