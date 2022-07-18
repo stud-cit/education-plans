@@ -40,8 +40,9 @@ class EnsureCabinetTokenIsValid
                 'faculty_name',
                 'department_id',
                 'department_name',
-                'email'
-            )->where("asu_id", $user['guid'])->first(); //TODO: TO LONG
+                'email',
+                'role_id'
+            )->where("asu_id", $user['guid'])->first();
 
             if($model) {
                 $asu = new Department();
@@ -57,10 +58,6 @@ class EnsureCabinetTokenIsValid
                 ];
 
                 if ($this->isArrayDiffByKey($model->toArray(), $new, array_keys($new))) {
-
-                    // clock('model', $model->toArray());
-                    // clock('new' , $new);
-                    // clock('update');
                     $model->update($new);
                     $model->refresh();
                 }
