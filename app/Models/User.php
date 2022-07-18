@@ -39,7 +39,10 @@ class User extends Authenticatable
         'created_at',
         'updated_at'
     ];
-
+    protected $casts = [
+        'department_id' => 'integer',
+        'faculty_id' => 'integer',
+    ];
     /**
      * @var string[]
      */
