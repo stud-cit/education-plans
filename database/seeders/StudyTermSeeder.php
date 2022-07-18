@@ -38,7 +38,31 @@ class StudyTermSeeder extends Seeder
                 'course' => 2,
                 'module' => 3,
                 'semesters' => 3,
-            ]
+            ],
+            [
+                'title' => '3 роки 9 місяців',
+                'year' => 3,
+                'month' => 9,
+                'course' => 4,
+                'module' => 8,
+                'semesters' => 8,
+            ],
+            [
+                'title' => '1 рік 3 місяці',
+                'year' => 1,
+                'month' => 3,
+                'course' => 2,
+                'module' => 3,
+                'semesters' => 3,
+            ],
+            [
+                'title' => '1 рік 9 місяців',
+                'year' => 1,
+                'month' => 9,
+                'course' => 2,
+                'module' => 4,
+                'semesters' => 4,
+            ],
         ]);
     }
 }
