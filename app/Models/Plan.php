@@ -61,24 +61,24 @@ class Plan extends Model
 
     public function getStatusAttribute()
     {
-      $data = array_column($this->verification->toArray(), 'status');
-      if(count($this->filterStatus($data, 1)) == 4) {
-        $result = 'success';
-      } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
-        $result = 'warning';
-      } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
-        $result = 'error';
-      } else {
-        $result = '';
-      }
-      return $result;
+        $data = array_column($this->verification->toArray(), 'status');
+        if (count($this->filterStatus($data, 1)) == 4) {
+            $result = 'success';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
+            $result = 'warning';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
+            $result = 'error';
+        } else {
+            $result = '';
+        }
+        return $result;
     }
 
     private function filterStatus($data, $id)
     {
-      return array_filter($data, function($val) use ($id) {
-        return $val == $id;
-      });
+        return array_filter($data, function ($val) use ($id) {
+            return $val == $id;
+        });
     }
 
     public function getCreatedAtAttribute($value)
@@ -176,7 +176,8 @@ class Plan extends Model
         switch ($type) {
             case User::FACULTY_INSTITUTE:
                 return $query->whereNull('parent_id')
-                    ->orWhere('faculty_id', '=', Auth::user()->faculty_id);
+                    ->orWhere('faculty_id', '=', Auth::user()->faculty_id)
+                    ->orWhereNull('faculty_id');
 
             case User::DEPARTMENT:
                 return $query->whereNull('parent_id')
@@ -196,7 +197,7 @@ class Plan extends Model
     }
 
     public function isNotTemplate() {
-        return $this->parent_id !== null ? true : false;
+        return $this->parent_id !== 0 ? true : false;
     }
 
     protected static function booted()

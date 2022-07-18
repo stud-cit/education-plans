@@ -40,6 +40,11 @@ class User extends Authenticatable
         'updated_at'
     ];
 
+    protected $casts = [
+        'faculty_id' => 'int',
+        'department_id' => 'int'
+    ];
+
     /**
      * @var string[]
      */
@@ -65,7 +70,7 @@ class User extends Authenticatable
         self::ROOT
     ];
 
-    public const DEPARTMENTS_ROLES = [
+    public const REPRESENTATIVE_DEPARTMENT_ROLES = [
         self::TRAINING_DEPARTMENT,
         self::PRACTICE_DEPARTMENT,
         self::EDUCATIONAL_DEPARTMENT_DEPUTY,
@@ -124,5 +129,20 @@ class User extends Authenticatable
     public function assignRole($role)
     {
         return $this->role()->associate($role)->save();
+    }
+
+    public function isFacultyMine(int $faculty_id): bool
+    {
+        return $this->faculty_id === $faculty_id ? true : false;
+    }
+
+    public function isDepartmentMine(int $department_id): bool
+    {
+        return $this->department_id === $department_id ? true : false;
+    }
+
+    public function isPlanMine(int $plan_id): bool
+    {
+        return $this->id === $plan_id ? true : false;
     }
 }

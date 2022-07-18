@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class PlanPolicy
 {
@@ -54,17 +53,26 @@ class PlanPolicy
      */
     public function update(User $user, Plan $plan)
     {
-        return true;
-        //TODO: prepare possibility
-        // if ($user->possibility(User::PRIVILEGED_ROLES)) {
-        //     return Response::allow();
-        // }
+        if ($user->possibility(User::PRIVILEGED_ROLES)) {
+            return true;
+        }
 
-        // if ($user->possibility(User::DEPARTMENTS_ROLES) && $plan->isNotTemplate()) {
-        //     return Response::allow();
-        // }
+        if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $plan->isNotTemplate()) {
+            return true;
+        }
 
-        // return Response::deny();
+        if ($user->possibility(User::FACULTY_INSTITUTE) && $plan->isNotTemplate() &&
+            $user->isFacultyMine($plan->faculty_id) && $user->isPlanMine($plan->author_id)) {
+            return true;
+        }
+
+        if ($user->possibility(User::DEPARTMENT) && $plan->isNotTemplate() &&
+            $user->isDepartmentMine($plan->department_id) && $user->isPlanMine($plan->author_id)) {
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -77,13 +85,18 @@ class PlanPolicy
     public function delete(User $user, Plan $plan)
     {
         if ($user->possibility(User::PRIVILEGED_ROLES)) {
-            return Response::allow();
+            return true;
         }
 
-        if ($user->possibility(User::DEPARTMENTS_ROLES) && $plan->author_id === $user->id ) {
-            return Response::allow();
+        if ($user->possibility(User::FACULTY_INSTITUTE) && $plan->author_id === $user->id) {
+            return true;
         }
-        return Response::deny();
+
+        if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $plan->author_id === $user->id) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

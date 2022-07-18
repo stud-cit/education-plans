@@ -22,6 +22,7 @@ class PlanResource extends JsonResource
             'faculty_id' => $this->faculty_id,
             'faculty' => $this->facultyName,
             'short_faculty' => $this->shortFacultyName,
+            'department_id' => $this->department_id,
             'department' => $this->departmentName,
             'created_at' => $this->created_at,
             'status' => $this->status,
