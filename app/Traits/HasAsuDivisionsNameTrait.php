@@ -8,12 +8,16 @@ trait  HasAsuDivisionsNameTrait
 {
     public function getFacultyNameAttribute(): string
     {
+        if ($this->faculty_id === null) return '';
+
         $asu = new Department();
         return $asu->getFacultyName($this->faculty_id);
     }
 
     public function getShortFacultyNameAttribute(): string
     {
+        if ($this->faculty_id === null) return '';
+
         $asu = new Department();
         return $asu->getShortFacultyName($this->faculty_id);
     }
