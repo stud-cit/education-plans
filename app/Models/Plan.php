@@ -143,6 +143,13 @@ class Plan extends Model
         return $this->hasMany(Cycle::class)->with('subjects');
     }
 
+    public function getNotesAttribute()
+    {
+        $notes = new \App\Http\Controllers\NoteController;
+
+        return $notes->getNotes();
+    }
+
     public function formOrganization()
     {
         return $this->belongsTo(FormOrganization::class);

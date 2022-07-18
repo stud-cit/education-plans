@@ -45,7 +45,8 @@ class PlanShowResource extends JsonResource
             'count_exams' => $this->getCountExams(),
             'count_tests' => $this->getCountTests(),
             'count_coursework' => $this->getCountCoursework(),
-            'status' => $this->status
+            'status' => $this->status,
+            'notes' => $this->notes,
         ];
     }
 
