@@ -26,4 +26,9 @@ class Constant
         self::INDIVIDUAL_TASKS['COURSE_WORK'] => 'КР',
         self::INDIVIDUAL_TASKS['NO_TASK'] => 'БЗ'
     ];
+
+    const ASU_ERRORS = [
+        'ERROR_API',
+        'ERROR_CABINET'
+    ];
 }

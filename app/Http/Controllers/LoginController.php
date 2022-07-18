@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -33,10 +34,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        if (!$request->user()) return;
-        $request->user()->currentAccessToken()->delete();
-        return [
-            'message' => __('auth.logout'),
-        ];
+        Auth::logout();
+//         $request->user()->currentAccessToken()->delete();
     }
 }

@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\ExternalServices\Asu\Department;
-use App\ExternalServices\Asu\Worker;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRoleRequest;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\WorkersResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\ExternalServices\Asu\Worker;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Resources\WorkersResource;
+use App\ExternalServices\Asu\Department;
+use App\Http\Requests\UpdateUserRoleRequest;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(User::class);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +25,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::select('id', 'asu_id', 'department_id', 'faculty_id', 'role_id')->get());
+        $roleAdmin = Auth::user()->role_id === User::ADMIN;
+
+        $users = User::select('id', 'asu_id', 'department_id', 'faculty_id', 'role_id')
+            ->when($roleAdmin, function ($query) {
+                return $query->where('role_id', '!=', User::ROOT);
+            })
+            ->get();
+
+        return UserResource::collection($users);
     }
 
     /**
@@ -32,7 +45,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $validated = $request->validated();
-        
+
         User::create($validated);
 
         return $this->success(__('messages.Created'), 201);

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\RoleResource;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\RoleResource;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -15,7 +17,14 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return RoleResource::collection(Role::select('id', 'label')->get());
+        $roleAdmin = Auth::user()->role_id === User::ADMIN && !env('APP_DEBUG');
+
+        $roles = Role::select('id', 'label')
+            ->when($roleAdmin, function ($query) {
+                return $query->where('id', '!=', User::ROOT);
+            })->get();
+
+        return RoleResource::collection($roles);
     }
 
     /**

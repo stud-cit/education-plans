@@ -5,7 +5,6 @@ namespace App\Models;
 use App\ExternalServices\Asu\Department;
 use App\ExternalServices\Asu\Worker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -46,14 +45,54 @@ class User extends Authenticatable
      */
     protected $appends = ['full_name'];
 
-    // /**
-    //  * The attributes that should be cast.
-    //  *
-    //  * @var array<string, string>
-    //  */
-    // protected $casts = [
-    //     'email_verified_at' => 'datetime',
-    // ];
+    public const ADMIN = 1;
+    public const TRAINING_DEPARTMENT = 2;
+    public const PRACTICE_DEPARTMENT = 3;
+    public const EDUCATIONAL_DEPARTMENT_DEPUTY = 4;
+    public const EDUCATIONAL_DEPARTMENT_CHIEF = 5;
+    public const FACULTY_INSTITUTE = 6;
+    public const DEPARTMENT = 7;
+    public const ROOT = 8;
+
+    public const ALL_ROLES = [
+        self::ADMIN,
+        self::TRAINING_DEPARTMENT,
+        self::PRACTICE_DEPARTMENT,
+        self::EDUCATIONAL_DEPARTMENT_DEPUTY,
+        self::EDUCATIONAL_DEPARTMENT_CHIEF,
+        self::FACULTY_INSTITUTE,
+        self::DEPARTMENT,
+        self::ROOT
+    ];
+
+    public const DEPARTMENTS_ROLES = [
+        self::TRAINING_DEPARTMENT,
+        self::PRACTICE_DEPARTMENT,
+        self::EDUCATIONAL_DEPARTMENT_DEPUTY,
+        self::EDUCATIONAL_DEPARTMENT_CHIEF
+    ];
+
+    public const PRIVILEGED_ROLES = [
+        self::ADMIN,
+        self::ROOT
+    ];
+
+    /**
+     * possibility current user something do
+     *
+     * @param array|integer $roles
+     * @return boolean
+     */
+    public function possibility($roles = self::ALL_ROLES): bool
+    {
+        if (gettype ($roles) === 'array') {
+            return in_array($this->role_id, $roles);
+        } else if (gettype ($roles) === 'integer') {
+            return  $this->role_id === $roles;
+        }
+
+        return false;
+    }
 
     public function getFacultyNameAttribute()
     {

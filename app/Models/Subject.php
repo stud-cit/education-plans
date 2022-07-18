@@ -52,17 +52,20 @@ class Subject extends Model
 
     public function exams()
     {
-        return $this->getSemestersOnFormControl(Constant::FORM_CONTROL['EXAM']);
+        return $this->getSemestersOnFormControl([Constant::FORM_CONTROL['EXAM']]);
     }
 
     public function test()
     {
-        return $this->getSemestersOnFormControl(Constant::FORM_CONTROL['TEST']);
+        return $this->getSemestersOnFormControl([
+            Constant::FORM_CONTROL['TEST'],
+            Constant::FORM_CONTROL['DIFFERENTIAL_TEST']
+        ]);
     }
 
     public function individualTasks()
     {
-        return $this->getSemestersOnFormControl(Constant::FORM_CONTROL['PROTECTION'])
+        return $this->getSemestersOnFormControl([Constant::FORM_CONTROL['PROTECTION']])
                 ->orWhereIn('individual_task_id', [
                         Constant::INDIVIDUAL_TASKS['CONTROL_WORK'],
                         Constant::INDIVIDUAL_TASKS['COURSE_WORK']
@@ -81,12 +84,12 @@ class Subject extends Model
         return $subjects->getTitle($this->asu_id);
     }
 
-    private function getSemestersOnFormControl(int $form_control_id): HasMany
+    private function getSemestersOnFormControl(array $form_control_ids): HasMany
     {
         return $this->hoursModules()
             ->select(['subject_id'])
             ->selectRaw('(GROUP_CONCAT(DISTINCT semester)) as semester')
-            ->where('form_control_id', $form_control_id)
+            ->whereIn('form_control_id', $form_control_ids)
             ->groupBy('subject_id');
     }
 }

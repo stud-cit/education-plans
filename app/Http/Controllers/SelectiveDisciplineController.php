@@ -10,6 +10,11 @@ use App\Models\SelectiveDiscipline;
 
 class SelectiveDisciplineController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(SelectiveDiscipline::class);
+    }
     /**
      * Display a listing of the resource.
      *

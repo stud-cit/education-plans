@@ -2,33 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\ExternalServices\Asu\Department;
-use App\ExternalServices\Asu\Profession;
-use App\ExternalServices\Asu\Qualification;
-use App\ExternalServices\Op\OP;
-use App\Helpers\Tree;
-use App\Http\Constant;
-use App\Http\Requests\indexPlanRequest;
-use App\Http\Requests\StoreCycleRequest;
-use App\Http\Requests\StoreGeneralPlanRequest;
-use App\Http\Requests\StorePlanVerificationRequest;
-use App\Http\Requests\UpdateCycleRequest;
-use App\Http\Requests\UpdatePlanRequest;
-use App\Http\Resources\FacultiesResource;
-use App\Http\Resources\PlanEditResource;
-use App\Http\Resources\PlanResource;
-use App\Http\Resources\PlanShowResource;
-use App\Http\Resources\ProfessionsResource;
-use App\Models\Cycle;
-use App\Models\HoursModules;
-use App\Models\SemestersCredits;
 use App\Models\Plan;
+use App\Models\User;
+use App\Helpers\Tree;
+use App\Models\Cycle;
+use App\Http\Constant;
 use App\Models\Subject;
 use Illuminate\Support\Str;
+use App\Models\HoursModules;
 use Illuminate\Http\Request;
+use App\ExternalServices\Op\OP;
+use App\Models\SemestersCredits;
+use App\Http\Resources\PlanResource;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\indexPlanRequest;
+use App\ExternalServices\Asu\Department;
+use App\ExternalServices\Asu\Profession;
+use App\Http\Requests\StoreCycleRequest;
+use App\Http\Requests\UpdatePlanRequest;
+use App\Http\Resources\PlanEditResource;
+use App\Http\Resources\PlanShowResource;
+use App\Http\Requests\UpdateCycleRequest;
+use App\Http\Resources\FacultiesResource;
+use App\ExternalServices\Asu\Qualification;
+use App\Http\Resources\ProfessionsResource;
+use App\Http\Requests\StoreGeneralPlanRequest;
+use App\Http\Requests\StorePlanVerificationRequest;
 
 class PlanController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Plan::class);
+    }
+
     private function stringToBoolean(string $string): bool
     {
         return filter_var($string, FILTER_VALIDATE_BOOLEAN);
@@ -47,7 +54,9 @@ class PlanController extends Controller
 
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
-        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'created_at')
+        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'published', 'created_at')
+            ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn($query) => $query->published())
+            ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
                 return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));
@@ -77,6 +86,16 @@ class PlanController extends Controller
      */
     public function create()
     {
+
+    }
+
+    /**
+     * Returns additional data for creating or editing a plan.
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function additionalDataActionsPlan()
+    {
         $asu = new Department();
         $professions = new Profession();
         $qualifications = new Qualification();
@@ -97,6 +116,7 @@ class PlanController extends Controller
 
         return response()->json($data);
     }
+
 
     /**
      * Display the specified resource.
@@ -178,18 +198,23 @@ class PlanController extends Controller
 
     public function copy(Plan $plan)
     {
-      $model = $plan->load([
-        'cycles.cycles',
-        'cycles.subjects.semestersCredits',
-        'cycles.subjects.hoursModules',
-      ]);
-      $clonePlan = $plan->duplicate();
-      foreach ($model->cycles as $cycle) {
-        if($cycle['cycle_id'] == null) {
-          $this->createCycle($cycle, $clonePlan->id);
+        $model = $plan->load([
+            'cycles.cycles',
+            'cycles.subjects.semestersCredits',
+            'cycles.subjects.hoursModules',
+        ]);
+
+        $clonePlan = $plan->duplicate();
+
+        $clonePlan->parent_id = $plan->id;
+        $clonePlan->update();
+
+        foreach ($model->cycles as $cycle) {
+            if ($cycle['cycle_id'] == null) {
+                $this->createCycle($cycle, $clonePlan->id);
+            }
         }
-      }
-      return $this->success(__('messages.Copied'), 201);
+        return $this->success(__('messages.Copied'), 201);
     }
 
     function createCycle($cycle, $plan_id, $cycleId = null) {
@@ -261,12 +286,12 @@ class PlanController extends Controller
       $errors = 0;
       $comment = 'Не відповідає освітній програмі:<br>';
       $control_form = [
-        1 => 'іспит', 
+        1 => 'іспит',
         2 => 'диф. залік',
-        3 => 'залік', 
+        3 => 'залік',
         8 => 'захист'
       ];
-      
+
       $model = Subject::with('hoursModules', 'cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
         $queryCycle->where('plan_id', $planId);
       })->get();
@@ -325,10 +350,10 @@ class PlanController extends Controller
       $plan->update([
         "program_op_id" => $request->program_op_id
       ]);
- 
+
       return $this->success(__('messages.Updated'), 200);
     }
-    
+
     public function getLastFormControl($hoursModules) {
       $result = null;
       foreach ($hoursModules as $value) {

@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\FormControl;
+use Illuminate\Http\Request;
 use App\Http\Resources\FormControlResource;
 
 class FormControlController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(FormControl::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +21,7 @@ class FormControlController extends Controller
      */
     public function index()
     {
-      return FormControlResource::collection(FormControl::all());
+        return FormControlResource::collection(FormControl::all());
     }
 
     /**

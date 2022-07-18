@@ -20,12 +20,16 @@ trait  HasAsuDivisionsNameTrait
 
     public function getDepartmentNameAttribute(): string
     {
+        if ($this->department_id === null) return '';
+
         $asu = new Department();
         return $asu->getDepartmentName($this->department_id);
     }
 
     public function getShortDepartmentNameAttribute(): string
     {
+        if ($this->department_id === null) return '';
+
         $asu = new Department();
         return $asu->getShortDepartmentName($this->department_id);
     }

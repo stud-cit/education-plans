@@ -10,6 +10,10 @@ use GrahamCampbell\ResultType\Success;
 
 class SettingController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Setting::class);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +33,9 @@ class SettingController extends Controller
     public function store(StoreSettingRequest $request)
     {
         $validated = $request->validated();
-        
+
         Setting::create($validated);
-        
+
         return $this->success(__('messages.Created'), 201);
     }
 
@@ -58,7 +62,7 @@ class SettingController extends Controller
         $validated = $request->validated();
 
         $setting->update($validated);
-        
+
         return $this->success(__('messages.Updated'), 200);
     }
 
