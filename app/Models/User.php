@@ -131,7 +131,7 @@ class User extends Authenticatable
         return $this->role()->associate($role)->save();
     }
 
-    public function isFacultyMine(int $faculty_id): bool
+    public function isFacultyMine(?int $faculty_id): bool
     {
         return $this->faculty_id === $faculty_id ? true : false;
     }
