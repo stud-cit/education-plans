@@ -16,7 +16,12 @@ class StudyTermSelectResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->description
+            'title' => $this->title,
+            'year' => $this->year,
+            'month' => $this->month,
+            'course' => $this->course,
+            'module' => $this->module,
+            'semesters' => $this->semesters,
         ];
     }
 }

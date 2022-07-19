@@ -136,7 +136,7 @@ class User extends Authenticatable
         return $this->faculty_id === $faculty_id ? true : false;
     }
 
-    public function isDepartmentMine(int $department_id): bool
+    public function isDepartmentMine(?int $department_id): bool
     {
         return $this->department_id === $department_id ? true : false;
     }

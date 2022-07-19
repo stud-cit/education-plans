@@ -81,6 +81,6 @@ class StudyTermController extends Controller
     }
 
     public function select() {
-        return StudyTermSelectResource::collection(StudyTerm::select('id', 'title', 'year', 'month')->get());
+        return StudyTermSelectResource::collection(StudyTerm::all());
     }
 }
