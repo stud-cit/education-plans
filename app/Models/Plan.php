@@ -219,10 +219,12 @@ class Plan extends Model
 
         static::replicating(function ($plan) {
             $user = Auth::user();
-
-            $plan->author_id = $user->id;
-            $plan->faculty_id = $user->faculty_id;
             $plan->guid = Str::uuid();
+            $plan->author_id = $user->id;
+
+            if (!in_array($user->role_id, User::PRIVILEGED_ROLES)) {
+                $plan->faculty_id = $user->faculty_id;
+            }
 
             if ($user->role_id === User::DEPARTMENT) {
                 $plan->department_id = $user->department_id;

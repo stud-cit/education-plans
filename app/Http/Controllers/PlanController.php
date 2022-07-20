@@ -54,7 +54,7 @@ class PlanController extends Controller
 
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
-        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'published', 'created_at')
+        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'published', 'parent_id', 'created_at')
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
@@ -206,8 +206,14 @@ class PlanController extends Controller
 
         $clonePlan = $plan->duplicate();
 
-        $clonePlan->parent_id = $plan->id;
-        $clonePlan->update();
+        $user = Auth::user();
+        if (in_array($user->role_id, User::PRIVILEGED_ROLES) && $plan->parent_id !== null) {
+            $clonePlan->parent_id = $plan->id;
+            $clonePlan->update();
+        } elseif (!in_array($user->role_id, User::PRIVILEGED_ROLES) && $plan->parent_id === null) {
+            $clonePlan->parent_id = $plan->id;
+            $clonePlan->update();
+        }
 
         foreach ($model->cycles as $cycle) {
             if ($cycle['cycle_id'] == null) {
@@ -281,77 +287,79 @@ class PlanController extends Controller
     }
 
     public function verificationOP(Request $request, Plan $plan) {
-      $modelOP = new OP();
-      $planId = $plan->id;
-      $errors = 0;
-      $comment = 'Не відповідає освітній програмі:<br>';
-      $control_form = [
-        1 => 'іспит',
-        2 => 'диф. залік',
-        3 => 'залік',
-        8 => 'захист'
-      ];
+        clock('ver in controller');
 
-      $model = Subject::with('hoursModules', 'cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-        $queryCycle->where('plan_id', $planId);
-      })->get();
+        $modelOP = new OP();
+        $planId = $plan->id;
+        $errors = 0;
+        $comment = 'Не відповідає освітній програмі:<br>';
+        $control_form = [
+            1 => 'іспит',
+            2 => 'диф. залік',
+            3 => 'залік',
+            8 => 'захист'
+        ];
 
-      $program = $modelOP->getProgramId($request->program_op_id);
+        $model = Subject::with('hoursModules', 'cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+            $queryCycle->where('plan_id', $planId);
+        })->get();
 
-      $components = array_filter($program['component'], function($value) {
-        return in_array($value['group_id'], [7, 8, 9, 10]);
-      });
+        $program = $modelOP->getProgramId($request->program_op_id);
 
-      foreach ($model as $value) {
-        foreach($components as $item) {
-          if ($item['subject'] == $value['title']) {
-            if(intval($item['credit_col']) != $value['credits']) {
-              Subject::find($value['id'])->update(['verification' => 0]);
-              $errors++;
-              $comment .= 'Не вірна кількість кредитів в дисципліні ' . $item['subject'] . ';<br>';
-            } elseif($control_form[$this->getLastFormControl($value['hoursModules'])] != $item['control_form']) {
-              Subject::find($value['id'])->update(['verification' => 0]);
-              $errors++;
-              $comment .= 'Не вірна остання форма контролю в дисципліні ' . $item['subject'] . ';<br>';
-            } else {
-              Subject::find($value['id'])->update(['verification' => 1]);
+        $components = array_filter($program['component'], function ($value) {
+            return in_array($value['group_id'], [7, 8, 9, 10]);
+        });
+
+        foreach ($model as $value) {
+            foreach ($components as $item) {
+                if ($item['subject'] == $value['title']) {
+                    if (intval($item['credit_col']) != $value['credits']) {
+                        Subject::find($value['id'])->update(['verification' => 0]);
+                        $errors++;
+                        $comment .= 'Не вірна кількість кредитів в дисципліні ' . $item['subject'] . ';<br>';
+                    } elseif ($control_form[$this->getLastFormControl($value['hoursModules'])] != $item['control_form']) {
+                        Subject::find($value['id'])->update(['verification' => 0]);
+                        $errors++;
+                        $comment .= 'Не вірна остання форма контролю в дисципліні ' . $item['subject'] . ';<br>';
+                    } else {
+                        Subject::find($value['id'])->update(['verification' => 1]);
+                    }
+                }
             }
-          }
         }
-      }
 
-      if(count($model) != count($components)) {
-        $errors++;
-        $comment .= 'Не вірна кількість дисциплін.';
-      }
+        if (count($model) != count($components)) {
+            $errors++;
+            $comment .= 'Не вірна кількість дисциплін.';
+        }
 
-      if($errors > 0) {
-        $data = [
-          'user_id' => $request['user_id'],
-          'comment' => $comment,
-          'status' => false
-        ];
-      } else {
-        $data = [
-          'user_id' => $request['user_id'],
-          'comment' => null,
-          'status' => true
-        ];
-      }
+        if ($errors > 0) {
+            $data = [
+                'user_id' => $request['user_id'],
+                'comment' => $comment,
+                'status' => false
+            ];
+        } else {
+            $data = [
+                'user_id' => $request['user_id'],
+                'comment' => null,
+                'status' => true
+            ];
+        }
 
-      $plan->verification()->updateOrCreate(
-        [
-          "plan_id" => $plan->id,
-          'verification_statuses_id' => 1
-        ],
-        $data
-      );
+        $plan->verification()->updateOrCreate(
+            [
+                "plan_id" => $plan->id,
+                'verification_statuses_id' => 1
+            ],
+            $data
+        );
 
-      $plan->update([
-        "program_op_id" => $request->program_op_id
-      ]);
+        $plan->update([
+            "program_op_id" => $request->program_op_id
+        ]);
 
-      return $this->success(__('messages.Updated'), 200);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     public function getLastFormControl($hoursModules) {

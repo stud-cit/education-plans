@@ -26,6 +26,7 @@ class PlanResource extends JsonResource
             'department' => $this->departmentName,
             'created_at' => $this->created_at,
             'status' => $this->status,
+            'is_template' =>  $this->parent_id ? __('Plan') : __('Template')
         ];
     }
 }
