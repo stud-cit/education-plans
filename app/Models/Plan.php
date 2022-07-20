@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Policies\PlanPolicy;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
@@ -209,6 +211,19 @@ class Plan extends Model
 
     public function isNotTemplate() {
         return $this->parent_id !== 0 ? true : false;
+    }
+
+    public function actions()
+    {
+        $policy = new PlanPolicy();
+        $user = Auth::user();
+
+        return [
+            'preview' => $policy->viewAny($user),
+            'copy' =>  Gate::allows('copy-plan'),
+            'edit' => $policy->update($user, $this),
+            'delete' => $policy->delete($user, $this),
+        ];
     }
 
     protected static function booted()
