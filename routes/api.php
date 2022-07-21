@@ -53,6 +53,7 @@ Route::prefix('v1')->group(function () {
         Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
         Route::get('/plans/cycles/{plan}', [PlanController::class, 'cyclesWithSubjects'])->name('plans.cycles.subjects');
         Route::get('plans/additional-data', [PlanController::class, 'additionalDataActionsPlan']);
+        Route::get('plans/filters', [PlanController::class, 'getItemsFilters']);
         Route::Resource('plans', PlanController::class);
 
         Route::apiResource('verifications', VerificationController::class);
@@ -86,9 +87,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
-         Route::get('/user', function (Request $request) {
-             return \Illuminate\Support\Facades\Auth::user()->makeHidden('asu_id');
-         });
+        Route::get('/user', function (Request $request) {
+            return \Illuminate\Support\Facades\Auth::user()->makeHidden('asu_id');
+        });
 
         Route::get('/userName', function (Request $request) {
             return response()->json(['userName' => $request->user()->name]);
