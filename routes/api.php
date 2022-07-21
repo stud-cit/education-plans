@@ -44,9 +44,10 @@ Route::prefix('v1')->group(function () {
      Route::middleware('cabinetAuth')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
-        Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])->name('plans.verificationOP.store');
+        Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])
+            ->name('plans.verificationOP.store')->middleware('can:verification-op');
         Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy')
-            ->middleware('can:copy_plan');
+            ->middleware('can:copy-plan');
         Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
         Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
         Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
