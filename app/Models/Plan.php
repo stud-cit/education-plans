@@ -145,6 +145,24 @@ class Plan extends Model
         return $this->hasMany(Cycle::class)->with('subjects');
     }
 
+    public function getExamsTable($cycles)
+    {
+        $_subjects = $cycles->where('list_cycle_id', 10)->first();
+
+        if ($_subjects === null) return [];
+
+        $subjects = [];
+        $_subjects->subjects->map(function ($subject) use (&$subjects) {
+            $semester = $subject->semestersCredits->filter(fn ($item) => $item->credit !== 0)->last();
+            $subjects[] = [
+                'title' => $subject->title,
+                'semester' => $semester->semester ?? ''
+            ];
+        });
+
+        return $subjects;
+    }
+
     public function getNotesAttribute()
     {
         $notes = new \App\Http\Controllers\NoteController;
