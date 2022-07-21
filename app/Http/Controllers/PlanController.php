@@ -55,7 +55,8 @@ class PlanController extends Controller
 
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
-        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'published', 'parent_id', 'created_at')
+        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'published', 'author_id',
+            'parent_id', 'created_at')
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
