@@ -183,6 +183,14 @@ class Plan extends Model
     public function scopeOfUserType($query, $type)
     {
         switch ($type) {
+            case User::TRAINING_DEPARTMENT:
+            case User::PRACTICE_DEPARTMENT:
+            case User::EDUCATIONAL_DEPARTMENT_DEPUTY:
+            case User::EDUCATIONAL_DEPARTMENT_CHIEF:
+                return $query->whereHas('verification', function ($query) {
+                    $query->where('verification_statuses_id', VerificationStatuses::OP)->where('status', true);
+                });
+
             case User::FACULTY_INSTITUTE:
                 return $query->whereNull(['parent_id', 'faculty_id'])
                     ->orWhere('faculty_id', '=', Auth::user()->faculty_id)
@@ -194,9 +202,6 @@ class Plan extends Model
                         $query->where('faculty_id', '=', Auth::user()->faculty_id)->whereNull('department_id')
                         ->orWhere('department_id', '=', Auth::user()->department_id);
                     });
-                    // ->orWhere(function($query) {
-                    //     $query->where('department_id', '=', Auth::user()->department_id)->whereNotNull('parent_id');
-                    // });
 
             default:
                 return $query;
