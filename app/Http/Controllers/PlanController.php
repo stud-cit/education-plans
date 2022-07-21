@@ -8,6 +8,7 @@ use App\Helpers\Tree;
 use App\Models\Cycle;
 use App\Http\Constant;
 use App\Models\Subject;
+use App\Models\VerificationStatuses;
 use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use Illuminate\Http\Request;
@@ -418,5 +419,25 @@ class PlanController extends Controller
         $data = Tree::makeTree($cyclesWithSubjects);
 
         return response()->json(['data' => $data], 200);
+    }
+
+    public function getItemsFilters()
+    {
+        $modelVerificationStatuses = new VerificationStatuses;
+        $asu = new Department();
+        $user = Auth::user();
+
+        $divisions = $modelVerificationStatuses::select('id', 'title')->where('id','!=', $modelVerificationStatuses::OP)->get();
+        $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
+        $faculties = $asu->getFaculties()->when(
+            $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
+            fn ($collections) => $collections->filter( fn($faculty) => $faculty['id'] == $user->faculty_id )
+        );
+
+        return response([
+            'divisions' => ProfessionsResource::collection($divisions),
+            'verificationsStatus' => $verificationsStatus,
+            'faculties' => FacultiesResource::collection($faculties)
+        ]);
     }
 }

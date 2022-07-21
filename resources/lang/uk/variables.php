@@ -2,5 +2,8 @@
 
 return [
     'Plan' => 'План',
-    'Template' => 'Шаблон'
+    'Template' => 'Шаблон',
+    'NotChecked' => 'Не перевірено',
+    'Verified' => 'Верифіковано',
+    'NotVerified' => 'Не верифіковано'
 ];
