@@ -215,7 +215,7 @@ class Plan extends Model
     }
 
     public function isNotTemplate() {
-        return $this->parent_id !== 0 ? true : false;
+        return $this->parent_id !== null ? true : false;
     }
 
     public function actions()
