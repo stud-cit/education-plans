@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSignatureRequest extends FormRequest
+class UpdateSignatureRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,8 @@ class StoreSignatureRequest extends FormRequest
     public function rules()
     {
         return [
-            'position_id' => 'required|exists:App\Models\Position,id',
             'plan_id' => 'required|exists:App\Models\Plan,id',
+            'position_id' => 'required|exists:App\Models\Position,id',
             'manual_position' => 'required|string|max:255',
             'asu_id' => 'required|max:60',
         ];

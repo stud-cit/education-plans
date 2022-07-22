@@ -18,6 +18,7 @@ class SignatureResource extends JsonResource
             'id' => $this->id,
             'plan_id' => $this->plan_id,
             'position_id' => $this->position_id,
+            'manual_position' => $this->manual_position,
             'asu_id' => $this->asu_id
         ];
     }
