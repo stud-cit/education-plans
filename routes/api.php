@@ -45,7 +45,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])
-            ->name('plans.verificationOP.store')->middleware('can:verification-op');
+            ->name('plans.verificationOP.store');
         Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy')
             ->middleware('can:copy-plan');
         Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');

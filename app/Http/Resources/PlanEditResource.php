@@ -55,7 +55,8 @@ class PlanEditResource extends JsonResource
             'count_coursework' => $this->getCountCoursework(),
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
             'signatures' => SignatureResource::collection($this->signatures),
-            'program_op_id' => $this->program_op_id
+            'program_op_id' => $this->program_op_id,
+            'exams_table' => $this->getExamsTable($this->cycles),
         ];
     }
 
@@ -97,7 +98,7 @@ class PlanEditResource extends JsonResource
 
     function getCountExams() {
       $result = [];
-      for ($i = 0; $i < $this->studyTerm->semesters; $i++) { 
+      for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
         if($this->form_organization_id == 1) {
           array_push($result, '');
         }
@@ -108,7 +109,7 @@ class PlanEditResource extends JsonResource
 
     function getCountCoursework() {
       $result = [];
-      for ($i=0; $i < $this->studyTerm->semesters; $i++) { 
+      for ($i=0; $i < $this->studyTerm->semesters; $i++) {
         if($this->form_organization_id == 1) {
           array_push($result, '');
         }
