@@ -10,7 +10,7 @@ class Signature extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['plan_id', 'position_id', 'asu_id'];
+    protected $fillable = ['plan_id', 'position_id', 'manual_position', 'asu_id'];
 
 
     public function getNameAttribute(): string

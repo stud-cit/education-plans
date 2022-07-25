@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreSignatureRequest;
 use App\Models\Signature;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreSignatureRequest;
+use App\Http\Requests\UpdateSignatureRequest;
 
 class SignatureController extends Controller
 {
@@ -18,9 +18,9 @@ class SignatureController extends Controller
     {
         $validated = $request->validated();
 
-        Signature::upsert($validated, ['id', 'plan_id'], ['position_id', 'asu_id']);
+        $signature = Signature::create($validated);
 
-        return $this->success(__('messages.Created'), 201);
+        return response()->json($signature->fresh(), 201);
     }
 
     /**
@@ -30,7 +30,7 @@ class SignatureController extends Controller
      * @param  \App\Models\Signature  $signature
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreSignatureRequest $request, Signature $signature)
+    public function update(UpdateSignatureRequest $request, Signature $signature)
     {
         $validated = $request->validated();
 

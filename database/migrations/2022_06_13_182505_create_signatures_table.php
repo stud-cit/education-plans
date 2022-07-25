@@ -25,7 +25,7 @@ class CreateSignaturesTable extends Migration
                 ->constrained('positions')
                 ->cascadeOnUpdate();
             $table->string('asu_id', 60);
-            $table->unique(['id','plan_id']);
+            $table->string('manual_position');
             $table->timestamps();
         });
     }
