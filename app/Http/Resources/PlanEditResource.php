@@ -57,6 +57,10 @@ class PlanEditResource extends JsonResource
             'signatures' => SignatureResource::collection($this->signatures),
             'program_op_id' => $this->program_op_id,
             'exams_table' => $this->getExamsTable($this->cycles),
+            'summary_data_budget_time' => $this->summary_data_budget_time ?
+                json_decode($this->summary_data_budget_time) : [],
+            'practical_training' => $this->practical_training ?
+                json_decode($this->practical_training) : [],
         ];
     }
 

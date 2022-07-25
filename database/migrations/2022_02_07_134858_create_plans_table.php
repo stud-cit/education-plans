@@ -33,6 +33,8 @@ class CreatePlansTable extends Migration
             $table->integer('field_knowledge_id')->nullable(true);
             // $table->foreignId('form_organization_id')->nullable(true);
             $table->json('hours_weeks_semesters')->nullable(true);
+            $table->json('summary_data_budget_time')->nullable(true);
+            $table->json('practical_training')->nullable(true);
             $table->json('schedule_education_process')->nullable(true);
             $table->boolean('published')->default(false);
 

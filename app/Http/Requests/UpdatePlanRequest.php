@@ -40,6 +40,8 @@ class UpdatePlanRequest extends FormRequest
             'credits' => 'required|numeric',
             'schedule_education_process' => 'nullable|json',
             'hours_weeks_semesters' => 'required|json',
+            'summary_data_budget_time' => 'required|json',
+            'practical_training' => 'required|json',
             'published' => 'required'
         ];
     }
