@@ -45,7 +45,9 @@ class Plan extends Model
         'specialization_id',
         'form_study_id',
         'published',
-        'program_op_id'
+        'program_op_id',
+        'summary_data_budget_time',
+        'practical_training'
     ];
 
     protected $casts = [
