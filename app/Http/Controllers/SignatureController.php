@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Signature;
+use App\Http\Resources\SignatureResource;
 use App\Http\Requests\StoreSignatureRequest;
 use App\Http\Requests\UpdateSignatureRequest;
+use App\Http\Resources\SignatureNoWrapResource;
 
 class SignatureController extends Controller
 {
@@ -19,8 +21,9 @@ class SignatureController extends Controller
         $validated = $request->validated();
 
         $signature = Signature::create($validated);
+        $freshSignature = $signature->fresh();
 
-        return response()->json($signature->fresh(), 201);
+        return (new SignatureNoWrapResource($freshSignature))->response()->setStatusCode(201);
     }
 
     /**
@@ -35,8 +38,9 @@ class SignatureController extends Controller
         $validated = $request->validated();
 
         $signature->update($validated);
+        $freshSignature = $signature->fresh();
 
-        return $this->success(__('messages.Updated'), 201);
+        return (new SignatureNoWrapResource($freshSignature))->response()->setStatusCode(201);
     }
 
     /**
@@ -52,6 +56,7 @@ class SignatureController extends Controller
         } catch (\Illuminate\Database\QueryException $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }
+
         return $this->success(__('messages.Deleted'), 200);
     }
 }
