@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{AsuController,
+use App\Http\Controllers\{
+    AsuController,
     CycleController,
     EducationLevelController,
     FormStudyController,
@@ -23,7 +24,8 @@ use App\Http\Controllers\{AsuController,
     NoteController,
     PositionController,
     ListCycleController,
-    OpController};
+    OpController
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -35,10 +37,11 @@ use App\Http\Controllers\{AsuController,
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::get('/cabinet-service', \App\Http\Controllers\CabinetServiceController::class);
 
 Route::prefix('v1')->group(function () {
-     Route::middleware('cabinetAuth')->group(function () {
+    Route::middleware('cabinetAuth')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])
