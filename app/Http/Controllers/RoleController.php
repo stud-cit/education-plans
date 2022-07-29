@@ -17,12 +17,16 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roleAdmin = Auth::user()->role_id === User::ADMIN && !env('APP_DEBUG');
+        $user = Auth::user();
+        $roleAdmin = $user->role_id === User::ADMIN && !env('APP_DEBUG');
+        $roleInstitute = $user->role_id === User::FACULTY_INSTITUTE;
 
         $roles = Role::select('id', 'label')
             ->when($roleAdmin, function ($query) {
                 return $query->where('id', '!=', User::ROOT);
-            })->get();
+            })
+            ->when($roleInstitute, fn ($q) => $q->whereIn('id', [User::FACULTY_INSTITUTE, User::DEPARTMENT]))
+            ->get();
 
         return RoleResource::collection($roles);
     }

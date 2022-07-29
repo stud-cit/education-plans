@@ -17,7 +17,7 @@ class UserPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        return $user->possibility([User::ROOT, User::ADMIN, User::FACULTY_INSTITUTE]);
     }
 
     /**
@@ -40,7 +40,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        return $user->possibility([User::ROOT, User::ADMIN, User::FACULTY_INSTITUTE]);
     }
 
     /**
@@ -52,7 +52,13 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return env('APP_DEBUG') ? true : $user->possibility(User::PRIVILEGED_ROLES);
+        switch ($user->role_id) {
+            case User::FACULTY_INSTITUTE:
+                return $user->faculty_id === $model->faculty_id || env('APP_DEBUG') ? true : false;
+
+            default:
+                return env('APP_DEBUG') ? true : $user->possibility(User::PRIVILEGED_ROLES);
+        }
     }
 
     /**
@@ -64,15 +70,25 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        if ($user->role_id === User::ADMIN && $model->role_id === User::ROOT) {
-            return false;
-        }
+        switch ($user->role_id) {
+            case User::FACULTY_INSTITUTE:
+                if ($user->id === $model->id) {
+                    return false;
+                }
 
-        if ($user->id === $model->id) {
-            return false;
-        }
+                return $user->faculty_id === $model->faculty_id ? true : false;
 
-        return $user->possibility(User::PRIVILEGED_ROLES);
+            default:
+                if ($user->role_id === User::ADMIN && $model->role_id === User::ROOT) {
+                    return false;
+                }
+
+                if ($user->id === $model->id) {
+                    return false;
+                }
+
+                return $user->possibility(User::PRIVILEGED_ROLES);
+        }
     }
 
     /**

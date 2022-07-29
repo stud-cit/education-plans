@@ -25,11 +25,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        $roleAdmin = Auth::user()->role_id === User::ADMIN;
+        $user = Auth::user();
+        $roleAdmin = $user->role_id === User::ADMIN;
+        $roleInstitute = $user->role_id === User::FACULTY_INSTITUTE;
 
         $users = User::select('id', 'asu_id', 'department_id', 'faculty_id', 'role_id')
             ->when($roleAdmin, function ($query) {
                 return $query->where('role_id', '!=', User::ROOT);
+            })
+            ->when($roleInstitute, function ($query) use ($user) {
+                return $query->whereIn('role_id', [User::FACULTY_INSTITUTE, User::DEPARTMENT])
+                    ->where('faculty_id', '=', $user->faculty_id);
             })
             ->get();
 
@@ -101,7 +107,7 @@ class UserController extends Controller
 
             return [
                 'asu_id' => $worker['asu_id'],
-                'full_name' => $worker['last_name'] .' '. $worker['first_name'] .' '. $worker['patronymic'],
+                'full_name' => $worker['last_name'] . ' ' . $worker['first_name'] . ' ' . $worker['patronymic'],
                 'department_id' => $worker['department_id'],
                 'department' => $worker['department'],
                 'faculty_id' => $faculty['id'] ?? null,
@@ -113,7 +119,8 @@ class UserController extends Controller
         return response()->json($workers->sortBy('full_name')->values());
     }
 
-    public function getFacultyByWorker(Request $request) {
+    public function getFacultyByWorker(Request $request)
+    {
         $department = new Department();
 
         $validated = $request->validate([
