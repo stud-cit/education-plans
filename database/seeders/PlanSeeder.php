@@ -30,8 +30,8 @@ class PlanSeeder extends Seeder
             'speciality_id' => null,
             'specialization_id' => null,
             'education_program_id' => null,
-            'qualification_id' => 1,
-            'field_knowledge_id' => 115,
+            'qualification_id' => 64,
+            'field_knowledge_id' => 122,
             'hours_weeks_semesters' => json_encode([
                 ["hour" => 0, "week" => 3, "index" => 1, "course" => 1, "semester" => 1],
                 ["hour" => 0, "week" => 3, "index" => 1, "course" => 1, "semester" => 2],
