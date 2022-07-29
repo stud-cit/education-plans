@@ -43,6 +43,7 @@ class PlanSeeder extends Seeder
                 ["hour" => 0, "week" => 3, "index" => 1, "course" => 4, "semester" => 8]
             ]),
             'author_id' => 1,
+            'published' => 1,
             'created_at' => now()
         ]);
     }

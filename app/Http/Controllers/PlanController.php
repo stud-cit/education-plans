@@ -206,6 +206,8 @@ class PlanController extends Controller
             'cycles.subjects.hoursModules',
         ]);
 
+        $plan->title = "Копія " . $plan->title;
+
         $clonePlan = $plan->duplicate();
 
         $user = Auth::user();
