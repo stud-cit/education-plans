@@ -54,11 +54,13 @@ class UserPolicy
     {
         switch ($user->role_id) {
             case User::FACULTY_INSTITUTE:
-                return $user->faculty_id === $model->faculty_id || env('APP_DEBUG') ? true : false;
+                return env('APP_DEBUG') ? true : $user->faculty_id === $model->faculty_id;
 
             default:
                 return env('APP_DEBUG') ? true : $user->possibility(User::PRIVILEGED_ROLES);
         }
+
+        return false;
     }
 
     /**
