@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             VerificationStatusesSeeder::class,
             UserSeeder::class,
-            UserActivityLogSeeder::class,
             SelectiveDisciplineSeeder::class,
             IndividualTaskSeeder::class,
             FormControlSeeder::class,

@@ -24,7 +24,8 @@ use App\Http\Controllers\{
     NoteController,
     PositionController,
     ListCycleController,
-    OpController
+    OpController,
+    UserActivityController
 };
 
 /*
@@ -95,5 +96,6 @@ Route::prefix('v1')->group(function () {
             return response()->json(['userName' => $request->user()->name]);
         });
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+        Route::get('/user-activity', [UserActivityController::class, 'index'])->name('user-activity.index');
     });
 });

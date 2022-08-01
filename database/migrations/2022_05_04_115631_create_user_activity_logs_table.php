@@ -14,12 +14,14 @@ class CreateUserActivityLogsTable extends Migration
     public function up()
     {
         Schema::create('user_activity_logs', function (Blueprint $table) {
-            // $table->id();
+            $table->id();
             $table->string('asu_id');
-            $table->string('user_name');
-            $table->string('user_role');
+            $table->string('name');
+            $table->string('role');
             $table->string('operation');
+            $table->string('model');
             $table->string('ip');
+            $table->text('data')->nullable(true);
             $table->timestamps();
         });
     }

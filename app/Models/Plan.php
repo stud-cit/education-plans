@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Policies\PlanPolicy;
+use App\Observers\PlanObserver;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
@@ -218,15 +219,14 @@ class Plan extends Model
 
             case User::DEPARTMENT:
                 return $query->whereNull(['parent_id', 'faculty_id', 'department_id'])
-                    ->orWhere(function($query) {
+                    ->orWhere(function ($query) {
                         $query->where('faculty_id', '=', Auth::user()->faculty_id)->whereNull('department_id')
-                        ->orWhere('department_id', '=', Auth::user()->department_id);
+                            ->orWhere('department_id', '=', Auth::user()->department_id);
                     });
 
             default:
                 return $query;
         }
-
     }
 
     public function scopePublished($query)
@@ -234,7 +234,8 @@ class Plan extends Model
         $query->where('published', 1);
     }
 
-    public function isNotTemplate() {
+    public function isNotTemplate()
+    {
         return $this->parent_id !== null ? true : false;
     }
 
@@ -270,5 +271,6 @@ class Plan extends Model
                 $plan->department_id = $user->department_id;
             }
         });
+        Plan::observe(PlanObserver::class);
     }
 }

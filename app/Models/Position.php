@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\PositionObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,4 +15,9 @@ class Position extends Model
     protected $casts = [
         'agreed' => 'boolean'
     ];
+
+    protected static function booted()
+    {
+        Position::observe(PositionObserver::class);
+    }
 }

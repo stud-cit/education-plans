@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\ExternalServices\Asu\Department;
+use App\Observers\UserObserver;
+use Laravel\Sanctum\HasApiTokens;
 use App\ExternalServices\Asu\Worker;
+use App\ExternalServices\Asu\Department;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -90,9 +91,9 @@ class User extends Authenticatable
      */
     public function possibility($roles = self::ALL_ROLES): bool
     {
-        if (gettype ($roles) === 'array') {
+        if (gettype($roles) === 'array') {
             return in_array($this->role_id, $roles);
-        } else if (gettype ($roles) === 'integer') {
+        } else if (gettype($roles) === 'integer') {
             return  $this->role_id === $roles;
         }
 
@@ -144,5 +145,10 @@ class User extends Authenticatable
     public function isPlanMine(?int $plan_id): bool
     {
         return $this->id === $plan_id ? true : false;
+    }
+
+    protected static function booted()
+    {
+        User::observe(UserObserver::class);
     }
 }
