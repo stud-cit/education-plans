@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IndexLogRequest extends FormRequest
@@ -26,6 +27,8 @@ class IndexLogRequest extends FormRequest
         return [
             'page' => 'integer',
             'items_per_page' => 'integer',
+            'sort_by' => ['nullable', Rule::in(['created_at'])],
+            'sort_desc' => ['nullable', Rule::in(['true', 'false'])]
         ];
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Constant;
-use App\Http\Requests\IndexLogRequest;
 use App\Models\UserActivityLog;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\IndexLogRequest;
 use Illuminate\Support\Facades\Request;
+use App\Http\Resources\UserActivityResource;
 
 class UserActivityController extends Controller
 {
@@ -15,8 +16,10 @@ class UserActivityController extends Controller
         $validated = $request->validated();
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
-        $logs = UserActivityLog::select('id', 'name', 'role', 'ip', 'operation', 'model', 'data', 'created_at')->paginate(Constant::PAGINATE);
-        return response()->json($logs);
+        $logs = UserActivityLog::select('id', 'name', 'role', 'ip', 'operation', 'model', 'data', 'created_at')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+        return UserActivityResource::collection($logs);
     }
 
     public static function addToLog($operation, $model, $data = null)

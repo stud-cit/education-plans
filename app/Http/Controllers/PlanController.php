@@ -55,9 +55,18 @@ class PlanController extends Controller
 
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
-        $plans = Plan::select('id', 'title', 'year', 'faculty_id', 'department_id', 'published', 'author_id',
-            'parent_id', 'created_at')
-            ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn($query) => $query->published())
+        $plans = Plan::select(
+            'id',
+            'title',
+            'year',
+            'faculty_id',
+            'department_id',
+            'published',
+            'author_id',
+            'parent_id',
+            'created_at'
+        )
+            ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
@@ -88,7 +97,6 @@ class PlanController extends Controller
      */
     public function create()
     {
-
     }
 
     /**
@@ -137,7 +145,7 @@ class PlanController extends Controller
             'cycles.subjects.semestersCredits',
             'cycles.subjects.exams',
             'cycles.subjects.test',
-//            'cycles.subjects.individualTasks',
+            //            'cycles.subjects.individualTasks',
             'cycles.subjects.hoursModules.formControl',
             'cycles.subjects.hoursModules.individualTask',
             'signatures'
@@ -183,7 +191,7 @@ class PlanController extends Controller
 
         $plan->update($validated);
 
-        return $this->success( __('messages.Updated'), 201);
+        return $this->success(__('messages.Updated'), 201);
     }
 
     /**
@@ -227,72 +235,72 @@ class PlanController extends Controller
         return $this->success(__('messages.Copied'), 201);
     }
 
-    function createCycle($cycle, $plan_id, $cycleId = null) {
-      $cloneCycle = Cycle::create([
-        "title" => $cycle['title'],
-        "cycle_id" => $cycleId,
-        "list_cycle_id" => $cycle['list_cycle_id'],
-        "credit" => $cycle['credit'],
-        "plan_id" => $plan_id,
-        "has_discipline" => $cycle['has_discipline']
-      ]);
-      foreach ($cycle['subjects'] as $subject) {
-        $cloneSubject = Subject::create([
-          "asu_id" => $subject['asu_id'],
-          "cycle_id" => $cloneCycle->id,
-          "selective_discipline_id" => $subject['selective_discipline_id'],
-          "credits" => $subject['credits'],
-          "hours" => $subject['hours'],
-          "practices" => $subject['practices'],
-          "laboratories" => $subject['laboratories'],
-          "faculty_id" => $subject['faculty_id'],
-          "department_id" => $subject['department_id']
+    function createCycle($cycle, $plan_id, $cycleId = null)
+    {
+        $cloneCycle = Cycle::create([
+            "title" => $cycle['title'],
+            "cycle_id" => $cycleId,
+            "list_cycle_id" => $cycle['list_cycle_id'],
+            "credit" => $cycle['credit'],
+            "plan_id" => $plan_id,
+            "has_discipline" => $cycle['has_discipline']
         ]);
-        foreach ($subject->hoursModules as $hoursModule) {
-          HoursModules::create([
-            "course" => $hoursModule['course'],
-            "hour" => $hoursModule['hour'],
-            "subject_id" => $cloneSubject->id,
-            "form_control_id" => $hoursModule['form_control_id'],
-            "individual_task_id" => $hoursModule['individual_task_id'],
-            "module" => $hoursModule['module'],
-            "semester" => $hoursModule['semester']
-          ]);
+        foreach ($cycle['subjects'] as $subject) {
+            $cloneSubject = Subject::create([
+                "asu_id" => $subject['asu_id'],
+                "cycle_id" => $cloneCycle->id,
+                "selective_discipline_id" => $subject['selective_discipline_id'],
+                "credits" => $subject['credits'],
+                "hours" => $subject['hours'],
+                "practices" => $subject['practices'],
+                "laboratories" => $subject['laboratories'],
+                "faculty_id" => $subject['faculty_id'],
+                "department_id" => $subject['department_id']
+            ]);
+            foreach ($subject->hoursModules as $hoursModule) {
+                HoursModules::create([
+                    "course" => $hoursModule['course'],
+                    "hour" => $hoursModule['hour'],
+                    "subject_id" => $cloneSubject->id,
+                    "form_control_id" => $hoursModule['form_control_id'],
+                    "individual_task_id" => $hoursModule['individual_task_id'],
+                    "module" => $hoursModule['module'],
+                    "semester" => $hoursModule['semester']
+                ]);
+            }
+            foreach ($subject->semestersCredits as $semestersCredit) {
+                SemestersCredits::create([
+                    "course" => $semestersCredit['course'],
+                    "subject_id" => $cloneSubject->id,
+                    "credit" => $semestersCredit['credit'],
+                    "semester" => $semestersCredit['semester']
+                ]);
+            }
         }
-        foreach ($subject->semestersCredits as $semestersCredit) {
-          SemestersCredits::create([
-            "course" => $semestersCredit['course'],
-            "subject_id" => $cloneSubject->id,
-            "credit" => $semestersCredit['credit'],
-            "semester" => $semestersCredit['semester']
-          ]);
+        foreach ($cycle['cycles'] as $v) {
+            $this->createCycle($v, $plan_id, $cloneCycle->id);
         }
-      }
-      foreach ($cycle['cycles'] as $v) {
-        $this->createCycle($v, $plan_id, $cloneCycle->id);
-      }
     }
 
     public function verification(StorePlanVerificationRequest $request, Plan $plan)
     {
-      $validated = $request->validated();
-      $plan->verification()->updateOrCreate(
-        [
-          "plan_id" => $plan->id,
-          'verification_statuses_id' => $validated['verification_statuses_id']
-        ],
-        [
-          'user_id' => $validated['user_id'],
-          'comment' => isset($validated['comment']) ? $validated['comment'] : null,
-          'status' => $validated['status']
-        ]
-      );
-      $this->success(__('messages.Updated'), 200);
+        $validated = $request->validated();
+        $plan->verification()->updateOrCreate(
+            [
+                "plan_id" => $plan->id,
+                'verification_statuses_id' => $validated['verification_statuses_id']
+            ],
+            [
+                'user_id' => $validated['user_id'],
+                'comment' => isset($validated['comment']) ? $validated['comment'] : null,
+                'status' => $validated['status']
+            ]
+        );
+        $this->success(__('messages.Updated'), 200);
     }
 
-    public function verificationOP(Request $request, Plan $plan) {
-        clock('ver in controller');
-
+    public function verificationOP(Request $request, Plan $plan)
+    {
         $modelOP = new OP();
         $planId = $plan->id;
         $errors = 0;
@@ -366,14 +374,15 @@ class PlanController extends Controller
         return $this->success(__('messages.Updated'), 200);
     }
 
-    public function getLastFormControl($hoursModules) {
-      $result = null;
-      foreach ($hoursModules as $value) {
-        if(in_array($value['form_control_id'], [1, 2, 3, 8])) {
-          $result = $value['form_control_id'];
+    public function getLastFormControl($hoursModules)
+    {
+        $result = null;
+        foreach ($hoursModules as $value) {
+            if (in_array($value['form_control_id'], [1, 2, 3, 8])) {
+                $result = $value['form_control_id'];
+            }
         }
-      }
-      return $result;
+        return $result;
     }
 
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
@@ -430,11 +439,11 @@ class PlanController extends Controller
         $asu = new Department();
         $user = Auth::user();
 
-        $divisions = $modelVerificationStatuses::select('id', 'title')->where('id','!=', $modelVerificationStatuses::OP)->get();
+        $divisions = $modelVerificationStatuses::select('id', 'title')->where('id', '!=', $modelVerificationStatuses::OP)->get();
         $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
         $faculties = $asu->getFaculties()->when(
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
-            fn ($collections) => $collections->filter( fn($faculty) => $faculty['id'] == $user->faculty_id )
+            fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
         );
 
         return response([
