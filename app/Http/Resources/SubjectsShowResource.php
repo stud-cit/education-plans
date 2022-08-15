@@ -18,6 +18,7 @@ class SubjectsShowResource extends JsonResource
         return [
             "id" => $this->id,
             "cycle_id" => $this->cycle_id,
+            "list_cycle_id" => $this->cycle->list_cycle_id,
             "selective_discipline_id" => $this->selective_discipline_id,
             "asu_id" => $this->asu_id,
             "credits" => $this->credits,
@@ -26,6 +27,7 @@ class SubjectsShowResource extends JsonResource
             "laboratories" => $this->laboratories,
             "title" => $this->title,
             'department' => $this->department_id === null ? '' : $this->shortDepartmentName,
+            'department_id' => $this->department_id,
             "selective_discipline" => $this->whenLoaded('selectiveDiscipline'),
             "semesters_credits" => $this->whenLoaded('semestersCredits')->pluck('credit','semester'),
             "hours_modules" => $this->whenLoaded('hoursModules'),
