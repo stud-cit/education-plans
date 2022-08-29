@@ -34,7 +34,7 @@ class UpdatePlanRequest extends FormRequest
             'speciality_id' => 'nullable|numeric',
             'specialization_id' => 'nullable|numeric',
             'education_program_id' => 'nullable|numeric',
-            'qualification_id' => 'required|numeric',
+            'qualification_id' => 'nullable|numeric',
             'field_knowledge_id' => 'nullable|numeric',
             'form_organization_id' => 'required|numeric',
             'credits' => 'required|numeric',
