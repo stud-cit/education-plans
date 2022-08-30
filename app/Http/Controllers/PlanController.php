@@ -329,7 +329,11 @@ class PlanController extends Controller
                         Subject::find($value['id'])->update(['verification' => 0]);
                         $errors++;
                         $comment .= 'Не вірна кількість кредитів в дисципліні ' . $item['subject'] . ';<br>';
-                    } elseif ($control_form[$this->getLastFormControl($value['hoursModules'])] != $item['control_form']) {
+                    } elseif (
+                        isset($control_form[$this->getLastFormControl($value['hoursModules'])]) && 
+                        ($control_form[$this->getLastFormControl($value['hoursModules'])] != 
+                        $item['control_form'])
+                    ) {
                         Subject::find($value['id'])->update(['verification' => 0]);
                         $errors++;
                         $comment .= 'Не вірна остання форма контролю в дисципліні ' . $item['subject'] . ';<br>';
