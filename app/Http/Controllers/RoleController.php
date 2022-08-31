@@ -18,8 +18,9 @@ class RoleController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $roleAdmin = env('APP_DEBUG') ? false : $user->role_id === User::ADMIN;
-        $roleInstitute = env('APP_DEBUG') ? false : $user->role_id === User::FACULTY_INSTITUTE;
+        $debug = config('app.debug');
+        $roleAdmin =  $debug ? false : $user->role_id === User::ADMIN;
+        $roleInstitute = $debug ? false : $user->role_id === User::FACULTY_INSTITUTE;
 
         $roles = Role::select('id', 'label')
             ->when($roleAdmin, function ($query) {
