@@ -55,6 +55,7 @@ class EnsureCabinetTokenIsValid
                     'department_id' => $divisions['department_id'],
                     'department_name' => $divisions['department_name'],
                     'email' => $user['email'],
+                    'asu_id' => $user['guid'],
                 ];
 
                 if ($this->isArrayDiffByKey($model->toArray(), $new, array_keys($new))) {
