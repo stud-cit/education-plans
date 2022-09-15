@@ -37,7 +37,7 @@ class UserController extends Controller
                 return $query->whereIn('role_id', [User::FACULTY_INSTITUTE, User::DEPARTMENT])
                     ->where('faculty_id', '=', $user->faculty_id);
             })
-            ->get();
+            ->paginate();
 
         return UserResource::collection($users);
     }
