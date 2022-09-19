@@ -28,7 +28,8 @@ class PlanResource extends JsonResource
             'status' => $this->status,
             'author_id' => $this->author_id,
             'is_template' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
-            'actions' => $this->actions()
+            'actions' => $this->actions(),
+            'published' => $this->published,
         ];
     }
 }

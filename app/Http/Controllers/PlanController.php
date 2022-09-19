@@ -64,6 +64,7 @@ class PlanController extends Controller
             'published',
             'author_id',
             'parent_id',
+            'published',
             'created_at'
         )
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
@@ -330,9 +331,9 @@ class PlanController extends Controller
                         $errors++;
                         $comment .= 'Не вірна кількість кредитів в дисципліні ' . $item['subject'] . ';<br>';
                     } elseif (
-                        isset($control_form[$this->getLastFormControl($value['hoursModules'])]) && 
-                        ($control_form[$this->getLastFormControl($value['hoursModules'])] != 
-                        $item['control_form'])
+                        isset($control_form[$this->getLastFormControl($value['hoursModules'])]) &&
+                        ($control_form[$this->getLastFormControl($value['hoursModules'])] !=
+                            $item['control_form'])
                     ) {
                         Subject::find($value['id'])->update(['verification' => 0]);
                         $errors++;
