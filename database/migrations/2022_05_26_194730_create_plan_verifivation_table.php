@@ -16,9 +16,9 @@ class CreatePlanVerifivationTable extends Migration
         Schema::create('plan_verifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('plan_id')
-              ->constrained('plans')
-              ->cascadeOnUpdate()
-              ->cascadeOnDelete();
+                ->constrained('plans')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('verification_statuses_id')->constrained('verification_statuses');
             $table->boolean('status');
@@ -34,6 +34,7 @@ class CreatePlanVerifivationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plan_verifivation');
+        Schema::disableForeignKeyConstraints();
+        Schema::dropIfExists('plan_verifications');
     }
 }

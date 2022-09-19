@@ -35,6 +35,10 @@ class CreateSubjectsTable extends Migration
      */
     public function down()
     {
+        // Schema::table('subjects', function (Blueprint $table) {
+        //     $table->dropForeign(['cycle_id', 'selective_discipline_id']);
+        // });
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('subjects');
     }
 }
