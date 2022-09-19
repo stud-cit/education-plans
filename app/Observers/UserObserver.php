@@ -30,7 +30,8 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        UserActivityController::addToLog('Редагування', 'Користувач', "Користувач {$user->fullName} ({$user->id})");
+        // TODO: !need refactor
+        UserActivityController::addToLogV2('Редагування', 'Користувач', $user);
     }
 
     /**

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\IndexLogRequest;
 use Illuminate\Support\Facades\Request;
 use App\Http\Resources\UserActivityResource;
+use Illuminate\Support\Facades\Log;
 
 class UserActivityController extends Controller
 {
@@ -22,16 +23,31 @@ class UserActivityController extends Controller
         return UserActivityResource::collection($logs);
     }
 
+    // TODO: !need refactor
     public static function addToLog($operation, $model, $data = null)
     {
         $user = Auth::user();
-
         $log = [];
         $log['asu_id'] = $user['asu_id'];
         $log['name'] = $user['name'];
         $log['role'] = $user['role']['label'];
         $log['operation'] = $operation;
         $log['model'] = $model;
+        $log['ip'] = Request::ip();
+        $log['data'] = $data;
+
+        UserActivityLog::create($log);
+    }
+
+    // TODO: !need refactor
+    public static function addToLogV2($operation, $module, $user, $data = null)
+    {
+        $log = [];
+        $log['asu_id'] = $user['asu_id'];
+        $log['name'] = $user['name'];
+        $log['role'] = $user['role']['label'];
+        $log['operation'] = $operation;
+        $log['model'] = $module;
         $log['ip'] = Request::ip();
         $log['data'] = $data;
 
