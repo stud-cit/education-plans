@@ -29,7 +29,7 @@ class EnsureCabinetTokenIsValid
 
         $response = Http::retry(3, 100)->get('https://cabinet.sumdu.edu.ua/api/getPersonInfo', $params)->json();
 
-        if($response['status'] === 'OK') {
+        if ($response['status'] === 'OK') {
             $user = $response['result'];
 
             $model = User::select(
@@ -44,7 +44,7 @@ class EnsureCabinetTokenIsValid
                 'role_id'
             )->where("asu_id", $user['guid'])->first();
 
-            if($model) {
+            if ($model) {
                 $asu = new Department();
                 $divisions = $asu->getDepartmentInfoByUser($user);
 
@@ -55,7 +55,6 @@ class EnsureCabinetTokenIsValid
                     'department_id' => $divisions['department_id'],
                     'department_name' => $divisions['department_name'],
                     'email' => $user['email'],
-                    'asu_id' => $user['guid'],
                 ];
 
                 if ($this->isArrayDiffByKey($model->toArray(), $new, array_keys($new))) {
@@ -68,13 +67,13 @@ class EnsureCabinetTokenIsValid
                 return $next($request);
             } else {
 
-              return response(['message' => __('auth.not_allowed_user')], 403);
+                return response(['message' => __('auth.not_allowed_user')], 403);
             }
-          } else if (in_array($response['status'], Constant::ASU_ERRORS) ) {
+        } else if (in_array($response['status'], Constant::ASU_ERRORS)) {
 
             return response(['message' => "Cabinet: {$response['result']}"], 401);
         } else {
-            throw new HttpException (500, $response);
+            throw new HttpException(500, $response);
         }
     }
 
