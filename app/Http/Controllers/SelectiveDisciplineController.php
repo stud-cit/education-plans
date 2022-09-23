@@ -45,11 +45,7 @@ class SelectiveDisciplineController extends Controller
      */
     public function store(StoreSelectiveDisciplineRequest $request)
     {
-        $validated = $request->validated();
-
-        SelectiveDiscipline::create($validated);
-
-        return $this->success(__('messages.Created'), 201);
+        //
     }
 
     /**
@@ -98,8 +94,6 @@ class SelectiveDisciplineController extends Controller
      */
     public function destroy(SelectiveDiscipline $selectiveDiscipline)
     {
-        $selectiveDiscipline->delete();
-
-        return response()->json(['message' => __('messages.Deleted')], 201);
+        //
     }
 }
