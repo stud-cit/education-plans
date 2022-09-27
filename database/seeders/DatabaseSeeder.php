@@ -35,6 +35,8 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             NoteSeeder::class,
             SubjectLanguageSeeder::class,
+            CatalogHelperTypesSeeder::class,
+            SubjectHelperSeeder::class
         ]);
     }
 }
