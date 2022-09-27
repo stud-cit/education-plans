@@ -15,7 +15,7 @@ class CreateSubjectHelpersTable extends Migration
     {
         Schema::create('subject_helpers', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->text('title');
             $table->timestamps();
         });
     }

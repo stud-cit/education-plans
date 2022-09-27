@@ -15,7 +15,7 @@ class CreateCatalogHelperTypesTable extends Migration
     {
         Schema::create('catalog_helper_types', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->text('title');
             $table->string('key');
             $table->timestamps();
         });
