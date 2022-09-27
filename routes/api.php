@@ -25,8 +25,10 @@ use App\Http\Controllers\{
     PositionController,
     ListCycleController,
     OpController,
+    SubjectLanguageController,
     UserActivityController
 };
+use App\Models\SubjectLanguage;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,5 +99,6 @@ Route::prefix('v1')->group(function () {
         });
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
         Route::get('/user-activity', [UserActivityController::class, 'index'])->name('user-activity.index');
+        Route::apiResource('subject-languages', SubjectLanguageController::class);
     });
 });

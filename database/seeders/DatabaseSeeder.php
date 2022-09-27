@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\SubjectLanguage;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -30,10 +31,10 @@ class DatabaseSeeder extends Seeder
             ListCycleSeeder::class,
             CycleSeeder::class,
             SubjectSeeder::class,
-            // HoursWeekSeeder::class,
             SettingSeeder::class,
             PositionSeeder::class,
             NoteSeeder::class,
+            SubjectLanguageSeeder::class,
         ]);
     }
 }
