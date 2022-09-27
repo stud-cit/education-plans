@@ -15,10 +15,8 @@ class CreateCatalogGroupsHasCatalogSelectiveSubjectsTable extends Migration
     {
         Schema::create('catalog_groups_has_catalog_selective_subjects', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('subject_id')->constrained('catalog_selective_subjects');
             $table->foreignId('group_id')->constrained('catalog_groups');
-
             $table->timestamps();
         });
     }
