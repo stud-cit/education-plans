@@ -9,5 +9,5 @@ class SubjectLanguage extends Model
 {
     use HasFactory;
 
-    private $fillable = ['title'];
+    protected $fillable = ['title'];
 }
