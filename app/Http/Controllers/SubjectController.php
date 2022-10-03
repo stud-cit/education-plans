@@ -137,6 +137,10 @@ class SubjectController extends Controller
 
         PlanVerification::where("plan_id", $request['plan_id'])->delete();
 
+        Subject::where("plan_id", $request['plan_id'])->update([
+          'verification' => 1
+        ]);
+
         return $this->success(__('messages.Updated'), 200);
     }
 
