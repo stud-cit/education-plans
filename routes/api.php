@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AsuController,
+    CatalogHelperTypeController,
     CycleController,
     EducationLevelController,
     FormStudyController,
@@ -102,5 +103,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/user-activity', [UserActivityController::class, 'index'])->name('user-activity.index');
         Route::apiResource('subject-languages', SubjectLanguageController::class);
         Route::apiResource('subject-helpers', SubjectHelperController::class);
+        Route::apiResource('catalog-helper-types', CatalogHelperTypeController::class)->only('index');
     });
 });
