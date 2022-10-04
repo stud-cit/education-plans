@@ -18,6 +18,7 @@ use App\Http\Controllers\{
     StudyTermController,
     FormOrganizationController,
     RoleController,
+    SubjectHelperController,
     UserController,
     VerificationController,
     LoginController,
@@ -100,5 +101,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
         Route::get('/user-activity', [UserActivityController::class, 'index'])->name('user-activity.index');
         Route::apiResource('subject-languages', SubjectLanguageController::class);
+        Route::apiResource('subject-helpers', SubjectHelperController::class);
     });
 });
