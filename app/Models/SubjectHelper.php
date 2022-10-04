@@ -10,6 +10,11 @@ class SubjectHelper extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'catalog_helper_type_id',
+    ];
+
     public function type()
     {
         return $this->belongsTo(CatalogHelperType::class, 'catalog_helper_type_id', 'id')

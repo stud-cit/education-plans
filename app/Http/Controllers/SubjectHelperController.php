@@ -37,7 +37,14 @@ class SubjectHelperController extends Controller
      */
     public function store(StoreSubjectHelperRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        SubjectHelper::create([
+            'title' => $validated['title'],
+            'catalog_helper_type_id' => $validated['type']
+        ]);
+
+        return $this->success(__('messages.Created'), 201);
     }
 
     /**
@@ -60,7 +67,14 @@ class SubjectHelperController extends Controller
      */
     public function update(UpdateSubjectHelperRequest $request, SubjectHelper $subjectHelper)
     {
-        //
+        $validated = $request->validated();
+
+        $subjectHelper->update([
+            'title' => $validated['title'],
+            'catalog_helper_type_id' => $validated['type']
+        ]);
+
+        return $this->success(__('messages.Updated'), 201);
     }
 
     /**
@@ -71,6 +85,11 @@ class SubjectHelperController extends Controller
      */
     public function destroy(SubjectHelper $subjectHelper)
     {
-        //
+        try {
+            $subjectHelper->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $this->error($e->getMessage(), $e->getCode());
+        }
+        return $this->success(__('messages.Deleted'), 200);
     }
 }
