@@ -9,6 +9,11 @@ use App\Http\Requests\UpdateSubjectLanguageRequest;
 
 class SubjectLanguageController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(SubjectLanguage::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
