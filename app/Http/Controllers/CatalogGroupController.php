@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Constant;
 use App\Http\Requests\IndexCatalogGroupRequest;
 use App\Models\CatalogGroup;
-use CreateCatalogSignaturesTable;
 use App\Http\Resources\CatalogGroupResource;
 use App\Http\Requests\StoreCatalogGroupRequest;
 use App\Http\Requests\UpdateCatalogGroupRequest;
+use Illuminate\Http\Request;
 use PhpParser\Node\Stmt\TryCatch;
 
 class CatalogGroupController extends Controller
@@ -78,5 +78,10 @@ class CatalogGroupController extends Controller
         }
     }
 
-    // TODO: RESTORE
+    public function restore(Request $request)
+    {
+        CatalogGroup::withTrashed()->where('id', $request->id)->restore();
+
+        return $this->success(__('messages.Unzipped'), 201);
+    }
 }

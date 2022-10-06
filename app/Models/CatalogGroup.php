@@ -11,4 +11,8 @@ class CatalogGroup extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['title'];
+
+    protected $casts = [
+        'deleted_at' => 'boolean'
+    ];
 }
