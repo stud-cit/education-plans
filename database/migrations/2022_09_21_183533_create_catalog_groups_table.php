@@ -15,7 +15,8 @@ class CreateCatalogGroupsTable extends Migration
     {
         Schema::create('catalog_groups', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -27,6 +28,10 @@ class CreateCatalogGroupsTable extends Migration
      */
     public function down()
     {
+        Schema::table('catalog_groups', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
+
         Schema::dropIfExists('catalog_groups');
     }
 }

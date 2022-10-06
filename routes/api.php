@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     AsuController,
     CatalogHelperTypeController,
     CycleController,
+    CatalogGroupController,
     EducationLevelController,
     FormStudyController,
     PlanController,
@@ -104,5 +105,6 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('subject-languages', SubjectLanguageController::class);
         Route::apiResource('subject-helpers', SubjectHelperController::class);
         Route::apiResource('catalog-helper-types', CatalogHelperTypeController::class)->only('index');
+        Route::apiResource('catalog-groups', CatalogGroupController::class);
     });
 });
