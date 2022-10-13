@@ -103,10 +103,10 @@ class PlanEditResource extends JsonResource
     function getCountExams() {
       $result = [];
       for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-        if($this->form_organization_id == 1) {
-          array_push($result, '');
-        }
-        array_push($result, $this->getCountWorks(['form_control_id' => 1], $i + 1));
+        $result[$i+1] = 0;
+      }
+      for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+        $result[$i+1] += $this->getCountWorks(['form_control_id' => 1], $i + 1);
       }
       return $result;
     }

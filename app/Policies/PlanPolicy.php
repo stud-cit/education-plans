@@ -41,7 +41,13 @@ class PlanPolicy
      */
     public function create(User $user)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        if ($user->possibility(User::PRIVILEGED_ROLES)) {
+            return true;
+        }
+
+        if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES)) {
+            return true;
+        }
     }
 
     /**
@@ -57,7 +63,7 @@ class PlanPolicy
             return true;
         }
 
-        if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $plan->isNotTemplate()) {
+        if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES)) {
             return true;
         }
 
