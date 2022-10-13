@@ -119,6 +119,22 @@ class UserController extends Controller
         return response()->json($workers->sortBy('full_name')->values());
     }
 
+    public function listWorkers()
+    {
+        $worker = new Worker();
+        $workers = $worker->getAllWorkers();
+
+        $filteredWorkers = $workers->map(function ($worker) {
+
+            return [
+                'asu_id' => $worker['asu_id'],
+                'full_name' => "{$worker['last_name']} {$worker['first_name']} {$worker['patronymic']}",
+            ];
+        });
+
+        return response()->json($filteredWorkers->sortBy('full_name')->values());
+    }
+
     public function getFacultyByWorker(Request $request)
     {
         $department = new Department();

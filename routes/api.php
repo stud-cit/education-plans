@@ -72,6 +72,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('selective-discipline', SelectiveDisciplineController::class);
         Route::apiResource('roles', RoleController::class);
         Route::get('workers', [UserController::class, 'workers'])->name('users.workers');
+        Route::get('list-workers', [UserController::class, 'listWorkers'])->name('users.list-workers');
         Route::get('faculty-by-worker', [UserController::class, 'getFacultyByWorker'])->name('users.faculty.worker');
         Route::apiResource('users', UserController::class);
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
