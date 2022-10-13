@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Observers\CatalogGroupObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,4 +16,9 @@ class CatalogGroup extends Model
     protected $casts = [
         'deleted_at' => 'boolean'
     ];
+
+    protected static function booted()
+    {
+        CatalogGroup::observe(CatalogGroupObserver::class);
+    }
 }

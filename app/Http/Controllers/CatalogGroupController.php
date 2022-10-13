@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Constant;
+use App\Helpers\Helpers;
 use App\Http\Requests\IndexCatalogGroupRequest;
 use App\Models\CatalogGroup;
 use App\Http\Resources\CatalogGroupResource;
 use App\Http\Requests\StoreCatalogGroupRequest;
 use App\Http\Requests\UpdateCatalogGroupRequest;
 use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\TryCatch;
 
 class CatalogGroupController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(CatalogGroup::class);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -22,11 +25,16 @@ class CatalogGroupController extends Controller
     {
         $validated = $request->validated();
 
-        $perPage = array_key_exists('items_per_page', $validated)
-            ? $validated['items_per_page']
-            : Constant::PAGINATE;
+        $perPage = Helpers::getPerPage('items_per_page', $validated);
 
         $catalog = CatalogGroup::withTrashed()->select('id', 'title', 'deleted_at')->paginate($perPage);
+        return CatalogGroupResource::collection($catalog);
+    }
+
+    public function list()
+    {
+        $catalog = CatalogGroup::select('id', 'title')->get();
+
         return CatalogGroupResource::collection($catalog);
     }
 
@@ -72,7 +80,7 @@ class CatalogGroupController extends Controller
         try {
             $catalogGroup->delete();
 
-            return $this->success(__('messages.Deleted'), 201);
+            return $this->success(__('messages.Zipped'), 201);
         } catch (\Illuminate\Database\QueryException $exception) {
             return $this->error($exception->getMessage(), $exception->getCode());
         }

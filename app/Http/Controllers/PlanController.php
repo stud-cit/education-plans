@@ -68,7 +68,7 @@ class PlanController extends Controller
             'created_at'
         )
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
-            ->ofUserType(Auth::user()->role_id)
+            // ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
                 return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));

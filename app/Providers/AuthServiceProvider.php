@@ -27,11 +27,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage_study_terms', fn(User $user) => $user->possibility(User::PRIVILEGED_ROLES));
+        Gate::define('manage_study_terms', fn (User $user) => $user->possibility(User::PRIVILEGED_ROLES));
 
         // TODO: NEED TO CHECK DEPARTMENT FACULTY
-        Gate::define('copy-plan', function(User $user) {
+        Gate::define('copy-plan', function (User $user) {
             return in_array($user->role_id, User::ALL_ROLES);
+        });
+
+        Gate::define('restore_catalog_group', function (User $user) {
+            return $user->possibility(User::PRIVILEGED_ROLES);
         });
     }
 }
