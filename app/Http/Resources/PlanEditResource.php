@@ -128,7 +128,7 @@ class PlanEditResource extends JsonResource
         $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
           $queryCycle->where('plan_id', $planId);
         });
-      })->where($work)->where('semester', $semester)->where('hour', '!=', 0)->count();
+      })->where($work)->where('semester', $semester)->count();
       return $count;
     }
 

@@ -156,7 +156,7 @@ class Plan extends Model
 
         $subjects = [];
         $_subjects->subjects->map(function ($subject) use (&$subjects) {
-            $semester = $subject->semestersCredits->filter(fn ($item) => $item->credit !== 0)->last();
+            $semester = $subject->semestersCredits->filter(fn ($item) => $item->credit != 0)->last();
             $subjects[] = [
                 'title' => $subject->title,
                 'semester' => $semester->semester ?? ''
