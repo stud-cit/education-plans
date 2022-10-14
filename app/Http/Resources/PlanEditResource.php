@@ -61,6 +61,7 @@ class PlanEditResource extends JsonResource
                 json_decode($this->summary_data_budget_time) : [],
             'practical_training' => $this->practical_training ?
                 json_decode($this->practical_training) : [],
+            'need_verification' => $this->need_verification
         ];
     }
 

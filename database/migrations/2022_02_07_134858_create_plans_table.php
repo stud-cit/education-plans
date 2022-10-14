@@ -37,6 +37,7 @@ class CreatePlansTable extends Migration
             $table->json('practical_training')->nullable(true);
             $table->json('schedule_education_process')->nullable(true);
             $table->boolean('published')->default(false);
+            $table->boolean('need_verification')->default(false);
 
             $table->timestamps();
         });

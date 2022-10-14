@@ -26,10 +26,12 @@ class PlanResource extends JsonResource
             'department' => $this->departmentName,
             'created_at' => $this->created_at,
             'status' => $this->status,
+            'user_verifications' => $this->user_verifications,
             'author_id' => $this->author_id,
             'is_template' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
             'actions' => $this->actions(),
             'published' => $this->published,
+            'need_verification' => $this->need_verification
         ];
     }
 }

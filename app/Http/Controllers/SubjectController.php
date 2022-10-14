@@ -7,6 +7,7 @@ use App\Models\Subject;
 use App\Models\HoursModules;
 use App\Models\SemestersCredits;
 use App\Models\PlanVerification;
+use App\Models\Plan;
 use PhpParser\Node\Stmt\TryCatch;
 
 class SubjectController extends Controller
@@ -60,6 +61,12 @@ class SubjectController extends Controller
           $item['subject_id'] = $subject->id;
           return $item;
         });
+
+        Plan::find($request['plan_id'])->update([
+          'need_verification' => false
+        ]);
+
+        PlanVerification::where("plan_id", $request['plan_id'])->delete();
 
         HoursModules::insert($hoursModules->toArray());
         SemestersCredits::insert($semestersCredits->toArray());
@@ -134,6 +141,10 @@ class SubjectController extends Controller
         }
         HoursModules::insert($hoursModules);
         SemestersCredits::insert($semestersCredits);
+
+        Plan::find($request['plan_id'])->update([
+          'need_verification' => false
+        ]);
 
         PlanVerification::where("plan_id", $request['plan_id'])->delete();
 

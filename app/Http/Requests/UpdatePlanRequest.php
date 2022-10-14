@@ -42,7 +42,8 @@ class UpdatePlanRequest extends FormRequest
             'hours_weeks_semesters' => 'required|json',
             'summary_data_budget_time' => 'nullable|json',
             'practical_training' => 'nullable|json',
-            'published' => 'required'
+            'published' => 'required',
+            'need_verification' => 'boolean'
         ];
     }
 }

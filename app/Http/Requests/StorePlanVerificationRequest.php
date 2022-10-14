@@ -28,7 +28,7 @@ class StorePlanVerificationRequest extends FormRequest
             'user_id' => 'exists:App\Models\User,id',
             'plan_id' => 'exists:App\Models\Plan,id',
             'status' => 'required',
-            'comment' => 'string'
+            'comment' => 'string|nullable'
         ];
     }
 }

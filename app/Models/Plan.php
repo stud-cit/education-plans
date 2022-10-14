@@ -48,7 +48,8 @@ class Plan extends Model
         'published',
         'program_op_id',
         'summary_data_budget_time',
-        'practical_training'
+        'practical_training',
+        'need_verification'
     ];
 
     protected $casts = [
@@ -77,6 +78,11 @@ class Plan extends Model
             $result = '';
         }
         return $result;
+    }
+
+    public function getUserVerificationsAttribute()
+    {
+        return $this->verification;
     }
 
     private function filterStatus($data, $id)

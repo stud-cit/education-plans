@@ -29,6 +29,7 @@ use App\ExternalServices\Asu\Qualification;
 use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
+use App\Models\PlanVerification;
 
 class PlanController extends Controller
 {
@@ -65,7 +66,8 @@ class PlanController extends Controller
             'author_id',
             'parent_id',
             'published',
-            'created_at'
+            'created_at',
+            'need_verification'
         )
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
             // ->ofUserType(Auth::user()->role_id)
@@ -193,6 +195,8 @@ class PlanController extends Controller
 
         $plan->update($validated);
 
+        PlanVerification::where("plan_id", $plan->id)->delete();
+
         return $this->success(__('messages.Updated'), 201);
     }
 
@@ -217,6 +221,7 @@ class PlanController extends Controller
         ]);
 
         $plan->title = "Копія " . $plan->title;
+        $plan->need_verification = false;
 
         $clonePlan = $plan->duplicate();
 
@@ -346,10 +351,10 @@ class PlanController extends Controller
             }
         }
 
-        if (count($model) != count($components)) {
-            $errors++;
-            $comment .= 'Не вірна кількість дисциплін.';
-        }
+        // if (count($model) != count($components)) {
+        //     $errors++;
+        //     $comment .= 'Не вірна кількість дисциплін.';
+        // }
 
         if ($errors > 0) {
             $data = [
