@@ -20,6 +20,7 @@ class SignatureShowResource extends JsonResource
             'agreed' => $this->position->agreed,
             'name' => $this->name,
             'surname' => mb_strtoupper($this->surname),
+            'manual_position' => $this->manual_position
         ];
     }
 }
