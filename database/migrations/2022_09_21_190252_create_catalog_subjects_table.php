@@ -16,8 +16,8 @@ class CreateCatalogSubjectsTable extends Migration
         Schema::create('catalog_subjects', function (Blueprint $table) {
             $table->id();
             $table->year('year');
-            $table->unsignedInteger('education_program_id');
-            $table->unsignedInteger('specialization_id');
+            $table->unsignedInteger('education_program_id')->nullable(true);
+            $table->unsignedInteger('specialization_id')->nullable(true);
             $table->unsignedInteger('faculty_id');
             $table->unsignedInteger('department_id');
             $table->foreignId('selective_discipline_id')->constrained();
