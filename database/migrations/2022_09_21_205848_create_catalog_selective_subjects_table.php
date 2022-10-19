@@ -16,7 +16,6 @@ class CreateCatalogSelectiveSubjectsTable extends Migration
         Schema::create('catalog_selective_subjects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('catalog_subject_id')->constrained();
-            $table->foreignId('education_level_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->string('asu_id', 60);
             $table->text('title');
