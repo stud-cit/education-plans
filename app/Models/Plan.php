@@ -107,8 +107,10 @@ class Plan extends Model
         return "{$code} {$professions->getTitle($this->speciality_id, 'title')}";
     }
 
-    public function getQualificationIdNameAttribute(): string
+    public function getQualificationIdNameAttribute()
     {
+        if (!$this->qualification_id) return null;
+
         $qualifications = new Qualification();
         return $qualifications->getTitle($this->qualification_id);
     }
