@@ -43,8 +43,6 @@ use App\Http\Controllers\{
 |
 */
 
-Route::get('/cabinet-service', \App\Http\Controllers\CabinetServiceController::class);
-
 Route::prefix('v1')->group(function () {
     Route::middleware('cabinetAuth')->group(function () {
         Route::apiResource('cycles', CycleController::class);
