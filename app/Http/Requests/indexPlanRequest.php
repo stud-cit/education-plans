@@ -31,7 +31,7 @@ class indexPlanRequest extends FormRequest
             'divisionWithStatus' => 'string',
             'page' => 'integer',
             'items_per_page' => 'integer',
-            'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at'])],
+            'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at', 'parent_id'])],
             'sort_desc' => ['nullable', Rule::in(['true', 'false'])]
         ];
     }
