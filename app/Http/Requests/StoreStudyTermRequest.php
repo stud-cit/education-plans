@@ -24,7 +24,7 @@ class StoreStudyTermRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:255',
+            'title' => 'required|unique:study_terms|string|max:255',
             'year' => 'required|numeric',
             'month' => 'required|numeric',
             'course' => 'required|numeric',
