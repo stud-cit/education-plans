@@ -29,7 +29,8 @@ use App\Http\Controllers\{
     ListCycleController,
     OpController,
     SubjectLanguageController,
-    UserActivityController
+    UserActivityController,
+    CatalogSubjectController
 };
 
 /*
@@ -107,5 +108,6 @@ Route::prefix('v1')->group(function () {
         Route::get('catalog-groups/list', [CatalogGroupController::class, 'list']);
         Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore_catalog_group');
         Route::apiResource('catalog-groups', CatalogGroupController::class);
+        Route::apiResource('catalog-subjects', CatalogSubjectController::class);
     });
 });

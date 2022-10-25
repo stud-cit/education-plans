@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             CatalogHelperTypesSeeder::class,
             SubjectHelperSeeder::class,
             CatalogGroupSeeder::class,
+            CatalogSubjectSeeder::class,
             CatalogEducationLevelSeeder::class,
         ]);
     }
