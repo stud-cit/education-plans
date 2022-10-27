@@ -195,7 +195,10 @@ class PlanController extends Controller
 
         $plan->update($validated);
 
-        PlanVerification::where("plan_id", $plan->id)->delete();
+        $user = Auth::user();
+        if($user->role_id == 6 || $user->role_id == 7) {
+            PlanVerification::where("plan_id", $plan->id)->delete();
+        }
 
         return $this->success(__('messages.Updated'), 201);
     }
@@ -239,7 +242,7 @@ class PlanController extends Controller
                 $this->createCycle($cycle, $clonePlan->id);
             }
         }
-        return $this->success(__('messages.Copied'), 201);
+        return response()->json($clonePlan);
     }
 
     function createCycle($cycle, $plan_id, $cycleId = null)

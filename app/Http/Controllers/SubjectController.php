@@ -8,6 +8,7 @@ use App\Models\HoursModules;
 use App\Models\SemestersCredits;
 use App\Models\PlanVerification;
 use App\Models\Plan;
+use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\TryCatch;
 
 class SubjectController extends Controller
@@ -66,7 +67,10 @@ class SubjectController extends Controller
           'need_verification' => false
         ]);
 
-        PlanVerification::where("plan_id", $request['plan_id'])->delete();
+        $user = Auth::user();
+        if($user->role_id == 6 || $user->role_id == 7) {
+          PlanVerification::where("plan_id", $request['plan_id'])->delete();
+        }
 
         HoursModules::insert($hoursModules->toArray());
         SemestersCredits::insert($semestersCredits->toArray());
@@ -146,7 +150,10 @@ class SubjectController extends Controller
           'need_verification' => false
         ]);
 
-        PlanVerification::where("plan_id", $request['plan_id'])->delete();
+        $user = Auth::user();
+        if($user->role_id == 6 || $user->role_id == 7) {
+          PlanVerification::where("plan_id", $request['plan_id'])->delete();
+        }
 
         Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($request) {
           $queryCycle->where('plan_id', $request['plan_id']);
