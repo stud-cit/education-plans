@@ -13,12 +13,12 @@ class CreateCatalogGroupsHasCatalogSelectiveSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('catalog_groups_has_catalog_selective_subjects', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('subject_id')->constrained('catalog_selective_subjects');
-            $table->foreignId('group_id')->constrained('catalog_groups');
-            $table->timestamps();
-        });
+        // Schema::create('catalog_groups_has_catalog_selective_subjects', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('subject_id')->constrained('catalog_selective_subjects');
+        //     $table->foreignId('group_id')->constrained('catalog_groups');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -28,6 +28,6 @@ class CreateCatalogGroupsHasCatalogSelectiveSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('catalog_groups_has_catalog_selective_subjects');
+        // Schema::dropIfExists('catalog_groups_has_catalog_selective_subjects');
     }
 }

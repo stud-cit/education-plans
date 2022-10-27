@@ -30,7 +30,8 @@ use App\Http\Controllers\{
     OpController,
     SubjectLanguageController,
     UserActivityController,
-    CatalogSubjectController
+    CatalogSubjectController,
+    CatalogSelectiveSubjectController
 };
 
 /*
@@ -109,5 +110,6 @@ Route::prefix('v1')->group(function () {
         Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore_catalog_group');
         Route::apiResource('catalog-groups', CatalogGroupController::class);
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
+        Route::apiResource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });
 });

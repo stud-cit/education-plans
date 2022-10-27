@@ -16,7 +16,7 @@ class CatalogSubjectController extends Controller
      */
     public function index()
     {
-        $catalog = CatalogSubject::with('group')->select(['id', 'year', 'group_id']);
+        $catalog = CatalogSubject::with(['group'])->select(['id', 'year', 'group_id']);
         return CatalogSubjectGroupResource::collection($catalog->paginate());
     }
 

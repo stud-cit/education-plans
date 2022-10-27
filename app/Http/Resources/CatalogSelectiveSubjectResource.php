@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CatalogSubjectGroupResource extends JsonResource
+class CatalogSelectiveSubjectResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,12 @@ class CatalogSubjectGroupResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'year' => $this->year,
-            'group_id' => $this->group_id,
-            'group_name' => $this->group->title,
-            'user_id' => $this->id,
-            // 'subjects' => $this->subjects
+            'year' => $this->catalog->year,
+            'title' => $this->title,
+            'department_id' => $this->department_id,
+            'department' => $this->departmentName,
+            'group' => $this->catalog->group->title,
+
         ];
     }
 }
