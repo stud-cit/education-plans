@@ -22,7 +22,11 @@ class CatalogSelectiveSubjectController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $catalog = CatalogSelectiveSubject::with(['catalog.group'])->filterBy($validated)->paginate($perPage);
+        $catalog = CatalogSelectiveSubject
+            ::with(['selectiveCatalog.group'])
+            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id')
+            ->filterBy($validated)
+            ->paginate($perPage);
 
         return CatalogSelectiveSubjectResource::collection($catalog);
     }
@@ -34,7 +38,7 @@ class CatalogSelectiveSubjectController extends Controller
      */
     public function create()
     {
-        //
+        // TODO: get data for save
     }
 
     /**

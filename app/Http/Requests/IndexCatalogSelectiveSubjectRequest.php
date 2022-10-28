@@ -25,6 +25,8 @@ class IndexCatalogSelectiveSubjectRequest extends FormRequest
     {
         return [
             'year' => 'integer',
+            'group' => 'integer',
+            'faculty' => 'integer',
             'department' => 'integer',
             'page' => 'integer',
             'items_per_page' => 'integer',

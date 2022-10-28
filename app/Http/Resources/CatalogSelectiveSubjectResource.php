@@ -16,11 +16,11 @@ class CatalogSelectiveSubjectResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'year' => $this->catalog->year,
+            'year' => $this->selectiveCatalog->year,
             'title' => $this->title,
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
-            'group' => $this->catalog->group->title,
+            'group' => $this->selectiveCatalog->group->title,
 
         ];
     }

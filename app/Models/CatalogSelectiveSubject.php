@@ -36,6 +36,16 @@ class CatalogSelectiveSubject extends Model
         return $this->belongsTo(CatalogSubject::class, 'catalog_subject_id', 'id');
     }
 
+    /**
+     * Get first catalog Вибіркові дисципліни (каталог)
+     *
+     * @return void
+     */
+    public function selectiveCatalog()
+    {
+        return $this->catalog()->where('selective_discipline_id', 1);
+    }
+
     public function scopeFilterBy($query, $filters)
     {
         $namespace = 'App\Helpers\Filters\CatalogSelectiveSubjectFilters';
