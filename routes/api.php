@@ -110,6 +110,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore_catalog_group');
         Route::apiResource('catalog-groups', CatalogGroupController::class);
         Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);
+        Route::get('catalog-subjects/catalog-titles', [CatalogSubjectController::class, 'getCatalogs']);
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
         Route::apiResource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CatalogSubject;
 use App\Http\Requests\StoreCatalogRequest;
+use App\Http\Resources\CatalogSubjectNameResource;
 use App\Http\Resources\CatalogSubjectGroupResource;
 use App\Http\Resources\CatalogSubjectYearsResource;
 
@@ -98,5 +99,11 @@ class CatalogSubjectController extends Controller
     {
         $years = CatalogSubject::select('year')->distinct()->orderBy('year', 'desc')->get();
         return CatalogSubjectYearsResource::collection($years);
+    }
+
+    public function getCatalogs()
+    {
+        $catalogs = CatalogSubject::with('group')->select('id', 'year', 'group_id')->orderBy('year', 'desc')->get();
+        return CatalogSubjectNameResource::collection($catalogs);
     }
 }
