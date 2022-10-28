@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
-use App\Http\Requests\IndexCatalogGroupRequest;
 use App\Models\CatalogGroup;
+use Illuminate\Http\Request;
 use App\Http\Resources\CatalogGroupResource;
+use App\Http\Requests\IndexCatalogGroupRequest;
 use App\Http\Requests\StoreCatalogGroupRequest;
 use App\Http\Requests\UpdateCatalogGroupRequest;
-use Illuminate\Http\Request;
+use App\Http\Resources\CatalogGroupListResource;
 
 class CatalogGroupController extends Controller
 {
@@ -35,7 +36,7 @@ class CatalogGroupController extends Controller
     {
         $catalog = CatalogGroup::select('id', 'title')->get();
 
-        return CatalogGroupResource::collection($catalog);
+        return CatalogGroupListResource::collection($catalog);
     }
 
     /**
