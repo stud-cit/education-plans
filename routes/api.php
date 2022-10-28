@@ -113,3 +113,4 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });
 });
+Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);

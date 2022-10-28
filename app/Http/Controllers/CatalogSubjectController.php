@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\CatalogSubject;
 use App\Http\Requests\StoreCatalogRequest;
 use App\Http\Resources\CatalogSubjectGroupResource;
+use App\Http\Resources\CatalogSubjectYearsResource;
 
 class CatalogSubjectController extends Controller
 {
@@ -86,5 +87,15 @@ class CatalogSubjectController extends Controller
     public function destroy(CatalogSubject $catalogSubject)
     {
         //
+    }
+
+    /**
+     * Get unique years from CatalogSubjects for filters
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getYears()
+    {
+        return CatalogSubjectYearsResource::collection(CatalogSubject::select('year')->distinct()->get());
     }
 }
