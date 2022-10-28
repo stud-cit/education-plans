@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreStudyTermRequest;
 use App\Http\Requests\UpdateStudyTermRequest;
 use App\Models\StudyTerm;
-use Illuminate\Http\Request;
 use App\Http\Resources\StudyTermResource;
 use App\Http\Resources\StudyTermSelectResource;
 
@@ -29,7 +28,6 @@ class StudyTermController extends Controller
      */
     public function store(StoreStudyTermRequest $request)
     {
-
         $validated = $request->validated();
 
         StudyTerm::create($validated);
@@ -80,7 +78,8 @@ class StudyTermController extends Controller
         return $this->success(__('messages.Deleted'), 200);
     }
 
-    public function select() {
+    public function select()
+    {
         return StudyTermSelectResource::collection(StudyTerm::all());
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateStudyTermRequest extends FormRequest
@@ -24,7 +25,13 @@ class UpdateStudyTermRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|unique:study_terms|string|max:255',
+            'id' => Rule::unique('study_terms', 'id')->ignore($this->id),
+            'title' => [
+                'required',
+                Rule::unique('study_terms', 'title')->ignore($this->id),
+                'string',
+                'max:255',
+            ],
             'year' => 'required|numeric',
             'month' => 'required|numeric',
             'course' => 'required|numeric',
