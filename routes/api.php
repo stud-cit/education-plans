@@ -109,8 +109,8 @@ Route::prefix('v1')->group(function () {
         Route::get('catalog-groups/list', [CatalogGroupController::class, 'list']);
         Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore_catalog_group');
         Route::apiResource('catalog-groups', CatalogGroupController::class);
+        Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
         Route::apiResource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });
 });
-Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);
