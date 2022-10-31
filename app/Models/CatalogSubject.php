@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSubject extends Model
 {
@@ -35,5 +36,13 @@ class CatalogSubject extends Model
         static::saving(function ($catalog) {
             $catalog->user_id = 1; // Auth::id();
         });
+    }
+
+    public function scopeFilterBy($query, $filters)
+    {
+        $namespace = 'App\Helpers\Filters\CatalogSubjectFilters';
+        $filter = new FilterBuilder($query, $filters, $namespace);
+
+        return $filter->apply();
     }
 }

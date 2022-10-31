@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Models\CatalogSubject;
 use App\Http\Requests\StoreCatalogRequest;
+use App\Http\Requests\IndexCatalogSubjectRequest;
 use App\Http\Resources\CatalogSubjectNameResource;
 use App\Http\Resources\CatalogSubjectGroupResource;
 use App\Http\Resources\CatalogSubjectYearsResource;
@@ -16,9 +18,14 @@ class CatalogSubjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexCatalogSubjectRequest $request)
     {
-        $catalog = CatalogSubject::with(['group'])->select(['id', 'year', 'group_id']);
+        $validated = $request->validated();
+
+        $perPage = Helpers::getPerPage('items_per_page', $validated);
+
+        $catalog = CatalogSubject::with(['group'])
+            ->select(['id', 'year', 'group_id'])->where('selective_discipline_id', 1);
         return CatalogSubjectGroupResource::collection($catalog->paginate());
     }
 

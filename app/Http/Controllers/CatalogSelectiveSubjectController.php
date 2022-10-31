@@ -18,7 +18,6 @@ class CatalogSelectiveSubjectController extends Controller
     public function index(IndexCatalogSelectiveSubjectRequest $request)
     {
         $validated = $request->validated();
-        clock($validated);
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
