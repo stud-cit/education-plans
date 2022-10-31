@@ -26,7 +26,6 @@ class StoreCatalogRequest extends FormRequest
         return [
             'year' => 'required|date_format:Y',
             'group_id' => 'required|exists:App\Models\CatalogGroup,id',
-            'selective_discipline_id' => 'required|exists:App\Models\SelectiveDiscipline,id'
         ];
     }
 }
