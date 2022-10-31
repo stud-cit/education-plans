@@ -24,8 +24,15 @@ class StoreCatalogRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|date_format:Y',
+            'year' => 'required|date_format:Y|unique:catalog_subjects,year,group_id',
             'group_id' => 'required|exists:App\Models\CatalogGroup,id',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'year.unique' => 'Рік та група вже існує.',
         ];
     }
 }
