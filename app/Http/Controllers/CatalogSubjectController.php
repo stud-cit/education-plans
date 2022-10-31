@@ -25,8 +25,11 @@ class CatalogSubjectController extends Controller
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
         $catalog = CatalogSubject::with(['group'])
-            ->select(['id', 'year', 'group_id'])->where('selective_discipline_id', 1);
-        return CatalogSubjectGroupResource::collection($catalog->paginate());
+            ->select(['id', 'year', 'group_id'])
+            ->filterBy($validated)
+            ->where('selective_discipline_id', 1);
+
+        return CatalogSubjectGroupResource::collection($catalog->paginate($perPage));
     }
 
     /**
