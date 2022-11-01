@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
-use App\Http\Requests\IndexCatalogSelectiveSubjectRequest;
 use Illuminate\Http\Request;
+use App\Models\CatalogEducationLevel;
 use App\Models\CatalogSelectiveSubject;
+use App\Http\Controllers\SubjectLanguageController;
 use App\Http\Resources\CatalogSelectiveSubjectResource;
+use App\Http\Requests\IndexCatalogSelectiveSubjectRequest;
+use App\Http\Requests\StoreCatalogSelectiveSubjectRequest;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -37,7 +40,20 @@ class CatalogSelectiveSubjectController extends Controller
      */
     public function create()
     {
-        // TODO: get data for save
+        $asu = new AsuController();
+        $language = new SubjectLanguageController();
+        $user = new UserController();
+
+        $data = [
+            'subjects' => $asu->getSubjects(),
+            'faculties' => $asu->faculties(),
+            'departments' => [],
+            'language' => $language->index(),
+            'educationLevel' => CatalogEducationLevel::select('id', 'title')->get(),
+            'teachers' => $user->listWorkers(),
+        ];
+
+        return response()->json($data);
     }
 
     /**
@@ -46,9 +62,13 @@ class CatalogSelectiveSubjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCatalogSelectiveSubjectRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        CatalogSelectiveSubject::create($validated);
+
+        $this->success(__('messages.Created'), 201);
     }
 
     /**

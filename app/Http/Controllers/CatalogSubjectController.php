@@ -51,6 +51,8 @@ class CatalogSubjectController extends Controller
     public function store(StoreCatalogRequest $request)
     {
         $validated = $request->validated();
+        $validated['selective_discipline_id'] = 1;
+
         CatalogSubject::create($validated);
         return $this->success(__('messages.Created'), 201);
     }
