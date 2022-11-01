@@ -29,6 +29,7 @@ class CreateCatalogSelectiveSubjectsTable extends Migration
             $table->string('number_acquirers');
             $table->string('entry_requirements_applicants');
             $table->json('limitation');
+            $table->boolean('published')->default(false);
             $table->timestamps();
         });
     }

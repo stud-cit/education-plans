@@ -12,13 +12,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSelectiveSubject extends Model
 {
-    use HasFactory;
-    use HasAsuDivisionsNameTrait;
+    use HasFactory, HasAsuDivisionsNameTrait;
+
     protected $fillable = [
+        'asu_id',
         'faculty_id',
         'department_id',
         'catalog_education_level_id',
         'user_id',
+        'title',
+        'title_en',
+        'list_fields_knowledge',
+        'types_educational_activities',
+        'general_competence',
+        'number_acquirers',
+        'entry_requirements_applicants',
+        'limitation',
+        'published'
     ];
 
     public function educationLevel()
