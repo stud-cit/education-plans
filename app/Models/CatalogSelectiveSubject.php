@@ -48,12 +48,26 @@ class CatalogSelectiveSubject extends Model
 
     /**
      * Get first catalog Вибіркові дисципліни (каталог)
-     *
-     * @return void
      */
     public function selectiveCatalog()
     {
         return $this->catalog()->where('selective_discipline_id', 1);
+    }
+
+    /**
+     * Get second catalog Вибіркові дисципліни за спеціальністю
+     */
+    public function specializationCatalog()
+    {
+        return $this->catalog()->where('selective_discipline_id', 2);
+    }
+
+    /**
+     * Get third catalog Вибіркові дисципліни за освітньою програмою
+     */
+    public function educationProgramCatalog()
+    {
+        return $this->catalog()->where('selective_discipline_id', 3);
     }
 
     public function scopeFilterBy($query, $filters)
