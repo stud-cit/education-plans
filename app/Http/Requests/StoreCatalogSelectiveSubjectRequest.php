@@ -25,7 +25,7 @@ class StoreCatalogSelectiveSubjectRequest extends FormRequest
     {
         return [
             'catalog_subject_id' => 'required|exists:App\Models\CatalogSubject,id',
-            'asu_id' => 'null|string|max:255',
+            'asu_id' => 'nullable|string|max:255',
             'title' => 'required|max:255',
             'title_en' => 'required_if:title,null',
             'list_fields_knowledge' => 'required|json', //json
@@ -36,7 +36,7 @@ class StoreCatalogSelectiveSubjectRequest extends FormRequest
             'types_educational_activities' => 'required|max:255',
             'number_acquirers' => 'required|max:255',
             'entry_requirements_applicants',
-            'limitation' => 'required|json'
+            'limitation' => 'required|json' // json
         ];
     }
 }

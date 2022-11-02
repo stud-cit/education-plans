@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
+use App\Models\CatalogSubject;
 use App\Models\CatalogEducationLevel;
+use App\ExternalServices\Asu\Subjects;
 use App\Models\CatalogSelectiveSubject;
 use App\Http\Controllers\SubjectLanguageController;
 use App\Http\Resources\CatalogSelectiveSubjectResource;
 use App\Http\Requests\IndexCatalogSelectiveSubjectRequest;
 use App\Http\Requests\StoreCatalogSelectiveSubjectRequest;
+use App\Models\SubjectHelper;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -42,15 +45,25 @@ class CatalogSelectiveSubjectController extends Controller
     {
         $asu = new AsuController();
         $language = new SubjectLanguageController();
-        $user = new UserController();
+        $catalogs = new CatalogSubjectController();
+        $helpers = SubjectHelper::with('type')->where('selective_discipline_id', 1)->select(
+            'id',
+            'title',
+            'catalog_helper_type_id',
+        )->get();
 
         $data = [
+            'catalogs' => $catalogs->getCatalogs(),
             'subjects' => $asu->getSubjects(),
-            'faculties' => $asu->faculties(),
-            'departments' => [],
             'language' => $language->index(),
             'educationLevel' => CatalogEducationLevel::select('id', 'title')->get(),
-            'teachers' => $user->listWorkers(),
+            'faculties' => $asu->faculties(),
+            'departments' => $asu->getDepartments(),
+            'teachers' => $asu->getWorkers(), // TODO: sort
+            'helpersGeneralCompetence' => $helpers->where('type.key', 'general_competence')->pluck('title'),
+            'helpersResultsOfStudy' => $helpers->where('type.key', 'learning_outcomes')->pluck('title'),
+            'helpersTypesTrainingSessions' => $helpers->where('type.key', 'types_educational_activities')->pluck('title'),
+            'helpersRequirements' => $helpers->where('type.key', 'entry_requirements_applicants')->pluck('title'),
         ];
 
         return response()->json($data);
