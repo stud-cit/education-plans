@@ -55,8 +55,8 @@ class CatalogSelectiveSubjectController extends Controller
         $data = [
             'catalogs' => $catalogs->getCatalogs(),
             'subjects' => $asu->getSubjects(),
-            'language' => $language->index(),
-            'educationLevel' => CatalogEducationLevel::select('id', 'title')->get(),
+            'languages' => $language->index(),
+            'educationsLevel' => CatalogEducationLevel::select('id', 'title')->get(),
             'faculties' => $asu->faculties(),
             'departments' => $asu->getDepartments(),
             'teachers' => $asu->getWorkers(), // TODO: sort
