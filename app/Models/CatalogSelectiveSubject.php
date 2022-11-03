@@ -16,6 +16,7 @@ class CatalogSelectiveSubject extends Model
 
     protected $fillable = [
         'asu_id',
+        'catalog_subject_id',
         'faculty_id',
         'department_id',
         'catalog_education_level_id',
@@ -25,6 +26,7 @@ class CatalogSelectiveSubject extends Model
         'list_fields_knowledge',
         'types_educational_activities',
         'general_competence',
+        'learning_outcomes',
         'number_acquirers',
         'entry_requirements_applicants',
         'limitation',
@@ -46,12 +48,14 @@ class CatalogSelectiveSubject extends Model
         return $this->belongsTo(CatalogSubject::class, 'catalog_subject_id', 'id');
     }
 
-    /**
-     * languages
-     */
     public function languages()
     {
         return $this->hasMany(LanguageSubject::class, 'subject_id', 'id');
+    }
+
+    public function teachers()
+    {
+        return $this->hasMany(Teacher::class);
     }
 
     /**
@@ -84,5 +88,12 @@ class CatalogSelectiveSubject extends Model
         $filter = new FilterBuilder($query, $filters, $namespace);
 
         return $filter->apply();
+    }
+
+    protected static function booted()
+    {
+        static::saving(function ($catalog) {
+            $catalog->user_id = 1; // Auth::id();
+        });
     }
 }

@@ -79,9 +79,12 @@ class CatalogSelectiveSubjectController extends Controller
     {
         $validated = $request->validated();
 
-        CatalogSelectiveSubject::create($validated);
+        $subject = CatalogSelectiveSubject::create($validated);
+        clock($validated['teachers']);
+        $subject->languages()->createMany($validated['language']);
+        $subject->teachers()->createMany($validated['teachers']);
 
-        $this->success(__('messages.Created'), 201);
+        return $this->success(__('messages.Created'), 201);
     }
 
     /**
