@@ -47,6 +47,14 @@ class CatalogSelectiveSubject extends Model
     }
 
     /**
+     * languages
+     */
+    public function languages()
+    {
+        return $this->hasMany(LanguageSubject::class, 'subject_id', 'id');
+    }
+
+    /**
      * Get first catalog Вибіркові дисципліни (каталог)
      */
     public function selectiveCatalog()

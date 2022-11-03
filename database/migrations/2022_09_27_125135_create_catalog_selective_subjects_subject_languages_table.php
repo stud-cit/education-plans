@@ -13,7 +13,7 @@ class CreateCatalogSelectiveSubjectsSubjectLanguagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('catalog_selective_subjects_subject_languages', function (Blueprint $table) {
+        Schema::create('language_subjects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('language_id')->constrained('subject_languages');
             $table->foreignId('subject_id')->constrained('catalog_selective_subjects');
@@ -28,6 +28,6 @@ class CreateCatalogSelectiveSubjectsSubjectLanguagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('catalog_selective_subjects_subject_languages');
+        Schema::dropIfExists('language_subjects');
     }
 }
