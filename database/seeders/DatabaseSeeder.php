@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\LanguageSubject;
 use App\Models\SubjectLanguage;
 use Illuminate\Database\Seeder;
 
@@ -40,6 +41,8 @@ class DatabaseSeeder extends Seeder
             CatalogGroupSeeder::class,
             CatalogSubjectSeeder::class,
             CatalogEducationLevelSeeder::class,
+            CatalogSelectiveSubjectSeed::class,
+            LanguageSubjectSeed::class,
         ]);
     }
 }
