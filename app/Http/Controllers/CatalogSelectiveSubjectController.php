@@ -79,7 +79,7 @@ class CatalogSelectiveSubjectController extends Controller
         $validated = $request->validated();
 
         $subject = CatalogSelectiveSubject::create($validated);
-        clock($validated['teachers']);
+
         $subject->languages()->createMany($validated['language']);
         $subject->teachers()->createMany($validated['teachers']);
 
