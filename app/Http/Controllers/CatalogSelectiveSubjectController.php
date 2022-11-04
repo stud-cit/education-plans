@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use App\Models\CatalogSubject;
+use App\Models\SubjectHelper;
 use App\Models\CatalogEducationLevel;
-use App\ExternalServices\Asu\Subjects;
 use App\Models\CatalogSelectiveSubject;
 use App\Http\Controllers\SubjectLanguageController;
 use App\Http\Resources\CatalogSelectiveSubjectResource;
 use App\Http\Requests\IndexCatalogSelectiveSubjectRequest;
 use App\Http\Requests\StoreCatalogSelectiveSubjectRequest;
-use App\Models\SubjectHelper;
+use App\Http\Resources\CatalogSelectiveSubjectShowResource;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -95,7 +94,14 @@ class CatalogSelectiveSubjectController extends Controller
      */
     public function show(CatalogSelectiveSubject $catalogSelectiveSubject)
     {
-        //
+        $modelWithRelations = $catalogSelectiveSubject->load([
+            'languages.language',
+            'lecturers',
+            'practice',
+            'educationLevel'
+        ]);
+        // dd($modelWithRelations->toArray());
+        return new CatalogSelectiveSubjectShowResource($modelWithRelations);
     }
 
     /**

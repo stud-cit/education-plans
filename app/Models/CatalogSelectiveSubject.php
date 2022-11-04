@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\CatalogSubject;
 use App\Models\CatalogEducationLevel;
+use App\ExternalServices\Asu\Subjects;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
@@ -33,6 +34,28 @@ class CatalogSelectiveSubject extends Model
         'published'
     ];
 
+    const LECTOR = 'lector';
+    const PRACTICE = 'practice';
+
+    public function getSubjectNameAttribute()
+    {
+        if (!$this->asu_id) return null;
+
+        return $this->subject()->getTitle($this->asu_id, 'title');
+    }
+
+    public function getEnglishSubjectNameAttribute()
+    {
+        if (!$this->asu_id) return null;
+
+        return $this->subject()->getEnglishTitle($this->asu_id, 'title_eng');
+    }
+
+    protected function subject()
+    {
+        return new Subjects();
+    }
+
     public function educationLevel()
     {
         return $this->belongsTo(CatalogEducationLevel::class, 'catalog_education_level_id');
@@ -56,6 +79,16 @@ class CatalogSelectiveSubject extends Model
     public function teachers()
     {
         return $this->hasMany(Teacher::class);
+    }
+
+    public function lecturers()
+    {
+        return $this->teachers()->where('type', self::LECTOR)->select('id', 'catalog_selective_subject_id', 'asu_id');
+    }
+
+    public function practice()
+    {
+        return $this->teachers()->where('type', self::PRACTICE)->select('id', 'catalog_selective_subject_id', 'asu_id');
     }
 
     /**
@@ -82,6 +115,12 @@ class CatalogSelectiveSubject extends Model
         return $this->catalog()->where('selective_discipline_id', 3);
     }
 
+
+    public function scopePublished($query)
+    {
+        $query->where('published', 1);
+    }
+
     public function scopeFilterBy($query, $filters)
     {
         $namespace = 'App\Helpers\Filters\CatalogSelectiveSubjectFilters';
@@ -93,7 +132,7 @@ class CatalogSelectiveSubject extends Model
     protected static function booted()
     {
         static::saving(function ($catalog) {
-            $catalog->user_id = 1; // Auth::id();
+            $catalog->user_id = 1; // Auth::id(); TODO: FIX IT
         });
     }
 }
