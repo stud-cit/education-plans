@@ -46,11 +46,25 @@ class AsuController extends Controller
         return ProfessionsResource::collection($professions->getSpecialties($id));
     }
 
+    public function getAllSpecialities()
+    {
+        $professions = new Profession();
+
+        return ProfessionsResource::collection($professions->getAllSpecialties());
+    }
+
     public function getEducationPrograms(Request $request, $id)
     {
         $professions = new Profession();
 
         return ProfessionsResource::collection($professions->getEducationPrograms($id));
+    }
+
+    public function getAllEducationPrograms()
+    {
+        $professions = new Profession();
+
+        return ProfessionsResource::collection($professions->getAllEducationPrograms());
     }
 
     public function getSubjects()

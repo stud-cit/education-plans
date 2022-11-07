@@ -90,6 +90,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/specialities/{id}', [AsuController::class, 'getSpecialities'])->name('asu.specialities');
         Route::get('/specializations/{id}', [AsuController::class, 'getSpecializations'])->name('asu.specializations');
         Route::get('/education-programs/{id}', [AsuController::class, 'getEducationPrograms'])->name('asu.education-programs');
+        Route::get('/education-programs', [AsuController::class, 'getAllEducationPrograms']);
+        Route::get('/specialities', [AsuController::class, 'getAllSpecialities']);
+
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
