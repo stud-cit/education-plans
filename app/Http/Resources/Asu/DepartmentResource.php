@@ -17,6 +17,7 @@ class DepartmentResource extends JsonResource
         return [
             'id' => (int) $this['id'],
             'name' => $this['name'],
+            'faculty_id' => (int) $this['faculty_id'],
         ];
     }
 }
