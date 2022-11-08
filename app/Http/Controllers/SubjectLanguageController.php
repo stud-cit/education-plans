@@ -6,6 +6,7 @@ use App\Models\SubjectLanguage;
 use App\Http\Resources\SubjectLanguageResource;
 use App\Http\Requests\StoreSubjectLanguageRequest;
 use App\Http\Requests\UpdateSubjectLanguageRequest;
+use App\Http\Resources\SubjectLanguageListResource;
 
 class SubjectLanguageController extends Controller
 {
@@ -71,5 +72,12 @@ class SubjectLanguageController extends Controller
             return $this->error($e->getMessage(), $e->getCode());
         }
         return $this->success(__('messages.Deleted'), 200);
+    }
+
+    public function getList()
+    {
+        return SubjectLanguageListResource::collection(
+            SubjectLanguage::select(['id', 'title'])->get()
+        );
     }
 }
