@@ -69,7 +69,7 @@ class Worker extends ASU
         return $worker['last_name'] . ' ' . $worker['first_name'] . ' ' . $worker['patronymic'];
     }
 
-    public function getShortName($asu_id): String
+    public function getShortName($asu_id)
     {
         $worker = $this->getWorker($asu_id);
 
@@ -77,7 +77,9 @@ class Worker extends ASU
             return self::NOT_FOUND;
         }
 
-        return "{$this['last_name']} {$this['first_name'][0]}. {$this['patronymic'][0]}.";
+        return $worker['last_name'].' '.
+            mb_substr($worker['first_name'], 0, 1).'.'.
+            mb_substr($worker['last_name'], 0, 1). '.';
     }
 
     /**
