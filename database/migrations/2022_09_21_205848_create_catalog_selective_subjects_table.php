@@ -17,7 +17,7 @@ class CreateCatalogSelectiveSubjectsTable extends Migration
             $table->id();
             $table->foreignId('catalog_subject_id')->constrained('catalog_subjects', 'id');
             $table->foreignId('user_id')->constrained();
-            $table->string('asu_id', 60)->nullable(true); // 1
+            $table->integer('asu_id')->nullable(true); // 1
             $table->text('title')->nullable(true); // 1
             $table->text('title_en')->nullable(true); // 1
             // language in separate table 2
