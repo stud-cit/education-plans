@@ -16,13 +16,14 @@ class SubjectLanguageSeeder extends Seeder
     {
         DB::table('subject_languages')->insert([
             [
-                'title' => 'English',
+                'title' => 'Українська',
                 'created_at' => now()
             ],
             [
-                'title' => 'Українська',
+                'title' => 'English',
                 'created_at' => now()
-            ]
+            ],
+
         ]);
     }
 }
