@@ -112,7 +112,6 @@ class CatalogSelectiveSubject extends Model
 
         return $this->teachers()->createMany($lectures);
     }
-    }
 
     /**
      * Get first catalog Вибіркові дисципліни (каталог)
