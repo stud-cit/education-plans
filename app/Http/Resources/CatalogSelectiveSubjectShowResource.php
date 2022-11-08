@@ -19,7 +19,7 @@ class CatalogSelectiveSubjectShowResource extends JsonResource
             'id' => $this->id,
             'asu_id' => $this->subjectName,
             'title' => $this->title,
-            'title_eng' => $this->englishSubjectName,
+            'title_en' => $this->englishSubjectName,
             'language' => $this->languages->map(function ($collection) {
                 return $collection['language']['title'];
             })->implode(', '),
