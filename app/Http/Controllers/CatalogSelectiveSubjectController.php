@@ -81,7 +81,9 @@ class CatalogSelectiveSubjectController extends Controller
         $subject = CatalogSelectiveSubject::create($validated);
 
         $subject->languages()->createMany($validated['language']);
-        $subject->teachers()->createMany($validated['teachers']);
+
+        $subject->lecturersSave($validated['lecturers']);
+        $subject->practiceSave($validated['practice']);
 
         return $this->success(__('messages.Created'), 201);
     }
@@ -100,7 +102,7 @@ class CatalogSelectiveSubjectController extends Controller
             'practice',
             'educationLevel'
         ]);
-        // dd($modelWithRelations->toArray());
+
         return new CatalogSelectiveSubjectShowResource($modelWithRelations);
     }
 
@@ -112,7 +114,14 @@ class CatalogSelectiveSubjectController extends Controller
      */
     public function edit(CatalogSelectiveSubject $catalogSelectiveSubject)
     {
-        //
+        $modelWithRelations = $catalogSelectiveSubject->load([
+            'languages.language',
+            'lecturers',
+            'practice',
+            'educationLevel'
+        ]);
+
+        return new CatalogSelectiveSubjectShowResource($modelWithRelations);
     }
 
     /**

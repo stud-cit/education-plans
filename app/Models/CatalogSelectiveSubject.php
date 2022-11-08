@@ -46,9 +46,9 @@ class CatalogSelectiveSubject extends Model
 
     public function getEnglishSubjectNameAttribute()
     {
-        if (!$this->asu_id) return null;
+        $engTitle = $this->subject()->getEnglishTitle($this->asu_id, 'title_eng');
 
-        return $this->subject()->getEnglishTitle($this->asu_id, 'title_eng');
+        return $this->title_eng === $engTitle ? $engTitle : $this->title_eng;
     }
 
     protected function subject()
@@ -89,6 +89,29 @@ class CatalogSelectiveSubject extends Model
     public function practice()
     {
         return $this->teachers()->where('type', self::PRACTICE)->select('id', 'catalog_selective_subject_id', 'asu_id');
+    }
+
+
+
+    public function lecturersSave($teachers)
+    {
+        $lectures = array_map(function ($teacher) {
+            $teacher['type'] = self::LECTOR;
+            return $teacher;
+        }, $teachers);
+
+        return $this->teachers()->createMany($lectures);
+    }
+
+    public function practiceSave($teachers)
+    {
+        $lectures = array_map(function ($teacher) {
+            $teacher['type'] = self::PRACTICE;
+            return $teacher;
+        }, $teachers);
+
+        return $this->teachers()->createMany($lectures);
+    }
     }
 
     /**
