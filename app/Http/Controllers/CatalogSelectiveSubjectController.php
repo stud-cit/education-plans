@@ -11,6 +11,7 @@ use App\Http\Controllers\SubjectLanguageController;
 use App\Http\Resources\CatalogSelectiveSubjectResource;
 use App\Http\Requests\IndexCatalogSelectiveSubjectRequest;
 use App\Http\Requests\StoreCatalogSelectiveSubjectRequest;
+use App\Http\Resources\CatalogSelectiveSubjectEditResource;
 use App\Http\Resources\CatalogSelectiveSubjectShowResource;
 
 class CatalogSelectiveSubjectController extends Controller
@@ -121,7 +122,7 @@ class CatalogSelectiveSubjectController extends Controller
             'educationLevel'
         ]);
 
-        return new CatalogSelectiveSubjectShowResource($modelWithRelations);
+        return new CatalogSelectiveSubjectEditResource($modelWithRelations);
     }
 
     /**
