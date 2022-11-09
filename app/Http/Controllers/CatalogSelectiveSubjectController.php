@@ -144,6 +144,10 @@ class CatalogSelectiveSubjectController extends Controller
      */
     public function destroy(CatalogSelectiveSubject $catalogSelectiveSubject)
     {
-        //
+        $catalogSelectiveSubject->languages()->delete();
+        $catalogSelectiveSubject->teachers()->delete();
+        $catalogSelectiveSubject->delete();
+
+        return $this->success(__('messages.Deleted'), 200);
     }
 }
