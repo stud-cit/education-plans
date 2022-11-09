@@ -41,14 +41,13 @@ class StoreCatalogSelectiveSubjectRequest extends FormRequest
             'lecturers' => 'required',
             'practice' => 'required',
             'list_fields_knowledge' => 'required|json', //json
-            'faculty_id' => 'required|max:255',
-            'department_id' => 'required|max:255',
+            'faculty_id' => 'required|numeric',
+            'department_id' => 'required|numeric',
             'general_competence' => 'required|max:255',
             'learning_outcomes' => 'required|string|max:255',
             'entry_requirements_applicants' => 'required|string|max:255',
             'types_educational_activities' => 'required|string|max:255',
             'number_acquirers' => 'required|max:255',
-            'entry_requirements_applicants',
             'limitation' => 'required|json' // json
         ];
     }
