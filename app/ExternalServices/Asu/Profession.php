@@ -74,12 +74,27 @@ class Profession extends ASU
 
     public function getAllEducationPrograms()
     {
-        return $this->getFiltered(self::EDUCATION_PROGRAM_ID);
+        $educationPrograms = $this->getFiltered(self::EDUCATION_PROGRAM_ID);
+        return collect($educationPrograms)->map(function ($item) {
+            $ucFirstTitle = Str::ucfirst($item['title']);
+            return [
+                'id' => (int) $item['id'],
+                'title' => "{$item['code']} $ucFirstTitle",
+            ];
+        });
     }
 
     public function getAllSpecialties()
     {
-        return $this->getFiltered(self::SPECIALITY_ID);
+        $specialties = $this->getFiltered(self::SPECIALITY_ID);
+
+        return collect($specialties)->map(function ($item) {
+            $ucFirstTitle = Str::ucfirst($item['title']);
+            return [
+                'id' => (int) $item['id'],
+                'title' => "{$item['code']} $ucFirstTitle",
+            ];
+        });
     }
 
     // TODO: rename, bad name
