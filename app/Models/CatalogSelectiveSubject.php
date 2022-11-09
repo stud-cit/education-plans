@@ -51,6 +51,39 @@ class CatalogSelectiveSubject extends Model
         return $this->title_eng === $engTitle ? $engTitle : $this->title_eng;
     }
 
+    public function getListFieldsKnowledgeNameAttribute()
+    {
+        $obj = json_decode($this->list_fields_knowledge);
+
+        if ($obj->list === null) {
+            return $obj->label;
+        }
+
+        $label = "$obj->label $obj->type_name ";
+
+        $array = array_map(function ($item) {
+            if (array_key_exists('name', (array)$item)) {
+                return $item->name;
+            }
+            if (array_key_exists('title', (array)$item)) {
+                return $item->title;
+            }
+        }, $obj->list);
+
+        return $label . implode(', ', $array);
+    }
+
+    public function getLimitationNameAttribute()
+    {
+        $obj = json_decode($this->limitation);
+
+        if ($obj->semesters === null) {
+            return $obj->label;
+        }
+
+        return implode(', ', $obj->semesters);
+    }
+
     protected function subject()
     {
         return new Subjects();
@@ -90,8 +123,6 @@ class CatalogSelectiveSubject extends Model
     {
         return $this->teachers()->where('type', self::PRACTICE)->select('id', 'catalog_selective_subject_id', 'asu_id');
     }
-
-
 
     public function lecturersSave($teachers)
     {

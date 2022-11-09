@@ -29,20 +29,20 @@ class CatalogSelectiveSubjectShowResource extends JsonResource
             'faculty' => $this->facultyName,
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
-            'list_fields_knowledge' => $this->list_fields_knowledge, // TODO: prepare
+            'list_fields_knowledge' => $this->listFieldsKnowledgeName, // TODO: prepare
             'educationLevel' => $this->educationLevel->title,
             'general_competence' => $this->general_competence,
             'learning_outcomes' => $this->learning_outcomes,
             'entry_requirements_applicants' => $this->entry_requirements_applicants,
             'types_educational_activities' => $this->types_educational_activities,
             'number_acquirers' => $this->number_acquirers,
-            'limitation' => $this->limitation,
+            'limitation' => $this->limitationName,
         ];
     }
 
     protected function getShortNames($listNames)
     {
-        return $this->getShortName($listNames)->implode(' ');
+        return $this->getShortName($listNames)->implode(', ');
     }
 
     protected function getShortName($collection)
