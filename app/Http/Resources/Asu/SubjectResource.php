@@ -17,7 +17,7 @@ class SubjectResource extends JsonResource
         return [
             'id' => (int) $this['id'],
             'title' => $this['title'],
-            'title_eng' => $this['title_eng'],
+            'title_en' => $this['title_en'],
         ];
     }
 }

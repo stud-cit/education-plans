@@ -17,7 +17,7 @@ class Subjects extends ASU
     {
         $isExists = $this->getSubjects()->contains('id', $id);
 
-        return $isExists ? $this->getSubjects()->firstWhere('id', $id)['title_eng'] : self::NOT_FOUND;
+        return $isExists ? $this->getSubjects()->firstWhere('id', $id)['title_en'] : self::NOT_FOUND;
     }
 
     public function getSubjects(): Collection
@@ -26,7 +26,7 @@ class Subjects extends ASU
         $keys = [
             'ID_DISC' => 'id',
             'NAME_DISC' => 'title',
-            'NAME_ENG' => 'title_eng'
+            'NAME_ENG' => 'title_en'
         ];
         return  $this->getAsuData($url, [], 'subjects', $keys);
     }
