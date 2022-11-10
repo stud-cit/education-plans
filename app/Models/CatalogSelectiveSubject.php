@@ -81,7 +81,7 @@ class CatalogSelectiveSubject extends Model
             return $obj->label;
         }
 
-        return implode(', ', $obj->semesters);
+        return $obj->label . ' ' . implode(', ', $obj->semesters);
     }
 
     protected function subject()
