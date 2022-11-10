@@ -33,6 +33,9 @@ class CatalogSelectiveSubject extends Model
         'limitation',
         'published'
     ];
+    protected $casts = [
+        'published' => 'boolean'
+    ];
 
     const LECTOR = 'lector';
     const PRACTICE = 'practice';

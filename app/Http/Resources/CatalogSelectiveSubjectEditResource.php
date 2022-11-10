@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\SubjectLanguage\SubjectLanguageListShowResource;
 
 class CatalogSelectiveSubjectEditResource extends JsonResource
 {
@@ -14,24 +15,28 @@ class CatalogSelectiveSubjectEditResource extends JsonResource
      */
     public function toArray($request)
     {
+        // dd($this->whenLoaded('languages')['language']);
         return [
+            'catalog' => $this->group_id,
             'id' => $this->id,
-            'asu_id' => $this->asu_id,
-            'title' => $this->title,
-            'title_en' => $this->title_en,
-            'language' => $this->languages,
+            'discipline' => [
+                'id' => $this->asu_id,
+                'title_en' => $this->title_en,
+            ],
+            'language' => SubjectLanguageListShowResource::collection($this->languages),
             'lecturers' => $this->lecturers,
             'practice' => $this->practice,
             'faculty_id' => $this->faculty_id,
             'department_id' => $this->department_id,
-            'list_fields_knowledge' => $this->listFieldsKnowledge,
-            'educationLevel' => $this->educationLevel,
+            'list_fields_knowledge' => json_decode($this->list_fields_knowledge),
+            'educationLevel' => $this->educationLevel->id,
             'general_competence' => $this->general_competence,
             'learning_outcomes' => $this->learning_outcomes,
             'entry_requirements_applicants' => $this->entry_requirements_applicants,
             'types_educational_activities' => $this->types_educational_activities,
             'number_acquirers' => $this->number_acquirers,
             'limitation' => json_decode($this->limitation),
+            'published' => $this->published
         ];
     }
 }
