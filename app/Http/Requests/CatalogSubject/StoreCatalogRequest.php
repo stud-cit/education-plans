@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\CatalogSubject;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexCatalogSubjectRequest extends FormRequest
+class StoreCatalogRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,15 @@ class IndexCatalogSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'integer',
-            'group' => 'integer',
-            'page' => 'integer',
-            'items_per_page' => 'integer',
+            'year' => 'required|date_format:Y|unique:catalog_subjects,year,group_id',
+            'group_id' => 'required|exists:App\Models\CatalogGroup,id',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'year.unique' => 'Рік та група вже існує.',
         ];
     }
 }

@@ -5,11 +5,17 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Models\CatalogSubject;
-use App\Http\Requests\StoreCatalogRequest;
-use App\Http\Requests\IndexCatalogSubjectRequest;
-use App\Http\Resources\CatalogSubjectNameResource;
-use App\Http\Resources\CatalogSubjectGroupResource;
-use App\Http\Resources\CatalogSubjectYearsResource;
+use App\Http\Requests\CatalogSubject\{
+    IndexCatalogSubjectRequest,
+    StoreCatalogRequest,
+    PdfCatalogSubjectRequest,
+};
+use App\Http\Resources\CatalogSubject\{
+    CatalogSubjectYearsResource,
+    CatalogSubjectDisciplineResource,
+    CatalogSubjectGroupResource,
+    CatalogSubjectNameResource
+};
 
 class CatalogSubjectController extends Controller
 {
@@ -117,5 +123,24 @@ class CatalogSubjectController extends Controller
     {
         $catalogs = CatalogSubject::with('group')->select('id', 'year', 'group_id')->orderBy('year', 'desc')->get();
         return CatalogSubjectNameResource::collection($catalogs);
+    }
+
+    public function generateSubjectsPDF(PdfCatalogSubjectRequest $request)
+    {
+        $validated = $request->validated();
+
+        $data = CatalogSubject::with([
+            'group',
+            'subjects.languages.language',
+            'subjects.lecturers',
+            'subjects.practice',
+            'subjects.educationLevel',
+        ])
+            ->where('year', $validated['year'])
+            ->where('group_id', $validated['group_id'])
+            ->select('id', 'year', 'group_id')
+            ->get();
+
+        return CatalogSubjectDisciplineResource::collection($data);
     }
 }

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\CatalogSubject;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CatalogSelectiveSubjectShowResource;
+use Illuminate\Support\Str;
 
-class CatalogSubjectGroupResource extends JsonResource
+class CatalogSubjectDisciplineResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,12 +17,9 @@ class CatalogSubjectGroupResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
             'year' => $this->year,
-            'group_id' => $this->group_id,
-            'group_name' => $this->group->title,
-            'user_id' => $this->id,
-            // 'subjects' => $this->subjects
+            'group_name' => Str::upper($this->group->title),
+            'subjects' => CatalogSelectiveSubjectShowResource::collection($this->subjects),
         ];
     }
 }

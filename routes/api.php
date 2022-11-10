@@ -114,6 +114,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('catalog-groups', CatalogGroupController::class);
         Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);
         Route::get('catalog-subjects/catalog-titles', [CatalogSubjectController::class, 'getCatalogs']);
+        Route::get('/catalog-subjects/generate-pdf', [CatalogSubjectController::class, 'generateSubjectsPDF']);
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
         Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\CatalogSubject;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CatalogSubjectNameResource extends JsonResource
+class CatalogSubjectGroupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,11 @@ class CatalogSubjectNameResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => "{$this->year} рік. {$this->group->title}",
+            'year' => $this->year,
+            'group_id' => $this->group_id,
+            'group_name' => $this->group->title,
+            'user_id' => $this->id,
+            // 'subjects' => $this->subjects
         ];
     }
 }
