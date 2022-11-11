@@ -17,7 +17,7 @@ class CatalogSelectiveSubjectEditResource extends JsonResource
     {
 
         return [
-            'catalog_id' => $this->catalog_subject_id,
+            'catalog_subject_id' => $this->catalog_subject_id,
             'id' => $this->id,
             'discipline' => [
                 'id' => $this->asu_id,
