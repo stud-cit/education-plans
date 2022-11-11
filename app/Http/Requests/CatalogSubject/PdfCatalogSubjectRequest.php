@@ -24,8 +24,15 @@ class PdfCatalogSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|integer',
+            'year' => 'required|date_format:Y',
             'group_id' => 'required|integer',
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            'year.date_format' => 'Дана вказана в невірному форматі (приклад правильної дати 2022).'
+        ]
     }
 }
