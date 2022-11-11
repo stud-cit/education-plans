@@ -49,7 +49,11 @@ class CatalogSelectiveSubject extends Model
 
     public function getEnglishSubjectNameAttribute()
     {
-        $engTitle = $this->subject()->getEnglishTitle($this->asu_id, 'title_en');
+        $engTitle = $this->subject()->getEnglishTitle($this->asu_id);
+
+        if ($this->title_en === null) {
+            return $engTitle;
+        }
 
         return $this->title_en === $engTitle ? $engTitle : $this->title_en;
     }
