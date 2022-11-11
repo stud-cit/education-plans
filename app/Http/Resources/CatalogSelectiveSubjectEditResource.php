@@ -15,7 +15,7 @@ class CatalogSelectiveSubjectEditResource extends JsonResource
      */
     public function toArray($request)
     {
-        // dd($this->whenLoaded('languages')['language']);
+
         return [
             'catalog' => $this->group_id,
             'id' => $this->id,
@@ -29,7 +29,7 @@ class CatalogSelectiveSubjectEditResource extends JsonResource
             'faculty_id' => $this->faculty_id,
             'department_id' => $this->department_id,
             'list_fields_knowledge' => json_decode($this->list_fields_knowledge),
-            'educationLevel' => $this->educationLevel->id,
+            'education_level' => $this->educationLevel->id,
             'general_competence' => $this->general_competence,
             'learning_outcomes' => $this->learning_outcomes,
             'entry_requirements_applicants' => $this->entry_requirements_applicants,
