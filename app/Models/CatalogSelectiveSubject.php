@@ -44,7 +44,7 @@ class CatalogSelectiveSubject extends Model
     {
         if (!$this->asu_id) return null;
 
-        return $this->subject()->getTitle($this->asu_id, 'title');
+        return $this->subject()->getTitle($this->asu_id, 'title') . " ({$this->getEnglishSubjectNameAttribute()})";
     }
 
     public function getEnglishSubjectNameAttribute()
