@@ -61,7 +61,9 @@ Route::prefix('v1')->group(function () {
         Route::get('plans/filters', [PlanController::class, 'getItemsFilters']);
         Route::Resource('plans', PlanController::class);
 
-        Route::apiResource('verifications', VerificationController::class);
+        Route::get('/verifications', [VerificationController::class, 'index']);
+        Route::get('/verification-subject-statuses', [VerificationController::class, 'getVerificationSubjectStatuses']);
+
         Route::apiResource('form-studies', FormStudyController::class);
         Route::apiResource('form-organizations', FormOrganizationController::class);
         Route::apiResource('education-levels', EducationLevelController::class);
