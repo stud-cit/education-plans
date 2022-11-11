@@ -17,7 +17,7 @@ class CatalogSelectiveSubjectShowResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'asu_id' => $this->subjectName,
+            'asu_id' => $this->asu_id,
             'title' => $this->title,
             'title_en' => $this->title_en,
             'language' => $this->languages->map(function ($collection) {
@@ -30,7 +30,7 @@ class CatalogSelectiveSubjectShowResource extends JsonResource
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
             'list_fields_knowledge' => $this->listFieldsKnowledgeName, // TODO: prepare
-            'educationLevel' => $this->educationLevel->title,
+            'education_level' => $this->educationLevel->title,
             'general_competence' => $this->general_competence,
             'learning_outcomes' => $this->learning_outcomes,
             'entry_requirements_applicants' => $this->entry_requirements_applicants,
