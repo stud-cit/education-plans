@@ -15,12 +15,14 @@ class CatalogSelectiveSubjectEditResource extends JsonResource
      */
     public function toArray($request)
     {
+        clock($this->lecturers->toArray());
 
         return [
             'catalog_subject_id' => $this->catalog_subject_id,
             'id' => $this->id,
             'discipline' => [
                 'id' => $this->asu_id,
+                'title' => $this->title,
                 'title_en' => $this->title_en,
             ],
             'language' => SubjectLanguageListShowResource::collection($this->languages),
