@@ -139,8 +139,8 @@ class CatalogSubjectController extends Controller
             ->where('year', $validated['year'])
             ->where('group_id', $validated['group_id'])
             ->select('id', 'year', 'group_id')
-            ->get();
+            ->first();
 
-        return CatalogSubjectDisciplineResource::collection($data);
+        return new CatalogSubjectDisciplineResource($data);
     }
 }
