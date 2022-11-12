@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\CatalogSelectiveSubject;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCatalogSelectiveSubjectRequest extends FormRequest
+class UpdateCatalogSelectiveSubjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,16 +25,14 @@ class StoreCatalogSelectiveSubjectRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => [
+                'required',
+                'exists:App\Models\CatalogSelectiveSubject,id',
+                Rule::unique('catalog_selective_subjects')->ignore($this->id)
+            ],
             'catalog_subject_id' => 'required|exists:App\Models\CatalogSubject,id',
             'catalog_education_level_id' => 'required|exists:App\Models\CatalogEducationLevel,id',
-            'asu_id' => [
-                'required',
-                'numeric',
-                Rule::unique('catalog_selective_subjects')->where(function ($query) {
-                    return $query->where('asu_id', $this->asu_id)
-                        ->where('catalog_subject_id', $this->catalog_subject_id);
-                })
-            ],
+            'asu_id' => 'required|numeric',
             'title' => 'required|string|max:255', // ?
             'title_en' => 'nullable|string|max:255', // ?
             'language' => 'required', // TODO: how validate?
