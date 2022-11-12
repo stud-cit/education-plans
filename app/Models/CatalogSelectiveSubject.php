@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use App\Models\Uscreateuse App\Models\Teacher;
 use App\Models\CatalogSubject;
 use App\Models\CatalogEducationLevel;
 use App\ExternalServices\Asu\Subjects;
@@ -36,9 +36,6 @@ class CatalogSelectiveSubject extends Model
     protected $casts = [
         'published' => 'boolean'
     ];
-
-    const LECTOR = 'lector';
-    const PRACTICE = 'practice';
 
     public function getSubjectNameAttribute()
     {
@@ -123,18 +120,18 @@ class CatalogSelectiveSubject extends Model
 
     public function lecturers()
     {
-        return $this->teachers()->where('type', self::LECTOR)->select('id', 'catalog_selective_subject_id', 'asu_id');
+        return $this->teachers()->where('type', Teacher::LECTOR)->select('id', 'catalog_selective_subject_id', 'asu_id');
     }
 
     public function practice()
     {
-        return $this->teachers()->where('type', self::PRACTICE)->select('id', 'catalog_selective_subject_id', 'asu_id');
+        return $this->teachers()->where('type', Teacher::PRACTICE)->select('id', 'catalog_selective_subject_id', 'asu_id');
     }
 
     public function lecturersSave($teachers)
     {
         $lectures = array_map(function ($teacher) {
-            $teacher['type'] = self::LECTOR;
+            $teacher['type'] = Teacher::LECTOR;
             return $teacher;
         }, $teachers);
 
@@ -144,7 +141,7 @@ class CatalogSelectiveSubject extends Model
     public function practiceSave($teachers)
     {
         $lectures = array_map(function ($teacher) {
-            $teacher['type'] = self::PRACTICE;
+            $teacher['type'] = Teacher::PRACTICE;
             return $teacher;
         }, $teachers);
 

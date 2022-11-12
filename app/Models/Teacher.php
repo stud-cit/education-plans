@@ -14,4 +14,7 @@ class Teacher extends Model
         'catalog_selective_id',
         'type',
     ];
+
+    const LECTOR = 'lector';
+    const PRACTICE = 'practice';
 }
