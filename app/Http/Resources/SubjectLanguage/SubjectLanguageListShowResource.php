@@ -15,7 +15,9 @@ class SubjectLanguageListShowResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'language_id' => $this->language_id,
+            'subject_id' => $this->subject_id,
         ];
     }
 }
