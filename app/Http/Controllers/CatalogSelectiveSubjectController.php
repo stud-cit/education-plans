@@ -9,10 +9,14 @@ use App\Models\CatalogEducationLevel;
 use App\Models\CatalogSelectiveSubject;
 use App\Http\Controllers\SubjectLanguageController;
 use App\Http\Resources\CatalogSelectiveSubjectResource;
-use App\Http\Requests\IndexCatalogSelectiveSubjectRequest;
-use App\Http\Requests\StoreCatalogSelectiveSubjectRequest;
+use App\Http\Requests\CatalogSelectiveSubject\{
+    IndexCatalogSelectiveSubjectRequest,
+    UpdateCatalogSelectiveSubjectRequest,
+    StoreCatalogSelectiveSubjectRequest
+};
 use App\Http\Resources\CatalogSelectiveSubjectEditResource;
 use App\Http\Resources\CatalogSelectiveSubjectShowResource;
+use App\Models\Teacher;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -132,9 +136,53 @@ class CatalogSelectiveSubjectController extends Controller
      * @param  \App\Models\CatalogSelectiveSubject  $catalogSelectiveSubject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CatalogSelectiveSubject $catalogSelectiveSubject)
+    public function update(UpdateCatalogSelectiveSubjectRequest $request, CatalogSelectiveSubject $catalogSelectiveSubject)
     {
-        //
+        $validated = $request->validated();
+
+        $model = $catalogSelectiveSubject->load([
+            'languages',
+            'lecturers',
+            'practice',
+            'educationLevel'
+        ]);
+
+        $model->update($validated);
+
+        $model->languages()->whereNotIn('id', $this->getIds($validated['language']))->delete();
+
+        foreach ($validated['language'] as $language) {
+            if (array_key_exists('title', $language)) {
+                unset($language['title']);
+            }
+            $model->languages()->updateOrCreate($language);
+        }
+
+        $model->lecturers()->whereNotIn('id', $this->getIds($validated['lecturers']))->delete();
+        $this->updateTeachers($validated['lecturers'], Teacher::LECTOR, $model);
+
+        $model->practice()->whereNotIn('id', $this->getIds($validated['practice']))->delete();
+        $this->updateTeachers($validated['practice'], Teacher::PRACTICE, $model);
+
+        return $this->success(__('messages.Updated'));
+    }
+
+    protected function updateTeachers($records, $type, $model)
+    {
+        foreach ($records as $lecture) {
+            if (!array_key_exists('type', $lecture)) {
+                $lecture['type'] = $type;
+            }
+            if (array_key_exists('full_name', $lecture)) {
+                unset($lecture['full_name']);
+            }
+            $model->teachers()->updateOrCreate($lecture);
+        }
+    }
+
+    protected function getIds($records)
+    {
+        return array_column($records, 'id');
     }
 
     /**

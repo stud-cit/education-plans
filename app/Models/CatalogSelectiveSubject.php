@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Uscreateuse App\Models\Teacher;
+use App\Models\Teacher;
 use App\Models\CatalogSubject;
 use App\Models\CatalogEducationLevel;
 use App\ExternalServices\Asu\Subjects;
