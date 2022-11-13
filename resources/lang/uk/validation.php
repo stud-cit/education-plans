@@ -155,6 +155,7 @@ return [
         'specialization_id' => 'Спеціалізація',
         'education_program_id' => 'Освітня програма',
         'value' => 'Значення',
+        'group_id' => 'група',
     ],
 
 ];

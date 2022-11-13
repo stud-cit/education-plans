@@ -33,6 +33,6 @@ class PdfCatalogSubjectRequest extends FormRequest
     {
         return [
             'year.date_format' => 'Дана вказана в невірному форматі (приклад правильної дати 2022).'
-        ]
+        ];
     }
 }
