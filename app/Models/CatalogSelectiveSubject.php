@@ -118,6 +118,11 @@ class CatalogSelectiveSubject extends Model
         return $this->hasMany(Teacher::class);
     }
 
+    public function verifications()
+    {
+        return $this->hasMany(SubjectVerification::class, 'catalog_selective_subject_id', 'id');
+    }
+
     public function lecturers()
     {
         return $this->teachers()->where('type', Teacher::LECTOR)->select('id', 'catalog_selective_subject_id', 'asu_id');

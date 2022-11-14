@@ -105,7 +105,8 @@ class CatalogSelectiveSubjectController extends Controller
             'languages.language',
             'lecturers',
             'practice',
-            'educationLevel'
+            'educationLevel',
+            'verifications'
         ]);
 
         return new CatalogSelectiveSubjectShowResource($modelWithRelations);
