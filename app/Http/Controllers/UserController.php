@@ -79,6 +79,8 @@ class UserController extends Controller
     {
         $validated = $request->validated();
 
+        $user->name = $validated['full_name'];
+
         $user->update($validated);
 
         return $this->success(__('messages.Updated'), 201);
@@ -108,10 +110,6 @@ class UserController extends Controller
             return [
                 'asu_id' => $worker['asu_id'],
                 'full_name' => $worker['last_name'] . ' ' . $worker['first_name'] . ' ' . $worker['patronymic'],
-                'department_id' => $worker['department_id'],
-                'department' => $worker['department'],
-                'faculty_id' => $faculty['id'] ?? null,
-                'faculty' => $faculty['name'] ?? null,
                 'disabled' => $users->contains($worker['asu_id'])
             ];
         });

@@ -24,7 +24,10 @@ class UpdateUserRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'role_id' => 'required|numeric'
+            'role_id' => 'required|numeric',
+            'faculty_id' => 'required|numeric',
+            'department_id' => 'required|numeric',
+            'full_name' => 'required|string',
         ];
     }
 }
