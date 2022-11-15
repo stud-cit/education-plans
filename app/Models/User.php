@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Filters\FilterBuilder;
 use App\Observers\UserObserver;
 use Laravel\Sanctum\HasApiTokens;
 use App\ExternalServices\Asu\Worker;
@@ -150,5 +151,13 @@ class User extends Authenticatable
     protected static function booted()
     {
         User::observe(UserObserver::class);
+    }
+
+    public function scopeFilterBy($query, $filters)
+    {
+        $namespace = 'App\Helpers\Filters\Users';
+        $filter = new FilterBuilder($query, $filters, $namespace);
+
+        return $filter->apply();
     }
 }

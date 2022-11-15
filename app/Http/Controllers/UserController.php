@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Constant;
+use App\Http\Requests\IndexUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\ExternalServices\Asu\Worker;
@@ -23,13 +25,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexUserRequest $request)
     {
+        $validated = $request->validated();
         $user = Auth::user();
         $roleAdmin = $user->role_id === User::ADMIN;
         $roleInstitute = $user->role_id === User::FACULTY_INSTITUTE;
+        $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
         $users = User::select('id', 'asu_id', 'department_id', 'faculty_id', 'role_id')
+            ->filterBy($validated)
             ->when($roleAdmin, function ($query) {
                 return $query->where('role_id', '!=', User::ROOT);
             })
@@ -37,7 +42,7 @@ class UserController extends Controller
                 return $query->whereIn('role_id', [User::FACULTY_INSTITUTE, User::DEPARTMENT])
                     ->where('faculty_id', '=', $user->faculty_id);
             })
-            ->paginate();
+            ->paginate($perPage);
 
         return UserResource::collection($users);
     }
