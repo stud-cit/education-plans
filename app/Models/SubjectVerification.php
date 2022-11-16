@@ -10,4 +10,12 @@ class SubjectVerification extends Model
     use HasFactory;
 
     protected $table = 'subjects_verifications';
+
+    protected $fillable = [
+        'user_id',
+        'verification_status_id',
+        'subject_id',
+        'status',
+        'comment'
+    ];
 }

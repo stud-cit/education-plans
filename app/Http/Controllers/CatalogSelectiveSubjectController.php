@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
-use Illuminate\Http\Request;
 use App\Models\SubjectHelper;
 use App\Models\CatalogEducationLevel;
 use App\Models\CatalogSelectiveSubject;
@@ -12,7 +11,8 @@ use App\Http\Resources\CatalogSelectiveSubjectResource;
 use App\Http\Requests\CatalogSelectiveSubject\{
     IndexCatalogSelectiveSubjectRequest,
     UpdateCatalogSelectiveSubjectRequest,
-    StoreCatalogSelectiveSubjectRequest
+    StoreCatalogSelectiveSubjectRequest,
+    StoreSubjectVerificationRequest,
 };
 use App\Http\Resources\CatalogSelectiveSubjectEditResource;
 use App\Http\Resources\CatalogSelectiveSubjectShowResource;
@@ -199,5 +199,25 @@ class CatalogSelectiveSubjectController extends Controller
         $catalogSelectiveSubject->delete();
 
         return $this->success(__('messages.Deleted'), 200);
+    }
+
+    public function verification(StoreSubjectVerificationRequest $request,  CatalogSelectiveSubject $catalogSelectiveSubject)
+    {
+        $validated = $request->validated();
+
+        $catalogSelectiveSubject->verifications()->updateOrCreate(
+            [
+                'id' => isset($validated['id']) ? $validated['id'] : null,
+                'verification_status_id' => $validated['verification_status_id'],
+                'subject_id' => $validated['subject_id']
+            ],
+            [
+                'status' => $validated['status'],
+                'comment' => isset($validated['comment']) ? $validated['comment'] : null,
+                'user_id' => $validated['user_id'],
+            ]
+        );
+
+        return $this->success(__('messages.Updated'), 200);
     }
 }

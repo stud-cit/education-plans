@@ -31,7 +31,8 @@ use App\Http\Controllers\{
     SubjectLanguageController,
     UserActivityController,
     CatalogSubjectController,
-    CatalogSelectiveSubjectController
+    CatalogSelectiveSubjectController,
+    SubjectVerificationController
 };
 
 /*
@@ -118,6 +119,9 @@ Route::prefix('v1')->group(function () {
         Route::get('catalog-subjects/catalog-titles', [CatalogSubjectController::class, 'getCatalogs']);
         Route::get('/catalog-subjects/generate-pdf', [CatalogSubjectController::class, 'generateSubjectsPDF']);
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
+        Route::patch('/catalog-selective-subjects/verification/{catalog_selective_subject}', [
+            CatalogSelectiveSubjectController::class, 'verification'
+        ]);
         Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });
 });

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\VerificationStatuses;
+use App\Http\Resources\VerificationSubjectStatusesResource;
 
 class VerificationController extends Controller
 {
@@ -22,6 +22,6 @@ class VerificationController extends Controller
     {
         $statuses = VerificationStatuses::select('id', 'title')->where('type', 'subject')->get();
 
-        return response()->json(['data' => $statuses], 200);
+        return VerificationSubjectStatusesResource::collection($statuses);
     }
 }

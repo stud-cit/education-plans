@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Teacher;
 use App\Models\CatalogSubject;
+use Illuminate\Support\Facades\Auth;
 use App\Models\CatalogEducationLevel;
 use App\ExternalServices\Asu\Subjects;
 use App\Helpers\Filters\FilterBuilder;
@@ -16,6 +17,7 @@ class CatalogSelectiveSubject extends Model
     use HasFactory, HasAsuDivisionsNameTrait;
 
     protected $fillable = [
+        'id',
         'asu_id',
         'catalog_subject_id',
         'faculty_id',
@@ -120,7 +122,7 @@ class CatalogSelectiveSubject extends Model
 
     public function verifications()
     {
-        return $this->hasMany(SubjectVerification::class, 'catalog_selective_subject_id', 'id');
+        return $this->hasMany(SubjectVerification::class, 'subject_id', 'id');
     }
 
     public function lecturers()
@@ -177,7 +179,6 @@ class CatalogSelectiveSubject extends Model
         return $this->catalog()->where('selective_discipline_id', 3);
     }
 
-
     public function scopePublished($query)
     {
         $query->where('published', 1);
@@ -194,7 +195,7 @@ class CatalogSelectiveSubject extends Model
     protected static function booted()
     {
         static::saving(function ($catalog) {
-            $catalog->user_id = 1; // Auth::id(); TODO: FIX IT
+            $catalog->user_id = Auth::id();
         });
     }
 }
