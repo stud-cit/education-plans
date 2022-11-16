@@ -27,7 +27,8 @@ class StoreUserRequest extends FormRequest
             'asu_id' => 'required|unique:users,asu_id',
             'faculty_id' => 'nullable|numeric',
             'department_id' => 'nullable|numeric',
-            'role_id' => 'required|numeric'
+            'role_id' => 'required|numeric',
+            'name' => 'required|string'
         ];
     }
     /**

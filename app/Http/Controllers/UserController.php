@@ -115,6 +115,8 @@ class UserController extends Controller
             return [
                 'asu_id' => $worker['asu_id'],
                 'full_name' => $worker['last_name'] . ' ' . $worker['first_name'] . ' ' . $worker['patronymic'],
+                'department_id' => $worker['department_id'],
+                'department' => $worker['department'],
                 'disabled' => $users->contains($worker['asu_id'])
             ];
         });
