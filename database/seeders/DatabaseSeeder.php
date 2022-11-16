@@ -41,8 +41,8 @@ class DatabaseSeeder extends Seeder
             CatalogGroupSeeder::class,
             CatalogSubjectSeeder::class,
             CatalogEducationLevelSeeder::class,
-            CatalogSelectiveSubjectSeed::class,
-            LanguageSubjectSeed::class,
+            // CatalogSelectiveSubjectSeed::class,
+            // LanguageSubjectSeed::class,
             SubjectVerificationStatusesSeeder::class
         ]);
     }
