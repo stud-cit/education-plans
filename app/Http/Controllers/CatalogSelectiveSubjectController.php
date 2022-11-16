@@ -145,10 +145,13 @@ class CatalogSelectiveSubjectController extends Controller
             'languages',
             'lecturers',
             'practice',
-            'educationLevel'
+            'educationLevel',
+            'verifications'
         ]);
 
         $model->update($validated);
+
+        $model->verifications()->delete();
 
         $model->languages()->whereNotIn('id', $this->getIds($validated['language']))->delete();
 
@@ -196,6 +199,7 @@ class CatalogSelectiveSubjectController extends Controller
     {
         $catalogSelectiveSubject->languages()->delete();
         $catalogSelectiveSubject->teachers()->delete();
+        $catalogSelectiveSubject->verifications()->delete();
         $catalogSelectiveSubject->delete();
 
         return $this->success(__('messages.Deleted'), 200);
