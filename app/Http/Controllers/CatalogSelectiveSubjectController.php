@@ -33,7 +33,9 @@ class CatalogSelectiveSubjectController extends Controller
 
         $catalog = CatalogSelectiveSubject
             ::with(['selectiveCatalog.group'])
-            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id')
+            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published')
+            // я бачу всі опубліковані та свої не опубліковані
+            // like a plans
             ->filterBy($validated)
             ->paginate($perPage);
 

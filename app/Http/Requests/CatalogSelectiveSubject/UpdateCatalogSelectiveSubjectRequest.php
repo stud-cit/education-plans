@@ -46,7 +46,8 @@ class UpdateCatalogSelectiveSubjectRequest extends FormRequest
             'entry_requirements_applicants' => 'required|string|max:255',
             'types_educational_activities' => 'required|string|max:255',
             'number_acquirers' => 'required|max:255',
-            'limitation' => 'required|json' // json
+            'limitation' => 'required|json',
+            'published' => 'nullable|boolean'
         ];
     }
 
