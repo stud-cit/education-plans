@@ -24,9 +24,13 @@ class SubjectVerificationStatusesSeeder extends Seeder
                 'type' => 'subject'
             ],
             [
-                'title' => 'Навчально-методичний відділ',
+                'title' => 'Заступник НМВ',
                 'type' => 'subject'
             ],
+            [
+                'title' => 'Начальник НМВ',
+                'type' => 'subject'
+            ]
         ]);
     }
 }
