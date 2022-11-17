@@ -63,6 +63,7 @@ class Plan extends Model
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
+        'published' => 'boolean'
     ];
 
     public function getStatusAttribute()
