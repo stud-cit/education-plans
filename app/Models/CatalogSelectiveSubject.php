@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Teacher;
 use App\Models\CatalogSubject;
+use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CatalogEducationLevel;
 use App\ExternalServices\Asu\Subjects;
@@ -38,6 +39,31 @@ class CatalogSelectiveSubject extends Model
     protected $casts = [
         'published' => 'boolean'
     ];
+
+    public function getStatusAttribute()
+    {
+        $fullVerification = VerificationStatuses::fullSubjectVerification();
+
+        $data = array_column($this->verifications->toArray(), 'status');
+
+        if (count($this->filterStatus($data, 1)) === $fullVerification) {
+            $result = 'success';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
+            $result = 'warning';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
+            $result = 'error';
+        } else {
+            $result = '';
+        }
+        return $result;
+    }
+
+    private function filterStatus($data, $id)
+    {
+        return array_filter($data, function ($val) use ($id) {
+            return $val === $id;
+        });
+    }
 
     public function getSubjectNameAttribute()
     {
@@ -181,7 +207,7 @@ class CatalogSelectiveSubject extends Model
 
     public function scopePublished($query)
     {
-        $query->where('published', 1);
+        return $query->where('published', 1);
     }
 
     public function scopeFilterBy($query, $filters)
