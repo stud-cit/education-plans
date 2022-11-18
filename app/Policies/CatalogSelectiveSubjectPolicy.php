@@ -53,7 +53,9 @@ class CatalogSelectiveSubjectPolicy
      */
     public function update(User $user, CatalogSelectiveSubject $catalogSelectiveSubject)
     {
-        return $user->id === $catalogSelectiveSubject->user_id || $user->possibility(User::PRIVILEGED_ROLES);
+        return $user->id === $catalogSelectiveSubject->user_id
+            && $catalogSelectiveSubject->need_verification === false
+            || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -65,7 +67,9 @@ class CatalogSelectiveSubjectPolicy
      */
     public function delete(User $user, CatalogSelectiveSubject $catalogSelectiveSubject)
     {
-        return $user->id === $catalogSelectiveSubject->user_id || $user->possibility(User::PRIVILEGED_ROLES);
+        return $user->id === $catalogSelectiveSubject->user_id
+            && $catalogSelectiveSubject->need_verification === false
+            || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
