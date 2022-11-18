@@ -122,6 +122,9 @@ Route::prefix('v1')->group(function () {
         Route::patch('/catalog-selective-subjects/verification/{catalog_selective_subject}', [
             CatalogSelectiveSubjectController::class, 'verification'
         ]);
+        Route::patch('/catalog-selective-subjects/toggle-to-verification/{catalog_selective_subject}', [
+            CatalogSelectiveSubjectController::class, 'toggleToVerification'
+        ]);
         Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });
 });
