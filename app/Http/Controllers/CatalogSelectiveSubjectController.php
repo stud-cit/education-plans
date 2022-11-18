@@ -37,9 +37,8 @@ class CatalogSelectiveSubjectController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $catalog = CatalogSelectiveSubject
-            ::with(['selectiveCatalog.group'])
-            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published', 'user_id')
+        $catalog = CatalogSelectiveSubject::with(['selectiveCatalog.group'])
+            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published', 'user_id', 'need_verification')
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->paginate($perPage);
