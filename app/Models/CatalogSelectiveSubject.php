@@ -11,6 +11,7 @@ use App\ExternalServices\Asu\Subjects;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
+use App\Policies\CatalogSelectiveSubjectPolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSelectiveSubject extends Model
@@ -232,6 +233,18 @@ class CatalogSelectiveSubject extends Model
             default:
                 return $query;
         }
+    }
+
+    public function actions()
+    {
+        $policy = new CatalogSelectiveSubjectPolicy();
+        $user = Auth::user();
+
+        return [
+            'preview' => $policy->viewAny($user),
+            'edit' => $policy->update($user, $this),
+            'delete' => $policy->delete($user, $this),
+        ];
     }
 
 

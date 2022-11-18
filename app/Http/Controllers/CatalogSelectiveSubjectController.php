@@ -22,6 +22,10 @@ use Illuminate\Support\Facades\Auth;
 
 class CatalogSelectiveSubjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(CatalogSelectiveSubject::class);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -233,6 +237,7 @@ class CatalogSelectiveSubjectController extends Controller
         $validated = $request->validated();
 
         $catalogSelectiveSubject->need_verification = $validated['need_verification'];
+        $catalogSelectiveSubject->published = true;
         $catalogSelectiveSubject->update();
 
         return $this->success(__('messages.Updated'), 200);
