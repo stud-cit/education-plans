@@ -37,7 +37,8 @@ class CatalogSelectiveSubject extends Model
         'published'
     ];
     protected $casts = [
-        'published' => 'boolean'
+        'published' => 'boolean',
+        'need_verification' => 'boolean'
     ];
 
     public function getStatusAttribute()
@@ -209,6 +210,25 @@ class CatalogSelectiveSubject extends Model
     {
         return $query->where('published', 1);
     }
+
+    public function scopeOfUserType($query, $type)
+    {
+        switch ($type) {
+
+            case User::FACULTY_INSTITUTE:
+                return $query->where('faculty_id', Auth::user()->faculty_id)->published();
+
+            case User::DEPARTMENT:
+                return $query->published()
+                    ->orWhere(function ($query) {
+                        $query->where('user_id', Auth::id())->where('published', false);
+                    });
+
+            default:
+                return $query->published();
+        }
+    }
+
 
     public function scopeFilterBy($query, $filters)
     {

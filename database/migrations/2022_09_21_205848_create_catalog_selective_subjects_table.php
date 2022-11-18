@@ -34,6 +34,7 @@ class CreateCatalogSelectiveSubjectsTable extends Migration
             $table->string('entry_requirements_applicants'); // 12
             $table->json('limitation'); // 13
             $table->boolean('published')->default(false);
+            $table->boolean('need_verification')->default(false);
             $table->timestamps();
         });
     }

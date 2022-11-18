@@ -13,10 +13,12 @@ use App\Http\Requests\CatalogSelectiveSubject\{
     UpdateCatalogSelectiveSubjectRequest,
     StoreCatalogSelectiveSubjectRequest,
     StoreSubjectVerificationRequest,
+    ToggleSubjectVerificationRequest,
 };
 use App\Http\Resources\CatalogSelectiveSubjectEditResource;
 use App\Http\Resources\CatalogSelectiveSubjectShowResource;
 use App\Models\Teacher;
+use Illuminate\Support\Facades\Auth;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -33,9 +35,8 @@ class CatalogSelectiveSubjectController extends Controller
 
         $catalog = CatalogSelectiveSubject
             ::with(['selectiveCatalog.group'])
-            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published')
-            // я бачу всі опубліковані та свої не опубліковані
-            // like a plans
+            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published', 'user_id')
+            ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->paginate($perPage);
 
@@ -223,6 +224,16 @@ class CatalogSelectiveSubjectController extends Controller
                 'user_id' => $validated['user_id'],
             ]
         );
+
+        return $this->success(__('messages.Updated'), 200);
+    }
+
+    public function toggleToVerification(ToggleSubjectVerificationRequest $request, CatalogSelectiveSubject $catalogSelectiveSubject)
+    {
+        $validated = $request->validated();
+
+        $catalogSelectiveSubject->need_verification = $validated['need_verification'];
+        $catalogSelectiveSubject->update();
 
         return $this->success(__('messages.Updated'), 200);
     }
