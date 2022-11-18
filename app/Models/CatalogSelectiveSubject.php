@@ -214,6 +214,11 @@ class CatalogSelectiveSubject extends Model
     public function scopeOfUserType($query, $type)
     {
         switch ($type) {
+            case User::TRAINING_DEPARTMENT:
+            case User::PRACTICE_DEPARTMENT:
+            case User::EDUCATIONAL_DEPARTMENT_DEPUTY:
+            case User::EDUCATIONAL_DEPARTMENT_CHIEF:
+                return $query->published();
 
             case User::FACULTY_INSTITUTE:
                 return $query->where('faculty_id', Auth::user()->faculty_id)->published();
@@ -225,7 +230,7 @@ class CatalogSelectiveSubject extends Model
                     });
 
             default:
-                return $query->published();
+                return $query;
         }
     }
 
