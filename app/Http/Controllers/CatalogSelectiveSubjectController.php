@@ -19,6 +19,7 @@ use App\Http\Resources\CatalogSelectiveSubjectEditResource;
 use App\Http\Resources\CatalogSelectiveSubjectShowResource;
 use App\Models\Teacher;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -233,6 +234,11 @@ class CatalogSelectiveSubjectController extends Controller
 
     public function toggleToVerification(ToggleSubjectVerificationRequest $request, CatalogSelectiveSubject $catalogSelectiveSubject)
     {
+
+        if (!Gate::allows('toggle-need-verification', $catalogSelectiveSubject)) {
+            abort(403);
+        }
+
         $validated = $request->validated();
 
         $catalogSelectiveSubject->need_verification = $validated['need_verification'];

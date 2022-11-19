@@ -79,7 +79,7 @@ Route::prefix('v1')->group(function () {
         Route::get('faculty-by-worker', [UserController::class, 'getFacultyByWorker'])->name('users.faculty.worker');
         Route::apiResource('users', UserController::class);
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
-        Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage_study_terms');
+        Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage-study-terms');
         Route::apiResource('settings', SettingController::class);
         Route::apiResource('positions', PositionController::class);
         Route::apiResource('signatures', SignatureController::class)
@@ -113,7 +113,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('catalog-helper-types', CatalogHelperTypeController::class)->only('index');
 
         Route::get('catalog-groups/list', [CatalogGroupController::class, 'list']);
-        Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore_catalog_group');
+        Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore-catalog-group');
         Route::apiResource('catalog-groups', CatalogGroupController::class);
         Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);
         Route::get('catalog-subjects/catalog-titles', [CatalogSubjectController::class, 'getCatalogs']);

@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use App\Models\CatalogSelectiveSubject;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -27,15 +27,24 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage_study_terms', fn (User $user) => $user->possibility(User::PRIVILEGED_ROLES));
+        Gate::define('manage-study-terms', fn (User $user) => $user->possibility(User::PRIVILEGED_ROLES));
 
-        // TODO: NEED TO CHECK DEPARTMENT FACULTY
         Gate::define('copy-plan', function (User $user) {
             return in_array($user->role_id, User::ALL_ROLES);
         });
 
-        Gate::define('restore_catalog_group', function (User $user) {
+        Gate::define('restore-catalog-group', function (User $user) {
             return $user->possibility(User::PRIVILEGED_ROLES);
         });
+
+        Gate::define(
+            'toggle-need-verification',
+            function (User $user, CatalogSelectiveSubject $catalogSelectiveSubject) {
+
+                return $user->id === $catalogSelectiveSubject->user_id
+                    && $catalogSelectiveSubject->need_verification === false
+                    || $user->possibility(User::PRIVILEGED_ROLES);
+            }
+        );
     }
 }
