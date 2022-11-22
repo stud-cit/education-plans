@@ -29,7 +29,7 @@ class StoreSubjectVerificationRequest extends FormRequest
             'user_id' => 'required|exists:App\Models\User,id',
             'subject_id' => 'required|exists:App\Models\CatalogSelectiveSubject,id',
             'status' => 'required',
-            'comment' => 'nullable|string|max:255'
+            'comment' => 'nullable|required_if:status,false|string|max:255'
         ];
     }
 }

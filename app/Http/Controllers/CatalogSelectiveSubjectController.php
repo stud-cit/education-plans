@@ -18,6 +18,7 @@ use App\Http\Requests\CatalogSelectiveSubject\{
 use App\Http\Resources\CatalogSelectiveSubjectEditResource;
 use App\Http\Resources\CatalogSelectiveSubjectShowResource;
 use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -89,6 +90,8 @@ class CatalogSelectiveSubjectController extends Controller
     public function store(StoreCatalogSelectiveSubjectRequest $request)
     {
         $validated = $request->validated();
+
+        // $validated['user_id'] = Auth::id();
 
         $subject = CatalogSelectiveSubject::create($validated);
 
@@ -214,11 +217,27 @@ class CatalogSelectiveSubjectController extends Controller
 
     public function verification(StoreSubjectVerificationRequest $request,  CatalogSelectiveSubject $catalogSelectiveSubject)
     {
+
+        if (!Gate::allows('can-verification', $catalogSelectiveSubject)) {
+            abort(403);
+        }
+
         $validated = $request->validated();
+
+        if (array_key_exists('comment', $validated)) {
+            if ($validated['comment'] !== null) {
+                $catalogSelectiveSubject->need_verification = false;
+                $catalogSelectiveSubject->update();
+            }
+        }
+
+        if (Auth::user()->role_id === User::ADMIN) {
+            $catalogSelectiveSubject->need_verification = true;
+            $catalogSelectiveSubject->update();
+        }
 
         $catalogSelectiveSubject->verifications()->updateOrCreate(
             [
-                'id' => isset($validated['id']) ? $validated['id'] : null,
                 'verification_status_id' => $validated['verification_status_id'],
                 'subject_id' => $validated['subject_id']
             ],
@@ -243,6 +262,7 @@ class CatalogSelectiveSubjectController extends Controller
 
         $catalogSelectiveSubject->need_verification = $validated['need_verification'];
         $catalogSelectiveSubject->published = true;
+
         $catalogSelectiveSubject->update();
 
         return $this->success(__('messages.Updated'), 200);

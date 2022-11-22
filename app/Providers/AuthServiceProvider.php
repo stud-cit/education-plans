@@ -46,5 +46,17 @@ class AuthServiceProvider extends ServiceProvider
                     || $user->possibility(User::PRIVILEGED_ROLES);
             }
         );
+
+        Gate::define(
+            'can-verification',
+            function (User $user, CatalogSelectiveSubject $catalogSelectiveSubject) {
+                return $user->role_id === User::TRAINING_DEPARTMENT && $catalogSelectiveSubject->need_verification === true
+                    || $user->role_id === User::EDUCATIONAL_DEPARTMENT_DEPUTY && $catalogSelectiveSubject->need_verification === true
+                    || $user->role_id === User::EDUCATIONAL_DEPARTMENT_CHIEF && $catalogSelectiveSubject->need_verification === true
+                    || $user->faculty_id === $catalogSelectiveSubject->faculty_id
+                    && $catalogSelectiveSubject->need_verification === true
+                    || $user->possibility(User::PRIVILEGED_ROLES);
+            }
+        );
     }
 }

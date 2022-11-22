@@ -21,7 +21,7 @@ class CreateSubjectsVerificationsTable extends Migration
             $table->boolean('status');
             $table->text('comment')->nullable(true);
             $table->timestamps();
-            $table->unique('verification_status_id', 'subject_id');
+            $table->unique(['verification_status_id', 'subject_id']);
         });
     }
 

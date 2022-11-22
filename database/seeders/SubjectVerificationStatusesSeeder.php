@@ -17,19 +17,23 @@ class SubjectVerificationStatusesSeeder extends Seeder
         DB::table('verification_statuses')->Insert([
             [
                 'title' => 'Інститут/факультет',
-                'type' => 'subject'
+                'type' => 'subject',
+                'role_id' => 6,
             ],
             [
                 'title' => 'Навчальний відділ',
-                'type' => 'subject'
+                'type' => 'subject',
+                'role_id' => 2,
             ],
             [
                 'title' => 'Заступник НМВ',
-                'type' => 'subject'
+                'type' => 'subject',
+                'role_id' => 4,
             ],
             [
                 'title' => 'Начальник НМВ',
-                'type' => 'subject'
+                'type' => 'subject',
+                'role_id' => 5,
             ]
         ]);
     }

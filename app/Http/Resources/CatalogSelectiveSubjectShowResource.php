@@ -38,7 +38,8 @@ class CatalogSelectiveSubjectShowResource extends JsonResource
             'limitation' => $this->limitationName,
             'verifications' => $this->verifications,
             'status' => $this->status,
-            'need_verification' => $this->need_verification
+            'need_verification' => $this->need_verification,
+            'user_id' => $this->user_id,
         ];
     }
 

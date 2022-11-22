@@ -20,7 +20,7 @@ class VerificationController extends Controller
 
     public function getVerificationSubjectStatuses()
     {
-        $statuses = VerificationStatuses::select('id', 'title')->where('type', 'subject')->get();
+        $statuses = VerificationStatuses::select('id', 'title', 'role_id')->where('type', 'subject')->get();
 
         return VerificationSubjectStatusesResource::collection($statuses);
     }

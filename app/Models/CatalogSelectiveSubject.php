@@ -35,7 +35,8 @@ class CatalogSelectiveSubject extends Model
         'number_acquirers',
         'entry_requirements_applicants',
         'limitation',
-        'published'
+        'published',
+        'need_verification'
     ];
     protected $casts = [
         'published' => 'boolean',
@@ -219,10 +220,8 @@ class CatalogSelectiveSubject extends Model
             case User::PRACTICE_DEPARTMENT:
             case User::EDUCATIONAL_DEPARTMENT_DEPUTY:
             case User::EDUCATIONAL_DEPARTMENT_CHIEF:
-                return $query->published();
-
             case User::FACULTY_INSTITUTE:
-                return $query->where('faculty_id', Auth::user()->faculty_id)->published();
+                return $query->published();
 
             case User::DEPARTMENT:
                 return $query->published()
@@ -258,7 +257,7 @@ class CatalogSelectiveSubject extends Model
 
     protected static function booted()
     {
-        static::saving(function ($catalog) {
+        static::creating(function ($catalog) {
             $catalog->user_id = Auth::id();
         });
     }
