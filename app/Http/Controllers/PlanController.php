@@ -196,7 +196,7 @@ class PlanController extends Controller
         $plan->update($validated);
 
         $user = Auth::user();
-        if($user->role_id == 6 || $user->role_id == 7) {
+        if ($user->role_id == User::FACULTY_INSTITUTE || $user->role_id == User::DEPARTMENT) {
             PlanVerification::where("plan_id", $plan->id)->delete();
         }
 
@@ -453,7 +453,7 @@ class PlanController extends Controller
         $asu = new Department();
         $user = Auth::user();
 
-        $divisions = $modelVerificationStatuses::select('id', 'title')->where('id', '!=', $modelVerificationStatuses::OP)->get();
+        $divisions = $modelVerificationStatuses::select('id', 'title')->where('id', '!=', $modelVerificationStatuses::OP)->where('type', 'plan')->get();
         $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
         $faculties = $asu->getFaculties()->when(
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
