@@ -2,25 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Teacher;
 use App\Helpers\Helpers;
 use App\Models\SubjectHelper;
-use App\Models\CatalogEducationLevel;
-use App\Models\CatalogSelectiveSubject;
-use App\Http\Controllers\SubjectLanguageController;
-use App\Http\Resources\CatalogSelectiveSubjectResource;
-use App\Http\Requests\CatalogSelectiveSubject\{
-    IndexCatalogSelectiveSubjectRequest,
-    UpdateCatalogSelectiveSubjectRequest,
-    StoreCatalogSelectiveSubjectRequest,
-    StoreSubjectVerificationRequest,
-    ToggleSubjectVerificationRequest,
-};
-use App\Http\Resources\CatalogSelectiveSubjectEditResource;
-use App\Http\Resources\CatalogSelectiveSubjectShowResource;
-use App\Models\Teacher;
-use App\Models\User;
+use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Models\CatalogEducationLevel;
+use App\Models\CatalogSelectiveSubject;
+use App\ExternalServices\Asu\Department;
+use App\Http\Resources\FacultiesResource;
+use App\Http\Resources\ProfessionsResource;
+use App\Http\Controllers\SubjectLanguageController;
+use App\Http\Resources\CatalogSelectiveSubjectResource;
+use App\Http\Resources\CatalogSelectiveSubjectEditResource;
+use App\Http\Resources\CatalogSelectiveSubjectShowResource;
+use App\Http\Requests\CatalogSelectiveSubject\StoreSubjectVerificationRequest;
+use App\Http\Requests\CatalogSelectiveSubject\ToggleSubjectVerificationRequest;
+use App\Http\Requests\CatalogSelectiveSubject\IndexCatalogSelectiveSubjectRequest;
+use App\Http\Requests\CatalogSelectiveSubject\StoreCatalogSelectiveSubjectRequest;
+use App\Http\Requests\CatalogSelectiveSubject\UpdateCatalogSelectiveSubjectRequest;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -266,5 +268,26 @@ class CatalogSelectiveSubjectController extends Controller
         $catalogSelectiveSubject->update();
 
         return $this->success(__('messages.Updated'), 200);
+    }
+
+    public function getItemsFilters()
+    {
+        $modelVerificationStatuses = new VerificationStatuses;
+        $asu = new Department();
+        $user = Auth::user();
+
+        $divisions = VerificationStatuses::select('id', 'title')->where('type', 'subject')->get();
+        clock($divisions->toArray());
+        $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
+        $faculties = $asu->getFaculties()->when(
+            $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
+            fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
+        );
+
+        return response([
+            'divisions' => ProfessionsResource::collection($divisions),
+            'verificationsStatus' => $verificationsStatus,
+            'faculties' => FacultiesResource::collection($faculties)
+        ]);
     }
 }

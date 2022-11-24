@@ -115,16 +115,19 @@ Route::prefix('v1')->group(function () {
         Route::get('catalog-groups/list', [CatalogGroupController::class, 'list']);
         Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore-catalog-group');
         Route::apiResource('catalog-groups', CatalogGroupController::class);
+
         Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);
         Route::get('catalog-subjects/catalog-titles', [CatalogSubjectController::class, 'getCatalogs']);
         Route::get('/catalog-subjects/generate-pdf', [CatalogSubjectController::class, 'generateSubjectsPDF']);
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
+
         Route::patch('/catalog-selective-subjects/verification/{catalog_selective_subject}', [
             CatalogSelectiveSubjectController::class, 'verification'
         ]);
         Route::patch('/catalog-selective-subjects/toggle-to-verification/{catalog_selective_subject}', [
             CatalogSelectiveSubjectController::class, 'toggleToVerification'
         ]);
+        Route::get('catalog-selective-subjects/filters', [CatalogSelectiveSubjectController::class, 'getItemsFilters']);
         Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
     });
 });
