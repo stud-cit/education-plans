@@ -68,7 +68,7 @@ class PlanController extends Controller
             'published',
             'created_at',
             'need_verification'
-        )
+        )->with(['verification.role'])
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
@@ -298,7 +298,7 @@ class PlanController extends Controller
         $plan->verification()->updateOrCreate(
             [
                 "plan_id" => $plan->id,
-                'verification_statuses_id' => $validated['verification_statuses_id']
+                'verification_statuses_id' => $validated['verification_status_id']
             ],
             [
                 'user_id' => $validated['user_id'],

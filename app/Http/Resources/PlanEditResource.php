@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\SemestersCredits;
-use App\Models\HoursModules;
 use App\Models\Subject;
+use App\Models\HoursModules;
+use App\Models\SemestersCredits;
+use App\Http\Resources\VerificationPlanResource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanEditResource extends JsonResource
 {
@@ -45,7 +46,7 @@ class PlanEditResource extends JsonResource
             'hours_weeks_semesters' => $this->hours_weeks_semesters ?
                 json_decode($this->hours_weeks_semesters) : null,
             'created_at' => $this->created_at,
-            'verification' => $this->verification,
+            'verification' => VerificationPlanResource::collection($this->verification),
             'published' => $this->published,
             'schedule_education_process' => $this->schedule_education_process ?
                 json_decode($this->schedule_education_process) : null,
@@ -65,79 +66,85 @@ class PlanEditResource extends JsonResource
         ];
     }
 
-    function getSumSemestersHours() {
-      $planId = $this->id;
-      $result = [];
-      $semestersWithHours = HoursModules::select('semester', 'hour', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
-        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-          $queryCycle->where('plan_id', $planId);
-        });
-      })->get();
-      foreach ($semestersWithHours as $value) {
-        if(isset($result[$value['semester']])) {
-          $result[$value['semester']] += $value['hour'];
-        } else {
-          $result += [$value['semester'] => $value['hour']];
+    function getSumSemestersHours()
+    {
+        $planId = $this->id;
+        $result = [];
+        $semestersWithHours = HoursModules::select('semester', 'hour', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            });
+        })->get();
+        foreach ($semestersWithHours as $value) {
+            if (isset($result[$value['semester']])) {
+                $result[$value['semester']] += $value['hour'];
+            } else {
+                $result += [$value['semester'] => $value['hour']];
+            }
         }
-      }
-      return $result;
+        return $result;
     }
 
-    function getSumSemestersCredits() {
-      $planId = $this->id;
-      $result = [];
-      $semestersWithCredits = SemestersCredits::select('semester', 'credit', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
-        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-          $queryCycle->where('plan_id', $planId);
-        });
-      })->get();
-      foreach ($semestersWithCredits as $value) {
-        if(isset($result[$value['semester']])) {
-          $result[$value['semester']] += $value['credit'];
-        } else {
-          $result += [$value['semester'] => $value['credit']];
+    function getSumSemestersCredits()
+    {
+        $planId = $this->id;
+        $result = [];
+        $semestersWithCredits = SemestersCredits::select('semester', 'credit', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            });
+        })->get();
+        foreach ($semestersWithCredits as $value) {
+            if (isset($result[$value['semester']])) {
+                $result[$value['semester']] += $value['credit'];
+            } else {
+                $result += [$value['semester'] => $value['credit']];
+            }
         }
-      }
-      return $result;
+        return $result;
     }
 
-    function getCountExams() {
-      $result = [];
-      for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-        $result[$i+1] = 0;
-      }
-      for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-        $result[$i+1] += $this->getCountWorks(['form_control_id' => 1], $i + 1);
-      }
-      return $result;
-    }
-
-    function getCountCoursework() {
-      $result = [];
-      for ($i=0; $i < $this->studyTerm->semesters; $i++) {
-        if($this->form_organization_id == 1) {
-          array_push($result, '');
+    function getCountExams()
+    {
+        $result = [];
+        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            $result[$i + 1] = 0;
         }
-        array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
-      }
-      return $result;
+        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            $result[$i + 1] += $this->getCountWorks(['form_control_id' => 1], $i + 1);
+        }
+        return $result;
     }
 
-    function getCountWorks($work, $semester) {
-      $planId = $this->id;
-      $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
-        $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-          $queryCycle->where('plan_id', $planId);
-        });
-      })->where($work)->where('semester', $semester)->count();
-      return $count;
+    function getCountCoursework()
+    {
+        $result = [];
+        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            if ($this->form_organization_id == 1) {
+                array_push($result, '');
+            }
+            array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
+        }
+        return $result;
     }
 
-    function getCountCreditsSelectiveDiscipline() {
-      $planId = $this->id;
-      $count = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-          $queryCycle->where('plan_id', $planId);
-      })->sum('credits');
-      return intval($count);
+    function getCountWorks($work, $semester)
+    {
+        $planId = $this->id;
+        $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            });
+        })->where($work)->where('semester', $semester)->count();
+        return $count;
+    }
+
+    function getCountCreditsSelectiveDiscipline()
+    {
+        $planId = $this->id;
+        $count = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+            $queryCycle->where('plan_id', $planId);
+        })->sum('credits');
+        return intval($count);
     }
 }

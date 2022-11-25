@@ -24,7 +24,7 @@ class StorePlanVerificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'verification_statuses_id' => 'exists:App\Models\VerificationStatuses,id',
+            'verification_status_id' => 'exists:App\Models\VerificationStatuses,id',
             'user_id' => 'exists:App\Models\User,id',
             'plan_id' => 'exists:App\Models\Plan,id',
             'status' => 'required',
