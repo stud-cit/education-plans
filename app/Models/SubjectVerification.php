@@ -18,4 +18,9 @@ class SubjectVerification extends Model
         'status',
         'comment'
     ];
+
+    public function role()
+    {
+        return $this->hasOne(VerificationStatuses::class, 'id', 'verification_status_id');
+    }
 }

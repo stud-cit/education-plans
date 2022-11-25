@@ -22,7 +22,8 @@ class CatalogSelectiveSubjectResource extends JsonResource
             'department' => $this->departmentName,
             'group' => $this->selectiveCatalog->group->title,
             'status' => $this->status,
-            'user_verifications' => $this->verifications,
+            'user_verifications' => VerificationSubjectResource::collection($this->verifications),
+            'need_verification' => $this->need_verification,
             'published' => $this->published,
             'actions' => $this->actions(),
         ];
