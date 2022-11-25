@@ -36,5 +36,32 @@ class SubjectVerificationStatusesSeeder extends Seeder
                 'role_id' => 5,
             ]
         ]);
+
+        DB::table('verification_statuses')->upsert(
+            [
+                [
+                    'id' => 2,
+                    'title' => '',
+                    'role_id' => 2,
+                ],
+                [
+                    'id' => 3,
+                    'title' => '',
+                    'role_id' => 3,
+                ],
+                [
+                    'id' => 4,
+                    'title' => '',
+                    'role_id' => 4,
+                ],
+                [
+                    'id' => 5,
+                    'title' => '',
+                    'role_id' => 5,
+                ]
+            ],
+            ['id'],
+            ['role_id']
+        );
     }
 }
