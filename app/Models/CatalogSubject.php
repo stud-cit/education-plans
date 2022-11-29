@@ -28,12 +28,14 @@ class CatalogSubject extends Model
     ];
 
     // TODO: MOVE TO TRAIT?
-    public function getSpecializationIdNameAttribute()
+    public function getSpecialityIdNameAttribute()
     {
-        if (!$this->specialization_id) return null;
+        if (!$this->speciality_id) return null;
 
         $professions = new Profession();
-        return $professions->getTitle($this->specialization_id, 'title');
+
+        $code = $professions->getTitle($this->speciality_id, 'code');
+        return "{$code} {$professions->getTitle($this->speciality_id, 'title')}";
     }
 
     public function group()

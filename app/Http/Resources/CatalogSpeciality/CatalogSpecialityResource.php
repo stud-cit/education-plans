@@ -17,8 +17,8 @@ class CatalogSpecialityResource extends JsonResource
         return [
             'id' => $this->id,
             'year' => $this->year,
-            'specialization_id' => $this->specialization_id,
-            'specialization_name' => $this->specializationIdName,
+            'speciality_id' => $this->speciality_id,
+            'speciality_name' => $this->specialityIdName,
             'user_id' => $this->id,
         ];
     }
