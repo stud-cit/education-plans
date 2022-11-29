@@ -24,6 +24,12 @@ class CatalogSpecialityResource extends JsonResource
             'faculty_id' => $this->faculty_id,
             'faculty' => $this->facultyName,
             'user_id' => $this->id,
+            'actions' => [
+                'preview' => true,
+                'edit' => true,
+                'copy' => true,
+                'delete' => true,
+            ]
         ];
     }
 }
