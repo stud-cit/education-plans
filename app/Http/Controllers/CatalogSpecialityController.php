@@ -14,6 +14,7 @@ use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
+use App\Models\CatalogEducationLevel;
 
 class CatalogSpecialityController extends Controller
 {
@@ -140,7 +141,8 @@ class CatalogSpecialityController extends Controller
             'divisions' => ProfessionsResource::collection($divisions),
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties),
-            'years' => $years
+            'years' => $years,
+            'education_levels' => CatalogEducationLevel::select('id', 'title')->get(),
         ]);
     }
 }
