@@ -10,6 +10,10 @@ class CatalogSubject extends Model
 {
     use HasFactory;
 
+    const SUBJECT = 1;
+    const SPECIALIZATION = 2;
+    const EDUCATION_PROGRAM = 3;
+
     protected $fillable = [
         'year',
         'education_program_id',
@@ -34,7 +38,7 @@ class CatalogSubject extends Model
     protected static function booted()
     {
         static::saving(function ($catalog) {
-            $catalog->user_id = 1; // Auth::id();
+            $catalog->user_id = 1; // TODO: Auth::id();
         });
     }
 
