@@ -121,7 +121,8 @@ class CatalogSubjectController extends Controller
 
     public function getCatalogs()
     {
-        $catalogs = CatalogSubject::with('group')->select('id', 'year', 'group_id')->orderBy('year', 'desc')->get();
+        $catalogs = CatalogSubject::whereHas('group')->select('id', 'year', 'group_id')->orderBy('year', 'desc')->get();
+        clock($catalogs->toArray());
         return CatalogSubjectNameResource::collection($catalogs);
     }
 
