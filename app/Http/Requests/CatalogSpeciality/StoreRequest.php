@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\CatalogSpecialization;
+namespace App\Http\Requests\CatalogSpeciality;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -24,15 +24,17 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|date_format:Y|unique:catalog_subjects,year,specialization_id',
-            'specialization_id' => 'required',
+            'year' => 'required|date_format:Y|unique:catalog_subjects,year,speciality_id',
+            'speciality_id' => 'required',
+            'faculty_id' => 'required',
+            'department_id' => 'required'
         ];
     }
 
     public function messages()
     {
         return [
-            'year.unique' => 'Рік та спеціалізація вже існує.',
+            'year.unique' => 'Рік та спеціальністю вже існує.',
         ];
     }
 }

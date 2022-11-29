@@ -17,7 +17,7 @@ class CreateCatalogSubjectsTable extends Migration
             $table->id();
             $table->year('year');
             $table->unsignedInteger('education_program_id')->nullable(true);
-            $table->unsignedInteger('specialization_id')->nullable(true);
+            $table->unsignedInteger('speciality_id')->nullable(true);
             $table->unsignedInteger('faculty_id')->nullable(true);
             $table->unsignedInteger('department_id')->nullable(true);
             $table->foreignId('group_id')->nullable(true)->constrained('catalog_groups');

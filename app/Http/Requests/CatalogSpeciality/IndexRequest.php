@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\CatalogSpecialization;
+namespace App\Http\Requests\CatalogSpeciality;
 
 use Illuminate\Foundation\Http\FormRequest;
 

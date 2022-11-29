@@ -13,7 +13,7 @@ class CatalogSubject extends Model
     use HasFactory, HasAsuDivisionsNameTrait;
 
     const SUBJECT = 1;
-    const SPECIALIZATION = 2;
+    const SPECIALITY = 2;
     const EDUCATION_PROGRAM = 3;
 
     protected $fillable = [

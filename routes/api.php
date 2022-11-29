@@ -32,7 +32,7 @@ use App\Http\Controllers\{
     UserActivityController,
     CatalogSubjectController,
     CatalogSelectiveSubjectController,
-    SubjectVerificationController
+    CatalogSpecialityController,
 };
 
 /*
@@ -129,7 +129,7 @@ Route::prefix('v1')->group(function () {
         ]);
         Route::get('catalog-selective-subjects/filters', [CatalogSelectiveSubjectController::class, 'getItemsFilters']);
         Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
-
-        Route::Resource('catalog-specializations', CatalogSpecializationController::class);
     });
 });
+
+Route::Resource('catalog-specialties', CatalogSpecialityController::class);

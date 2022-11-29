@@ -17,7 +17,7 @@ class CatalogVerificationStatusSeeder extends Seeder
         DB::table('verification_statuses')->Insert([
             [
                 'title' => 'Інститут/факультет',
-                'type' => 'specialization',
+                'type' => 'speciality',
                 'role_id' => 6,
             ],
             [

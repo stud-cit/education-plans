@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\CatalogSpecialization;
+namespace App\Http\Resources\CatalogSpeciality;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CatalogSpecializationResource extends JsonResource
+class CatalogSpecialityResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

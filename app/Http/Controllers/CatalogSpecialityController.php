@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Models\CatalogSubject;
-use App\Http\Requests\CatalogSpecialization\IndexRequest;
-use App\Http\Requests\CatalogSpecialization\StoreRequest;
-use App\Http\Resources\CatalogSpecialization\CatalogSpecializationResource;
+use App\Http\Requests\CatalogSpeciality\IndexRequest;
+use App\Http\Requests\CatalogSpeciality\StoreRequest;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
 
-class CatalogSpecializationController extends Controller
+class CatalogSpecialityController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,9 +25,9 @@ class CatalogSpecializationController extends Controller
         $catalog = CatalogSubject
             ::select(['id', 'year', 'department_id', 'faculty_id', 'specialization_id', 'user_id'])
             ->filterBy($validated)
-            ->where('selective_discipline_id', CatalogSubject::SPECIALIZATION);
+            ->where('selective_discipline_id', CatalogSubject::SPECIALITY);
 
-        return CatalogSpecializationResource::collection($catalog->paginate($perPage));
+        return CatalogSpecialityResource::collection($catalog->paginate($perPage));
     }
 
     /**
@@ -49,7 +49,7 @@ class CatalogSpecializationController extends Controller
     public function store(StoreRequest $request)
     {
         $validated = $request->validated();
-        $validated['selective_discipline_id'] = CatalogSubject::SPECIALIZATION;
+        $validated['selective_discipline_id'] = CatalogSubject::SPECIALITY;
 
         CatalogSubject::create($validated);
         return $this->success(__('messages.Created'), 201);
