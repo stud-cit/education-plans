@@ -115,7 +115,7 @@ class CatalogSubjectController extends Controller
      */
     public function getYears()
     {
-        $years = CatalogSubject::select('year')->distinct()->orderBy('year', 'desc')->get();
+        $years = CatalogSubject::select('year')->where('group_id', '!=', null)->distinct()->orderBy('year', 'desc')->get();
         return CatalogSubjectYearsResource::collection($years);
     }
 
