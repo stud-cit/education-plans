@@ -18,6 +18,7 @@ class CatalogSpecialitySeed extends Seeder
             [
                 'year' => 2022,
                 'selective_discipline_id' => 2,
+                'catalog_education_level_id' => 1,
                 'speciality_id' => 580,
                 'department_id' => 325,
                 'faculty_id' => 414,
@@ -26,6 +27,7 @@ class CatalogSpecialitySeed extends Seeder
             [
                 'year' => 2022,
                 'selective_discipline_id' => 2,
+                'catalog_education_level_id' => 1,
                 'speciality_id' => 763,
                 'department_id' => 325,
                 'faculty_id' => 414,
@@ -34,6 +36,7 @@ class CatalogSpecialitySeed extends Seeder
             [
                 'year' => 2022,
                 'selective_discipline_id' => 2,
+                'catalog_education_level_id' => 1,
                 'speciality_id' => 1324,
                 'department_id' => 325,
                 'faculty_id' => 414,
@@ -42,6 +45,7 @@ class CatalogSpecialitySeed extends Seeder
             [
                 'year' => 2022,
                 'selective_discipline_id' => 2,
+                'catalog_education_level_id' => 1,
                 'speciality_id' => 1443,
                 'department_id' => 325,
                 'faculty_id' => 414,

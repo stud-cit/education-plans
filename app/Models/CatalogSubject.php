@@ -23,6 +23,7 @@ class CatalogSubject extends Model
         'faculty_id',
         'department_id',
         'selective_discipline_id',
+        'catalog_education_level_id',
         'group_id',
         'user_id',
     ];
@@ -36,6 +37,11 @@ class CatalogSubject extends Model
 
         $code = $professions->getTitle($this->speciality_id, 'code');
         return "{$code} {$professions->getTitle($this->speciality_id, 'title')}";
+    }
+
+    public function educationLevel()
+    {
+        return $this->belongsTo(CatalogEducationLevel::class, 'catalog_education_level_id');
     }
 
     public function group()

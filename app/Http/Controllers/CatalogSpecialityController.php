@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Models\CatalogSubject;
+use App\Models\VerificationStatuses;
+use Illuminate\Support\Facades\Auth;
+use App\ExternalServices\Asu\Department;
+use App\Http\Resources\FacultiesResource;
+use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
@@ -22,8 +28,16 @@ class CatalogSpecialityController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $catalog = CatalogSubject
-            ::select(['id', 'year', 'department_id', 'faculty_id', 'speciality_id', 'user_id'])
+        $catalog = CatalogSubject::with('educationLevel')
+            ->select([
+                'id',
+                'year',
+                'department_id',
+                'faculty_id',
+                'speciality_id',
+                'catalog_education_level_id',
+                'user_id'
+            ])
             ->filterBy($validated)
             ->where('selective_discipline_id', CatalogSubject::SPECIALITY);
 
@@ -98,5 +112,35 @@ class CatalogSpecialityController extends Controller
     public function destroy(CatalogSubject $catalogSubject)
     {
         //
+    }
+
+    public function getItemsFilters()
+    {
+        $modelVerificationStatuses = new VerificationStatuses;
+        $asuController = new AsuController;
+        $asu = new Department();
+        $user = Auth::user();
+        $years = CatalogSubject::select('year')
+            ->where('speciality_id', '!=', null)
+            ->distinct()->orderBy('year', 'desc')
+            ->get();
+        $divisions = VerificationStatuses::select('id', 'title')
+            ->where('type', 'speciality')
+            ->get();
+
+        $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
+
+        $faculties = $asu->getFaculties()->when(
+            $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
+            fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
+        );
+
+        return response([
+            'specialties' => $asuController->getAllSpecialities(),
+            'divisions' => ProfessionsResource::collection($divisions),
+            'verificationsStatus' => $verificationsStatus,
+            'faculties' => FacultiesResource::collection($faculties),
+            'years' => $years
+        ]);
     }
 }
