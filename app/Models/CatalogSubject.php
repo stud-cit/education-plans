@@ -4,11 +4,13 @@ namespace App\Models;
 
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
+use App\ExternalServices\Asu\Profession;
+use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSubject extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAsuDivisionsNameTrait;
 
     const SUBJECT = 1;
     const SPECIALIZATION = 2;
@@ -24,6 +26,15 @@ class CatalogSubject extends Model
         'group_id',
         'user_id',
     ];
+
+    // TODO: MOVE TO TRAIT?
+    public function getSpecializationIdNameAttribute()
+    {
+        if (!$this->specialization_id) return null;
+
+        $professions = new Profession();
+        return $professions->getTitle($this->specialization_id, 'title');
+    }
 
     public function group()
     {
