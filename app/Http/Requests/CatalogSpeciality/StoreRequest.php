@@ -27,7 +27,8 @@ class StoreRequest extends FormRequest
             'year' => 'required|date_format:Y|unique:catalog_subjects,year,speciality_id',
             'speciality_id' => 'required',
             'faculty_id' => 'required',
-            'department_id' => 'required'
+            'department_id' => 'required',
+            'catalog_education_level_id' => 'required|exists:App\Models\CatalogEducationLevel,id'
         ];
     }
 
