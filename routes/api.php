@@ -129,7 +129,6 @@ Route::prefix('v1')->group(function () {
         ]);
         Route::get('catalog-selective-subjects/filters', [CatalogSelectiveSubjectController::class, 'getItemsFilters']);
         Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
+        Route::Resource('catalog-specialties', CatalogSpecialityController::class);
     });
 });
-
-Route::Resource('catalog-specialties', CatalogSpecialityController::class);
