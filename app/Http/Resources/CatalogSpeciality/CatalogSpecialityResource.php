@@ -18,7 +18,11 @@ class CatalogSpecialityResource extends JsonResource
             'id' => $this->id,
             'year' => $this->year,
             'speciality_id' => $this->speciality_id,
-            'speciality_name' => $this->specialityIdName,
+            'speciality' => $this->specialityIdName,
+            'department_id' => $this->department_id,
+            'department' => $this->departmentName,
+            'faculty_id' => $this->faculty_id,
+            'faculty' => $this->facultyName,
             'user_id' => $this->id,
         ];
     }

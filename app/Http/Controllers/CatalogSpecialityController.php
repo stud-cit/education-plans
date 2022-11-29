@@ -23,7 +23,7 @@ class CatalogSpecialityController extends Controller
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
         $catalog = CatalogSubject
-            ::select(['id', 'year', 'department_id', 'faculty_id', 'specialization_id', 'user_id'])
+            ::select(['id', 'year', 'department_id', 'faculty_id', 'speciality_id', 'user_id'])
             ->filterBy($validated)
             ->where('selective_discipline_id', CatalogSubject::SPECIALITY);
 

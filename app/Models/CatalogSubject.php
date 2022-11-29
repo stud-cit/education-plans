@@ -19,7 +19,7 @@ class CatalogSubject extends Model
     protected $fillable = [
         'year',
         'education_program_id',
-        'specialization_id',
+        'speciality_id',
         'faculty_id',
         'department_id',
         'selective_discipline_id',
