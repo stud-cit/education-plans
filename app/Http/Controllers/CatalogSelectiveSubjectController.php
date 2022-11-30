@@ -175,25 +175,12 @@ class CatalogSelectiveSubjectController extends Controller
         }
 
         $model->lecturers()->whereNotIn('id', $this->getIds($validated['lecturers']))->delete();
-        $this->updateTeachers($validated['lecturers'], Teacher::LECTOR, $model);
+        $model->updateTeachers($validated['lecturers'], Teacher::LECTOR);
 
         $model->practice()->whereNotIn('id', $this->getIds($validated['practice']))->delete();
-        $this->updateTeachers($validated['practice'], Teacher::PRACTICE, $model);
+        $model->updateTeachers($validated['practice'], Teacher::PRACTICE);
 
         return $this->success(__('messages.Updated'));
-    }
-
-    protected function updateTeachers($records, $type, $model)
-    {
-        foreach ($records as $lecture) {
-            if (!array_key_exists('type', $lecture)) {
-                $lecture['type'] = $type;
-            }
-            if (array_key_exists('full_name', $lecture)) {
-                unset($lecture['full_name']);
-            }
-            $model->teachers()->updateOrCreate($lecture);
-        }
     }
 
     protected function getIds($records)

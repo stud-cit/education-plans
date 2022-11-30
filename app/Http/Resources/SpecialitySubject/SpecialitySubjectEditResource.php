@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\SpecialitySubject;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\SubjectLanguage\SubjectLanguageListShowResource;
 
-class CatalogSelectiveSubjectEditResource extends JsonResource
+class SpecialitySubjectEditResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -29,7 +29,6 @@ class CatalogSelectiveSubjectEditResource extends JsonResource
             'faculty_id' => $this->faculty_id,
             'department_id' => $this->department_id,
             'list_fields_knowledge' => json_decode($this->list_fields_knowledge),
-            'education_level' => $this->educationLevel->id,
             'general_competence' => $this->general_competence,
             'learning_outcomes' => $this->learning_outcomes,
             'entry_requirements_applicants' => $this->entry_requirements_applicants,

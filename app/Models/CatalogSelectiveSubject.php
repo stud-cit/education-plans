@@ -255,6 +255,19 @@ class CatalogSelectiveSubject extends Model
         return $filter->apply();
     }
 
+    public function updateTeachers($records, $type)
+    {
+        foreach ($records as $lecture) {
+            if (!array_key_exists('type', $lecture)) {
+                $lecture['type'] = $type;
+            }
+            if (array_key_exists('full_name', $lecture)) {
+                unset($lecture['full_name']);
+            }
+            $this->teachers()->updateOrCreate($lecture);
+        }
+    }
+
     protected static function booted()
     {
         static::creating(function ($catalog) {
