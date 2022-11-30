@@ -24,7 +24,7 @@ class CreateCatalogSubjectsTable extends Migration
             $table->foreignId('selective_discipline_id')->constrained();
             $table->year('year');
             $table->boolean('need_verification')->nullable(true);
-            $table->unique(['year', 'group_id']);
+            // $table->unique(['year', 'group_id']);
             $table->timestamps();
         });
     }
