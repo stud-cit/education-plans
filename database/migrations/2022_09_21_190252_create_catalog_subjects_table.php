@@ -15,14 +15,15 @@ class CreateCatalogSubjectsTable extends Migration
     {
         Schema::create('catalog_subjects', function (Blueprint $table) {
             $table->id();
-            $table->year('year');
+            $table->foreignId('group_id')->nullable(true)->constrained('catalog_groups');
+            $table->foreignId('user_id')->constrained();
             $table->unsignedInteger('education_program_id')->nullable(true);
             $table->unsignedInteger('speciality_id')->nullable(true);
             $table->unsignedInteger('faculty_id')->nullable(true);
             $table->unsignedInteger('department_id')->nullable(true);
-            $table->foreignId('group_id')->nullable(true)->constrained('catalog_groups');
             $table->foreignId('selective_discipline_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->year('year');
+            $table->boolean('need_verification')->nullable(true);
             $table->unique(['year', 'group_id']);
             $table->timestamps();
         });
