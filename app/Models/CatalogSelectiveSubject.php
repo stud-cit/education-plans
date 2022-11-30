@@ -38,6 +38,7 @@ class CatalogSelectiveSubject extends Model
         'published',
         'need_verification'
     ];
+
     protected $casts = [
         'published' => 'boolean',
         'need_verification' => 'boolean'
@@ -195,7 +196,7 @@ class CatalogSelectiveSubject extends Model
     /**
      * Get second catalog Вибіркові дисципліни за спеціальністю
      */
-    public function specializationCatalog()
+    public function specialtiesCatalog()
     {
         return $this->catalog()->where('selective_discipline_id', 2);
     }

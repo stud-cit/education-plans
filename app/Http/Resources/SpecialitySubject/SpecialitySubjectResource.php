@@ -17,7 +17,6 @@ class SpecialitySubjectResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'year' => $this->year,
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
             'published' => $this->published,

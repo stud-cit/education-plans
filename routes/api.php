@@ -134,6 +134,6 @@ Route::prefix('v1')->group(function () {
 
         Route::get('catalog-specialties/filters', [CatalogSpecialityController::class, 'getItemsFilters']);
         Route::Resource('catalog-specialties', CatalogSpecialityController::class);
+        Route::Resource('speciality-subjects', SpecialitySubjectController::class);
     });
 });
-Route::Resource('speciality-subjects', SpecialitySubjectController::class);
