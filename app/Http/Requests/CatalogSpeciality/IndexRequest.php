@@ -27,6 +27,7 @@ class IndexRequest extends FormRequest
             'year' => 'integer',
             'page' => 'integer',
             'items_per_page' => 'integer',
+            'speciality' => 'integer'
         ];
     }
 }
