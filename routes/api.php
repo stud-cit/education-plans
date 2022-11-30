@@ -33,6 +33,7 @@ use App\Http\Controllers\{
     CatalogSubjectController,
     CatalogSelectiveSubjectController,
     CatalogSpecialityController,
+    SpecialitySubjectController,
 };
 
 /*
@@ -135,3 +136,4 @@ Route::prefix('v1')->group(function () {
         Route::Resource('catalog-specialties', CatalogSpecialityController::class);
     });
 });
+Route::Resource('speciality-subjects', SpecialitySubjectController::class);
