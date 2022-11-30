@@ -90,6 +90,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('list-cycles', ListCycleController::class)->only('index');
 
         Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
+        Route::get('/departments', [AsuController::class, 'getDepartments']);
         Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
         Route::get('/specialities/{id}', [AsuController::class, 'getSpecialities'])->name('asu.specialities');
         Route::get('/specializations/{id}', [AsuController::class, 'getSpecializations'])->name('asu.specializations');
