@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Teacher;
 use App\Helpers\Helpers;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\CatalogSelectiveSubject;
+use App\Models\SpecialitySubject;
 use App\Http\Resources\SpecialitySubject\SpecialitySubjectResource;
 use App\Http\Requests\SpecialitySubject\IndexSpecialitySubjectRequest;
 use App\Http\Requests\SpecialitySubject\StoreSpecialitySubjectRequest;
@@ -27,7 +25,7 @@ class SpecialitySubjectController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $catalog = CatalogSelectiveSubject::select(
+        $catalog = SpecialitySubject::select(
             'id',
             'catalog_subject_id',
             'department_id',
@@ -63,7 +61,7 @@ class SpecialitySubjectController extends Controller
     {
         $validated = $request->validated();
 
-        $subject = CatalogSelectiveSubject::create($validated);
+        $subject = SpecialitySubject::create($validated);
 
         $subject->languages()->createMany($validated['language']);
 
@@ -76,12 +74,12 @@ class SpecialitySubjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CatalogSelectiveSubject  $catalogSelectiveSubject
+     * @param  \App\Models\SpecialitySubject  $specialitySubject
      * @return \Illuminate\Http\Response
      */
-    public function show(CatalogSelectiveSubject $catalogSelectiveSubject)
+    public function show(SpecialitySubject $specialitySubject)
     {
-        $modelWithRelations = $catalogSelectiveSubject->load([
+        $modelWithRelations = $specialitySubject->load([
             'languages.language',
             'lecturers',
             'practice',
@@ -93,12 +91,12 @@ class SpecialitySubjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\CatalogSelectiveSubject  $catalogSelectiveSubject
+     * @param  \App\Models\SpecialitySubject  $specialitySubject
      * @return \Illuminate\Http\Response
      */
-    public function edit(CatalogSelectiveSubject $catalogSelectiveSubject)
+    public function edit(SpecialitySubject $specialitySubject)
     {
-        $modelWithRelations = $catalogSelectiveSubject->load([
+        $modelWithRelations = $specialitySubject->load([
             'languages.language',
             'lecturers',
             'practice',
@@ -111,14 +109,14 @@ class SpecialitySubjectController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CatalogSelectiveSubject  $catalogSelectiveSubject
+     * @param  \App\Models\SpecialitySubject  $specialitySubject
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSpecialitySubjectRequest $request, CatalogSelectiveSubject $catalogSelectiveSubject)
+    public function update(UpdateSpecialitySubjectRequest $request, SpecialitySubject $specialitySubject)
     {
         $validated = $request->validated();
 
-        $model = $catalogSelectiveSubject->load([
+        $model = $specialitySubject->load([
             'languages',
             'lecturers',
             'practice',
@@ -155,11 +153,11 @@ class SpecialitySubjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CatalogSelectiveSubject $catalogSelectiveSubject)
+    public function destroy(SpecialitySubject $specialitySubject)
     {
-        $catalogSelectiveSubject->languages()->delete();
-        $catalogSelectiveSubject->teachers()->delete();
-        $catalogSelectiveSubject->delete();
+        $specialitySubject->languages()->delete();
+        $specialitySubject->teachers()->delete();
+        $specialitySubject->delete();
 
         return $this->success(__('messages.Deleted'), 200);
     }

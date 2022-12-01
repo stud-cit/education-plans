@@ -24,7 +24,6 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        clock($this->year, $this->speciality_id);
         return [
             'year' => [
                 'required', 'date_format:Y',
@@ -37,13 +36,6 @@ class StoreRequest extends FormRequest
             'faculty_id' => 'required',
             'department_id' => 'required',
             'catalog_education_level_id' => 'required|exists:App\Models\CatalogEducationLevel,id'
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'year.unique' => 'Рік та спеціальністю вже існує.',
         ];
     }
 }
