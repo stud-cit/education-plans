@@ -42,7 +42,9 @@ class SpecialitySubjectController extends Controller
         $catalog = CatalogSubject::findOrFail($validated['catalogSubject']);
 
         return SpecialitySubjectResource::collection($subject)->additional([
-            'catalog' => $catalog->specialityCatalogName,
+            'catalog' => [
+                'title' => $catalog->specialityCatalogName,
+            ],
         ]);
     }
 
