@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Catalog;
+use App\Traits\Catalog;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Builder;

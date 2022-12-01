@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Traits;
+namespace App\Traits;
 
 use App\Models\CatalogEducationLevel;
 use App\Helpers\Filters\FilterBuilder;

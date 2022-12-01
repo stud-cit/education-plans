@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\Subject;
+use App\Traits\Subject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;

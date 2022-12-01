@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CatalogEducationLevel;
-use App\Models\Traits\Subject;
+use App\Traits\Subject;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
 use App\Policies\CatalogSelectiveSubjectPolicy;
