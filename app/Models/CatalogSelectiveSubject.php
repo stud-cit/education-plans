@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Traits\Subject;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CatalogEducationLevel;
-use App\Traits\Subject;
+use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
 use App\Policies\CatalogSelectiveSubjectPolicy;
@@ -125,6 +126,14 @@ class CatalogSelectiveSubject extends Model
             'edit' => $policy->update($user, $this),
             'delete' => $policy->delete($user, $this),
         ];
+    }
+
+    public function scopeFilterBy($query, $filters)
+    {
+        $namespace = 'App\Helpers\Filters\CatalogSelectiveSubjectFilters';
+        $filter = new FilterBuilder($query, $filters, $namespace);
+
+        return $filter->apply();
     }
 
     protected static function booted()

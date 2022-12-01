@@ -122,14 +122,6 @@ trait Subject
         return $query->where('published', 1);
     }
 
-    public function scopeFilterBy($query, $filters)
-    {
-        $namespace = 'App\Helpers\Filters\CatalogSelectiveSubjectFilters';
-        $filter = new FilterBuilder($query, $filters, $namespace);
-
-        return $filter->apply();
-    }
-
     public function updateTeachers($records, $type)
     {
         foreach ($records as $lecture) {
