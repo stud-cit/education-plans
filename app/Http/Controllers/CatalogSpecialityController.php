@@ -29,15 +29,16 @@ class CatalogSpecialityController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $catalog = CatalogSpeciality::with('educationLevel')
+        $catalog = CatalogSpeciality::with(['educationLevel', 'verifications'])
             ->select([
                 'id',
-                'year',
+                'user_id',
                 'department_id',
                 'faculty_id',
                 'speciality_id',
                 'catalog_education_level_id',
-                'user_id'
+                'year',
+                'need_verification',
             ])
             ->filterBy($validated);
 

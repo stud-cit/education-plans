@@ -3,6 +3,7 @@
 namespace App\Http\Resources\CatalogSpeciality;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\VerificationCatalogResource;
 
 class CatalogSpecialityResource extends JsonResource
 {
@@ -25,6 +26,8 @@ class CatalogSpecialityResource extends JsonResource
             'faculty' => $this->facultyName,
             'education_level' => $this->educationLevel->title,
             'user_id' => $this->user_id,
+            'user_verifications' => VerificationCatalogResource::collection($this->verifications),
+            'need_verification' => $this->need_verification,
             'actions' => [
                 'preview' => true,
                 'edit' => true,

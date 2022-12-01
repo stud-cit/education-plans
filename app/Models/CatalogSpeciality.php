@@ -29,6 +29,10 @@ class CatalogSpeciality extends Model
         'need_verification',
     ];
 
+    protected $casts = [
+        'need_verification' => 'boolean'
+    ];
+
     public function getSpecialityIdNameAttribute()
     {
         if (!$this->speciality_id) return null;
@@ -43,6 +47,11 @@ class CatalogSpeciality extends Model
     {
         $nextYear = $this->year + 1;
         return "Каталог {$this->year}-{$nextYear}р. за спеціальністю {$this->getSpecialityIdNameAttribute()}";
+    }
+
+    public function verifications()
+    {
+        return $this->hasMany(CatalogVerification::class, 'catalog_subject_id', 'id');
     }
 
     public function scopeFilterBy($query, $filters)
