@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
-use App\Models\CatalogSubject;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use App\ExternalServices\Asu\Department;
@@ -15,6 +14,7 @@ use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
 use App\Models\CatalogEducationLevel;
+use App\Models\CatalogSpeciality;
 
 class CatalogSpecialityController extends Controller
 {
@@ -29,7 +29,7 @@ class CatalogSpecialityController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $catalog = CatalogSubject::with('educationLevel')
+        $catalog = CatalogSpeciality::with('educationLevel')
             ->select([
                 'id',
                 'year',
@@ -39,8 +39,7 @@ class CatalogSpecialityController extends Controller
                 'catalog_education_level_id',
                 'user_id'
             ])
-            ->filterBy($validated)
-            ->where('selective_discipline_id', CatalogSubject::SPECIALITY);
+            ->filterBy($validated);
 
         return CatalogSpecialityResource::collection($catalog->paginate($perPage));
     }
@@ -64,19 +63,19 @@ class CatalogSpecialityController extends Controller
     public function store(StoreRequest $request)
     {
         $validated = $request->validated();
-        $validated['selective_discipline_id'] = CatalogSubject::SPECIALITY;
+        $validated['selective_discipline_id'] = CatalogSpeciality::SPECIALITY;
 
-        CatalogSubject::create($validated);
+        CatalogSpeciality::create($validated);
         return $this->success(__('messages.Created'), 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\CatalogSubject  $catalogSubject
+     * @param  \App\Models\CatalogSpeciality  $catalogSpeciality
      * @return \Illuminate\Http\Response
      */
-    public function show(CatalogSubject $catalogSubject)
+    public function show(CatalogSpeciality $catalogSpeciality)
     {
         //
     }
@@ -84,10 +83,10 @@ class CatalogSpecialityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\CatalogSubject  $catalogSubject
+     * @param  \App\Models\CatalogSpeciality  $catalogSpeciality
      * @return \Illuminate\Http\Response
      */
-    public function edit(CatalogSubject $catalogSubject)
+    public function edit(CatalogSpeciality $catalogSpeciality)
     {
         //
     }
@@ -96,10 +95,10 @@ class CatalogSpecialityController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\CatalogSubject  $catalogSubject
+     * @param  \App\Models\CatalogSpeciality  $catalogSpeciality
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CatalogSubject $catalogSubject)
+    public function update(Request $request, CatalogSpeciality $catalogSpeciality)
     {
         //
     }
@@ -107,10 +106,10 @@ class CatalogSpecialityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\CatalogSubject  $catalogSubject
+     * @param  \App\Models\CatalogSpeciality  $catalogSpeciality
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CatalogSubject $catalogSubject)
+    public function destroy(CatalogSpeciality $catalogSpeciality)
     {
         //
     }
@@ -121,7 +120,7 @@ class CatalogSpecialityController extends Controller
         $asuController = new AsuController;
         $asu = new Department();
         $user = Auth::user();
-        $years = CatalogSubject::select('year')
+        $years = CatalogSpeciality::select('year')
             ->where('speciality_id', '!=', null)
             ->distinct()->orderBy('year', 'desc')
             ->get();

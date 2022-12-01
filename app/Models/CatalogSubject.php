@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-use App\Helpers\Filters\FilterBuilder;
+use App\Models\Traits\Catalog;
 use Illuminate\Database\Eloquent\Model;
-use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSubject extends Model
 {
-    use HasFactory, HasAsuDivisionsNameTrait;
+    use HasFactory, HasAsuDivisionsNameTrait, Catalog;
 
     const SUBJECT = 1;
-    const SPECIALITY = 2;
+    // need move
     const EDUCATION_PROGRAM = 3;
 
     protected $fillable = [
@@ -28,36 +28,9 @@ class CatalogSubject extends Model
         'user_id',
     ];
 
-    // TODO: MOVE TO TRAIT?
-    public function getSpecialityIdNameAttribute()
-    {
-        if (!$this->speciality_id) return null;
-
-        $professions = new Profession();
-
-        $code = $professions->getTitle($this->speciality_id, 'code');
-        return "{$code} {$professions->getTitle($this->speciality_id, 'title')}";
-    }
-
-    public function getSpecialityCatalogNameAttribute()
-    {
-        $nextYear = $this->year + 1;
-        return "Каталог {$this->year}-{$nextYear}р. за спеціальністю {$this->getSpecialityIdNameAttribute()}";
-    }
-
-    public function educationLevel()
-    {
-        return $this->belongsTo(CatalogEducationLevel::class, 'catalog_education_level_id');
-    }
-
     public function group()
     {
         return $this->belongsTo(CatalogGroup::class, 'group_id', 'id');
-    }
-
-    public function subjects()
-    {
-        return $this->hasMany(CatalogSelectiveSubject::class);
     }
 
     protected static function booted()
@@ -65,13 +38,8 @@ class CatalogSubject extends Model
         static::saving(function ($catalog) {
             $catalog->user_id = 1; // TODO: Auth::id();
         });
-    }
-
-    public function scopeFilterBy($query, $filters)
-    {
-        $namespace = 'App\Helpers\Filters\CatalogSubjectFilters';
-        $filter = new FilterBuilder($query, $filters, $namespace);
-
-        return $filter->apply();
+        static::addGlobalScope('selective_discipline', function (Builder $builder) {
+            $builder->where('selective_discipline_id', self::SUBJECT);
+        });
     }
 }

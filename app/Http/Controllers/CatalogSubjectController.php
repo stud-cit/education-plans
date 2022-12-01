@@ -32,8 +32,7 @@ class CatalogSubjectController extends Controller
 
         $catalog = CatalogSubject::with(['group'])
             ->select(['id', 'year', 'group_id'])
-            ->filterBy($validated)
-            ->where('selective_discipline_id', 1);
+            ->filterBy($validated);
 
         return CatalogSubjectGroupResource::collection($catalog->paginate($perPage));
     }
