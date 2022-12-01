@@ -6,12 +6,13 @@ use App\Traits\Catalog;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
+use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSpeciality extends Model
 {
-    use HasFactory, Catalog;
+    use HasFactory, Catalog, HasAsuDivisionsNameTrait;
 
     const SPECIALITY = 2;
 
