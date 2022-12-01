@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Teacher;
 use App\Helpers\Helpers;
+use App\Models\CatalogSubject;
 use App\Models\SpecialitySubject;
 use App\Http\Resources\SpecialitySubject\SpecialitySubjectResource;
 use App\Http\Requests\SpecialitySubject\IndexSpecialitySubjectRequest;
@@ -25,7 +26,7 @@ class SpecialitySubjectController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $catalog = SpecialitySubject::select(
+        $subject = SpecialitySubject::select(
             'id',
             'catalog_subject_id',
             'department_id',
@@ -38,7 +39,11 @@ class SpecialitySubjectController extends Controller
             ->filterBy($validated)
             ->paginate($perPage);
 
-        return SpecialitySubjectResource::collection($catalog);
+        $catalog = CatalogSubject::findOrFail($validated['catalogSubject']);
+
+        return SpecialitySubjectResource::collection($subject)->additional([
+            'catalog' => $catalog->specialityCatalogName,
+        ]);
     }
 
     /**

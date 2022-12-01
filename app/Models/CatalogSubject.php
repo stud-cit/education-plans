@@ -39,6 +39,12 @@ class CatalogSubject extends Model
         return "{$code} {$professions->getTitle($this->speciality_id, 'title')}";
     }
 
+    public function getSpecialityCatalogNameAttribute()
+    {
+        $nextYear = $this->year + 1;
+        return "Каталог {$this->year}-{$nextYear}р. за спеціальністю {$this->getSpecialityIdNameAttribute()}";
+    }
+
     public function educationLevel()
     {
         return $this->belongsTo(CatalogEducationLevel::class, 'catalog_education_level_id');
