@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Traits\Catalog;
+use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSpeciality extends Model
 {
@@ -41,6 +42,15 @@ class CatalogSpeciality extends Model
     {
         $nextYear = $this->year + 1;
         return "Каталог {$this->year}-{$nextYear}р. за спеціальністю {$this->getSpecialityIdNameAttribute()}";
+    }
+
+    public function scopeFilterBy($query, $filters)
+    {
+        // $namespace = 'App\Helpers\Filters\CatalogSubjectFilters';
+        $namespace = 'App\Helpers\Filters\CatalogSpecialityFilters';
+        $filter = new FilterBuilder($query, $filters, $namespace);
+
+        return $filter->apply();
     }
 
     protected static function booted()

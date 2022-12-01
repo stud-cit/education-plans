@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Catalog;
+use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,6 +32,14 @@ class CatalogSubject extends Model
     public function group()
     {
         return $this->belongsTo(CatalogGroup::class, 'group_id', 'id');
+    }
+
+    public function scopeFilterBy($query, $filters)
+    {
+        $namespace = 'App\Helpers\Filters\CatalogSubjectFilters';
+        $filter = new FilterBuilder($query, $filters, $namespace);
+
+        return $filter->apply();
     }
 
     protected static function booted()

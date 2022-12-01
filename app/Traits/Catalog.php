@@ -17,12 +17,4 @@ trait Catalog
     {
         return $this->hasMany(CatalogSelectiveSubject::class, 'catalog_subject_id');
     }
-
-    public function scopeFilterBy($query, $filters)
-    {
-        $namespace = 'App\Helpers\Filters\CatalogSubjectFilters';
-        $filter = new FilterBuilder($query, $filters, $namespace);
-
-        return $filter->apply();
-    }
 }

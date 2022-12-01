@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\Filters\CatalogSubjectFilters;
+namespace App\Helpers\Filters\CatalogSpecialityFilters;
 
 use App\Helpers\Filters\QueryFilter;
 use App\Helpers\Filters\FilterContract;
