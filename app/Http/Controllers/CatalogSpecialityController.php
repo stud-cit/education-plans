@@ -15,6 +15,7 @@ use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\CatalogSpeciality\CopyRequest;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
+use App\Http\Requests\CatalogSpeciality\UpdateRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
 
 class CatalogSpecialityController extends Controller
@@ -100,9 +101,13 @@ class CatalogSpecialityController extends Controller
      * @param  \App\Models\CatalogSpeciality  $catalogSpeciality
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CatalogSpeciality $catalogSpeciality)
+    public function update(UpdateRequest $request, CatalogSpeciality $catalogSpeciality)
     {
-        //
+        $validated = $request->validated();
+
+        $catalogSpeciality->update($validated);
+
+        $this->success(__('messages.Updated'));
     }
 
     /**
@@ -154,6 +159,8 @@ class CatalogSpecialityController extends Controller
         $catalog = $catalogSpeciality->fill([
             'year' => $validated['year'],
             'speciality_id' => $validated['speciality_id'],
+            'user_id' => Auth::id(),
+            'need_verification' => null,
         ]);
 
         $clone = $catalog->duplicate();
