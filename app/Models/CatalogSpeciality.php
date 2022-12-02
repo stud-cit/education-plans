@@ -12,7 +12,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSpeciality extends Model
 {
-    use HasFactory, Catalog, HasAsuDivisionsNameTrait;
+    use HasFactory, Catalog, HasAsuDivisionsNameTrait, \Bkwld\Cloner\Cloneable;
+
+    protected $cloneable_relations = ['subjects'];
 
     const SPECIALITY = 2;
 
@@ -32,6 +34,11 @@ class CatalogSpeciality extends Model
     protected $casts = [
         'need_verification' => 'boolean'
     ];
+
+    public function subjects()
+    {
+        return $this->hasMany(SpecialitySubject::class, 'catalog_subject_id');
+    }
 
     public function getSpecialityIdNameAttribute()
     {

@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SpecialitySubject extends Model
 {
-    use HasFactory, HasAsuDivisionsNameTrait, Subject;
+    use HasFactory, HasAsuDivisionsNameTrait, Subject, \Bkwld\Cloner\Cloneable;
 
     protected $table = 'catalog_selective_subjects';
+
+    protected $cloneable_relations = ['languages', 'teachers'];
 
     protected $fillable = [
         'id',
@@ -38,6 +40,10 @@ class SpecialitySubject extends Model
         'published' => 'boolean',
     ];
 
+    public function onCloning($src, $child = null)
+    {
+        $src->load(['languages', 'teachers']);
+    }
     /**
      * Get second catalog Вибіркові дисципліни за спеціальністю
      */

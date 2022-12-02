@@ -5,16 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
+use App\Models\CatalogSpeciality;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
+use App\Models\CatalogEducationLevel;
 use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
 use App\Http\Resources\ProfessionsResource;
+use App\Http\Requests\CatalogSpeciality\CopyRequest;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
-use App\Models\CatalogEducationLevel;
-use App\Models\CatalogSpeciality;
 
 class CatalogSpecialityController extends Controller
 {
@@ -144,5 +145,19 @@ class CatalogSpecialityController extends Controller
             'years' => $years,
             'education_levels' => CatalogEducationLevel::select('id', 'title')->get(),
         ]);
+    }
+
+    public function copy(CopyRequest $request, CatalogSpeciality $catalogSpeciality)
+    {
+        $validated = $request->validated();
+
+        $catalog = $catalogSpeciality->fill([
+            'year' => $validated['year'],
+            'speciality_id' => $validated['speciality_id'],
+        ]);
+
+        $clone = $catalog->duplicate();
+
+        return $this->success(__('messages.Created'), 201);
     }
 }
