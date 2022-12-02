@@ -39,7 +39,6 @@ class StoreSpecialitySubjectRequest extends FormRequest
             'language' => 'required',
             'lecturers' => 'required',
             'practice' => 'required',
-            'list_fields_knowledge' => 'required|json',
             'faculty_id' => 'required|numeric',
             'department_id' => 'required|numeric',
             'general_competence' => 'required|max:255',
