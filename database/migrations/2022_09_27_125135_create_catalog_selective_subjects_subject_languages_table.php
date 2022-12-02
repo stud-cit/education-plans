@@ -16,7 +16,9 @@ class CreateCatalogSelectiveSubjectsSubjectLanguagesTable extends Migration
         Schema::create('language_subjects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('language_id')->constrained('subject_languages');
-            $table->foreignId('subject_id')->constrained('catalog_selective_subjects');
+            $table->foreignId('subject_id')->constrained('catalog_selective_subjects')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
