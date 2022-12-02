@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Filters\FilterBuilder;
 use App\Traits\Subject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
@@ -56,6 +57,14 @@ class SpecialitySubject extends Model
         // 'edit' => $policy->update($user, $this),
         // 'delete' => $policy->delete($user, $this),
         // ];
+    }
+
+    public function scopeFilterBy($query, $filters)
+    {
+        $namespace = 'App\Helpers\Filters\CatalogSpecialityFilters';
+        $filter = new FilterBuilder($query, $filters, $namespace);
+
+        return $filter->apply();
     }
 
     protected static function booted()
