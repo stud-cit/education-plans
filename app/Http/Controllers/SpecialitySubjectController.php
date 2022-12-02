@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Teacher;
 use App\Helpers\Helpers;
+use App\Models\SubjectHelper;
 use App\Models\CatalogSpeciality;
 use App\Models\SpecialitySubject;
 use App\Http\Resources\SpecialitySubject\SpecialitySubjectResource;
@@ -56,7 +57,26 @@ class SpecialitySubjectController extends Controller
      */
     public function create()
     {
-        //
+        $asu = new AsuController();
+        $language = new SubjectLanguageController();
+        $helpers = SubjectHelper::with('type')->select(
+            'id',
+            'title',
+            'catalog_helper_type_id',
+        )->get();
+
+        $data = [
+            'subjects' => $asu->getSubjects(),
+            'languages' => $language->getList(),
+            'departments' => $asu->getDepartments(),
+            'teachers' => $asu->getWorkers(),
+            'helpersGeneralCompetence' => $helpers->where('type.key', 'general_competence')->pluck('title'),
+            'helpersResultsOfStudy' => $helpers->where('type.key', 'learning_outcomes')->pluck('title'),
+            'helpersTypesTrainingSessions' => $helpers->where('type.key', 'types_educational_activities')->pluck('title'),
+            'helpersRequirements' => $helpers->where('type.key', 'entry_requirements_applicants')->pluck('title'),
+        ];
+
+        return response()->json($data);
     }
 
     /**
