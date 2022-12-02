@@ -22,7 +22,7 @@ class CreateCatalogSelectiveSubjectsTable extends Migration
             $table->text('title_en')->nullable(true); // 1
             // language in separate table 2
             // education_level_id  3
-            $table->json('list_fields_knowledge'); // 4
+            $table->json('list_fields_knowledge')->nullable(true); // 4
             $table->unsignedInteger('faculty_id');
             $table->unsignedInteger('department_id'); // 5
             // 6 teachers // type ??
