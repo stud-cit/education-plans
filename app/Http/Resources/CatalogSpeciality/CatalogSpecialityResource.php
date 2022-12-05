@@ -28,12 +28,7 @@ class CatalogSpecialityResource extends JsonResource
             'user_id' => $this->user_id,
             'user_verifications' => VerificationCatalogResource::collection($this->verifications),
             'need_verification' => $this->need_verification,
-            'actions' => [
-                'preview' => true,
-                'edit' => true,
-                'copy' => true,
-                'delete' => true,
-            ]
+            'actions' => $this->actions()
         ];
     }
 }

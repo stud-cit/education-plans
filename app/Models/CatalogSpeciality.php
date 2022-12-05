@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Traits\Catalog;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
+use App\Policies\CatalogSpecialityPolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -61,6 +64,11 @@ class CatalogSpeciality extends Model
         return $this->hasMany(CatalogVerification::class, 'catalog_subject_id', 'id');
     }
 
+    public function owners()
+    {
+        return $this->hasMany(OwnerCatalogSubject::class, 'catalog_subject_id');
+    }
+
     public function scopeFilterBy($query, $filters)
     {
         // $namespace = 'App\Helpers\Filters\CatalogSubjectFilters';
@@ -68,6 +76,19 @@ class CatalogSpeciality extends Model
         $filter = new FilterBuilder($query, $filters, $namespace);
 
         return $filter->apply();
+    }
+
+    public function actions()
+    {
+        $policy = new CatalogSpecialityPolicy();
+        $user = Auth::user();
+
+        return [
+            'copy' =>  Gate::allows('copy-catalog-speciality'),
+            'preview' => $policy->viewAny($user),
+            'edit' => $policy->update($user, $this),
+            'delete' => $policy->delete($user, $this),
+        ];
     }
 
     protected static function booted()

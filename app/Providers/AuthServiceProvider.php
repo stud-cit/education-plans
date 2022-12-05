@@ -58,5 +58,10 @@ class AuthServiceProvider extends ServiceProvider
                     || $user->possibility(User::PRIVILEGED_ROLES);
             }
         );
+
+        Gate::define('copy-catalog-speciality', function (User $user) {
+            clock($user);
+            return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
+        });
     }
 }

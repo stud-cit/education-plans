@@ -20,6 +20,11 @@ use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
 
 class CatalogSpecialityController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(CatalogSpeciality::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -152,6 +157,13 @@ class CatalogSpecialityController extends Controller
         ]);
     }
 
+    /**
+     * Copy speciality catalog with subjects
+     *
+     * @param CopyRequest $request
+     * @param CatalogSpeciality $catalogSpeciality
+     * @return void
+     */
     public function copy(CopyRequest $request, CatalogSpeciality $catalogSpeciality)
     {
         $validated = $request->validated();
@@ -163,7 +175,7 @@ class CatalogSpecialityController extends Controller
             'need_verification' => null,
         ]);
 
-        $clone = $catalog->duplicate();
+        $catalog->duplicate();
 
         return $this->success(__('messages.Created'), 201);
     }

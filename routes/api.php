@@ -135,8 +135,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/catalog-specialties/filters', [CatalogSpecialityController::class, 'getItemsFilters']);
         Route::patch('/catalog-specialties/copy/{catalog_speciality}', [
             CatalogSpecialityController::class, 'copy'
-        ]);
+        ])->middleware('can:copy-catalog-speciality');
         Route::Resource('catalog-specialties', CatalogSpecialityController::class);
+
         Route::Resource('speciality-subjects', SpecialitySubjectController::class);
     });
 });
