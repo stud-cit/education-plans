@@ -16,6 +16,11 @@ use App\Http\Resources\SpecialitySubject\SpecialitySubjectShowResource;
 
 class SpecialitySubjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(SpecialitySubject::class);
+    }
+
     /**
      * Display a listing of the resource.
      *

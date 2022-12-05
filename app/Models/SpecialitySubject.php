@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\Helpers\Filters\FilterBuilder;
 use App\Traits\Subject;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
+use App\Policies\SpecialitySubjectPolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class SpecialitySubject extends Model
@@ -52,17 +53,16 @@ class SpecialitySubject extends Model
         return $this->catalog()->where('selective_discipline_id', 2);
     }
 
-    // TODO: make policy
     public function actions()
     {
-        // $policy = new CatalogSelectiveSubjectPolicy();
-        // $user = Auth::user();
+        $policy = new SpecialitySubjectPolicy();
+        $user = Auth::user();
 
-        // return [
-        // 'preview' => $policy->viewAny($user),
-        // 'edit' => $policy->update($user, $this),
-        // 'delete' => $policy->delete($user, $this),
-        // ];
+        return [
+            'preview' => $policy->viewAny($user),
+            'edit' => $policy->update($user, $this),
+            'delete' => $policy->delete($user, $this),
+        ];
     }
 
     public function scopeFilterBy($query, $filters)

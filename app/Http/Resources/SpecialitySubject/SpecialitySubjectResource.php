@@ -21,12 +21,7 @@ class SpecialitySubjectResource extends JsonResource
             'department' => $this->departmentName,
             'published' => $this->published,
             'user_id' => $this->id,
-            'actions' => [
-                'preview' => true,
-                'edit' => true,
-                'copy' => true,
-                'delete' => true,
-            ]
+            'actions' => $this->actions()
         ];
     }
 }
