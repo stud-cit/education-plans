@@ -66,7 +66,7 @@ class CatalogSpeciality extends Model
 
     public function owners()
     {
-        return $this->hasMany(OwnerCatalogSubject::class, 'catalog_subject_id');
+        return $this->hasMany(OwnerCatalogSubject::class, 'catalog_subject_id', 'id');
     }
 
     public function scopeFilterBy($query, $filters)

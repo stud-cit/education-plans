@@ -14,9 +14,11 @@ use App\Http\Resources\FacultiesResource;
 use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\CatalogSpeciality\CopyRequest;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
+use App\Http\Requests\CatalogSpeciality\OwnerRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Requests\CatalogSpeciality\UpdateRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityEditResource;
 
 class CatalogSpecialityController extends Controller
 {
@@ -176,6 +178,19 @@ class CatalogSpecialityController extends Controller
         ]);
 
         $catalog->duplicate();
+
+        return $this->success(__('messages.Created'), 201);
+    }
+
+    public function owners(OwnerRequest $request, CatalogSpeciality $catalogSpeciality)
+    {
+        $validated = $request->validated();
+
+        $catalogSpeciality->owners()->upsert(
+            $validated['owners'],
+            ['catalog_subject_id', 'department_id'],
+            ['department_id']
+        );
 
         return $this->success(__('messages.Created'), 201);
     }

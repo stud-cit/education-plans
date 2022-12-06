@@ -136,8 +136,13 @@ Route::prefix('v1')->group(function () {
         Route::patch('/catalog-specialties/copy/{catalog_speciality}', [
             CatalogSpecialityController::class, 'copy'
         ])->middleware('can:copy-catalog-speciality');
+        Route::patch('/catalog-specialties/owners/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'owners'
+        ]); //->middleware('can:copy-catalog-speciality');
         Route::Resource('catalog-specialties', CatalogSpecialityController::class);
 
         Route::Resource('speciality-subjects', SpecialitySubjectController::class);
     });
 });
+
+// Route::Resource('catalog-specialties', CatalogSpecialityController::class);
