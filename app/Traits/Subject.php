@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\ExternalServices\Asu\Worker;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\CatalogSubject;
@@ -133,5 +134,19 @@ trait Subject
             }
             $this->teachers()->updateOrCreate($lecture);
         }
+    }
+
+    public function getShortNames($listNames)
+    {
+        return $this->getShortName($listNames)->implode(', ');
+    }
+
+    protected function getShortName($collection)
+    {
+        $worker = new Worker();
+
+        return $collection->map(function ($collection) use ($worker) {
+            return $worker->getShortName($collection['asu_id']);
+        });
     }
 }
