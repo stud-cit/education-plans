@@ -25,6 +25,7 @@ class CatalogSpecialityResource extends JsonResource
             'faculty_id' => $this->faculty_id,
             'faculty' => $this->facultyName,
             'education_level' => $this->educationLevel->title,
+            'education_level_id' => $this->educationLevel->id,
             'user_id' => $this->user_id,
             'user_verifications' => VerificationCatalogResource::collection($this->verifications),
             'need_verification' => $this->need_verification,
