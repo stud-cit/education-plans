@@ -27,7 +27,6 @@ class SpecialitySubjectShowResource extends JsonResource
             'faculty' => $this->facultyName,
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
-            'list_fields_knowledge' => $this->listFieldsKnowledgeName,
             'general_competence' => $this->general_competence,
             'learning_outcomes' => $this->learning_outcomes,
             'entry_requirements_applicants' => $this->entry_requirements_applicants,
