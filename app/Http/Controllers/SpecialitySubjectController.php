@@ -51,6 +51,11 @@ class SpecialitySubjectController extends Controller
             'catalog' => [
                 'id' => $catalog->id,
                 'title' => $catalog->specialityCatalogName,
+                'year' => $catalog->year,
+                'speciality' => $catalog->specialityIdName,
+                'education_level' => $catalog->educationLevel->title,
+                'faculty' => $catalog->facultyName,
+                'department' => $catalog->departmentName,
             ],
         ]);
     }
