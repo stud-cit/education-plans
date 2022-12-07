@@ -200,9 +200,16 @@ class CatalogSpecialityController extends Controller
 
         $catalogSpeciality->owners()->whereNotIn('id', array_column($validated['owners'], 'id'))->delete();
 
-        $result = array_filter($validated['owners'], function ($el) {
-            if (!array_key_exists('id', $el)) return $el;
-        });
+//        $result = array_filter($validated['owners'], function ($el) use (&$test) {
+//           if (!array_key_exists('id', $el)) return $el;
+//        });
+
+        $result = array_map(function ($el) use ($validated) {
+            return [
+                'catalog_subject_id' => $validated['id'],
+                'department_id' => $el['id'],
+            ];
+        }, $validated['owners']);
 
         $catalogSpeciality->owners()->createMany($result);
 

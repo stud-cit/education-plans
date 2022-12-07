@@ -56,6 +56,7 @@ class SpecialitySubjectController extends Controller
                 'education_level' => $catalog->educationLevel->title,
                 'faculty' => $catalog->facultyName,
                 'department' => $catalog->departmentName,
+                'owners' => $catalog->owners->map(fn ($owner) => ['id' => $owner->department_id])
             ],
         ]);
     }
