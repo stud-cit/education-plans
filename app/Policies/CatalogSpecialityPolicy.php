@@ -54,8 +54,8 @@ class CatalogSpecialityPolicy
     public function update(User $user, CatalogSpeciality $catalogSpeciality)
     {
         // TODO check owner catalog
-        return $user->possibility(User::DEPARTMENT) && $catalogSpeciality->user_id ||
-            $user->possibility(User::PRIVILEGED_ROLES);
+        // return $user->possibility(User::DEPARTMENT) && $catalogSpeciality->user_id ||
+        // $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -67,9 +67,7 @@ class CatalogSpecialityPolicy
      */
     public function delete(User $user, CatalogSpeciality $catalogSpeciality)
     {
-        // TODO check owner catalog
-        return $user->possibility(User::DEPARTMENT) && $catalogSpeciality->user_id ||
-            $user->possibility(User::PRIVILEGED_ROLES);
+        //
     }
 
     /**

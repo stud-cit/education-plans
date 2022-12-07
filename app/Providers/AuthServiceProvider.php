@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CatalogSelectiveSubject;
+use App\Models\CatalogSpeciality;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -61,6 +62,14 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('copy-catalog-speciality', function (User $user) {
             return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
+        });
+
+        Gate::define('delete-catalog-speciality', function (User $user, CatalogSpeciality $catalogSpeciality) {
+            clock('delete-catalog');
+            clock("role id $user->role_id");
+            clock("id $catalogSpeciality->id");
+
+            return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogSpeciality->user_id;
         });
     }
 }

@@ -18,7 +18,7 @@ use App\Http\Requests\CatalogSpeciality\OwnerRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Requests\CatalogSpeciality\UpdateRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
-use App\Http\Resources\CatalogSpeciality\CatalogSpecialityEditResource;
+use ErrorException;
 
 class CatalogSpecialityController extends Controller
 {
@@ -125,7 +125,19 @@ class CatalogSpecialityController extends Controller
      */
     public function destroy(CatalogSpeciality $catalogSpeciality)
     {
-        //
+        // TODO: $catalogSpeciality null
+        // 🤷‍♀️ now use method delete
+    }
+
+    public function delete(CatalogSpeciality $catalogSpeciality)
+    {
+        $model = $catalogSpeciality->loadCount('subjects');
+
+        if ($model->subjects_count > 0) {
+            throw new ErrorException('Каталог не пустий, видаліть спочатку предмети.');
+        } else {
+            $catalogSpeciality->delete();
+        }
     }
 
     public function getItemsFilters()

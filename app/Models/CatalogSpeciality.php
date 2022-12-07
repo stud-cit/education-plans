@@ -40,7 +40,7 @@ class CatalogSpeciality extends Model
 
     public function subjects()
     {
-        return $this->hasMany(SpecialitySubject::class, 'catalog_subject_id');
+        return $this->hasMany(SpecialitySubject::class, 'catalog_subject_id', 'id');
     }
 
     public function getSpecialityIdNameAttribute()
@@ -87,14 +87,15 @@ class CatalogSpeciality extends Model
             'copy' =>  Gate::allows('copy-catalog-speciality'),
             'preview' => $policy->viewAny($user),
             'edit' => $policy->update($user, $this),
-            'delete' => $policy->delete($user, $this),
+            'delete' => Gate::allows('delete-catalog-speciality', $this),
         ];
     }
 
     protected static function booted()
     {
         static::saving(function ($catalog) {
-            $catalog->user_id = 1; // TODO: Auth::id();
+            // $catalog->user_id = 1; // TODO: Auth::id();
+            $catalog->user_id = Auth::id();
         });
 
         static::addGlobalScope('selective_discipline', function (Builder $builder) {
