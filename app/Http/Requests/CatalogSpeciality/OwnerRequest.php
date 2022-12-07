@@ -24,8 +24,8 @@ class OwnerRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'require|exists:CatalogSpeciality,id',
-            'owners' => 'require'
+            'id' => 'required|exists:App\Models\CatalogSpeciality,id',
+            'owners' => 'required'
         ];
     }
 }

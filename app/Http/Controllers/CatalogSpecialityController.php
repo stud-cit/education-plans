@@ -198,11 +198,13 @@ class CatalogSpecialityController extends Controller
     {
         $validated = $request->validated();
 
-        $catalogSpeciality->owners()->upsert(
-            $validated['owners'],
-            ['catalog_subject_id', 'department_id'],
-            ['department_id']
-        );
+        $catalogSpeciality->owners()->whereNotIn('id', array_column($validated['owners'], 'id'))->delete();
+
+        $result = array_filter($validated['owners'], function ($el) {
+            if (!array_key_exists('id', $el)) return $el;
+        });
+
+        $catalogSpeciality->owners()->createMany($result);
 
         return $this->success(__('messages.Created'), 201);
     }

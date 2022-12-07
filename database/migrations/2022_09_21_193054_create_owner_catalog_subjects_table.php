@@ -19,6 +19,7 @@ class CreateOwnerCatalogSubjectsTable extends Migration
             // $table->unsignedInteger('faculty_id');
             $table->unsignedInteger('department_id');
             $table->timestamps();
+            $table->unique(['catalog_subject_id', 'department_id']);
         });
     }
 
