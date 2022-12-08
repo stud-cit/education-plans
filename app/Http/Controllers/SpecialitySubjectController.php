@@ -7,12 +7,14 @@ use App\Helpers\Helpers;
 use App\Models\SubjectHelper;
 use App\Models\CatalogSpeciality;
 use App\Models\SpecialitySubject;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SpecialitySubject\SpecialitySubjectResource;
 use App\Http\Requests\SpecialitySubject\IndexSpecialitySubjectRequest;
 use App\Http\Requests\SpecialitySubject\StoreSpecialitySubjectRequest;
 use App\Http\Requests\SpecialitySubject\UpdateSpecialitySubjectRequest;
 use App\Http\Resources\SpecialitySubject\SpecialitySubjectEditResource;
 use App\Http\Resources\SpecialitySubject\SpecialitySubjectShowResource;
+use Illuminate\Support\Facades\Gate;
 
 class SpecialitySubjectController extends Controller
 {
@@ -56,7 +58,8 @@ class SpecialitySubjectController extends Controller
                 'education_level' => $catalog->educationLevel->title,
                 'faculty' => $catalog->facultyName,
                 'department' => $catalog->departmentName,
-                'owners' => $catalog->owners->map(fn ($owner) => ['id' => $owner->department_id])
+                'owners' => $catalog->owners->map(fn ($owner) => ['id' => $owner->department_id]),
+                'can_create' => Gate::allows('create-speciality-subject', $catalog->id),
             ],
         ]);
     }
@@ -98,6 +101,10 @@ class SpecialitySubjectController extends Controller
      */
     public function store(StoreSpecialitySubjectRequest $request)
     {
+        if (!Gate::allows('create-speciality-subject', [$request->catalog_subject_id])) {
+            abort(403);
+        };
+
         $validated = $request->validated();
 
         $subject = SpecialitySubject::create($validated);

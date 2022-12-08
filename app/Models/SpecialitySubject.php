@@ -76,7 +76,8 @@ class SpecialitySubject extends Model
     protected static function booted()
     {
         static::creating(function ($catalog) {
-            $catalog->user_id =  1; //Auth::id();
+            $catalog->user_id = Auth::id();
+            // $catalog->user_id =  1; //Auth::id();
         });
     }
 }

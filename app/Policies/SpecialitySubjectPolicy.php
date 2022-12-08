@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\SpecialitySubject;
 use App\Models\User;
+use App\Models\SpecialitySubject;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SpecialitySubjectPolicy
@@ -41,8 +41,8 @@ class SpecialitySubjectPolicy
      */
     public function create(User $user)
     {
-        // TODO: how add catalog id & check ?
-        return $user->possibility();
+        // Skip action, because check in controller custom rule create-speciality-subject
+        return true;
     }
 
     /**
@@ -54,7 +54,6 @@ class SpecialitySubjectPolicy
      */
     public function update(User $user, SpecialitySubject $specialitySubject)
     {
-        // TODO: or owner catalog
         return $user->possibility(User::DEPARTMENT) && $specialitySubject->user_id === $user->id
             || $user->possibility(User::PRIVILEGED_ROLES);
     }
@@ -68,7 +67,6 @@ class SpecialitySubjectPolicy
      */
     public function delete(User $user, SpecialitySubject $specialitySubject)
     {
-        // TODO: or owner catalog
         return $user->possibility(User::DEPARTMENT) && $specialitySubject->user_id === $user->id
             || $user->possibility(User::PRIVILEGED_ROLES);
     }

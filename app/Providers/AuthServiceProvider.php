@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CatalogSelectiveSubject;
 use App\Models\CatalogSpeciality;
+use App\Models\SpecialitySubject;
+use App\Policies\SpecialitySubjectPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         '\App\Models\FormControl::class' => '\App\Policies\FormControlPolicy::class',
+        SpecialitySubject::class => SpecialitySubjectPolicy::class,
     ];
 
     /**
@@ -65,11 +68,15 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('delete-catalog-speciality', function (User $user, CatalogSpeciality $catalogSpeciality) {
-            clock('delete-catalog');
-            clock("role id $user->role_id");
-            clock("id $catalogSpeciality->id");
-
             return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogSpeciality->user_id;
+        });
+
+        Gate::define('create-speciality-subject', function (User $user, $catalog_id) {
+
+            $catalog = CatalogSpeciality::with('owners')->where('id', $catalog_id)->first();
+
+            $ids = array_column($catalog->owners->toArray(), 'department_id');
+            return in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
         });
     }
 }
