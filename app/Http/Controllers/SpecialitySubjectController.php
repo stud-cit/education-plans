@@ -60,6 +60,8 @@ class SpecialitySubjectController extends Controller
                 'department' => $catalog->departmentName,
                 'owners' => $catalog->owners->map(fn ($owner) => ['id' => $owner->department_id]),
                 'can_create' => Gate::allows('create-speciality-subject', $catalog->id),
+                'need_verification' => $catalog->need_verification,
+                'verifications' => $catalog->verifications,
             ],
         ]);
     }

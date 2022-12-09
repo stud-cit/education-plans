@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Models\CatalogSpeciality;
 use App\Models\SpecialitySubject;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -54,7 +55,16 @@ class SpecialitySubjectPolicy
      */
     public function update(User $user, SpecialitySubject $specialitySubject)
     {
-        return $user->possibility(User::DEPARTMENT) && $specialitySubject->user_id === $user->id
+
+        $catalog = CatalogSpeciality::with('owners')
+            ->where('id', $specialitySubject->catalog_subject_id)
+            ->first();
+
+        $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+        return $user->possibility(User::DEPARTMENT)
+            && $specialitySubject->user_id === $user->id
+            || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
             || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
@@ -67,7 +77,14 @@ class SpecialitySubjectPolicy
      */
     public function delete(User $user, SpecialitySubject $specialitySubject)
     {
+        $catalog = CatalogSpeciality::with('owners')
+            ->where('id', $specialitySubject->catalog_subject_id)
+            ->first();
+
+        $ids = array_column($catalog->owners->toArray(), 'department_id');
+
         return $user->possibility(User::DEPARTMENT) && $specialitySubject->user_id === $user->id
+            || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
             || $user->possibility(User::PRIVILEGED_ROLES);
     }
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use ErrorException;
 use App\Models\User;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Models\CatalogSpeciality;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Models\CatalogEducationLevel;
 use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
@@ -18,7 +20,8 @@ use App\Http\Requests\CatalogSpeciality\OwnerRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Requests\CatalogSpeciality\UpdateRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
-use ErrorException;
+use App\Http\Requests\CatalogSpeciality\StoreCatalogSpecialityVerificationRequest;
+use App\Http\Requests\CatalogSpeciality\ToggleCatalogSpecialityVerificationRequest;
 
 class CatalogSpecialityController extends Controller
 {
@@ -210,5 +213,60 @@ class CatalogSpecialityController extends Controller
         $catalogSpeciality->owners()->createMany($result);
 
         return $this->success(__('messages.Created'), 201);
+    }
+
+    public function toggleToVerification(
+        ToggleCatalogSpecialityVerificationRequest $request,
+        CatalogSpeciality $catalogSpeciality
+    ) {
+        if (!Gate::allows('toggle-need-verification-speciality-catalog', $catalogSpeciality)) {
+            abort(403);
+        }
+
+        $validated = $request->validated();
+
+        $catalogSpeciality->need_verification = $validated['need_verification'];
+
+        $catalogSpeciality->update();
+
+        return $this->success(__('messages.Updated'), 200);
+    }
+
+    public function verification(
+        StoreCatalogSpecialityVerificationRequest $request,
+        CatalogSpeciality $catalogSpeciality
+    ) {
+
+        if (!Gate::allows('can-verification-speciality-catalog', $catalogSpeciality)) {
+            abort(403);
+        }
+
+        $validated = $request->validated();
+
+        if (array_key_exists('comment', $validated)) {
+            if ($validated['comment'] !== null) {
+                $catalogSpeciality->need_verification = false;
+                $catalogSpeciality->update();
+            }
+        }
+
+        if (Auth::user()->role_id === User::ADMIN) {
+            $catalogSpeciality->need_verification = true;
+            $catalogSpeciality->update();
+        }
+
+        $catalogSpeciality->verifications()->updateOrCreate(
+            [
+                'verification_status_id' => $validated['verification_status_id'],
+                'catalog_subject_id' => $validated['catalog_subject_id']
+            ],
+            [
+                'status' => $validated['status'],
+                'comment' => isset($validated['comment']) ? $validated['comment'] : null,
+                'user_id' => $validated['user_id'],
+            ]
+        );
+
+        return $this->success(__('messages.Updated'), 200);
     }
 }
