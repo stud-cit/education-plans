@@ -28,8 +28,8 @@ class CatalogSelectiveSubjectShowResource extends JsonResource
             'faculty' => $this->facultyName,
             'department_id' => $this->department_id,
             'department' => $this->departmentName,
-            'list_fields_knowledge' => $this->listFieldsKnowledgeName, // TODO: prepare
-            'education_level' => $this->educationLevel->title,
+            'list_fields_knowledge' => $this->list_fields_knowledge ? $this->listFieldsKnowledgeName : null, // TODO: prepare
+            'education_level' => $this->education_level ? $this->educationLevel->title : null,
             'general_competence' => $this->general_competence,
             'learning_outcomes' => $this->learning_outcomes,
             'entry_requirements_applicants' => $this->entry_requirements_applicants,
