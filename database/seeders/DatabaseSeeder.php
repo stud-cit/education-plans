@@ -42,7 +42,8 @@ class DatabaseSeeder extends Seeder
             CatalogEducationLevelSeeder::class,
             SubjectVerificationStatusesSeeder::class,
             CatalogVerificationStatusSeeder::class,
-            CatalogSpecialitySeed::class
+            CatalogSpecialitySeed::class,
+            CatalogSignatureTypeSeeder::class
         ]);
     }
 }
