@@ -150,6 +150,8 @@ Route::prefix('v1')->group(function () {
             CatalogSpecialityController::class, 'toggleToVerification'
         ]);
 
+        Route::get('/catalog-specialties/generate-pdf', [CatalogSpecialityController::class, 'pdf']);
+
         Route::Resource('catalog-specialties', CatalogSpecialityController::class);
 
         Route::Resource('speciality-subjects', SpecialitySubjectController::class);

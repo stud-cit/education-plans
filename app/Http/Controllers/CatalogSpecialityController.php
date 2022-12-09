@@ -20,6 +20,8 @@ use App\Http\Requests\CatalogSpeciality\OwnerRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Requests\CatalogSpeciality\UpdateRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
+use App\Http\Requests\CatalogSpeciality\PdfCatalogSpecialityRequest;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 use App\Http\Requests\CatalogSpeciality\StoreCatalogSpecialityVerificationRequest;
 use App\Http\Requests\CatalogSpeciality\ToggleCatalogSpecialityVerificationRequest;
 
@@ -268,5 +270,20 @@ class CatalogSpecialityController extends Controller
         );
 
         return $this->success(__('messages.Updated'), 200);
+    }
+
+    public function pdf(PdfCatalogSpecialityRequest $request)
+    {
+        $validated = $request->validated();
+
+        if (array_key_exists('catalog_id', $validated['catalog_id'])) {
+            $catalog = CatalogSpeciality::with(['subjects'])->where('id', $validated['catalog_id'])->first();
+            return new CatalogSpecialityPdfResource($catalog);
+        } else {
+            $catalog = CatalogSpeciality::with(['subjects'])
+                ->where('year', $validated['year'])
+                ->where('id', $validated['speciality_id'])->first();
+            return new CatalogSpecialityPdfResource($catalog);
+        }
     }
 }
