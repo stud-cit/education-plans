@@ -79,5 +79,27 @@ class AuthServiceProvider extends ServiceProvider
             return $user->possibility([User::ROOT, User::ADMIN]) ||
                 in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
         });
+
+        Gate::define(
+            'can-verification-speciality-catalog',
+            function (User $user, CatalogSpeciality $catalogSpeciality) {
+                return
+                    $user->possibility([User::ADMIN, User::ROOT]) ||
+                    $user->faculty_id === $catalogSpeciality->faculty_id && $user->role_id === User::FACULTY_INSTITUTE;
+            }
+        );
+
+        Gate::define(
+            'toggle-need-verification-speciality-catalog',
+            function (User $user, CatalogSpeciality $catalogSpeciality) {
+                $catalog = $catalogSpeciality->load('owners');
+                $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+                return
+                    $user->possibility([User::ROOT, User::ADMIN]) ||
+                    in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) ||
+                    $catalog->user_id === $user->id;
+            }
+        );
     }
 }
