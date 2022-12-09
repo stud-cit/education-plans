@@ -3,6 +3,7 @@
 namespace App\Http\Resources\CatalogSpeciality;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\SpecialitySubject\SpecialitySubjectResource;
 
 class CatalogSpecialityPdfResource extends JsonResource
 {
@@ -15,12 +16,13 @@ class CatalogSpecialityPdfResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'faculty' => $this->facultyName,
-            'department' => $this->departmentName,
-            'speciality' => $this->specialityIdName,
-            'education_level' => $this->educationLevel->title,
-            'subjects' => $this->subjects,
+            'catalogs' => [
+                'faculty' => $this->facultyName,
+                'department' => $this->departmentName,
+                'speciality' => $this->specialityIdName,
+                'education_level' => $this->educationLevel->title,
+            ],
+            'subjects' => SpecialitySubjectResource::collection($this->subjects),
             'signatures' => $this->signatures,
         ];
     }
