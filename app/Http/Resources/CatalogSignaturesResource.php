@@ -17,7 +17,7 @@ class CatalogSignaturesResource extends JsonResource
         return [
             'name' => $this->name,
             'department' => $this->shortDepartmentName,
-            'faculty' => $this->facultyName,
+            'faculty' => $this->shortFacultyName,
             'type' => $this->catalog_signature_type_id
         ];
     }
