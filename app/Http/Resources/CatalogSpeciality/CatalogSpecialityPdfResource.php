@@ -16,7 +16,7 @@ class CatalogSpecialityPdfResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'catalogs' => [
+            'catalog' => [
                 'faculty' => $this->facultyName,
                 'department' => $this->departmentName,
                 'speciality' => $this->specialityIdName,
