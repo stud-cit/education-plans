@@ -301,7 +301,7 @@ class CatalogSpecialityController extends Controller
     {
         $validated = $request->validated();
 
-        if (array_key_exists('catalog_id', $validated['catalog_id'])) {
+        if (array_key_exists('catalog_id', $validated)) {
             $catalog = CatalogSpeciality::with(['subjects'])->where('id', $validated['catalog_id'])->first();
             return new CatalogSpecialityPdfResource($catalog);
         } else {
