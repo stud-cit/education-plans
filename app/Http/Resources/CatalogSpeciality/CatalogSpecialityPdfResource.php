@@ -3,6 +3,7 @@
 namespace App\Http\Resources\CatalogSpeciality;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\CatalogSignaturesResource;
 use App\Http\Resources\CatalogSelectiveSubjectShowResource;
 
 class CatalogSpecialityPdfResource extends JsonResource
@@ -21,9 +22,10 @@ class CatalogSpecialityPdfResource extends JsonResource
                 'department' => $this->departmentName,
                 'speciality' => $this->specialityIdName,
                 'education_level' => $this->educationLevel->title,
+                'year' => $this->year,
             ],
             'subjects' => CatalogSelectiveSubjectShowResource::collection($this->subjects),
-            'signatures' => $this->signatures,
+            'signatures' => CatalogSignaturesResource::collection($this->signatures),
         ];
     }
 }

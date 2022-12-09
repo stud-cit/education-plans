@@ -77,9 +77,20 @@ class Worker extends ASU
             return self::NOT_FOUND;
         }
 
-        return $worker['last_name'].' '.
-            mb_substr($worker['first_name'], 0, 1).'.'.
-            mb_substr($worker['last_name'], 0, 1). '.';
+        return $worker['last_name'] . ' ' .
+            mb_substr($worker['first_name'], 0, 1) . '.' .
+            mb_substr($worker['last_name'], 0, 1) . '.';
+    }
+
+    public function getFirstLastNames($asu_id)
+    {
+        $worker = $this->getWorker($asu_id);
+
+        if (empty($worker)) {
+            return self::NOT_FOUND;
+        }
+
+        return $worker['first_name'] . ' ' . $worker['last_name'];
     }
 
     /**

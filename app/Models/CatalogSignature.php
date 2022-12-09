@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\ExternalServices\Asu\Worker;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\HasAsuDivisionsNameTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CatalogSignature extends Model
 {
-    use HasFactory;
+    use HasFactory, HasAsuDivisionsNameTrait;
 
     protected $fillable = [
         'asu_id',
@@ -16,4 +18,12 @@ class CatalogSignature extends Model
         'catalog_signature_type_id',
         'catalog_subject_id'
     ];
+
+    public function getNameAttribute(): string
+    {
+        if ($this->asu_id === null) return '';
+
+        $asu = new Worker();
+        return $asu->getFirstLastNames($this->asu_id);
+    }
 }
