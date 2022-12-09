@@ -76,7 +76,8 @@ class AuthServiceProvider extends ServiceProvider
             $catalog = CatalogSpeciality::with('owners')->where('id', $catalog_id)->first();
 
             $ids = array_column($catalog->owners->toArray(), 'department_id');
-            return in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
+            return $user->possibility([User::ROOT, User::ADMIN]) ||
+                in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
         });
     }
 }
