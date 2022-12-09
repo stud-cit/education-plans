@@ -43,6 +43,11 @@ class CatalogSpeciality extends Model
         return $this->hasMany(SpecialitySubject::class, 'catalog_subject_id', 'id');
     }
 
+    public function signatures()
+    {
+        return $this->hasMany(CatalogSignature::class, 'catalog_subject_id', 'id');
+    }
+
     public function getSpecialityIdNameAttribute()
     {
         if (!$this->speciality_id) return null;

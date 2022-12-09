@@ -47,7 +47,7 @@ class SpecialitySubjectController extends Controller
             ->filterBy($validated)
             ->paginate($perPage);
 
-        $catalog = CatalogSpeciality::findOrFail($validated['catalogSubject']);
+        $catalog = CatalogSpeciality::with('signatures')->findOrFail($validated['catalogSubject']);
 
         return SpecialitySubjectResource::collection($subject)->additional([
             'catalog' => [
@@ -58,8 +58,11 @@ class SpecialitySubjectController extends Controller
                 'education_level' => $catalog->educationLevel->title,
                 'faculty' => $catalog->facultyName,
                 'department' => $catalog->departmentName,
+                'faculty_id' => $catalog->faculty_id,
+                'department_id' => $catalog->department_id,
                 'owners' => $catalog->owners->map(fn ($owner) => ['id' => $owner->department_id]),
                 'can_create' => Gate::allows('create-speciality-subject', $catalog->id),
+                'signatures' => $catalog->signatures
             ],
         ]);
     }
