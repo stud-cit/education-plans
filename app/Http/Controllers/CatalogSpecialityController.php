@@ -19,6 +19,7 @@ use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\OwnerRequest;
 use App\Http\Requests\CatalogSpeciality\StoreRequest;
 use App\Http\Requests\CatalogSpeciality\UpdateRequest;
+use App\Http\Requests\CatalogSpeciality\StoreSignatureRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
 use App\Http\Requests\CatalogSpeciality\PdfCatalogSpecialityRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
@@ -215,6 +216,30 @@ class CatalogSpecialityController extends Controller
         $catalogSpeciality->owners()->createMany($result);
 
         return $this->success(__('messages.Created'), 201);
+    }
+
+    public function storeSignatures(StoreSignatureRequest $request, CatalogSpeciality $catalogSpeciality)
+    {
+        $validated = $request->validated();
+        clock($validated);
+        $catalogSpeciality->signatures()->whereNotIn('id', array_column($validated['signatures'], 'id'))->delete();
+
+        foreach ($validated['signatures'] as $signature) {
+            $catalogSpeciality->signatures()->updateOrCreate(
+                [
+                    'id' => $signature['id'],
+                    'catalog_subject_id' => $signature['catalog_subject_id'],
+                ],
+                [
+                    'asu_id' =>  $signature['asu_id'],
+                    'faculty_id' =>  $signature['faculty_id'],
+                    'department_id' =>  $signature['department_id'],
+                    'catalog_signature_type_id' =>  $signature['catalog_signature_type_id'],
+                ]
+            );
+        }
+
+        return $this->success(__('messages.Updated'), 201);
     }
 
     public function toggleToVerification(

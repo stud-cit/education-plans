@@ -139,6 +139,9 @@ Route::prefix('v1')->group(function () {
         Route::patch('/catalog-specialties/owners/{catalog_speciality}', [
             CatalogSpecialityController::class, 'owners'
         ]); //->middleware('can:owner-catalog-speciality');
+        Route::patch('/catalog-specialties/signature/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'storeSignatures'
+        ]);
         Route::delete('/catalog-specialties/delete/{catalog_speciality}', [
             CatalogSpecialityController::class, 'delete'
         ])->middleware('can:delete-catalog-speciality,catalog_speciality');
