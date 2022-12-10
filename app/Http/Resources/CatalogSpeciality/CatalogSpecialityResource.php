@@ -3,7 +3,7 @@
 namespace App\Http\Resources\CatalogSpeciality;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\VerificationCatalogResource;
+use App\Http\Resources\CatalogSpeciality\VerificationCatalogResource;
 
 class CatalogSpecialityResource extends JsonResource
 {
