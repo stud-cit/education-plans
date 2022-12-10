@@ -24,11 +24,12 @@ class StoreCatalogSpecialityVerificationRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'nullable|exists:App\Models\CatalogVerification,id',
-            'verification_status_id' => 'required|exists:App\Models\VerificationStatuses,id',
-            'user_id' => 'required|exists:App\Models\User,id',
-            'catalog_subject_id' => 'required|exists:App\Models\CatalogSpeciality,id',
             'status' => 'required',
+            'user_id' => 'required|exists:App\Models\User,id',
+            'verification_status_id' => 'required|exists:App\Models\VerificationStatuses,id',
+
+            'id' => 'nullable|exists:App\Models\CatalogVerification,id',
+            'catalog_id' => 'required|exists:App\Models\CatalogSpeciality,id',
             'comment' => 'nullable|required_if:status,false|string|max:255'
         ];
     }

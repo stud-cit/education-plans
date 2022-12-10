@@ -12,7 +12,7 @@ class CatalogVerification extends Model
     protected $fillable = [
         'user_id',
         'verification_status_id',
-        'catalog_subject_id',
+        'catalog_id',
         'status',
         'comment'
     ];

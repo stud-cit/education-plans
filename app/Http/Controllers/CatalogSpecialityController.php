@@ -285,7 +285,7 @@ class CatalogSpecialityController extends Controller
         $catalogSpeciality->verifications()->updateOrCreate(
             [
                 'verification_status_id' => $validated['verification_status_id'],
-                'catalog_subject_id' => $validated['catalog_subject_id']
+                'catalog_subject_id' => $validated['catalog_id']
             ],
             [
                 'status' => $validated['status'],
