@@ -148,7 +148,7 @@ Route::prefix('v1')->group(function () {
             CatalogSpecialityController::class, 'delete'
         ])->middleware('can:delete-catalog-speciality,catalog_speciality');
 
-        Route::patch('/catalog-specialties/verification/{catalog_subject}', [
+        Route::patch('/catalog-specialties/verification/{catalog_speciality}', [
             CatalogSpecialityController::class, 'verification'
         ]);
         Route::patch('/catalog-specialties/toggle-to-verification/{catalog_subject}', [
