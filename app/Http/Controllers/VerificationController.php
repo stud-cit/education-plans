@@ -31,4 +31,11 @@ class VerificationController extends Controller
 
         return VerificationSubjectStatusesResource::collection($statuses);
     }
+
+    public function getVerificationCatalogEducationProgramStatuses()
+    {
+        $statuses = VerificationStatuses::select('id', 'title', 'role_id')->where('type', 'education-program')->get();
+
+        return VerificationSubjectStatusesResource::collection($statuses);
+    }
 }

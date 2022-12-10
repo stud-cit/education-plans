@@ -66,6 +66,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/verifications', [VerificationController::class, 'index']);
         Route::get('/verification-subject-statuses', [VerificationController::class, 'getVerificationSubjectStatuses']);
         Route::get('/verification-catalog-speciality-statuses', [VerificationController::class, 'getVerificationCatalogSpecialityStatuses']);
+        Route::get('/verification-catalog-education-program-statuses', [VerificationController::class, 'getVerificationCatalogEducationProgramStatuses']);
 
         Route::apiResource('form-studies', FormStudyController::class);
         Route::apiResource('form-organizations', FormOrganizationController::class);
