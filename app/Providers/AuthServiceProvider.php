@@ -80,7 +80,15 @@ class AuthServiceProvider extends ServiceProvider
 
             $catalog = CatalogSpeciality::with('owners')->where('id', $catalog_id)->first();
 
+            if (
+                $catalog->department_id === $user->department_id
+                && $user->possibility(User::DEPARTMENT)
+            ) {
+                return true;
+            }
+
             $ids = array_column($catalog->owners->toArray(), 'department_id');
+
             return $user->possibility([User::ROOT, User::ADMIN]) ||
                 in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
         });
@@ -133,7 +141,10 @@ class AuthServiceProvider extends ServiceProvider
             'can-setting-catalog-speciality',
             function (User $user, CatalogSpeciality $catalogSpeciality) {
 
-                if ($catalogSpeciality->department_id === $user->department_id) {
+                if (
+                    $catalogSpeciality->department_id === $user->department_id
+                    && $user->possibility(User::DEPARTMENT)
+                ) {
                     return true;
                 }
 
