@@ -66,7 +66,7 @@ class CatalogSpeciality extends Model
 
     public function verifications()
     {
-        return $this->hasMany(CatalogVerification::class, 'catalog_subject_id', 'id');
+        return $this->hasMany(CatalogVerification::class, 'catalog_id', 'id');
     }
 
     public function owners()
@@ -91,7 +91,7 @@ class CatalogSpeciality extends Model
         return [
             'copy' =>  Gate::allows('copy-catalog-speciality'),
             'preview' => $policy->viewAny($user),
-            'edit' => $policy->update($user, $this),
+            // 'edit' => $policy->update($user, $this),
             'delete' => Gate::allows('delete-catalog-speciality', $this),
         ];
     }
