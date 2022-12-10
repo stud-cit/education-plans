@@ -19,8 +19,9 @@ class CreateCatalogVerificationsTable extends Migration
             $table->foreignId('verification_status_id')->constrained();
             $table->foreignId('catalog_subject_id')->constrained();
             $table->boolean('status');
-            $table->text('comment');
+            $table->text('comment')->nullable(true);
             $table->timestamps();
+            $table->unique(['verification_status_id', 'catalog_subject_id']);
         });
     }
 
