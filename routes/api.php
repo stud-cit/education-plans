@@ -151,7 +151,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('/catalog-specialties/verification/{catalog_speciality}', [
             CatalogSpecialityController::class, 'verification'
         ]);
-        Route::patch('/catalog-specialties/toggle-to-verification/{catalog_subject}', [
+        Route::patch('/catalog-specialties/toggle-to-verification/{catalog_speciality}', [
             CatalogSpecialityController::class, 'toggleToVerification'
         ]);
 
