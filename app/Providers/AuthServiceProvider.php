@@ -127,5 +127,20 @@ class AuthServiceProvider extends ServiceProvider
                     $catalogEducationProgram->user_id === $user->id;
             }
         );
+
+
+        Gate::define(
+            'can-setting-catalog-speciality',
+            function (User $user, CatalogSpeciality $catalogSpeciality) {
+
+                if ($catalogSpeciality->department_id === $user->department_id) {
+                    return true;
+                }
+
+                return
+                    $user->possibility([User::ROOT, User::ADMIN]) ||
+                    $catalogSpeciality->user_id === $user->id;
+            }
+        );
     }
 }

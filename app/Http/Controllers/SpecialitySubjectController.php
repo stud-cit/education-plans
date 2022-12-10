@@ -64,6 +64,7 @@ class SpecialitySubjectController extends Controller
                 'can_create' => Gate::allows('create-speciality-subject', $catalog->id),
                 'can_verification' => Gate::allows('can-verification-speciality-catalog', $catalog),
                 'toggle_to_verification' => Gate::allows('toggle-need-verification-speciality-catalog', $catalog),
+                'can_setting' => Gate::allows('can-setting-catalog-speciality', $catalog),
                 'need_verification' => $catalog->need_verification,
                 'verifications' => $catalog->verifications,
                 'signatures' => $catalog->signatures
