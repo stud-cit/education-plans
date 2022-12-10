@@ -3,10 +3,11 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Gate;
-use App\Models\CatalogSelectiveSubject;
 use App\Models\CatalogSpeciality;
 use App\Models\SpecialitySubject;
+use Illuminate\Support\Facades\Gate;
+use App\Models\CatalogEducationProgram;
+use App\Models\CatalogSelectiveSubject;
 use App\Policies\SpecialitySubjectPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -67,6 +68,10 @@ class AuthServiceProvider extends ServiceProvider
             return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
         });
 
+        Gate::define('copy-catalog-education-program', function (User $user) {
+            return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
+        });
+
         Gate::define('delete-catalog-speciality', function (User $user, CatalogSpeciality $catalogSpeciality) {
             return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogSpeciality->user_id;
         });
@@ -92,7 +97,24 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define(
             'toggle-need-verification-speciality-catalog',
             function (User $user, CatalogSpeciality $catalogSpeciality) {
-                $catalog = $catalogSpeciality->load('owners');
+                // $catalog = $catalogSpeciality->load('owners');
+                // $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+                if ($catalogSpeciality->department_id === $user->department_id) {
+                    return true;
+                }
+
+                return
+                    $user->possibility([User::ROOT, User::ADMIN]) ||
+                    // in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) ||
+                    $catalogSpeciality->user_id === $user->id;
+            }
+        );
+
+        Gate::define(
+            'toggle-need-verification-education-program-catalog',
+            function (User $user, CatalogEducationProgram $catalogEducationProgram) {
+                $catalog = $catalogEducationProgram->load('owners');
                 $ids = array_column($catalog->owners->toArray(), 'department_id');
 
                 return
