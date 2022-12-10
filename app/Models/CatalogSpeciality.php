@@ -64,6 +64,31 @@ class CatalogSpeciality extends Model
         return "Каталог {$this->year}-{$nextYear}р. за спеціальністю {$this->getSpecialityIdNameAttribute()}";
     }
 
+    public function getStatusAttribute()
+    {
+        $fullVerification = VerificationStatuses::fullCatalogSpecialityVerification();
+
+        $data = array_column($this->verifications->toArray(), 'status');
+
+        if (count($this->filterStatus($data, 1)) === $fullVerification) {
+            $result = 'success';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
+            $result = 'warning';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
+            $result = 'error';
+        } else {
+            $result = '';
+        }
+        return $result;
+    }
+
+    private function filterStatus($data, $id)
+    {
+        return array_filter($data, function ($val) use ($id) {
+            return $val === $id;
+        });
+    }
+
     public function verifications()
     {
         return $this->hasMany(CatalogVerification::class, 'catalog_id', 'id');
