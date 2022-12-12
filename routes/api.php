@@ -35,6 +35,7 @@ use App\Http\Controllers\{
     CatalogSelectiveSubjectController,
     CatalogSpecialityController,
     SpecialitySubjectController,
+    EducationProgramSubjectController,
 };
 
 /*
@@ -189,5 +190,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/catalog-education-programs/generate-pdf', [CatalogEducationProgramController::class, 'pdf']);
 
         Route::resource('catalog-education-programs', CatalogEducationProgramController::class);
+        Route::resource('education-program-subjects', EducationProgramSubjectController::class);
     });
 });
