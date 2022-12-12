@@ -84,6 +84,31 @@ class CatalogEducationProgram extends Model
         return $filter->apply();
     }
 
+    public function getStatusAttribute()
+    {
+        $fullVerification = VerificationStatuses::fullCatalogEducationProgramVerification();
+
+        $data = array_column($this->verifications->toArray(), 'status');
+
+        if (count($this->filterStatus($data, 1)) === $fullVerification) {
+            $result = 'success';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
+            $result = 'warning';
+        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
+            $result = 'error';
+        } else {
+            $result = '';
+        }
+        return $result;
+    }
+
+    private function filterStatus($data, $id)
+    {
+        return array_filter($data, function ($val) use ($id) {
+            return $val === $id;
+        });
+    }
+
     public function actions()
     {
         $policy = new CatalogEducationProgramPolicy();
