@@ -85,16 +85,6 @@ class CatalogSelectiveSubject extends Model
         return $this->catalog()->where('selective_discipline_id', 1);
     }
 
-    // not gen
-    /**
-     * Get third catalog Вибіркові дисципліни за освітньою програмою
-     */
-    public function educationProgramCatalog()
-    {
-        return $this->catalog()->where('selective_discipline_id', 3);
-    }
-
-
     public function scopeOfUserType($query, $type)
     {
         switch ($type) {

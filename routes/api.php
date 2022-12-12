@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AsuController,
+    CatalogEducationProgramController,
     CatalogHelperTypeController,
     CycleController,
     CatalogGroupController,
@@ -160,7 +161,31 @@ Route::prefix('v1')->group(function () {
         Route::Resource('catalog-specialties', CatalogSpecialityController::class);
 
         Route::Resource('speciality-subjects', SpecialitySubjectController::class);
+        // education program
+        Route::get('/catalog-education-programs/filters', [CatalogEducationProgramController::class, 'getItemsFilters']);
+        Route::patch('/catalog-education-programs/copy/{catalog_speciality}', [
+            CatalogEducationProgramController::class, 'copy'
+        ])->middleware('can:copy-catalog-speciality');
+        Route::patch('/catalog-education-programs/owners/{catalog_speciality}', [
+            CatalogEducationProgramController::class, 'owners'
+        ]);
+        Route::patch('/catalog-education-programs/signature/{catalog_speciality}', [
+            CatalogEducationProgramController::class, 'storeSignatures'
+        ]);
+        // todo
+        // Route::delete('/catalog-education-programs/delete/{catalog_speciality}', [
+        //     CatalogEducationProgramController::class, 'delete'
+        // ])->middleware('can:delete-catalog-speciality,catalog_speciality');
+
+        Route::patch('/catalog-education-programs/verification/{catalog_speciality}', [
+            CatalogEducationProgramController::class, 'verification'
+        ]);
+        Route::patch('/catalog-education-programs/toggle-to-verification/{catalog_speciality}', [
+            CatalogEducationProgramController::class, 'toggleToVerification'
+        ]);
+
+        Route::get('/catalog-education-programs/generate-pdf', [CatalogEducationProgramController::class, 'pdf']);
+
+        Route::resource('catalog-education-programs', CatalogEducationProgramController::class);
     });
 });
-
-Route::get('/catalog-specialties/generate-pdf', [CatalogSpecialityController::class, 'pdf']);
