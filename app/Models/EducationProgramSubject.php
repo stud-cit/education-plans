@@ -15,8 +15,6 @@ class EducationProgramSubject extends Model
 {
     use HasFactory, HasAsuDivisionsNameTrait, Subject, \Bkwld\Cloner\Cloneable;
 
-    const EDUCATION_PROGRAM = 3;
-
     protected $table = 'catalog_selective_subjects';
     protected $cloneable_relations = ['languages', 'teachers'];
     protected $fillable = [
@@ -79,10 +77,6 @@ class EducationProgramSubject extends Model
     {
         static::creating(function ($catalog) {
             $catalog->user_id = Auth::id();
-        });
-
-        static::addGlobalScope('selective_discipline', function (Builder $builder) {
-            $builder->where('selective_discipline_id', self::EDUCATION_PROGRAM);
         });
     }
 }
