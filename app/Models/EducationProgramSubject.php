@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Auth;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
+use App\Policies\EducationProgramSubjectPolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EducationProgramSubject extends Model
@@ -51,7 +53,7 @@ class EducationProgramSubject extends Model
 
     public function actions()
     {
-        $policy = new SpecialitySubjectPolicy();
+        $policy = new EducationProgramSubjectPolicy();
         $user = Auth::user();
 
         return [
@@ -73,7 +75,6 @@ class EducationProgramSubject extends Model
     {
         static::creating(function ($catalog) {
             $catalog->user_id = Auth::id();
-            // $catalog->user_id =  1; //Auth::id();
         });
     }
 }
