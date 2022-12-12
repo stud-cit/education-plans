@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\CatalogEducationProgram;
 use App\Models\EducationProgramSubject;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class EducationProgramSubjectPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->possibility();
     }
 
     /**
@@ -30,7 +31,7 @@ class EducationProgramSubjectPolicy
      */
     public function view(User $user, EducationProgramSubject $educationProgramSubject)
     {
-        //
+        return $user->possibility();
     }
 
     /**
@@ -41,7 +42,7 @@ class EducationProgramSubjectPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +54,16 @@ class EducationProgramSubjectPolicy
      */
     public function update(User $user, EducationProgramSubject $educationProgramSubject)
     {
-        //
+        $catalog = CatalogEducationProgram::with('owners')
+            ->where('id', $educationProgramSubject->catalog_subject_id)
+            ->first();
+
+        $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+        return $user->possibility(User::DEPARTMENT)
+            && $educationProgramSubject->user_id === $user->id
+            || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
+            || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
@@ -65,7 +75,15 @@ class EducationProgramSubjectPolicy
      */
     public function delete(User $user, EducationProgramSubject $educationProgramSubject)
     {
-        //
+        $catalog = CatalogEducationProgram::with('owners')
+            ->where('id', $educationProgramSubject->catalog_subject_id)
+            ->first();
+
+        $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+        return $user->possibility(User::DEPARTMENT) && $educationProgramSubject->user_id === $user->id
+            || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
+            || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
