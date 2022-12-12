@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Traits\Catalog;
+use App\Models\CatalogSignature;
+use App\Models\CatalogVerification;
+use App\Models\OwnerCatalogSubject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
