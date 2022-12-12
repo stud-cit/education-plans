@@ -90,7 +90,7 @@ class CatalogEducationProgram extends Model
             'preview' => $policy->viewAny($user),
             // 'edit' => $policy->update($user, $this),
             // check if works
-            'delete' => $policy->delete($user, $this),
+            'delete' => Gate::allows('delete-catalog-education-program', $this),
         ];
     }
 
