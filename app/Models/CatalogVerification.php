@@ -9,6 +9,8 @@ class CatalogVerification extends Model
 {
     use HasFactory;
 
+    protected $table = 'catalog_verifications';
+
     protected $fillable = [
         'user_id',
         'verification_status_id',
