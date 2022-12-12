@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
+use Illuminate\Database\Eloquent\Builder;
 use App\Policies\EducationProgramSubjectPolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class EducationProgramSubject extends Model
 {
     use HasFactory, HasAsuDivisionsNameTrait, Subject, \Bkwld\Cloner\Cloneable;
+
+    const EDUCATION_PROGRAM = 3;
 
     protected $table = 'catalog_selective_subjects';
     protected $cloneable_relations = ['languages', 'teachers'];
@@ -76,6 +79,10 @@ class EducationProgramSubject extends Model
     {
         static::creating(function ($catalog) {
             $catalog->user_id = Auth::id();
+        });
+
+        static::addGlobalScope('selective_discipline', function (Builder $builder) {
+            $builder->where('selective_discipline_id', self::EDUCATION_PROGRAM);
         });
     }
 }
