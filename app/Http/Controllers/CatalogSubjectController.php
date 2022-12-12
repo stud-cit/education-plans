@@ -141,6 +141,9 @@ class CatalogSubjectController extends Controller
             ->select('id', 'year', 'group_id')
             ->first();
 
-        return new CatalogSubjectDisciplineResource($data);
+        $result = new CatalogSubjectDisciplineResource($data);
+        $result->subjects = $result->subjects->filter( fn ($s) => $s->status === 'success');
+
+        return $result;
     }
 }
