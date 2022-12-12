@@ -17,19 +17,23 @@ class SubjectHelperSeeder extends Seeder
         DB::table('subject_helpers')->insert([
             [
                 'title' => 'Здатність до абстрактного мислення, аналізу та синтезу. Здатність діяти соціально відповідально та свідомо',
-                'catalog_helper_type_id' => 1
+                'catalog_helper_type_id' => 1,
+                'selective_discipline_id' => 1
             ],
             [
                 'title' => 'Застосовувати категорії та принципи виборчого права татехнології виборчих кампаній для оцінювання програм кандидатів тадемократичності виборів. Давати оцінку перевагам та недолікам виборчих систем. Узагальнювати електоральну статистику',
-                'catalog_helper_type_id' => 2
+                'catalog_helper_type_id' => 2,
+                'selective_discipline_id' => 1
             ],
             [
                 'title' => 'Лекції, семінари, проблемні заняття',
-                'catalog_helper_type_id' => 3
+                'catalog_helper_type_id' => 3,
+                'selective_discipline_id' => 1
             ],
             [
                 'title' => 'Аудиторiя',
-                'catalog_helper_type_id' => 4
+                'catalog_helper_type_id' => 4,
+                'selective_discipline_id' => 1
             ],
         ]);
     }

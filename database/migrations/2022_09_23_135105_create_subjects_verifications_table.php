@@ -17,10 +17,11 @@ class CreateSubjectsVerificationsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('verification_status_id')->constrained();
-            $table->foreignId('catalog_selective_subject_id')->constrained();
+            $table->foreignId('subject_id')->constrained();
             $table->boolean('status');
-            $table->text('comment');
+            $table->text('comment')->nullable(true);
             $table->timestamps();
+            $table->unique(['verification_status_id', 'subject_id']);
         });
     }
 
@@ -34,7 +35,7 @@ class CreateSubjectsVerificationsTable extends Migration
         Schema::table('subjects_verifications', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['verification_status_id']);
-            $table->dropForeign(['catalog_selective_subject_id']);
+            $table->dropForeign(['subject_id']);
         });
 
         Schema::dropIfExists('subjects_verifications');

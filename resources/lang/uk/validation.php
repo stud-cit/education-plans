@@ -126,10 +126,15 @@ return [
     'uploaded'             => 'Завантаження :attribute не вдалося.',
     'url'                  => 'Формат поля :attribute хибний.',
     'uuid'                 => 'Поле :attribute має бути коректним UUID ідентифікатором.',
-    'custom'               => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
+    // 'custom'               => [
+    //     'attribute-name' => [
+    //         'rule-name' => 'custom-message',
+    //     ],
+    // ],
+    'custom' => [
+        'asu_id' => [
+            'unique' => 'В даному каталозі дисципліна вже існує.',
+        ]
     ],
 
     'attributes' => [
@@ -155,6 +160,7 @@ return [
         'specialization_id' => 'Спеціалізація',
         'education_program_id' => 'Освітня програма',
         'value' => 'Значення',
+        'group_id' => 'група',
     ],
 
 ];

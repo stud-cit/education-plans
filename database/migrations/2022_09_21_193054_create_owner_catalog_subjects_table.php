@@ -16,9 +16,10 @@ class CreateOwnerCatalogSubjectsTable extends Migration
         Schema::create('owner_catalog_subjects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('catalog_subject_id')->constrained();
-            $table->unsignedInteger('faculty_id');
+            // $table->unsignedInteger('faculty_id');
             $table->unsignedInteger('department_id');
             $table->timestamps();
+            $table->unique(['catalog_subject_id', 'department_id']);
         });
     }
 

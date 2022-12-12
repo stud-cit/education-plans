@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\ExternalServices\Asu;
 
@@ -64,7 +66,31 @@ class Worker extends ASU
             return self::NOT_FOUND;
         }
 
-        return $worker['last_name'] .' '. $worker['first_name'] .' '. $worker['patronymic'];
+        return $worker['last_name'] . ' ' . $worker['first_name'] . ' ' . $worker['patronymic'];
+    }
+
+    public function getShortName($asu_id)
+    {
+        $worker = $this->getWorker($asu_id);
+
+        if (empty($worker)) {
+            return self::NOT_FOUND;
+        }
+
+        return $worker['last_name'] . ' ' .
+            mb_substr($worker['first_name'], 0, 1) . '.' .
+            mb_substr($worker['last_name'], 0, 1) . '.';
+    }
+
+    public function getFirstLastNames($asu_id)
+    {
+        $worker = $this->getWorker($asu_id);
+
+        if (empty($worker)) {
+            return self::NOT_FOUND;
+        }
+
+        return $worker['first_name'] . ' ' . $worker['last_name'];
     }
 
     /**
@@ -98,5 +124,4 @@ class Worker extends ASU
 
         return $worker[$attribute];
     }
-
 }

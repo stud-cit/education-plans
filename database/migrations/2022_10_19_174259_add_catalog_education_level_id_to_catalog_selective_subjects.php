@@ -14,7 +14,7 @@ class AddCatalogEducationLevelIdToCatalogSelectiveSubjects extends Migration
     public function up()
     {
         Schema::table('catalog_selective_subjects', function (Blueprint $table) {
-            $table->foreignId('catalog_education_level_id')->constrained();
+            $table->foreignId('catalog_education_level_id')->nullable(true)->constrained();
         });
     }
 

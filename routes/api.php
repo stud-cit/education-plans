@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AsuController,
+    CatalogEducationProgramController,
     CatalogHelperTypeController,
     CycleController,
     CatalogGroupController,
@@ -31,7 +32,10 @@ use App\Http\Controllers\{
     SubjectLanguageController,
     UserActivityController,
     CatalogSubjectController,
-    CatalogSelectiveSubjectController
+    CatalogSelectiveSubjectController,
+    CatalogSpecialityController,
+    SpecialitySubjectController,
+    EducationProgramSubjectController,
 };
 
 /*
@@ -61,7 +65,11 @@ Route::prefix('v1')->group(function () {
         Route::get('plans/filters', [PlanController::class, 'getItemsFilters']);
         Route::Resource('plans', PlanController::class);
 
-        Route::apiResource('verifications', VerificationController::class);
+        Route::get('/verifications', [VerificationController::class, 'index']);
+        Route::get('/verification-subject-statuses', [VerificationController::class, 'getVerificationSubjectStatuses']);
+        Route::get('/verification-catalog-speciality-statuses', [VerificationController::class, 'getVerificationCatalogSpecialityStatuses']);
+        Route::get('/verification-catalog-education-program-statuses', [VerificationController::class, 'getVerificationCatalogEducationProgramStatuses']);
+
         Route::apiResource('form-studies', FormStudyController::class);
         Route::apiResource('form-organizations', FormOrganizationController::class);
         Route::apiResource('education-levels', EducationLevelController::class);
@@ -76,7 +84,7 @@ Route::prefix('v1')->group(function () {
         Route::get('faculty-by-worker', [UserController::class, 'getFacultyByWorker'])->name('users.faculty.worker');
         Route::apiResource('users', UserController::class);
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
-        Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage_study_terms');
+        Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage-study-terms');
         Route::apiResource('settings', SettingController::class);
         Route::apiResource('positions', PositionController::class);
         Route::apiResource('signatures', SignatureController::class)
@@ -86,10 +94,14 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('list-cycles', ListCycleController::class)->only('index');
 
         Route::get('/departments/{id}', [AsuController::class, 'departmentById'])->name('asu.department.show');
+        Route::get('/departments', [AsuController::class, 'getDepartments']);
         Route::get('/faculties', [AsuController::class, 'faculties'])->name('asu.faculty');
         Route::get('/specialities/{id}', [AsuController::class, 'getSpecialities'])->name('asu.specialities');
         Route::get('/specializations/{id}', [AsuController::class, 'getSpecializations'])->name('asu.specializations');
         Route::get('/education-programs/{id}', [AsuController::class, 'getEducationPrograms'])->name('asu.education-programs');
+        Route::get('/education-programs', [AsuController::class, 'getAllEducationPrograms']);
+        Route::get('/specialities', [AsuController::class, 'getAllSpecialities']);
+
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
@@ -107,10 +119,78 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('catalog-helper-types', CatalogHelperTypeController::class)->only('index');
 
         Route::get('catalog-groups/list', [CatalogGroupController::class, 'list']);
-        Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore_catalog_group');
+        Route::patch('catalog-groups/restore/{id}', [CatalogGroupController::class, 'restore'])->middleware('can:restore-catalog-group');
         Route::apiResource('catalog-groups', CatalogGroupController::class);
+
         Route::get('catalog-subjects/years', [CatalogSubjectController::class, 'getYears']);
+        Route::get('catalog-subjects/catalog-titles', [CatalogSubjectController::class, 'getCatalogs']);
+        Route::get('/catalog-subjects/generate-pdf', [CatalogSubjectController::class, 'generateSubjectsPDF']);
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
-        Route::apiResource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
+
+        Route::patch('/catalog-selective-subjects/verification/{catalog_selective_subject}', [
+            CatalogSelectiveSubjectController::class, 'verification'
+        ]);
+        Route::patch('/catalog-selective-subjects/toggle-to-verification/{catalog_selective_subject}', [
+            CatalogSelectiveSubjectController::class, 'toggleToVerification'
+        ]);
+        Route::get('catalog-selective-subjects/filters', [CatalogSelectiveSubjectController::class, 'getItemsFilters']);
+        Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
+
+        Route::get('/catalog-specialties/filters', [CatalogSpecialityController::class, 'getItemsFilters']);
+        Route::patch('/catalog-specialties/copy/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'copy'
+        ])->middleware('can:copy-catalog-speciality');
+        Route::patch('/catalog-specialties/owners/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'owners'
+        ]); //->middleware('can:owner-catalog-speciality');
+        Route::patch('/catalog-specialties/signature/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'storeSignatures'
+        ]);
+        Route::delete('/catalog-specialties/delete/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'delete'
+        ])->middleware('can:delete-catalog-speciality,catalog_speciality');
+
+        Route::patch('/catalog-specialties/verification/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'verification'
+        ]);
+        Route::patch('/catalog-specialties/toggle-to-verification/{catalog_speciality}', [
+            CatalogSpecialityController::class, 'toggleToVerification'
+        ]);
+
+        Route::get('/catalog-specialties/generate-pdf', [CatalogSpecialityController::class, 'pdf']);
+
+        Route::Resource('catalog-specialties', CatalogSpecialityController::class);
+
+        Route::Resource('speciality-subjects', SpecialitySubjectController::class);
+        // education program
+        Route::get('/catalog-education-programs/filters', [CatalogEducationProgramController::class, 'getItemsFilters']);
+
+        Route::patch('/catalog-education-programs/copy/{catalog_education_program}', [
+            CatalogEducationProgramController::class, 'copy'
+        ])->middleware('can:copy-catalog-education-program');
+
+        Route::patch('/catalog-education-programs/owners/{catalog_education_program}', [
+            CatalogEducationProgramController::class, 'owners'
+        ]);
+        Route::patch('/catalog-education-programs/signature/{catalog_education_program}', [
+            CatalogEducationProgramController::class, 'storeSignatures'
+        ]);
+
+        Route::delete('/catalog-education-programs/delete/{catalog_education_program}', [
+            CatalogEducationProgramController::class, 'delete'
+        ])->middleware('can:delete-catalog-education-program,catalog_education_program');
+
+        Route::patch('/catalog-education-programs/verification/{catalog_education_program}', [
+            CatalogEducationProgramController::class, 'verification'
+        ]);
+        Route::patch('/catalog-education-programs/toggle-to-verification/{catalog_education_program}', [
+            CatalogEducationProgramController::class, 'toggleToVerification'
+        ]);
+
+        Route::get('/catalog-education-programs/generate-pdf', [CatalogEducationProgramController::class, 'pdf']);
+
+        Route::resource('catalog-education-programs', CatalogEducationProgramController::class);
+        Route::resource('education-program-subjects', EducationProgramSubjectController::class);
+        Route::get('/catalog-education-programs/generate-pdf', [CatalogEducationProgramController::class, 'pdf']);
     });
 });

@@ -14,7 +14,10 @@ class AddCatalogSelectiveSubjectIdToTeachersTable extends Migration
     public function up()
     {
         Schema::table('teachers', function (Blueprint $table) {
-            $table->foreignId('catalog_selective_subject_id')->constrained();
+            $table->foreignId('catalog_selective_subject_id')
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

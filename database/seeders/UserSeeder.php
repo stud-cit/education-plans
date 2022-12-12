@@ -93,6 +93,17 @@ class UserSeeder extends Seeder
                 'role_id' => 6,
                 'email' => 'department1@gmail.com',
                 'password' => Hash::make('password')
+            ],
+            [
+                'asu_id' => '148141f5-83c3-e511-867d-001a4be6d04a',
+                'name' => 'Max',
+                'faculty_id' => 414,
+                'faculty_name' => 'Elit',
+                'department_id' => 325,
+                'department_name' => 'Komp nauk',
+                'role_id' => 1,
+                'email' => 'department11@gmail.com',
+                'password' => Hash::make('password')
             ]
         ]);
     }

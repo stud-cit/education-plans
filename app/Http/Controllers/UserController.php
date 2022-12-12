@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Constant;
 use App\Http\Requests\IndexUserRequest;
 use App\Models\User;
+use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\ExternalServices\Asu\Worker;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\IndexUserRequest;
 use App\Http\Requests\StoreUserRequest;
-use App\Http\Resources\WorkersResource;
 use App\ExternalServices\Asu\Department;
 use App\Http\Requests\UpdateUserRoleRequest;
 
@@ -28,10 +29,11 @@ class UserController extends Controller
     public function index(IndexUserRequest $request)
     {
         $validated = $request->validated();
+        $perPage = Helpers::getPerPage('items_per_page', $validated);
+
         $user = Auth::user();
         $roleAdmin = $user->role_id === User::ADMIN;
         $roleInstitute = $user->role_id === User::FACULTY_INSTITUTE;
-        $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
         $users = User::select('id', 'asu_id', 'department_id', 'faculty_id', 'role_id')
             ->filterBy($validated)

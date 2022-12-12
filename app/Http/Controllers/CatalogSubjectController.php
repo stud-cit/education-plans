@@ -2,11 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Models\CatalogSubject;
-use App\Http\Requests\StoreCatalogRequest;
-use App\Http\Resources\CatalogSubjectGroupResource;
-use App\Http\Resources\CatalogSubjectYearsResource;
+use App\Http\Requests\CatalogSubject\{
+    IndexCatalogSubjectRequest,
+    StoreCatalogRequest,
+    PdfCatalogSubjectRequest,
+};
+use App\Http\Resources\CatalogSubject\{
+    CatalogSubjectYearsResource,
+    CatalogSubjectDisciplineResource,
+    CatalogSubjectGroupResource,
+    CatalogSubjectNameResource
+};
 
 class CatalogSubjectController extends Controller
 {
@@ -15,10 +24,17 @@ class CatalogSubjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(IndexCatalogSubjectRequest $request)
     {
-        $catalog = CatalogSubject::with(['group'])->select(['id', 'year', 'group_id']);
-        return CatalogSubjectGroupResource::collection($catalog->paginate());
+        $validated = $request->validated();
+
+        $perPage = Helpers::getPerPage('items_per_page', $validated);
+
+        $catalog = CatalogSubject::with(['group'])
+            ->select(['id', 'year', 'group_id'])
+            ->filterBy($validated);
+
+        return CatalogSubjectGroupResource::collection($catalog->paginate($perPage));
     }
 
     /**
@@ -40,6 +56,8 @@ class CatalogSubjectController extends Controller
     public function store(StoreCatalogRequest $request)
     {
         $validated = $request->validated();
+        $validated['selective_discipline_id'] = 1;
+
         CatalogSubject::create($validated);
         return $this->success(__('messages.Created'), 201);
     }
@@ -96,7 +114,36 @@ class CatalogSubjectController extends Controller
      */
     public function getYears()
     {
-        $years = CatalogSubject::select('year')->distinct()->orderBy('year', 'desc')->get();
+        $years = CatalogSubject::select('year')->where('group_id', '!=', null)->distinct()->orderBy('year', 'desc')->get();
         return CatalogSubjectYearsResource::collection($years);
+    }
+
+    public function getCatalogs()
+    {
+        $catalogs = CatalogSubject::whereHas('group')->select('id', 'year', 'group_id')->orderBy('year', 'desc')->get();
+        clock($catalogs->toArray());
+        return CatalogSubjectNameResource::collection($catalogs);
+    }
+
+    public function generateSubjectsPDF(PdfCatalogSubjectRequest $request)
+    {
+        $validated = $request->validated();
+
+        $data = CatalogSubject::with([
+            'group',
+            'subjects.languages.language',
+            'subjects.lecturers',
+            'subjects.practice',
+            'subjects.educationLevel',
+        ])
+            ->where('year', $validated['year'])
+            ->where('group_id', $validated['group_id'])
+            ->select('id', 'year', 'group_id')
+            ->first();
+
+        $result = new CatalogSubjectDisciplineResource($data);
+        $result->subjects = $result->subjects->filter( fn ($s) => $s->status === 'success');
+
+        return $result;
     }
 }

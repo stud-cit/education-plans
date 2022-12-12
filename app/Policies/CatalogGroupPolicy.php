@@ -18,7 +18,7 @@ class CatalogGroupPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        return $user->possibility();
     }
 
     /**

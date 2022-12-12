@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\SubjectLanguage;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -34,12 +33,17 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             PositionSeeder::class,
             NoteSeeder::class,
+            // for v2
             SubjectLanguageSeeder::class,
             CatalogHelperTypesSeeder::class,
             SubjectHelperSeeder::class,
             CatalogGroupSeeder::class,
             CatalogSubjectSeeder::class,
             CatalogEducationLevelSeeder::class,
+            SubjectVerificationStatusesSeeder::class,
+            CatalogVerificationStatusSeeder::class,
+            CatalogSpecialitySeed::class,
+            CatalogSignatureTypeSeeder::class
         ]);
     }
 }

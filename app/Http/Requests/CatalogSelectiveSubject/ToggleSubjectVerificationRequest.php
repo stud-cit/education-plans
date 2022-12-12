@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\CatalogSelectiveSubject;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCatalogRequest extends FormRequest
+class ToggleSubjectVerificationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class StoreCatalogRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|date_format:Y',
-            'group_id' => 'required|exists:App\Models\CatalogGroup,id',
-            'selective_discipline_id' => 'required|exists:App\Models\SelectiveDiscipline,id'
+            'id' => 'required',
+            'need_verification' => 'required|boolean'
         ];
     }
 }

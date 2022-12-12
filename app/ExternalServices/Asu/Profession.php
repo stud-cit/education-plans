@@ -12,6 +12,8 @@ class Profession extends ASU
     protected const SPECIALITY_ID = 2; // СПЕЦІАЛЬНІСТЬ
     protected const SPECIALIZATION_ID = 3; // СПЕЦІАЛІЗАЦІЯ
     protected const EDUCATION_PROGRAM_ID = 9; // 9 Освітня програма
+    protected const EDUCATION_PROGRAM_ONP_ID = 11; // 11 Освітньо-наукова програма
+
 
     private const REMOVE_KEYS = ['parent_id', 'label_id', 'label'];
 
@@ -61,13 +63,38 @@ class Profession extends ASU
         $filtered = collect($this->getFiltered(self::EDUCATION_PROGRAM_ID, $id));
 
         $currentLocale = setlocale(LC_ALL, NULL);
-        setlocale(LC_ALL,'uk_UA.utf8');
+        setlocale(LC_ALL, 'uk_UA.utf8');
 
         $sorted = $filtered->sortBy('title', SORT_LOCALE_STRING)->values()->all();
         Helpers::removeColumnInArray($sorted, self::REMOVE_KEYS);
         setlocale(LC_ALL, $currentLocale);
 
         return $sorted;
+    }
+
+    public function getAllEducationPrograms()
+    {
+        $educationPrograms = $this->getFiltered(self::EDUCATION_PROGRAM_ID);
+        return collect($educationPrograms)->map(function ($item) {
+            $ucFirstTitle = Str::ucfirst($item['title']);
+            return [
+                'id' => (int) $item['id'],
+                'title' => "{$item['code']} $ucFirstTitle",
+            ];
+        });
+    }
+
+    public function getAllSpecialties()
+    {
+        $specialties = $this->getFiltered(self::SPECIALITY_ID);
+
+        return collect($specialties)->map(function ($item) {
+            $ucFirstTitle = Str::ucfirst($item['title']);
+            return [
+                'id' => (int) $item['id'],
+                'title' => "{$item['code']} $ucFirstTitle",
+            ];
+        });
     }
 
     // TODO: rename, bad name

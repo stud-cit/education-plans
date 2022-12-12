@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\VerificationPlanResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanResource extends JsonResource
@@ -26,7 +27,8 @@ class PlanResource extends JsonResource
             'department' => $this->departmentName,
             'created_at' => $this->created_at,
             'status' => $this->status,
-            'user_verifications' => $this->user_verifications,
+            'user_verifications' => VerificationPlanResource::collection($this->user_verifications),
+            'user_verifications_old' => $this->user_verifications,
             'author_id' => $this->author_id,
             'parent_id' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
             'actions' => $this->actions(),
