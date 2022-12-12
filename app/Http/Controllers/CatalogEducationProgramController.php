@@ -264,7 +264,7 @@ class CatalogEducationProgramController extends Controller
         CatalogEducationProgram $catalogEducationProgram
     ) {
         // TODO: MAKE GATE
-        if (!Gate::allows('can-verification-speciality-catalog', $catalogEducationProgram)) {
+        if (!Gate::allows('can-verification-education-program-catalog', $catalogEducationProgram)) {
             abort(403);
         }
 
