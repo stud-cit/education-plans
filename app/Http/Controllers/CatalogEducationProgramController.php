@@ -162,7 +162,7 @@ class CatalogEducationProgramController extends Controller
         );
 
         return response([
-            'specialties' => $asuController->getAllSpecialities(),
+            'education_programs' => $asuController->getAllEducationPrograms(),
             'divisions' => ProfessionsResource::collection($divisions),
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties),
