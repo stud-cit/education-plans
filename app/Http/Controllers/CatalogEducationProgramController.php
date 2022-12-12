@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CatalogEducationProgram\PdfCatalogRequest;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 use ErrorException;
 use App\Models\User;
 use App\Helpers\Helpers;
@@ -21,7 +23,6 @@ use App\Http\Requests\CatalogEducationProgram\StoreRequest;
 use App\Http\Requests\CatalogEducationProgram\UpdateRequest;
 use App\Http\Requests\CatalogEducationProgram\StoreSignatureRequest;
 use App\Http\Resources\CatalogEducationProgram\CatalogEducationProgramResource;
-use App\Http\Requests\CatalogSpeciality\ToggleCatalogSpecialityVerificationRequest;
 use App\Http\Requests\CatalogEducationProgram\StoreCatalogEducationProgramVerificationRequest;
 use App\Http\Requests\CatalogEducationProgram\ToggleCatalogEducationProgramVerificationRequest;
 
@@ -294,5 +295,20 @@ class CatalogEducationProgramController extends Controller
         );
 
         return $this->success(__('messages.Updated'), 200);
+    }
+
+    public function pdf(PdfCatalogRequest $request)
+    {
+        $validated = $request->validated();
+
+        if (array_key_exists('catalog_id', $validated)) {
+            $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])->where('id', $validated['catalog_id'])->first();
+            return new CatalogSpecialityPdfResource($catalog);
+        } else {
+            $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
+                ->where('year', $validated['year'])
+                ->where('education_program_id', $validated['education_program_id'])->first();
+            return new CatalogSpecialityPdfResource($catalog);
+        }
     }
 }
