@@ -131,6 +131,11 @@ class CatalogEducationProgramController extends Controller
      */
     public function destroy(CatalogEducationProgram $catalogEducationProgram)
     {
+        //
+    }
+
+    public function delete(CatalogEducationProgram $catalogEducationProgram)
+    {
         $model = $catalogEducationProgram->loadCount('subjects');
 
         if ($model->subjects_count > 0) {

@@ -155,8 +155,8 @@ class AuthServiceProvider extends ServiceProvider
             return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
         });
 
-        // Gate::define('delete-catalog-education-program', function (User $user, CatalogEducationProgram $catalogEducationProgram) {
-        //     return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogEducationProgram->user_id;
-        // });
+        Gate::define('delete-catalog-education-program', function (User $user, CatalogEducationProgram $catalogEducationProgram) {
+            return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogEducationProgram->user_id;
+        });
     }
 }

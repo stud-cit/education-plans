@@ -174,10 +174,10 @@ Route::prefix('v1')->group(function () {
         Route::patch('/catalog-education-programs/signature/{catalog_education_program}', [
             CatalogEducationProgramController::class, 'storeSignatures'
         ]);
-        // todo
-        // Route::delete('/catalog-education-programs/delete/{catalog_speciality}', [
-        //     CatalogEducationProgramController::class, 'delete'
-        // ])->middleware('can:delete-catalog-speciality,catalog_speciality');
+
+        Route::delete('/catalog-education-programs/delete/{catalog_education_program}', [
+            CatalogEducationProgramController::class, 'delete'
+        ])->middleware('can:delete-catalog-education-program,catalog_education_program');
 
         Route::patch('/catalog-education-programs/verification/{catalog_education_program}', [
             CatalogEducationProgramController::class, 'verification'
