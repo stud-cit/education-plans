@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Teacher;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Models\SubjectHelper;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CatalogEducationProgram;
 use App\Models\EducationProgramSubject;
+use App\Http\Resources\EducationProgramSubject\EducationProgramEditResource;
 use App\Http\Resources\EducationProgramSubject\EducationProgramSubjectResource;
 use App\Http\Requests\EducationProgramSubject\IndexEducationProgramSubjectRequest;
 use App\Http\Requests\EducationProgramSubject\StoreEducationProgramSubjectRequest;
+use App\Http\Requests\EducationProgramSubject\UpdateEducationProgramSubjectRequest;
+use App\Http\Resources\EducationProgramSubject\EducationProgramSubjectShowResource;
 
 class EducationProgramSubjectController extends Controller
 {
@@ -130,7 +134,13 @@ class EducationProgramSubjectController extends Controller
      */
     public function show(EducationProgramSubject $educationProgramSubject)
     {
-        //
+        $modelWithRelations = $educationProgramSubject->load([
+            'languages.language',
+            'lecturers',
+            'practice',
+        ]);
+
+        return new EducationProgramSubjectShowResource($modelWithRelations);
     }
 
     /**
@@ -141,7 +151,13 @@ class EducationProgramSubjectController extends Controller
      */
     public function edit(EducationProgramSubject $educationProgramSubject)
     {
-        //
+        $modelWithRelations = $educationProgramSubject->load([
+            'languages.language',
+            'lecturers',
+            'practice',
+        ]);
+
+        return new EducationProgramEditResource($modelWithRelations);
     }
 
     /**
@@ -151,9 +167,39 @@ class EducationProgramSubjectController extends Controller
      * @param  \App\Models\EducationProgramSubject  $educationProgramSubject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, EducationProgramSubject $educationProgramSubject)
+    public function update(UpdateEducationProgramSubjectRequest $request, EducationProgramSubject $educationProgramSubject)
     {
-        //
+        $validated = $request->validated();
+
+        $model = $educationProgramSubject->load([
+            'languages',
+            'lecturers',
+            'practice',
+        ]);
+
+        $model->update($validated);
+
+        $model->languages()->whereNotIn('id', $this->getIds($validated['language']))->delete();
+
+        foreach ($validated['language'] as $language) {
+            if (array_key_exists('title', $language)) {
+                unset($language['title']);
+            }
+            $model->languages()->updateOrCreate($language);
+        }
+
+        $model->lecturers()->whereNotIn('id', $this->getIds($validated['lecturers']))->delete();
+        $model->updateTeachers($validated['lecturers'], Teacher::LECTOR);
+
+        $model->practice()->whereNotIn('id', $this->getIds($validated['practice']))->delete();
+        $model->updateTeachers($validated['practice'], Teacher::PRACTICE);
+
+        return $this->success(__('messages.Updated'));
+    }
+
+    protected function getIds($records)
+    {
+        return array_column($records, 'id');
     }
 
     /**
@@ -164,6 +210,10 @@ class EducationProgramSubjectController extends Controller
      */
     public function destroy(EducationProgramSubject $educationProgramSubject)
     {
-        //
+        $educationProgramSubject->languages()->delete();
+        $educationProgramSubject->teachers()->delete();
+        $educationProgramSubject->delete();
+
+        return $this->success(__('messages.Deleted'), 200);
     }
 }
