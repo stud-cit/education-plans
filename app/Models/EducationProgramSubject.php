@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -62,7 +63,7 @@ class EducationProgramSubject extends Model
 
     public function scopeFilterBy($query, $filters)
     {
-        $namespace = 'App\Helpers\Filters\CatalogSpecialityFilters';
+        $namespace = 'App\Helpers\Filters\CatalogEducationProgramFilters';
         $filter = new FilterBuilder($query, $filters, $namespace);
 
         return $filter->apply();
