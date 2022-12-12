@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Catalog;
+use Illuminate\Support\Facades\Auth;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;
@@ -45,7 +46,7 @@ class CatalogSubject extends Model
     protected static function booted()
     {
         static::saving(function ($catalog) {
-            $catalog->user_id = 1; // TODO: Auth::id();
+            $catalog->user_id = Auth::id();
         });
         static::addGlobalScope('selective_discipline', function (Builder $builder) {
             $builder->where('selective_discipline_id', self::SUBJECT);
