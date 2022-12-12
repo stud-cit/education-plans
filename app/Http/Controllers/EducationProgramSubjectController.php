@@ -11,6 +11,7 @@ use App\Models\EducationProgramSubject;
 use App\Http\Resources\EducationProgramSubject\EducationProgramSubjectResource;
 use App\Http\Requests\EducationProgramSubject\IndexEducationProgramSubjectRequest;
 use App\Http\Requests\EducationProgramSubject\StoreEducationProgramSubjectRequest;
+use App\Http\Resources\EducationProgramSubject\EducationProgramSubjectShowResource;
 
 class EducationProgramSubjectController extends Controller
 {
@@ -130,7 +131,13 @@ class EducationProgramSubjectController extends Controller
      */
     public function show(EducationProgramSubject $educationProgramSubject)
     {
-        //
+        $modelWithRelations = $educationProgramSubject->load([
+            'languages.language',
+            'lecturers',
+            'practice',
+        ]);
+
+        return new EducationProgramSubjectShowResource($modelWithRelations);
     }
 
     /**
