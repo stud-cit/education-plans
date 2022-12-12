@@ -29,6 +29,7 @@ class CatalogEducationProgramResource extends JsonResource
             'user_id' => $this->user_id,
             'user_verifications' => VerificationCatalogResource::collection($this->verifications),
             'need_verification' => $this->need_verification,
+            'status' => $this->status,
             'actions' => $this->actions()
         ];
     }
