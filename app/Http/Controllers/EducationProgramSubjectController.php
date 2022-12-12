@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
+use App\Models\SubjectHelper;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CatalogEducationProgram;
 use App\Models\EducationProgramSubject;
 use App\Http\Resources\EducationProgramSubject\EducationProgramSubjectResource;
 use App\Http\Requests\EducationProgramSubject\IndexEducationProgramSubjectRequest;
+use App\Http\Requests\EducationProgramSubject\StoreEducationProgramSubjectRequest;
 
 class EducationProgramSubjectController extends Controller
 {
@@ -74,7 +76,26 @@ class EducationProgramSubjectController extends Controller
      */
     public function create()
     {
-        //
+        $asu = new AsuController();
+        $language = new SubjectLanguageController();
+        $helpers = SubjectHelper::with('type')->select(
+            'id',
+            'title',
+            'catalog_helper_type_id',
+        )->get();
+
+        $data = [
+            'subjects' => $asu->getSubjects(),
+            'languages' => $language->getList(),
+            'departments' => $asu->getDepartments(),
+            'teachers' => $asu->getWorkers(),
+            'helpersGeneralCompetence' => $helpers->where('type.key', 'general_competence')->pluck('title'),
+            'helpersResultsOfStudy' => $helpers->where('type.key', 'learning_outcomes')->pluck('title'),
+            'helpersTypesTrainingSessions' => $helpers->where('type.key', 'types_educational_activities')->pluck('title'),
+            'helpersRequirements' => $helpers->where('type.key', 'entry_requirements_applicants')->pluck('title'),
+        ];
+
+        return response()->json($data);
     }
 
     /**
@@ -83,9 +104,22 @@ class EducationProgramSubjectController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEducationProgramSubjectRequest $request)
     {
-        //
+        if (!Gate::allows('create-education-program-subject', [$request->catalog_subject_id])) {
+            abort(403);
+        };
+
+        $validated = $request->validated();
+
+        $subject = EducationProgramSubject::create($validated);
+
+        $subject->languages()->createMany($validated['language']);
+
+        $subject->lecturersSave($validated['lecturers']);
+        $subject->practiceSave($validated['practice']);
+
+        return $this->success(__('messages.Created'), 201);
     }
 
     /**
