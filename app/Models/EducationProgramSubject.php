@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Subject;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
