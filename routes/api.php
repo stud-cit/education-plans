@@ -163,9 +163,11 @@ Route::prefix('v1')->group(function () {
         Route::Resource('speciality-subjects', SpecialitySubjectController::class);
         // education program
         Route::get('/catalog-education-programs/filters', [CatalogEducationProgramController::class, 'getItemsFilters']);
+
         Route::patch('/catalog-education-programs/copy/{catalog_education_program}', [
             CatalogEducationProgramController::class, 'copy'
-        ])->middleware('can:copy-catalog-speciality');
+        ])->middleware('can:copy-catalog-education-program');
+
         Route::patch('/catalog-education-programs/owners/{catalog_education_program}', [
             CatalogEducationProgramController::class, 'owners'
         ]);

@@ -65,7 +65,7 @@ class CatalogEducationProgramPolicy
      */
     public function delete(User $user, CatalogEducationProgram $catalogEducationProgram)
     {
-        //
+        return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogEducationProgram->user_id;
     }
 
     /**
