@@ -72,7 +72,6 @@ class AuthServiceProvider extends ServiceProvider
             return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogSpeciality->user_id;
         });
 
-
         Gate::define('create-speciality-subject', function (User $user, $catalog_id) {
 
             $catalog = CatalogSpeciality::with('owners')->where('id', $catalog_id)->first();
@@ -150,7 +149,7 @@ class AuthServiceProvider extends ServiceProvider
                     $catalogSpeciality->user_id === $user->id;
             }
         );
-
+        //  EDUCATION PROGRAM
         Gate::define('copy-catalog-education-program', function (User $user) {
             return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
         });
@@ -158,5 +157,66 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-catalog-education-program', function (User $user, CatalogEducationProgram $catalogEducationProgram) {
             return $user->possibility([User::ROOT, User::ADMIN]) || $user->id === $catalogEducationProgram->user_id;
         });
+
+        Gate::define('create-education-program-subject', function (User $user, $catalog_id) {
+
+            $catalog = CatalogEducationProgram::with('owners')->where('id', $catalog_id)->first();
+
+            if (
+                $catalog->department_id === $user->department_id
+                && $user->possibility(User::DEPARTMENT)
+            ) {
+                return true;
+            }
+
+            $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+            return $user->possibility([User::ROOT, User::ADMIN]) ||
+                in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
+        });
+
+        Gate::define(
+            'can-verification-education-program-catalog',
+            function (User $user, CatalogEducationProgram $catalogEducationProgram) {
+                return
+                    $user->possibility([User::ADMIN, User::ROOT]) ||
+                    $user->faculty_id === $catalogEducationProgram->faculty_id && $user->role_id === User::FACULTY_INSTITUTE;
+            }
+        );
+
+        Gate::define(
+            'toggle-need-verification-education-program-catalog',
+            function (User $user, CatalogEducationProgram $catalogEducationProgram) {
+                // $catalog = $catalogSpeciality->load('owners');
+                // $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+                if ($catalogEducationProgram->department_id === $user->department_id) {
+                    return true;
+                }
+
+                return
+                    $user->possibility([User::ROOT, User::ADMIN]) ||
+                    // in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) ||
+                    $catalogEducationProgram->user_id === $user->id;
+            }
+        );
+
+
+        Gate::define(
+            'can-setting-catalog-education-program',
+            function (User $user, CatalogEducationProgram $catalogEducationProgram) {
+
+                if (
+                    $catalogEducationProgram->department_id === $user->department_id
+                    && $user->possibility(User::DEPARTMENT)
+                ) {
+                    return true;
+                }
+
+                return
+                    $user->possibility([User::ROOT, User::ADMIN]) ||
+                    $catalogEducationProgram->user_id === $user->id;
+            }
+        );
     }
 }
