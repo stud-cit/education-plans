@@ -6,6 +6,7 @@ use App\Traits\Catalog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
+use App\Models\EducationProgramSubject;
 use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
