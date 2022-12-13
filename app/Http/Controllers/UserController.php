@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Constant;
 use App\Http\Requests\IndexUserRequest;
 use App\Models\User;
 use App\Helpers\Helpers;
@@ -10,7 +9,6 @@ use Illuminate\Http\Request;
 use App\ExternalServices\Asu\Worker;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\IndexUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\ExternalServices\Asu\Department;
 use App\Http\Requests\UpdateUserRoleRequest;
