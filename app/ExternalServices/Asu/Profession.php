@@ -16,6 +16,12 @@ class Profession extends ASU
     protected const EDUCATION_PROGRAM_OPP_ID = 10; // 10 Освітньо-професійна програма
     protected const EDUCATION_PROGRAM_ONP_ID = 11; // 11 Освітньо-наукова програма
 
+    protected const EDUCATION_PROGRAM_TYPES = [
+        self::EDUCATION_PROGRAM_ID => 'ОП',
+        self::EDUCATION_PROGRAM_OPP_ID => 'ОПП',
+        self::EDUCATION_PROGRAM_ONP_ID => 'ОНП'
+    ];
+
 
     private const REMOVE_KEYS = ['parent_id', 'label_id', 'label'];
 
@@ -76,12 +82,16 @@ class Profession extends ASU
 
     public function getAllEducationPrograms()
     {
-        $educationPrograms = $this->getFiltered(self::EDUCATION_PROGRAM_ID);
+        $educationPrograms = $this->sortProfessions();
         return collect($educationPrograms)->map(function ($item) {
             $ucFirstTitle = Str::ucfirst($item['title']);
+            $type = self::EDUCATION_PROGRAM_TYPES[$item['label_id']];
+
             return [
                 'id' => (int) $item['id'],
-                'title' => "{$item['code']} $ucFirstTitle",
+                'title' => "{$item['code']} $ucFirstTitle ($type)",
+                'speciality_id' => $item['speciality_id'],
+                'specialization_id' => $item['specialization_id']
             ];
         });
     }
@@ -129,4 +139,49 @@ class Profession extends ASU
         ];
         return  $this->getAsuData($url, [], 'professions', $keys);
     }
+
+    private function sortProfessions(): Collection
+    {
+        $professionsAll = $this->getProfessions()->keyBy('id');
+
+        $professions = $professionsAll->filter(fn ($p) => in_array($p['label_id'], [
+            self::EDUCATION_PROGRAM_ID, self::EDUCATION_PROGRAM_ONP_ID, self::EDUCATION_PROGRAM_OPP_ID
+        ]));
+
+        return $professions->map(function ($p) use ($professionsAll) {
+            return $this->findParentKeysByEducationPrograms($p, $professionsAll);
+        })->values();
+    }
+
+    /*
+     * $p - first child;
+     * $all - all collection getProfessions
+     * $c - this child $profession
+     */
+    private function findParentKeysByEducationPrograms($p, $all, $c = null)
+    {
+        $parent = $all[$p['parent_id']];
+        if (isset($parent)) {
+            if ($parent['label_id'] == self::SPECIALITY_ID ) {
+                if ($c !== null) {
+                    $c['speciality_id'] = $parent['id'];
+                    return $c;
+                } else {
+                    $p['speciality_id'] = $parent['id'];
+                    $p['specialization_id'] = null;
+                    return $p;
+                }
+
+            } else if ($parent['label_id'] == self::SPECIALIZATION_ID) {
+                $p['specialization_id'] = $parent['id'];
+
+                return $this->findParentKeysByEducationPrograms($parent, $all, $p);
+            } else {
+                return $c;
+            }
+        } else {
+            return $p;
+        }
+    }
+
 }

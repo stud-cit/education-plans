@@ -34,6 +34,7 @@ class CatalogEducationProgram extends Model
         'user_id',
         'faculty_id',
         'department_id',
+        'speciality_id',
         'year',
         'need_verification',
     ];
