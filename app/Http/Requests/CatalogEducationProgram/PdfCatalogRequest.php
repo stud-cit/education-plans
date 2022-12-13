@@ -24,9 +24,7 @@ class PdfCatalogRequest extends FormRequest
     public function rules()
     {
         return [
-            'catalog_id' => 'required_if:year,null',
-            'year' => 'required_if:catalog_id,null',
-            'education_program_id' => 'required_if:catalog_id,null',
+            'catalog_id' => 'required:exists:App/Models/CatalogEducationProgram,id'
         ];
     }
 }

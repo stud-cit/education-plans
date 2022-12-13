@@ -301,14 +301,8 @@ class CatalogEducationProgramController extends Controller
     {
         $validated = $request->validated();
 
-        if (array_key_exists('catalog_id', $validated)) {
-            $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])->where('id', $validated['catalog_id'])->first();
-            return new CatalogSpecialityPdfResource($catalog);
-        } else {
-            $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
-                ->where('year', $validated['year'])
-                ->where('education_program_id', $validated['education_program_id'])->first();
-            return new CatalogSpecialityPdfResource($catalog);
-        }
+        $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
+            ->where('id', $validated['catalog_id'])->first();
+        return new CatalogSpecialityPdfResource($catalog);
     }
 }
