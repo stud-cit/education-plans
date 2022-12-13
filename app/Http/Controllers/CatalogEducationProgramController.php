@@ -255,6 +255,7 @@ class CatalogEducationProgramController extends Controller
         $catalogEducationProgram->need_verification = $validated['need_verification'];
 
         $catalogEducationProgram->update();
+        $catalogEducationProgram->verifications()->delete();
 
         return $this->success(__('messages.Updated'), 200);
     }
@@ -270,16 +271,16 @@ class CatalogEducationProgramController extends Controller
 
         $validated = $request->validated();
 
-        if (array_key_exists('comment', $validated)) {
-            if ($validated['comment'] !== null) {
-                $catalogEducationProgram->need_verification = false;
-                $catalogEducationProgram->update();
-            }
-        }
-
         if (Auth::user()->role_id === User::ADMIN) {
             $catalogEducationProgram->need_verification = true;
             $catalogEducationProgram->update();
+        }
+
+        if (array_key_exists('comment', $validated)) {
+            if ($validated['comment'] !== null) {
+                $catalogEducationProgram->need_verification = null;
+                $catalogEducationProgram->update();
+            }
         }
 
         $catalogEducationProgram->verifications()->updateOrCreate(

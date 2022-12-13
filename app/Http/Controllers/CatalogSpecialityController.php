@@ -255,6 +255,7 @@ class CatalogSpecialityController extends Controller
         $catalogSpeciality->need_verification = $validated['need_verification'];
 
         $catalogSpeciality->update();
+        $catalogSpeciality->verifications()->delete();
 
         return $this->success(__('messages.Updated'), 200);
     }
@@ -270,17 +271,18 @@ class CatalogSpecialityController extends Controller
 
         $validated = $request->validated();
 
-        if (array_key_exists('comment', $validated)) {
-            if ($validated['comment'] !== null) {
-                $catalogSpeciality->need_verification = false;
-                $catalogSpeciality->update();
-            }
-        }
-
         if (Auth::user()->role_id === User::ADMIN) {
             $catalogSpeciality->need_verification = true;
             $catalogSpeciality->update();
         }
+
+        if (array_key_exists('comment', $validated)) {
+            if ($validated['comment'] !== null) {
+                $catalogSpeciality->need_verification = null;
+                $catalogSpeciality->update();
+            }
+        }
+
 
         $catalogSpeciality->verifications()->updateOrCreate(
             [
