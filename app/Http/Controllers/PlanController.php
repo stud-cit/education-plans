@@ -33,6 +33,7 @@ use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
+use App\Models\CatalogEducationProgram;
 
 class PlanController extends Controller
 {
@@ -484,6 +485,14 @@ class PlanController extends Controller
 
             return $result->filter(fn ($s) => $s->status === 'success');
         } else if (array_key_exists('education_program_id', $validated)) {
+
+            $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
+                ->where('speciality_id', $validated['education_program_id'])
+                ->whereBetween('years', [$validated['year'], $validated['end_year']]);
+
+            $result = CatalogSpecialityPdfResource::collection($catalog);
+
+            return $result->filter(fn ($s) => $s->status === 'success');
         }
     }
 }
