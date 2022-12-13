@@ -76,6 +76,10 @@ class AuthServiceProvider extends ServiceProvider
 
             $catalog = CatalogSpeciality::with('owners')->where('id', $catalog_id)->first();
 
+            if ($catalog->status === 'success') {
+                return false;
+            }
+
             if (
                 $catalog->department_id === $user->department_id
                 && $user->possibility(User::DEPARTMENT)
@@ -161,6 +165,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('create-education-program-subject', function (User $user, $catalog_id) {
 
             $catalog = CatalogEducationProgram::with('owners')->where('id', $catalog_id)->first();
+
+
+            if ($catalog->status === 'success') {
+                return false;
+            }
 
             if (
                 $catalog->department_id === $user->department_id
