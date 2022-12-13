@@ -17,8 +17,8 @@ class ProfessionsResource extends JsonResource
         return [
             'id' => (int) $this['id'],
             'title' => $this['title'],
-            'speciality_id' => $this['speciality_id'],
-            'specialization_id' => $this['specialization_id'],
+            'speciality_id' => $this['speciality_id'] ?? null,
+            'specialization_id' => $this['specialization_id'] ?? null,
         ];
     }
 }
