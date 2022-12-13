@@ -18,6 +18,7 @@ class CatalogSignatureTypeSeeder extends Seeder
             ['id' => 1, 'title' => 'Голова'],
             ['id' => 2, 'title' => 'Керівник'],
             ['id' => 3, 'title' => 'Завідувач'],
+            ['id' => 4, 'title' => 'Гарант'],
         ]);
     }
 }
