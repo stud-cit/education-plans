@@ -56,8 +56,10 @@ class AsuController extends Controller
     public function getEducationPrograms(Request $request, $id)
     {
         $professions = new Profession();
+        $result = $professions->getAllEducationPrograms()->filter(fn ($profession) => $profession['speciality_id'] == $id);
 
-        return ProfessionsResource::collection($professions->getEducationPrograms($id));
+
+        return ProfessionsResource::collection($result);
     }
 
     public function getAllEducationPrograms()
