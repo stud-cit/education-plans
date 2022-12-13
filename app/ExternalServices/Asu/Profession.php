@@ -8,10 +8,12 @@ use Illuminate\Support\Str;
 
 class Profession extends ASU
 {
-    protected const FIELD_KNOWLEDGE_ID = 5; // ГАЛУЗЬ ЗНАЬ
+    protected const FIELD_KNOWLEDGE_ID = 5; // ГАЛУЗЬ ЗНАНЬ
     protected const SPECIALITY_ID = 2; // СПЕЦІАЛЬНІСТЬ
     protected const SPECIALIZATION_ID = 3; // СПЕЦІАЛІЗАЦІЯ
     protected const EDUCATION_PROGRAM_ID = 9; // 9 Освітня програма
+
+    protected const EDUCATION_PROGRAM_OPP_ID = 10; // 10 Освітньо-професійна програма
     protected const EDUCATION_PROGRAM_ONP_ID = 11; // 11 Освітньо-наукова програма
 
 
