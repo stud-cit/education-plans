@@ -24,9 +24,7 @@ class PdfCatalogSpecialityRequest extends FormRequest
     public function rules()
     {
         return [
-            'catalog_id' => 'required_if:year,null',
-            'year' => 'required_if:catalog_id,null',
-            'speciality_id' => 'required_if:catalog_id,null',
+            'catalog_id' => 'required',
         ];
     }
 }

@@ -301,14 +301,9 @@ class CatalogSpecialityController extends Controller
     {
         $validated = $request->validated();
 
-        if (array_key_exists('catalog_id', $validated)) {
-            $catalog = CatalogSpeciality::with(['subjects', 'signatures'])->where('id', $validated['catalog_id'])->first();
-            return new CatalogSpecialityPdfResource($catalog);
-        } else {
-            $catalog = CatalogSpeciality::with(['subjects', 'signatures'])
-                ->where('year', $validated['year'])
-                ->where('id', $validated['speciality_id'])->first();
-            return new CatalogSpecialityPdfResource($catalog);
-        }
+        $catalog = CatalogSpeciality::with(['subjects', 'signatures'])
+            ->where('id', $validated['catalog_id'])
+            ->first();
+        return new CatalogSpecialityPdfResource($catalog);
     }
 }
