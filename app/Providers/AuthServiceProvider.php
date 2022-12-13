@@ -120,24 +120,6 @@ class AuthServiceProvider extends ServiceProvider
         );
 
         Gate::define(
-            'toggle-need-verification-education-program-catalog',
-            function (User $user, CatalogEducationProgram $catalogEducationProgram) {
-                // $catalog = $catalogEducationProgram->load('owners');
-                // $ids = array_column($catalog->owners->toArray(), 'department_id');
-
-                if ($catalogEducationProgram->department_id === $user->department_id) {
-                    return true;
-                }
-
-                return
-                    $user->possibility([User::ROOT, User::ADMIN]) ||
-                    // in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) ||
-                    $catalogEducationProgram->user_id === $user->id;
-            }
-        );
-
-
-        Gate::define(
             'can-setting-catalog-speciality',
             function (User $user, CatalogSpeciality $catalogSpeciality) {
 
