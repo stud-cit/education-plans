@@ -486,7 +486,7 @@ class PlanController extends Controller
         } else if (array_key_exists('education_program_id', $validated)) {
 
             $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
-                ->where('speciality_id', $validated['education_program_id'])
+                ->where('education_program_id', $validated['education_program_id'])
                 ->whereBetween('year', [$validated['year'], $validated['end_year']])->get();
 
             $result = CatalogSpecialityPdfResource::collection($catalog);
