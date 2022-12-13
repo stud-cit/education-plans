@@ -63,6 +63,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/plans/cycles/{plan}', [PlanController::class, 'cyclesWithSubjects'])->name('plans.cycles.subjects');
         Route::get('plans/additional-data', [PlanController::class, 'additionalDataActionsPlan']);
         Route::get('plans/filters', [PlanController::class, 'getItemsFilters']);
+        Route::get('plans/catalog-pdf', [PlanController::class, 'catalogPdf']);
         Route::Resource('plans', PlanController::class);
 
         Route::get('/verifications', [VerificationController::class, 'index']);
@@ -194,3 +195,5 @@ Route::prefix('v1')->group(function () {
         Route::get('/catalog-education-programs/generate-pdf', [CatalogEducationProgramController::class, 'pdf']);
     });
 });
+
+Route::get('plans/catalog-pdf', [PlanController::class, 'catalogPdf']);

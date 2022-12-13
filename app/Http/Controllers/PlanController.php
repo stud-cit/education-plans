@@ -8,17 +8,20 @@ use App\Helpers\Tree;
 use App\Models\Cycle;
 use App\Http\Constant;
 use App\Models\Subject;
-use App\Models\VerificationStatuses;
 use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use Illuminate\Http\Request;
 use App\ExternalServices\Op\OP;
+use App\Models\PlanVerification;
 use App\Models\SemestersCredits;
+use App\Models\CatalogSpeciality;
 use App\Http\Resources\PlanResource;
+use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\indexPlanRequest;
 use App\ExternalServices\Asu\Department;
 use App\ExternalServices\Asu\Profession;
+use App\Http\Requests\CatalogPdfRequest;
 use App\Http\Requests\StoreCycleRequest;
 use App\Http\Requests\UpdatePlanRequest;
 use App\Http\Resources\PlanEditResource;
@@ -29,7 +32,7 @@ use App\ExternalServices\Asu\Qualification;
 use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
-use App\Models\PlanVerification;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 
 class PlanController extends Controller
 {
@@ -465,5 +468,22 @@ class PlanController extends Controller
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties)
         ]);
+    }
+
+    public function catalogPdf(CatalogPdfRequest $request)
+    {
+        $validated = $request->validated();
+
+        if (array_key_exists('speciality_id', $validated)) {
+
+            $catalog = CatalogSpeciality::with(['subjects', 'signatures'])
+                ->where('speciality_id', $validated['speciality_id'])
+                ->whereBetween('years', [$validated['year'], $validated['end_year']]);
+
+            $result = CatalogSpecialityPdfResource::collection($catalog);
+
+            return $result->filter(fn ($s) => $s->status === 'success');
+        } else if (array_key_exists('education_program_id', $validated)) {
+        }
     }
 }
