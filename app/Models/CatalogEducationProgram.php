@@ -53,14 +53,6 @@ class CatalogEducationProgram extends Model
         return $this->hasMany(CatalogSignature::class, 'catalog_subject_id', 'id');
     }
 
-    public function getEducationProgramIdNameAttribute()
-    {
-        if (!$this->education_program_id) return null;
-
-        $professions = new Profession();
-        return $professions->getTitle($this->education_program_id, 'title');
-    }
-
     public function getEducationProgramCatalogNameAttribute()
     {
         $nextYear = $this->year + 1;

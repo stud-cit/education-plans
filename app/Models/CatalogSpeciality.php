@@ -48,16 +48,6 @@ class CatalogSpeciality extends Model
         return $this->hasMany(CatalogSignature::class, 'catalog_subject_id', 'id');
     }
 
-    public function getSpecialityIdNameAttribute()
-    {
-        if (!$this->speciality_id) return null;
-
-        $professions = new Profession();
-
-        $code = $professions->getTitle($this->speciality_id, 'code');
-        return "{$code} {$professions->getTitle($this->speciality_id, 'title')}";
-    }
-
     public function getSpecialityCatalogNameAttribute()
     {
         $nextYear = $this->year + 1;
