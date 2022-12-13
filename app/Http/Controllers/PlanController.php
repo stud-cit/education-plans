@@ -478,7 +478,9 @@ class PlanController extends Controller
 
             $catalog = CatalogSpeciality::with(['subjects', 'signatures'])
                 ->where('speciality_id', $validated['speciality_id'])
-                ->whereBetween('year', [$validated['year'], $validated['end_year']])->get();
+                ->whereBetween('year', [$validated['year'], $validated['end_year']])
+                ->orderBy('year', 'asc')
+                ->get();
 
             $result = CatalogSpecialityPdfResource::collection($catalog);
 
@@ -487,7 +489,9 @@ class PlanController extends Controller
 
             $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
                 ->where('education_program_id', $validated['education_program_id'])
-                ->whereBetween('year', [$validated['year'], $validated['end_year']])->get();
+                ->whereBetween('year', [$validated['year'], $validated['end_year']])
+                ->orderBy('year', 'asc')
+                ->get();
 
             $result = CatalogSpecialityPdfResource::collection($catalog);
 
