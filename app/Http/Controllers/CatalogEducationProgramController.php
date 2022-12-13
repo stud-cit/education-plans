@@ -56,7 +56,7 @@ class CatalogEducationProgramController extends Controller
                 'year',
                 'need_verification',
             ])
-            ->filterBy($validated);
+            ->filterBy($validated)->orderBy('created_at', 'desc');
 
         return CatalogEducationProgramResource::collection($catalog->paginate($perPage));
     }

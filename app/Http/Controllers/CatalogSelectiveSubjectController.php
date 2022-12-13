@@ -45,6 +45,7 @@ class CatalogSelectiveSubjectController extends Controller
             ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published', 'user_id', 'need_verification')
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
+            ->orderBy('created_at')
             ->paginate($perPage);
 
         return CatalogSelectiveSubjectResource::collection($catalog);

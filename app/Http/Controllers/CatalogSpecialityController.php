@@ -55,7 +55,7 @@ class CatalogSpecialityController extends Controller
                 'year',
                 'need_verification',
             ])
-            ->filterBy($validated);
+            ->filterBy($validated)->orderBy('created_at', 'desc');
 
         return CatalogSpecialityResource::collection($catalog->paginate($perPage));
     }
