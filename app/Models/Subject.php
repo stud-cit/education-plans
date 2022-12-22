@@ -32,7 +32,7 @@ class Subject extends Model
     protected $appends = ['title'];
 
     protected $casts = [
-      'asu_id' => 'string'
+      'asu_id' => 'integer'
     ];
 
     public function selectiveDiscipline()
