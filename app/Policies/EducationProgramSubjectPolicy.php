@@ -79,10 +79,15 @@ class EducationProgramSubjectPolicy
             ->where('id', $educationProgramSubject->catalog_subject_id)
             ->first();
 
-        $ids = array_column($catalog->owners->toArray(), 'department_id');
+        if ($catalog) {
+            $ids = array_column($catalog->owners->toArray(), 'department_id');
+
+            return $user->possibility(User::DEPARTMENT) && $educationProgramSubject->user_id === $user->id
+                || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
+                || $user->possibility(User::PRIVILEGED_ROLES);
+        }
 
         return $user->possibility(User::DEPARTMENT) && $educationProgramSubject->user_id === $user->id
-            || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
             || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
