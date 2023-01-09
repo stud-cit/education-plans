@@ -79,7 +79,7 @@ class PlanShowResource extends JsonResource
         if($this->form_organization_id == 1) {
           array_push($result, '');
         }
-        array_push($result, $this->getCountWorks(['form_control_id' => 3], $i + 1));
+        array_push($result, $this->getCountWorks(['form_control_id' => 3, 'form_control_id' => 2], $i + 1));
       }
       return $result;
     }
