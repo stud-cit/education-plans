@@ -140,9 +140,13 @@ class CatalogEducationProgramController extends Controller
         $model = $catalogEducationProgram->loadCount('subjects');
 
         if ($model->subjects_count > 0) {
-            throw new ErrorException('Каталог не пустий, видаліть спочатку предмети.');
+            return response()->json([
+                'message' => __('messages.Directory_not_empty'),
+                'warning' => true,
+            ], 200);
         } else {
             $catalogEducationProgram->delete();
+            return $this->success(__('messages.Deleted'));
         }
     }
 

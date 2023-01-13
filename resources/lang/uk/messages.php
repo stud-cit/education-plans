@@ -11,5 +11,6 @@ return [
     'Page_not_found' => 'Сторінка не знайдена',
     'Circles_not_found' => 'В плана відсутні цикли',
     'Cannot_delete' => 'Неможливо видалити батьківський рядок',
-    'error_update' => 'Помилка оновлення :param'
+    'error_update' => 'Помилка оновлення :param',
+    'Directory_not_empty' => 'Каталог не пустий, видаліть спочатку предмети.'
 ];
