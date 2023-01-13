@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\CatalogSubject;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCatalogRequest extends FormRequest
@@ -24,7 +25,15 @@ class StoreCatalogRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'required|date_format:Y|unique:catalog_subjects,year,group_id',
+            'year' => [
+                'required',
+                'date_format:Y',
+                Rule::unique('catalog_subjects')->where(function ($query) {
+                    return $query->where('year', $this->year)
+                        ->where('group_id', $this->group_id);
+                })
+            ],
+
             'group_id' => 'required|exists:App\Models\CatalogGroup,id',
         ];
     }
