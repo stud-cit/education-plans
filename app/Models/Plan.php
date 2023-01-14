@@ -175,6 +175,21 @@ class Plan extends Model
         return $subjects;
     }
 
+    public function getIndividualTaskSemester($cycles)
+    {
+        $_subjects = $cycles->where('list_cycle_id', 10)->first();
+
+        if ($_subjects === null) return [];
+
+        $subjects = [];
+        $_subjects->subjects->map(function ($subject) use (&$subjects) {
+            $semester = $subject->hoursModules->filter(fn ($item) => $item->form_control_id != 1 && ($item->form_control_id != 10 || $item->individual_task_id != 3))->last();
+            $subjects[] = $semester->semester ?? '';
+        });
+
+        return $subjects;
+    }
+
     public function getNotesAttribute()
     {
         $notes = new \App\Http\Controllers\NoteController;
