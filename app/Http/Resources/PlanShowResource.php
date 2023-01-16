@@ -55,6 +55,7 @@ class PlanShowResource extends JsonResource
             'status' => $this->status,
             'notes' => $this->notes,
             'exams_table' => $this->getExamsTable($this->cycles),
+            'individual_task_semester' => $this->getIndividualTaskSemester($this->cycles),
             'summary_data_budget_time' => $this->summary_data_budget_time ?
                 json_decode($this->summary_data_budget_time) : [],
             'practical_training' => $this->practical_training ?
