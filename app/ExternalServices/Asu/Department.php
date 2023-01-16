@@ -6,10 +6,15 @@ use Illuminate\Support\Collection;
 
 class Department extends ASU
 {
+    private const MEDICAL_INSTITUTE = 383;
+    private const POSTGRADUATE_MEDICAL_FACULTY = 382;
+
     public function getFaculties(): Collection
     {
         $filtered = $this->getDepartments()->filter(function ($value) {
             return $value['unit_type'] == self::ID_FACULTY || $value['unit_type'] == self::ID_INSTITUTE;
+        })->reject(function ($value) {
+            return $value['id'] == self::POSTGRADUATE_MEDICAL_FACULTY;
         });
 
         return $filtered->values();
@@ -107,6 +112,12 @@ class Department extends ASU
     public function getDepartmentsByStructuralId($structuralId): Collection
     {
         $filtered = $this->getDepartments()->filter(function ($value) use ($structuralId) {
+
+            if ($structuralId == self::MEDICAL_INSTITUTE) {
+                return ($value['faculty_id'] == $structuralId || $value['faculty_id'] == self::POSTGRADUATE_MEDICAL_FACULTY) &&
+                    $value['unit_type'] == self::ID_DEPARTMENT;
+            }
+
             return $value['faculty_id'] == $structuralId && $value['unit_type'] == self::ID_DEPARTMENT;
         });
 
@@ -117,7 +128,7 @@ class Department extends ASU
     {
         $divisions = $this->getDepartments();
 
-        foreach ($divisions as $division)  {
+        foreach ($divisions as $division) {
             if ($division['id'] == $department_id) {
                 if ($division['unit_type'] == self::ID_FACULTY || $division['unit_type'] == self::ID_INSTITUTE) {
                     return $division;
@@ -136,9 +147,9 @@ class Department extends ASU
         $facultyName = '';
         // TODO: KOD_SYMP 1,5
 
-        if(isset($user['info2'])){
+        if (isset($user['info2'])) {
             foreach ($user['info2'] as $k => $v) {
-                if(($v['KOD_STATE'] == 1) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
+                if (($v['KOD_STATE'] == 1) && ($v['KOD_SYMP'] == 1 || $v['KOD_SYMP'] == 5)) {
                     $departmentId = $v['KOD_DIV'];
                 }
             }
@@ -150,11 +161,11 @@ class Department extends ASU
         $divType = $departments[$divIndex]['unit_type'];
         $facultyId = $departments[$divIndex]['faculty_id'];
 
-        if($divType == self::ID_FACULTY || $divType == self::ID_INSTITUTE){
+        if ($divType == self::ID_FACULTY || $divType == self::ID_INSTITUTE) {
             $facultyId = $departmentId;
             $facultyName = $departments[$divIndex]['name'];
             $departmentId = 0;
-        } else if($facultyId != 0) {
+        } else if ($facultyId != 0) {
             $facultyId = $departments[$divIndex]['faculty_id'];
             $facultyIndex = array_search($facultyId, array_column($departments, 'id'));
             $facultyName = $departments[$facultyIndex]['name'];
@@ -184,5 +195,4 @@ class Department extends ASU
 
         return  $this->getAsuData($this->url('getDivisions'), [], 'departments', $keys);
     }
-
 }
