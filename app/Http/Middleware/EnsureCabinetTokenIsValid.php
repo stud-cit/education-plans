@@ -22,12 +22,13 @@ class EnsureCabinetTokenIsValid
      */
     public function handle(Request $request, Closure $next)
     {
+        $cabinetUrl = config('app.cabinet_app_url') . 'api/getPersonInfo';
         $params = [
             'key' => $request->header('Authorization'),
             'token' => config('app.cabinet_app_token'),
         ];
 
-        $response = Http::retry(3, 100)->get('https://cabinet.sumdu.edu.ua/api/getPersonInfo', $params)->json();
+        $response = Http::retry(3, 100)->get($cabinetUrl, $params)->json();
 
         if ($response['status'] === 'OK') {
             $user = $response['result'];
@@ -45,15 +46,15 @@ class EnsureCabinetTokenIsValid
             )->where("asu_id", $user['guid'])->first();
 
             if ($model) {
-//                $asu = new Department();
-//                $divisions = $asu->getDepartmentInfoByUser($user);
+                //                $asu = new Department();
+                //                $divisions = $asu->getDepartmentInfoByUser($user);
 
                 $new = [
                     'name' => "{$user['surname']} {$user['name']} {$user['patronymic']}",
-//                    'faculty_id' => $divisions['faculty_id'],
-//                    'faculty_name' => $divisions['faculty_name'],
-//                    'department_id' => $divisions['department_id'],
-//                    'department_name' => $divisions['department_name'],
+                    //                    'faculty_id' => $divisions['faculty_id'],
+                    //                    'faculty_name' => $divisions['faculty_name'],
+                    //                    'department_id' => $divisions['department_id'],
+                    //                    'department_name' => $divisions['department_name'],
                     'email' => $user['email'],
                 ];
 
