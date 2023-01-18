@@ -28,8 +28,11 @@ class StoreRequest extends FormRequest
             'year' => [
                 'required', 'date_format:Y',
                 Rule::unique('catalog_subjects')->where(function ($query) {
-                    return $query->where('year', $this->year)
-                        ->where('speciality_id', $this->speciality_id);
+                    return $query->where([
+                        ['year', $this->year],
+                        ['speciality_id', $this->speciality_id],
+                        ['catalog_education_level_id', $this->catalog_education_level_id]
+                    ]);
                 })
             ],
             'speciality_id' => 'required',
