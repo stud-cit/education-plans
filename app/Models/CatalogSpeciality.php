@@ -50,8 +50,7 @@ class CatalogSpeciality extends Model
 
     public function getSpecialityCatalogNameAttribute()
     {
-        $nextYear = $this->year + 1;
-        return "Каталог {$this->year}-{$nextYear}р. за спеціальністю {$this->getSpecialityIdNameAttribute()}";
+        return nl2br("Каталог {$this->years()}\n за спеціальністю {$this->getSpecialityIdNameAttribute()}\n {$this->educationLevel->title} рівень");
     }
 
     public function getStatusAttribute()

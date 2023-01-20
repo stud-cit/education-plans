@@ -55,8 +55,7 @@ class CatalogEducationProgram extends Model
 
     public function getEducationProgramCatalogNameAttribute()
     {
-        $nextYear = $this->year + 1;
-        return "Каталог {$this->year}-{$nextYear}р. за освітньою програмою {$this->getEducationProgramIdNameAttribute()}";
+        return nl2br("Каталог {$this->years()}\nза освітньою програмою {$this->getEducationProgramIdNameAttribute()}\n{$this->educationLevel->title} рівень");
     }
 
     public function verifications()

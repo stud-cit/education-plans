@@ -36,4 +36,10 @@ trait Catalog
     {
         return $this->hasMany(CatalogSelectiveSubject::class, 'catalog_subject_id');
     }
+
+    private function years(): String
+    {
+        $nextYear = $this->year + 1;
+        return  "{$this->year}-{$nextYear}р.";
+    }
 }
