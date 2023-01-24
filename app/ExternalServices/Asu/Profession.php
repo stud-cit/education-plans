@@ -26,11 +26,39 @@ class Profession extends ASU
     private const REMOVE_KEYS = ['parent_id', 'label_id', 'label'];
 
     // TODO: DUPLICATE CODE LIKE getName. How do better?
-    public function getTitle($id, $key): string
-    {
-        $isExists = $this->getProfessions()->contains('id', $id);
 
-        return $isExists ? $this->getProfessions()->firstWhere('id', $id)[$key] : self::NOT_FOUND;
+    /**
+     * @param $id
+     * @param $key
+     * @param $quote = true/false
+     * @param $with = [$key => $position] $position (string) = after/before
+     * @return string
+     */
+    public function getTitle($id, $key, $quote = false, $with = []): string
+    {
+        if (!$this->getProfessions()->contains('id', $id)) {
+            return self::NOT_FOUND;
+        }
+
+        $profession = $this->getProfessions()->firstWhere('id', $id);
+
+        $title = $quote ? '"'.$profession[$key].'"' : $profession[$key];
+
+        if (count($with) > 0) {
+            foreach ($with as $key => $position) {
+                if ($position === 'after') {
+                    $title = $profession[$key]. ' '. $title;
+                } else if ($position === 'before') {
+                    $title = $title. ' '. $profession[$key];
+                }
+            }
+        }
+
+        return $title;
+
+        //$isExists = $this->getProfessions()->contains('id', $id);
+
+        //return $isExists ? $this->getProfessions()->firstWhere('id', $id)[$key] : self::NOT_FOUND;
     }
 
     public function getSpecializations(int $id): array

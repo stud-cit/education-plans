@@ -139,7 +139,7 @@ class Plan extends Model
         if (!$this->education_program_id) return null;
 
         $professions = new Profession();
-        return $professions->getTitle($this->education_program_id, 'title');
+        return $professions->getTitle($this->education_program_id, 'title', true, ['label'=>'after']);
     }
 
     public function formStudy()
