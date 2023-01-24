@@ -42,6 +42,8 @@ class Profession extends ASU
 
         $profession = $this->getProfessions()->firstWhere('id', $id);
 
+        $profession = $this->cloneOP($profession); //TODO - is problem name op in ASU
+
         $title = $quote ? '"'.$profession[$key].'"' : $profession[$key];
 
         if (count($with) > 0) {
@@ -59,6 +61,14 @@ class Profession extends ASU
         //$isExists = $this->getProfessions()->contains('id', $id);
 
         //return $isExists ? $this->getProfessions()->firstWhere('id', $id)[$key] : self::NOT_FOUND;
+    }
+
+    private function cloneOP($profession) {
+        if ($profession['label_id'] == self::EDUCATION_PROGRAM_ID) {
+            $profession['label'] = 'Освітньо-професійна програма';
+        };
+
+        return $profession;
     }
 
     public function getSpecializations(int $id): array
