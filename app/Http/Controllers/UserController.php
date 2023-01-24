@@ -92,6 +92,24 @@ class UserController extends Controller
     }
 
     /**
+     * Update the role id user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateRole(Request $request, User $user)
+    {
+        $validated = $request->validate([
+            'role_id' => 'required',
+        ]);
+
+        $user->update($validated);
+
+        return $this->success(__('messages.Updated'), 201);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

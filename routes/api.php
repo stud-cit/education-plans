@@ -84,6 +84,7 @@ Route::prefix('v1')->group(function () {
         Route::get('list-workers', [UserController::class, 'listWorkers'])->name('users.list-workers');
         Route::get('faculty-by-worker', [UserController::class, 'getFacultyByWorker'])->name('users.faculty.worker');
         Route::apiResource('users', UserController::class);
+        Route::patch('set-user-role/{user}', [UserController::class, 'updateRole']);
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
         Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage-study-terms');
         Route::apiResource('settings', SettingController::class);
