@@ -65,7 +65,7 @@ class AuthServiceProvider extends ServiceProvider
         );
 
         Gate::define('copy-catalog-speciality', function (User $user) {
-            return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
+            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE, User::ROOT, User::ADMIN]);
         });
 
         Gate::define('delete-catalog-speciality', function (User $user, CatalogSpeciality $catalogSpeciality) {
@@ -137,7 +137,7 @@ class AuthServiceProvider extends ServiceProvider
         );
         //  EDUCATION PROGRAM
         Gate::define('copy-catalog-education-program', function (User $user) {
-            return $user->possibility([User::DEPARTMENT, User::ROOT, User::ADMIN]);
+            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE, User::ROOT, User::ADMIN]);
         });
 
         Gate::define('delete-catalog-education-program', function (User $user, CatalogEducationProgram $catalogEducationProgram) {

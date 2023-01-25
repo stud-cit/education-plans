@@ -41,7 +41,7 @@ class CatalogEducationProgramPolicy
      */
     public function create(User $user)
     {
-        return $user->possibility([User::ROOT, User::ADMIN, User::DEPARTMENT]);
+        return $user->possibility([User::ROOT, User::ADMIN, User::DEPARTMENT, User::FACULTY_INSTITUTE]);
     }
 
     /**
