@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CatalogEducationProgram\PdfCatalogRequest;
-use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 use ErrorException;
 use App\Models\User;
 use App\Helpers\Helpers;
@@ -16,12 +14,15 @@ use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
 use App\Http\Resources\ProfessionsResource;
+use App\Policies\CatalogEducationProgramPolicy;
 use App\Http\Requests\CatalogEducationProgram\CopyRequest;
 use App\Http\Requests\CatalogEducationProgram\IndexRequest;
 use App\Http\Requests\CatalogEducationProgram\OwnerRequest;
 use App\Http\Requests\CatalogEducationProgram\StoreRequest;
 use App\Http\Requests\CatalogEducationProgram\UpdateRequest;
+use App\Http\Requests\CatalogEducationProgram\PdfCatalogRequest;
 use App\Http\Requests\CatalogEducationProgram\StoreSignatureRequest;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 use App\Http\Resources\CatalogEducationProgram\CatalogEducationProgramResource;
 use App\Http\Requests\CatalogEducationProgram\StoreCatalogEducationProgramVerificationRequest;
 use App\Http\Requests\CatalogEducationProgram\ToggleCatalogEducationProgramVerificationRequest;
@@ -58,7 +59,14 @@ class CatalogEducationProgramController extends Controller
             ])
             ->filterBy($validated)->orderBy('created_at', 'desc');
 
-        return CatalogEducationProgramResource::collection($catalog->paginate($perPage));
+        $policy = new CatalogEducationProgramPolicy();
+        $user = Auth::user();
+
+        return CatalogEducationProgramResource::collection($catalog->paginate($perPage))->additional([
+            'actions' => [
+                'can_create' => $policy->create($user),
+            ]
+        ]);
     }
 
     /**

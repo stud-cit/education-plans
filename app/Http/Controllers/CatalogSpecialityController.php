@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\CatalogEducationLevel;
 use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
+use App\Policies\CatalogSpecialityPolicy;
 use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\CatalogSpeciality\CopyRequest;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
@@ -57,7 +58,14 @@ class CatalogSpecialityController extends Controller
             ])
             ->filterBy($validated)->orderBy('created_at', 'desc');
 
-        return CatalogSpecialityResource::collection($catalog->paginate($perPage));
+        $policy = new CatalogSpecialityPolicy();
+        $user = Auth::user();
+
+        return CatalogSpecialityResource::collection($catalog->paginate($perPage))->additional([
+            'actions' => [
+                'can_create' => $policy->create($user)
+            ]
+        ]);
     }
 
     /**
