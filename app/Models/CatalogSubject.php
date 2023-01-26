@@ -32,7 +32,7 @@ class CatalogSubject extends Model
 
     public function group()
     {
-        return $this->belongsTo(CatalogGroup::class, 'group_id', 'id');
+        return $this->belongsTo(CatalogGroup::class, 'group_id', 'id')->withTrashed();
     }
 
     public function scopeFilterBy($query, $filters)
