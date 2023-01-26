@@ -2,20 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEducationLevelRequest;
-use App\Models\EducationLevel;
+use App\Helpers\Helpers;
+use App\Http\Requests\IndexEducationLevelRequest;
 use Illuminate\Http\Request;
+use App\Models\EducationLevel;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\EducationLevelResource;
+use App\Http\Requests\StoreEducationLevelRequest;
 
 class EducationLevelController extends Controller
 {
+    public function list()
+    {
+        return EducationLevelResource::collection(
+            EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')->get()
+        );
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(IndexEducationLevelRequest $request)
     {
-        return EducationLevelResource::collection(EducationLevel::select('id','title')->get());
+        $validated = $request->validated();
+
+        $perPage = Helpers::getPerPage('items_per_page', $validated);
+
+        return EducationLevelResource::collection(
+            EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->paginate($perPage)
+        );
     }
 
     /**
@@ -65,7 +80,19 @@ class EducationLevelController extends Controller
      */
     public function destroy(EducationLevel $educationLevel): JsonResponse
     {
-        $educationLevel->delete();
-        return response()->json(['message' => __('Deleted')], 204);
+        try {
+            $educationLevel->delete();
+
+            return $this->success(__('messages.Zipped'), 201);
+        } catch (\Illuminate\Database\QueryException $exception) {
+            return $this->error($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    public function restore(Request $request)
+    {
+        EducationLevel::withTrashed()->where('id', $request->id)->restore();
+
+        return $this->success(__('messages.Unzipped'), 201);
     }
 }

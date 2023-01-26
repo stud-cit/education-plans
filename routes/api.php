@@ -73,6 +73,7 @@ Route::prefix('v1')->group(function () {
 
         Route::apiResource('form-studies', FormStudyController::class);
         Route::apiResource('form-organizations', FormOrganizationController::class);
+        Route::patch('/education-levels/restore/{id}', [EducationLevelController::class, 'restore']);
         Route::apiResource('education-levels', EducationLevelController::class);
         Route::apiResource('subjects', SubjectController::class);
         Route::apiResource('form-controls', FormControlController::class);
