@@ -235,6 +235,7 @@ return [
     ],
 
     'asu_key' => env('ASU_KEY'),
+    'asu_host' => env('ASU_HOST'),
     'asu_key_scipub' => env('ASU_KEY_SCIPUB'),
     'cabinet_app_token' => env('CABINET_APP_TOKEN'),
     'cabinet_app_url' => env('CABINET_APP_URL'),
