@@ -77,9 +77,17 @@ class Worker extends ASU
             return self::NOT_FOUND;
         }
 
-        return $worker['last_name'] . ' ' .
-            mb_substr($worker['first_name'], 0, 1) . '.' .
-            mb_substr($worker['last_name'], 0, 1) . '.';
+        return sprintf(
+            '%s %s. %s.',
+            $worker['last_name'],
+            $this->getFirstLetter($worker['first_name']),
+            $this->getFirstLetter($worker['patronymic'])
+        );
+    }
+
+    protected function getFirstLetter($string): string
+    {
+        return mb_substr($string, 0, 1);
     }
 
     public function getFirstLastNames($asu_id)
