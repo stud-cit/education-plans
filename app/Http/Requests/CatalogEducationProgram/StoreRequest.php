@@ -37,7 +37,6 @@ class StoreRequest extends FormRequest
             ],
             'education_program_id' => 'required',
             'faculty_id' => 'required',
-            'speciality_id' => 'nullable',
             'department_id' => 'required',
             'catalog_education_level_id' => 'required|exists:App\Models\CatalogEducationLevel,id'
         ];
