@@ -17,7 +17,7 @@ class Profession extends ASU
     protected const EDUCATION_PROGRAM_ONP_ID = 11; // 11 Освітньо-наукова програма
 
     protected const EDUCATION_PROGRAM_TYPES = [
-        self::EDUCATION_PROGRAM_ID => 'ОП',
+        self::EDUCATION_PROGRAM_ID => 'ОПП',
         self::EDUCATION_PROGRAM_OPP_ID => 'ОПП',
         self::EDUCATION_PROGRAM_ONP_ID => 'ОНП'
     ];
