@@ -128,7 +128,7 @@ class PlanController extends Controller
             'forms_study' => $formStudy->index(),
             'terms_study' => $studyTerm->index(),
             'forms_organizationStudy' => $formOrganization->index(),
-            'educations_level' => $educationLevel->index(),
+            'educations_level' => $educationLevel->list(),
         ];
 
         return response()->json($data);

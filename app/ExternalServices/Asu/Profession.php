@@ -11,8 +11,8 @@ class Profession extends ASU
     protected const FIELD_KNOWLEDGE_ID = 5; // ГАЛУЗЬ ЗНАНЬ
     protected const SPECIALITY_ID = 2; // СПЕЦІАЛЬНІСТЬ
     protected const SPECIALIZATION_ID = 3; // СПЕЦІАЛІЗАЦІЯ
-    protected const EDUCATION_PROGRAM_ID = 9; // 9 Освітня програма
 
+    protected const EDUCATION_PROGRAM_ID = 9; // 9 Освітня програма
     protected const EDUCATION_PROGRAM_OPP_ID = 10; // 10 Освітньо-професійна програма
     protected const EDUCATION_PROGRAM_ONP_ID = 11; // 11 Освітньо-наукова програма
 
@@ -24,8 +24,6 @@ class Profession extends ASU
 
 
     private const REMOVE_KEYS = ['parent_id', 'label_id', 'label'];
-
-    // TODO: DUPLICATE CODE LIKE getName. How do better?
 
     /**
      * @param $id
@@ -40,35 +38,51 @@ class Profession extends ASU
             return self::NOT_FOUND;
         }
 
-        $profession = $this->getProfessions()->firstWhere('id', $id);
+        $profession = $this->getFixedProfession($id);
 
-        $profession = $this->cloneOP($profession); //TODO - is problem name op in ASU
-
-        $title = $quote ? '"'.$profession[$key].'"' : $profession[$key];
+        $professionName = $profession[$key];
+        $title = $quote ? $this->quotedString($professionName) : $professionName;
 
         if (count($with) > 0) {
-            foreach ($with as $key => $position) {
+            foreach ($with as $label => $position) {
                 if ($position === 'after') {
-                    $title = $profession[$key]. ' '. $title;
+                    $title = "$profession[$label] $title";
                 } else if ($position === 'before') {
-                    $title = $title. ' '. $profession[$key];
+                    $title = "$title $profession[$label]";
                 }
             }
         }
 
         return $title;
-
-        //$isExists = $this->getProfessions()->contains('id', $id);
-
-        //return $isExists ? $this->getProfessions()->firstWhere('id', $id)[$key] : self::NOT_FOUND;
     }
 
-    private function cloneOP($profession) {
+    private function getFixedProfession($id)
+    {
+        $profession = $this->getProfessions()->firstWhere('id', $id);
+
+        return $this->fixLabelEducationProgram($profession);
+    }
+
+    /**
+     * It problem name op in ASU
+     *
+     * @param array $profession
+     * @return array
+     */
+    private function fixLabelEducationProgram($profession): array
+    {
         if ($profession['label_id'] == self::EDUCATION_PROGRAM_ID) {
             $profession['label'] = 'Освітньо-професійна програма';
         };
 
         return $profession;
+    }
+
+    private function quotedString($professionName)
+    {
+        $format = '"%s"';
+
+        return sprintf($format, $professionName);
     }
 
     public function getSpecializations(int $id): array
@@ -147,7 +161,6 @@ class Profession extends ASU
         });
     }
 
-    // TODO: rename, bad name
     private function getFiltered(int $label_id, int $id = null): array
     {
         $filtered = $this->getProfessions()->filter(function ($value) use ($id, $label_id) {
@@ -200,7 +213,7 @@ class Profession extends ASU
     {
         $parent = $all[$p['parent_id']];
         if (isset($parent)) {
-            if ($parent['label_id'] == self::SPECIALITY_ID ) {
+            if ($parent['label_id'] == self::SPECIALITY_ID) {
                 if ($c !== null) {
                     $c['speciality_id'] = $parent['id'];
                     return $c;
@@ -209,7 +222,6 @@ class Profession extends ASU
                     $p['specialization_id'] = null;
                     return $p;
                 }
-
             } else if ($parent['label_id'] == self::SPECIALIZATION_ID) {
                 $p['specialization_id'] = $parent['id'];
 
@@ -221,5 +233,4 @@ class Profession extends ASU
             return $p;
         }
     }
-
 }

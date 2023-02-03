@@ -13,8 +13,8 @@ class ASU
 {
     protected $asu_key;
     private $expirationTime;
+    private $host;
 
-    private const HOST = 'https://asu.sumdu.edu.ua/api/';
     protected const ID_INSTITUTE = 7;
     protected const ID_FACULTY = 9;
     protected const ID_DEPARTMENT = 2;
@@ -23,7 +23,9 @@ class ASU
     protected const NOT_FOUND = 'Ідентифікатор не знайдено.';
     protected const ASU_ERRORS = ['ERROR_API', 'ERROR_CABINET']; // TODO: MOVE TO SINGLE FILE?
 
-    public function __construct() {
+    public function __construct()
+    {
+        $this->host = config('app.asu_host');
         $this->asu_key = config('app.asu_key');
         $this->expirationTime = now()->addHours(24);
     }
@@ -36,12 +38,12 @@ class ASU
         return $this->asu_key;
     }
 
-    protected function url($method) : string
+    protected function url($method): string
     {
-        return self::HOST . $method;
+        return $this->host . $method;
     }
 
-    private function setQueryParams(Array $params): array
+    private function setQueryParams(array $params): array
     {
         return array_merge(['key' => $this->asu_key], $params ?? []);
     }
@@ -65,7 +67,7 @@ class ASU
         if (in_array($status, self::ASU_ERRORS)) {
             $message = "ASU: $results";
             Log::error($message);
-            throw new HttpException ( 500, $message);
+            throw new HttpException(500, $message);
         }
 
         if (!empty($replaceKeys) && $status === 'OK') {
