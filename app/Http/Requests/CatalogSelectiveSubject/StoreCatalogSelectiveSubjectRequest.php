@@ -26,7 +26,7 @@ class StoreCatalogSelectiveSubjectRequest extends FormRequest
     {
         return [
             'catalog_subject_id' => 'required|exists:App\Models\CatalogSubject,id',
-            'catalog_education_level_id' => 'required|exists:App\Models\CatalogEducationLevel,id',
+            'catalog_education_level_id' => 'required|exists:App\Models\EducationLevel,id',
             'asu_id' => [
                 'required',
                 'numeric',

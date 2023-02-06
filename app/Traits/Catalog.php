@@ -2,8 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\CatalogEducationLevel;
-use App\Helpers\Filters\FilterBuilder;
+use App\Models\EducationLevel;
 use App\Models\CatalogSelectiveSubject;
 use App\ExternalServices\Asu\Profession;
 
@@ -29,7 +28,7 @@ trait Catalog
 
     public function educationLevel()
     {
-        return $this->belongsTo(CatalogEducationLevel::class, 'catalog_education_level_id');
+        return $this->belongsTo(EducationLevel::class, 'catalog_education_level_id')->withTrashed();
     }
 
     public function subjects()

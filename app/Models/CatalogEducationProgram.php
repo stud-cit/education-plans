@@ -34,7 +34,6 @@ class CatalogEducationProgram extends Model
         'user_id',
         'faculty_id',
         'department_id',
-        'speciality_id',
         'year',
         'need_verification',
     ];
@@ -55,7 +54,7 @@ class CatalogEducationProgram extends Model
 
     public function getEducationProgramCatalogNameAttribute()
     {
-        return nl2br("Каталог {$this->years()}\nза освітньою програмою {$this->getEducationProgramIdNameAttribute()}\n{$this->educationLevel->title} рівень");
+        return nl2br("Каталог {$this->years()}\nза освітньою програмою {$this->getEducationProgramIdNameAttribute()}\n{$this->educationLevel->title}");
     }
 
     public function verifications()

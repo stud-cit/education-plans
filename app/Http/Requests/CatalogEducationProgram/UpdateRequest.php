@@ -36,7 +36,7 @@ class UpdateRequest extends FormRequest
             'education_program_id' => 'required',
             'faculty_id' => 'required',
             'department_id' => 'required',
-            'catalog_education_level_id' => 'required|exists:App\Models\CatalogEducationLevel,id'
+            'catalog_education_level_id' => 'required|exists:App\Models\EducationLevel,id'
         ];
     }
 }

@@ -15,8 +15,6 @@ class CatalogSubject extends Model
     use HasFactory, HasAsuDivisionsNameTrait, Catalog;
 
     const SUBJECT = 1;
-    // need move
-    const EDUCATION_PROGRAM = 3;
 
     protected $fillable = [
         'year',

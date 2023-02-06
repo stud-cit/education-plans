@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Subject;
+use App\Models\EducationLevel;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CatalogEducationLevel;
@@ -69,7 +70,7 @@ class CatalogSelectiveSubject extends Model
 
     public function educationLevel()
     {
-        return $this->belongsTo(CatalogEducationLevel::class, 'catalog_education_level_id');
+        return $this->belongsTo(EducationLevel::class, 'catalog_education_level_id')->withTrashed();
     }
 
     public function verifications()

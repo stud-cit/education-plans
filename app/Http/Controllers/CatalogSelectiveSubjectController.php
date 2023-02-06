@@ -6,10 +6,10 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Helpers\Helpers;
 use App\Models\SubjectHelper;
+use App\Models\EducationLevel;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\CatalogEducationLevel;
 use App\Models\CatalogSelectiveSubject;
 use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
@@ -23,6 +23,7 @@ use App\Http\Requests\CatalogSelectiveSubject\ToggleSubjectVerificationRequest;
 use App\Http\Requests\CatalogSelectiveSubject\IndexCatalogSelectiveSubjectRequest;
 use App\Http\Requests\CatalogSelectiveSubject\StoreCatalogSelectiveSubjectRequest;
 use App\Http\Requests\CatalogSelectiveSubject\UpdateCatalogSelectiveSubjectRequest;
+use App\Http\Resources\EducationLevelResource;
 
 class CatalogSelectiveSubjectController extends Controller
 {
@@ -67,11 +68,15 @@ class CatalogSelectiveSubjectController extends Controller
             'catalog_helper_type_id',
         )->get();
 
+        $educationLevels = EducationLevelResource::collection(
+            EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')->get()
+        );
+
         $data = [
             'catalogs' => $catalogs->getCatalogs(),
             'subjects' => $asu->getSubjects(),
             'languages' => $language->getList(),
-            'educationsLevel' => CatalogEducationLevel::select('id', 'title')->get(),
+            'educationsLevel' => $educationLevels,
             'faculties' => $asu->faculties(),
             'departments' => $asu->getDepartments(),
             'teachers' => $asu->getWorkers(), // TODO: sort

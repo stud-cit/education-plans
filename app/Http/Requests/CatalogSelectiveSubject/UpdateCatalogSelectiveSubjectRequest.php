@@ -31,7 +31,7 @@ class UpdateCatalogSelectiveSubjectRequest extends FormRequest
                 Rule::unique('catalog_selective_subjects')->ignore($this->id)
             ],
             'catalog_subject_id' => 'required|exists:App\Models\CatalogSubject,id',
-            'catalog_education_level_id' => 'required|exists:App\Models\CatalogEducationLevel,id',
+            'catalog_education_level_id' => 'required|exists:App\Models\EducationLevel,id',
             'asu_id' => 'required|numeric',
             'title' => 'required|string|max:255', // ?
             'title_en' => 'nullable|string|max:255', // ?

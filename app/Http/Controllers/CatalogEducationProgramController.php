@@ -6,14 +6,15 @@ use ErrorException;
 use App\Models\User;
 use App\Helpers\Helpers;
 use Illuminate\Http\Request;
+use App\Models\EducationLevel;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use App\Models\CatalogEducationLevel;
 use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
 use App\Http\Resources\ProfessionsResource;
+use App\Http\Resources\EducationLevelResource;
 use App\Policies\CatalogEducationProgramPolicy;
 use App\Http\Requests\CatalogEducationProgram\CopyRequest;
 use App\Http\Requests\CatalogEducationProgram\IndexRequest;
@@ -178,6 +179,8 @@ class CatalogEducationProgramController extends Controller
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
             fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
         );
+        $educationLevels = EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')
+            ->get();
 
         return response([
             'education_programs' => $asuController->getAllEducationPrograms(),
@@ -185,7 +188,7 @@ class CatalogEducationProgramController extends Controller
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties),
             'years' => $years,
-            'education_levels' => CatalogEducationLevel::select('id', 'title')->get(),
+            'education_levels' => EducationLevelResource::collection($educationLevels),
         ]);
     }
 
@@ -276,7 +279,7 @@ class CatalogEducationProgramController extends Controller
         StoreCatalogEducationProgramVerificationRequest $request,
         CatalogEducationProgram $catalogEducationProgram
     ) {
-        // TODO: MAKE GATE
+
         if (!Gate::allows('can-verification-education-program-catalog', $catalogEducationProgram)) {
             abort(403);
         }

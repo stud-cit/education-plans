@@ -160,6 +160,13 @@ class AuthServiceProvider extends ServiceProvider
                 return true;
             }
 
+            if (
+                $catalog->faculty_id === $user->faculty_id
+                && $user->possibility(User::FACULTY_INSTITUTE)
+            ) {
+                return true;
+            }
+
             $ids = array_column($catalog->owners->toArray(), 'department_id');
 
             return $user->possibility([User::ROOT, User::ADMIN]) ||
