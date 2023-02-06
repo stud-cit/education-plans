@@ -478,6 +478,7 @@ class PlanController extends Controller
 
             $catalog = CatalogSpeciality::with(['subjects', 'signatures'])
                 ->where('speciality_id', $validated['speciality_id'])
+                ->where('catalog_education_level_id', $validated['education_level'])
                 ->whereBetween('year', [$validated['year'], $validated['end_year']])
                 ->orderBy('year', 'asc')
                 ->get();
@@ -489,6 +490,7 @@ class PlanController extends Controller
 
             $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
                 ->where('education_program_id', $validated['education_program_id'])
+                ->where('catalog_education_level_id', $validated['education_level'])
                 ->whereBetween('year', [$validated['year'], $validated['end_year']])
                 ->orderBy('year', 'asc')
                 ->get();

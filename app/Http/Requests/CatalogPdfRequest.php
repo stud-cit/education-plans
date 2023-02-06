@@ -28,8 +28,8 @@ class CatalogPdfRequest extends FormRequest
             'year' => 'required|date_format:Y',
             'end_year' => 'required|date_format:Y',
             'speciality_id' => 'nullable|required_if:education_program_id,null',
-            'education_program_id' => 'required_if:speciality_id,null'
-
+            'education_program_id' => 'required_if:speciality_id,null',
+            'education_level' => 'required'
         ];
     }
 }
