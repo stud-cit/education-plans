@@ -216,5 +216,9 @@ class AuthServiceProvider extends ServiceProvider
                     $catalogEducationProgram->user_id === $user->id;
             }
         );
+
+        Gate::define('upload-manual', function (User $user) {
+            return $user->possibility(User::ROOT);
+        });
     }
 }
