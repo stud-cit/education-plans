@@ -31,6 +31,7 @@ class IndexRequest extends FormRequest
             'faculty' => 'integer',
             'department' => 'integer',
             'divisionWithStatus' => 'string',
+            'educationLevel' => 'integer'
         ];
     }
 }
