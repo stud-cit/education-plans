@@ -52,4 +52,11 @@ if (config('app.debug')) {
             ->where('catalog_education_level_id', 1)
             ->increment('catalog_education_level_id');
     });
+
+    Route::get('/fix', function () {
+        DB::table('catalog_subjects')->select('*')
+            ->where('selective_discipline_id', 3)
+            ->where('education_program_id', '!=', null)
+            ->update(['speciality_id' => null]);
+    });
 }
