@@ -82,7 +82,7 @@ class AuthServiceProvider extends ServiceProvider
 
             if (
                 $catalog->department_id === $user->department_id
-                && $user->possibility(User::DEPARTMENT)
+                && $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE])
             ) {
                 return true;
             }
@@ -90,7 +90,7 @@ class AuthServiceProvider extends ServiceProvider
             $ids = array_column($catalog->owners->toArray(), 'department_id');
 
             return $user->possibility([User::ROOT, User::ADMIN]) ||
-                in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
+                in_array($user->department_id, $ids) && $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) || $catalog->user_id === $user->id;
         });
 
         Gate::define(
@@ -114,7 +114,6 @@ class AuthServiceProvider extends ServiceProvider
 
                 return
                     $user->possibility([User::ROOT, User::ADMIN]) ||
-                    // in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) ||
                     $catalogSpeciality->user_id === $user->id;
             }
         );
@@ -155,7 +154,7 @@ class AuthServiceProvider extends ServiceProvider
 
             if (
                 $catalog->department_id === $user->department_id
-                && $user->possibility(User::DEPARTMENT)
+                && $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE])
             ) {
                 return true;
             }
@@ -170,7 +169,7 @@ class AuthServiceProvider extends ServiceProvider
             $ids = array_column($catalog->owners->toArray(), 'department_id');
 
             return $user->possibility([User::ROOT, User::ADMIN]) ||
-                in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) || $catalog->user_id === $user->id;
+                in_array($user->department_id, $ids) && $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) || $catalog->user_id === $user->id;
         });
 
         Gate::define(

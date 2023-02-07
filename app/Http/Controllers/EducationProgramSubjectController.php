@@ -98,7 +98,7 @@ class EducationProgramSubjectController extends Controller
             'helpersTypesTrainingSessions' => $helpers->where('type.key', 'types_educational_activities')->pluck('title'),
             'helpersRequirements' => $helpers->where('type.key', 'entry_requirements_applicants')->pluck('title'),
         ];
-        clock($data);
+
         return response()->json($data);
     }
 

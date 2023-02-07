@@ -63,13 +63,13 @@ class SpecialitySubjectPolicy
         if ($catalog) {
             $ids = array_column($catalog->owners->toArray(), 'department_id');
 
-            return $user->possibility(User::DEPARTMENT)
+            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE])
                 && $specialitySubject->user_id === $user->id
                 || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
                 || $user->possibility(User::PRIVILEGED_ROLES);
         }
 
-        return $user->possibility(User::DEPARTMENT) && $specialitySubject->user_id === $user->id
+        return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) && $specialitySubject->user_id === $user->id
             || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
@@ -85,11 +85,15 @@ class SpecialitySubjectPolicy
         $catalog = CatalogSpeciality::with('owners')
             ->where('id', $specialitySubject->catalog_subject_id)
             ->first();
+        if ($catalog) {
+            $ids = array_column($catalog->owners->toArray(), 'department_id');
 
-        $ids = array_column($catalog->owners->toArray(), 'department_id');
+            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) && $specialitySubject->user_id === $user->id
+                || in_array($user->department_id, $ids) && $user->possibility([User::DEPARTMENT])
+                || $user->possibility(User::PRIVILEGED_ROLES);
+        }
 
-        return $user->possibility(User::DEPARTMENT) && $specialitySubject->user_id === $user->id
-            || in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT)
+        return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) && $specialitySubject->user_id === $user->id
             || $user->possibility(User::PRIVILEGED_ROLES);
     }
 
