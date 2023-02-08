@@ -18,7 +18,7 @@ class FormControlPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->possibility(User::ALL_ROLES);
+        return $user->possibility();
     }
 
     /**

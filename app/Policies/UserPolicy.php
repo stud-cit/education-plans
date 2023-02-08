@@ -54,10 +54,10 @@ class UserPolicy
     {
         switch ($user->role_id) {
             case User::FACULTY_INSTITUTE:
-                return env('APP_DEBUG') ? true : $user->faculty_id === $model->faculty_id;
+                return config('app.debug') ? true : $user->faculty_id === $model->faculty_id;
 
             default:
-                return env('APP_DEBUG') ? true : $user->possibility(User::PRIVILEGED_ROLES);
+                return config('app.debug') ? true : $user->possibility(User::PRIVILEGED_ROLES);
         }
 
         return false;
@@ -78,7 +78,7 @@ class UserPolicy
                     return false;
                 }
 
-                return $user->faculty_id === $model->faculty_id ? true : false;
+                return $user->isFacultyMine($model->faculty_id);
 
             default:
                 if ($user->role_id === User::ADMIN && $model->role_id === User::ROOT) {
