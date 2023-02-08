@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
-use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
 use App\Policies\CatalogSpecialityPolicy;
 use Illuminate\Database\Eloquent\Builder;
@@ -90,7 +89,6 @@ class CatalogSpeciality extends Model
 
     public function scopeFilterBy($query, $filters)
     {
-        // $namespace = 'App\Helpers\Filters\CatalogSubjectFilters';
         $namespace = 'App\Helpers\Filters\CatalogSpecialityFilters';
         $filter = new FilterBuilder($query, $filters, $namespace);
 
@@ -105,15 +103,18 @@ class CatalogSpeciality extends Model
         return [
             'copy' =>  Gate::allows('copy-catalog-speciality'),
             'preview' => $policy->viewAny($user),
-            // 'edit' => $policy->update($user, $this),
             'delete' => Gate::allows('delete-catalog-speciality', $this),
         ];
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->status === 'success';
     }
 
     protected static function booted()
     {
         static::saving(function ($catalog) {
-            // $catalog->user_id = 1; // TODO: Auth::id();
             $catalog->user_id = Auth::id();
         });
 

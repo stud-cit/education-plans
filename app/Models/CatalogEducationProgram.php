@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
 use App\Models\EducationProgramSubject;
 use Illuminate\Database\Eloquent\Model;
-use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Builder;
 use App\Policies\CatalogEducationProgramPolicy;
@@ -108,10 +107,13 @@ class CatalogEducationProgram extends Model
         return [
             'copy' =>  Gate::allows('copy-catalog-education-program'),
             'preview' => $policy->viewAny($user),
-            // 'edit' => $policy->update($user, $this),
-            // check if works
             'delete' => Gate::allows('delete-catalog-education-program', $this),
         ];
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->status === 'success';
     }
 
     protected static function booted()

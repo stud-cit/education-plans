@@ -135,17 +135,22 @@ class User extends Authenticatable
 
     public function isFacultyMine(?int $faculty_id): bool
     {
-        return $this->faculty_id === $faculty_id ? true : false;
+        return $this->faculty_id === $faculty_id;
     }
 
     public function isDepartmentMine(?int $department_id): bool
     {
-        return $this->department_id === $department_id ? true : false;
+        return $this->department_id === $department_id;
     }
 
     public function isPlanMine(?int $plan_id): bool
     {
         return $this->id === $plan_id ? true : false;
+    }
+
+    public function isOwner($user_id): bool
+    {
+        return $this->id === $user_id;
     }
 
     protected static function booted()
