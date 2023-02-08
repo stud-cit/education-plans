@@ -125,7 +125,7 @@ class AuthServiceProvider extends ServiceProvider
 
                 return
                     $user->possibility([User::ROOT, User::ADMIN]) ||
-                    $catalogSpeciality->user_id === $user->isOwner();
+                    $user->isOwner($catalogSpeciality->user_id);
             }
         );
         //  EDUCATION PROGRAM
