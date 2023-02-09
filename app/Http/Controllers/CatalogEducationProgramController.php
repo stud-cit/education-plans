@@ -165,6 +165,8 @@ class CatalogEducationProgramController extends Controller
         $asuController = new AsuController;
         $asu = new Department();
         $user = Auth::user();
+        $educationLevels = new EducationLevelController();
+
         $years = CatalogEducationProgram::select('year')
             ->where('education_program_id', '!=', null)
             ->distinct()->orderBy('year', 'desc')
@@ -179,8 +181,6 @@ class CatalogEducationProgramController extends Controller
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
             fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
         );
-        $educationLevels = EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')
-            ->get();
 
         return response([
             'education_programs' => $asuController->getAllEducationPrograms(),
@@ -188,7 +188,7 @@ class CatalogEducationProgramController extends Controller
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties),
             'years' => $years,
-            'education_levels' => EducationLevelResource::collection($educationLevels),
+            'education_levels' => $educationLevels->list(),
         ]);
     }
 

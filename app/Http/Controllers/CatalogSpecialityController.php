@@ -165,6 +165,8 @@ class CatalogSpecialityController extends Controller
         $asuController = new AsuController;
         $asu = new Department();
         $user = Auth::user();
+        $educationLevels = new EducationLevelController();
+
         $years = CatalogSpeciality::select('year')
             ->where('speciality_id', '!=', null)
             ->distinct()->orderBy('year', 'desc')
@@ -179,14 +181,14 @@ class CatalogSpecialityController extends Controller
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
             fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
         );
-        $educationLevels = EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->get();
+
         return response([
             'specialties' => $asuController->getAllSpecialities(),
             'divisions' => ProfessionsResource::collection($divisions),
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties),
             'years' => $years,
-            'education_levels' => EducationLevelResource::collection($educationLevels),
+            'education_levels' => $educationLevels->list(),
         ]);
     }
 
