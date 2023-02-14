@@ -15,16 +15,17 @@ class OP
 
     private const HOST = 'https://op.sumdu.edu.ua/api/';
 
-    public function __construct() {
-      $this->expirationTime = now()->addHours(24);
+    public function __construct()
+    {
+        $this->expirationTime = now()->addHours(24);
     }
 
-    protected function url($method) : string
+    protected function url($method): string
     {
         return self::HOST . $method;
     }
 
-    private function setQueryParams(Array $params): array
+    private function setQueryParams(array $params): array
     {
         return array_merge($params ?? []);
     }
@@ -39,11 +40,11 @@ class OP
         return collect($results);
     }
 
-    public function getPrograms($request): Collection
+    public function getPrograms($array): Collection
     {
         $url = $this->url('get-programs-api');
 
-        return  $this->getOpData($url, $request->all(), 'programs');
+        return  $this->getOpData($url, $array, 'programs');
     }
 
     public function getProgramId($id): Collection
