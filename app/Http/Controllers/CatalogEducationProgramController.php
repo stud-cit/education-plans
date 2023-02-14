@@ -148,6 +148,10 @@ class CatalogEducationProgramController extends Controller
     {
         $model = $catalogEducationProgram->loadCount('subjects');
 
+        $model->signatures()->delete();
+        $model->verifications()->delete();
+        $model->owners()->delete();
+
         if ($model->subjects_count > 0) {
             return response()->json([
                 'message' => __('messages.Directory_not_empty'),
