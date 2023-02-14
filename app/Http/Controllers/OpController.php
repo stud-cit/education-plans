@@ -32,7 +32,6 @@ class OpController extends Controller
 
         if (array_key_exists($validated['degree'], $bridge)) {
             $validated['degree'] = $bridge[$validated['degree']];
-            clock(['source' => $validated['degree'], 'direct' => $bridge[$validated['degree']]]);
         }
 
         $model = new OP();
