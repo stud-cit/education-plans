@@ -89,14 +89,12 @@ class EducationProgramSubjectPolicy
         if ($catalog) {
             $ids = array_column($catalog->owners->toArray(), 'department_id');
 
-            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) &&
-                $user->isOwner($educationProgramSubject->user_id) ||
+            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) ||
                 in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) ||
                 $user->possibility(User::PRIVILEGED_ROLES);
         }
 
-        return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) &&
-            $user->isOwner($educationProgramSubject->user_id) ||
+        return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) ||
             $user->possibility(User::PRIVILEGED_ROLES);
     }
 

@@ -71,6 +71,14 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('delete-catalog-speciality', function (User $user, CatalogSpeciality $catalogSpeciality) {
+            if ($user->possibility(User::FACULTY_INSTITUTE)) {
+                return $user->isFacultyMine($catalogSpeciality->faculty_id);
+            }
+
+            if ($user->possibility(User::DEPARTMENT)) {
+                return $user->isDepartmentMine($catalogSpeciality->department_id);
+            }
+
             return $user->possibility([User::ROOT, User::ADMIN]) || $user->isOwner($catalogSpeciality->user_id);
         });
 
@@ -134,6 +142,14 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('delete-catalog-education-program', function (User $user, CatalogEducationProgram $catalogEducationProgram) {
+            if ($user->possibility(User::FACULTY_INSTITUTE)) {
+               return $user->isFacultyMine($catalogEducationProgram->faculty_id);
+            }
+
+            if ($user->possibility(User::DEPARTMENT)) {
+                return $user->isDepartmentMine($catalogEducationProgram->department_id);
+            }
+
             return $user->possibility([User::ROOT, User::ADMIN]) || $user->isOwner($catalogEducationProgram->user_id);
         });
 
