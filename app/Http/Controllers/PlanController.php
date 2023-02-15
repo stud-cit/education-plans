@@ -463,11 +463,16 @@ class PlanController extends Controller
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
             fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
         );
+        $types = [
+            [ 'title' => 'Шаблон', 'value' => 2 ],
+            [ 'title' => 'План', 'value' => 1 ]
+        ];
 
         return response([
             'divisions' => ProfessionsResource::collection($divisions),
             'verificationsStatus' => $verificationsStatus,
-            'faculties' => FacultiesResource::collection($faculties)
+            'faculties' => FacultiesResource::collection($faculties),
+            'types' => $types
         ]);
     }
 
