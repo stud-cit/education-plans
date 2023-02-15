@@ -102,6 +102,10 @@ class PlanPolicy
             return true;
         }
 
+        if ($user->possibility(User::DEPARTMENT) && $user->isPlanMine($plan->author_id)) {
+            return true;
+        }
+
         if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $user->isPlanMine($plan->author_id)) {
             return true;
         }
