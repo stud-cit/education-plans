@@ -25,6 +25,7 @@ class indexPlanRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'numeric',
             'title' => 'string',
             'faculty' => 'integer',
             'department' => 'integer',
