@@ -6,7 +6,7 @@ use App\Helpers\Filters\QueryFilter;
 use App\Helpers\Filters\FilterContract;
 
 
-class planOrTemplate extends QueryFilter implements FilterContract
+class PlanOrTemplate extends QueryFilter implements FilterContract
 {
     public function handle($value): void
     {
