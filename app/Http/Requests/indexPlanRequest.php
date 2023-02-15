@@ -30,6 +30,7 @@ class indexPlanRequest extends FormRequest
             'faculty' => 'integer',
             'department' => 'integer',
             'divisionWithStatus' => 'string',
+            'planOrTemplate' => 'boolean',
             'page' => 'integer',
             'items_per_page' => 'integer',
             'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at', 'parent_id'])],
