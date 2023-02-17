@@ -30,6 +30,7 @@ class CatalogEducationProgram extends Model
         'selective_discipline_id',
         'catalog_education_level_id',
         'education_program_id',
+        'speciality_id',
         'user_id',
         'faculty_id',
         'department_id',

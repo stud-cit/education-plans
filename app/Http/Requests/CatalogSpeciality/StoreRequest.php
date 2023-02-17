@@ -3,6 +3,7 @@
 namespace App\Http\Requests\CatalogSpeciality;
 
 use Illuminate\Validation\Rule;
+use App\Models\CatalogSpeciality;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -31,7 +32,8 @@ class StoreRequest extends FormRequest
                     return $query->where([
                         ['year', $this->year],
                         ['speciality_id', $this->speciality_id],
-                        ['catalog_education_level_id', $this->catalog_education_level_id]
+                        ['catalog_education_level_id', $this->catalog_education_level_id],
+                        ['selective_discipline_id',  CatalogSpeciality::SPECIALITY]
                     ]);
                 })
             ],

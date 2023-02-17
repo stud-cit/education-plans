@@ -56,6 +56,7 @@ class EducationProgramSubjectController extends Controller
                 'title' => $catalog->educationProgramCatalogName,
                 'year' => $catalog->year,
                 'education_program' => $catalog->educationProgramIdName,
+                'speciality' => $catalog->specialityIdName,
                 'education_level' => $catalog->educationLevel->title,
                 'faculty' => $catalog->facultyName,
                 'department' => $catalog->departmentName,
