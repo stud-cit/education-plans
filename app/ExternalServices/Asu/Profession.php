@@ -3,8 +3,9 @@
 namespace App\ExternalServices\Asu;
 
 use App\Helpers\Helpers;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class Profession extends ASU
 {
@@ -21,7 +22,6 @@ class Profession extends ASU
         self::EDUCATION_PROGRAM_OPP_ID => 'ОПП',
         self::EDUCATION_PROGRAM_ONP_ID => 'ОНП'
     ];
-
 
     private const REMOVE_KEYS = ['parent_id', 'label_id', 'label'];
 
@@ -161,6 +161,21 @@ class Profession extends ASU
         });
     }
 
+    public function getSpecialityByEducationProgram(int $id)
+    {
+        $specialtiesId = $this->getProfessions()->firstWhere('id', $id);
+
+        if (!$specialtiesId) {
+            $functionName = __FUNCTION__;
+            Log::info("Not fount {$id} in fn {$functionName}");
+            return;
+        }
+
+        $specialtiesId2 = $this->getProfessions()->firstWhere('id', $specialtiesId['parent_id']);
+
+        return (int)$specialtiesId2['id'];
+    }
+
     private function getFiltered(int $label_id, int $id = null): array
     {
         $filtered = $this->getProfessions()->filter(function ($value) use ($id, $label_id) {
@@ -176,6 +191,7 @@ class Profession extends ASU
 
         return $filteredArray;
     }
+
 
     private function getProfessions(): Collection
     {
