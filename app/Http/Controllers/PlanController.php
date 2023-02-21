@@ -464,8 +464,8 @@ class PlanController extends Controller
             fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
         );
         $types = [
-            [ 'title' => 'Шаблон', 'value' => 2 ],
-            [ 'title' => 'План', 'value' => 1 ]
+            ['title' => 'Шаблон', 'value' => 2],
+            ['title' => 'План', 'value' => 1]
         ];
 
         return response([
@@ -482,6 +482,7 @@ class PlanController extends Controller
         if (array_key_exists('speciality_id', $validated)) {
 
             $catalog = CatalogSpeciality::with(['subjects', 'signatures'])
+                ->where('selective_discipline_id', CatalogSpeciality::SPECIALITY)
                 ->where('speciality_id', $validated['speciality_id'])
                 ->where('catalog_education_level_id', $validated['education_level'])
                 ->whereBetween('year', [$validated['year'], $validated['end_year']])
@@ -494,6 +495,7 @@ class PlanController extends Controller
         } else if (array_key_exists('education_program_id', $validated)) {
 
             $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
+                ->where('selective_discipline_id', CatalogEducationProgram::EDUCATION_PROGRAM)
                 ->where('education_program_id', $validated['education_program_id'])
                 ->where('catalog_education_level_id', $validated['education_level'])
                 ->whereBetween('year', [$validated['year'], $validated['end_year']])
