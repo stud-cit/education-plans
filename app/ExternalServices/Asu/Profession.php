@@ -214,10 +214,17 @@ class Profession extends ASU
         $professions = $professionsAll->filter(fn ($p) => in_array($p['label_id'], [
             self::EDUCATION_PROGRAM_ID, self::EDUCATION_PROGRAM_ONP_ID, self::EDUCATION_PROGRAM_OPP_ID
         ]));
-
-        return $professions->map(function ($p) use ($professionsAll) {
+        $prof = $professions->map(function ($p) use ($professionsAll) {
             return $this->findParentKeysByEducationPrograms($p, $professionsAll);
         })->values();
+
+        return $prof->filter(fn ($p) => in_array($p['label_id'], [
+            self::EDUCATION_PROGRAM_ID, self::EDUCATION_PROGRAM_ONP_ID, self::EDUCATION_PROGRAM_OPP_ID
+        ]));
+        //ToDO Нужно исправить вложенность, проблема в findParentKeysByEducationPrograms записывает лишний спеціалізація 1462 1431
+//        return $professions->map(function ($p) use ($professionsAll) {
+//            return $this->findParentKeysByEducationPrograms($p, $professionsAll);
+//        })->values();
     }
 
     /*
