@@ -22,7 +22,7 @@ class EnsureCabinetTokenIsValid
      */
     public function handle(Request $request, Closure $next)
     {
-        $cabinetUrl = config('app.cabinet_app_url') . 'api/getPersonInfo';
+        $cabinetUrl = config('app.cabinet_app_url') . 'api/getPerson';
         $params = [
             'key' => $request->header('Authorization'),
             'token' => config('app.cabinet_app_token'),
@@ -35,26 +35,19 @@ class EnsureCabinetTokenIsValid
 
             $model = User::select(
                 'id',
-                'asu_id',
+                // 'asu_id',
                 'name',
                 'faculty_id',
-                'faculty_name',
+                // 'faculty_name',
                 'department_id',
-                'department_name',
-                'email',
+                // 'department_name',
+                'email', // Чи треба нам емейл
                 'role_id'
             )->where("asu_id", $user['guid'])->first();
 
             if ($model) {
-                //                $asu = new Department();
-                //                $divisions = $asu->getDepartmentInfoByUser($user);
-
                 $new = [
                     'name' => "{$user['surname']} {$user['name']} {$user['patronymic']}",
-                    //                    'faculty_id' => $divisions['faculty_id'],
-                    //                    'faculty_name' => $divisions['faculty_name'],
-                    //                    'department_id' => $divisions['department_id'],
-                    //                    'department_name' => $divisions['department_name'],
                     'email' => $user['email'],
                 ];
 

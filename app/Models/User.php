@@ -47,11 +47,6 @@ class User extends Authenticatable
         'department_id' => 'int'
     ];
 
-    /**
-     * @var string[]
-     */
-    protected $appends = ['full_name'];
-
     public const ADMIN = 1;
     public const TRAINING_DEPARTMENT = 2;
     public const PRACTICE_DEPARTMENT = 3;
@@ -119,8 +114,7 @@ class User extends Authenticatable
 
     public function getFullNameAttribute(): string
     {
-        $asu = new Worker();
-        return $asu->getFullNameWorker($this->asu_id);
+        return $this->name;
     }
 
     public function role()

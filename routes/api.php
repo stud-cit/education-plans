@@ -110,7 +110,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
         Route::get('/user', function (Request $request) {
-            return \Illuminate\Support\Facades\Auth::user()->makeHidden('asu_id');
+            return \Illuminate\Support\Facades\Auth::user();
         });
 
         Route::get('/userName', function (Request $request) {
