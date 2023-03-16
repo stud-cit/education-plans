@@ -171,10 +171,10 @@ class PlanController extends Controller
     {
         $model = $plan->load([
             'verification',
-            'formStudy',
-            'educationLevel',
-            'formOrganization',
-            'studyTerm',
+            'formStudy:id,title',
+            'educationLevel:id,title,deleted_at',
+            'formOrganization:id,title',
+            'studyTerm:id,title,year,month,course,module,semesters',
             'cycles.cycles',
             'cycles.subjects.exams',
             'cycles.subjects.semestersCredits',

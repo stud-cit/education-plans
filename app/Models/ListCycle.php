@@ -20,6 +20,8 @@ class ListCycle extends Model
         'general' => false,
     ];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     protected static function booted()
     {
         ListCycle::observe(ListCycleObserver::class);
