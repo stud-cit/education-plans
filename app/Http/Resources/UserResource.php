@@ -14,10 +14,11 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        clock($this->name);
         return [
             "id" => $this->id,
             "asu_id" => $this->asu_id,
-            "full_name" => $this->full_name,
+            "full_name" => $this->name,
             "department_id" => $this->department_id,
             'department' => $this->department_name,
             "faculty_id" => $this->faculty_id,
