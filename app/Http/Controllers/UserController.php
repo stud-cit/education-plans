@@ -33,7 +33,7 @@ class UserController extends Controller
         $roleAdmin = $user->role_id === User::ADMIN;
         $roleInstitute = $user->role_id === User::FACULTY_INSTITUTE;
 
-        $users = User::select('id', 'asu_id', 'department_id', 'faculty_id', 'role_id')
+        $users = User::select('id', 'name', 'asu_id', 'department_id', 'faculty_id', 'role_id')
             ->filterBy($validated)
             ->when($roleAdmin, function ($query) {
                 return $query->where('role_id', '!=', User::ROOT);
