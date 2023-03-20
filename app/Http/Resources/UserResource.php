@@ -14,6 +14,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        clock($this->name);
         return [
             "id" => $this->id,
             "asu_id" => $this->asu_id,
