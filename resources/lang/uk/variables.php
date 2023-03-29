@@ -5,7 +5,7 @@ return [
     'Template' => 'Шаблон',
     'NotChecked' => 'Не перевірено',
     'Verified' => 'Верифіковано',
-    'NotVerified' => 'Не верифіковано',
+    'NotVerified' => 'Відхилено',
     'created' => 'Створено',
     'updated' => 'Редаговано',
     'deleted' => 'Видалено',
