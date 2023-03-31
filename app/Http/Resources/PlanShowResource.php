@@ -60,6 +60,7 @@ class PlanShowResource extends JsonResource
                 json_decode($this->summary_data_budget_time) : [],
             'practical_training' => $this->practical_training ?
                 json_decode($this->practical_training) : [],
+            'subject_notes' => $this->getSubjectNotes()
         ];
     }
 
@@ -93,6 +94,14 @@ class PlanShowResource extends JsonResource
         }
         array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
       }
+      return $result;
+    }
+
+    function getSubjectNotes() {
+      $planId = $this->id;
+      $result = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+        $queryCycle->where('plan_id', $planId);
+      })->select('note')->whereNotNull('note')->get();
       return $result;
     }
 

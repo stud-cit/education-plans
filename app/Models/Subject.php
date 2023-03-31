@@ -26,7 +26,8 @@ class Subject extends Model
       'laboratories',
       'verification',
       'faculty_id',
-      'department_id'
+      'department_id',
+      'note'
     ];
 
     protected $appends = ['title'];

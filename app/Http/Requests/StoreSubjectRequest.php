@@ -32,7 +32,8 @@ class StoreSubjectRequest extends FormRequest
             'laboratories' => 'numeric',
             'selective_discipline_id' => 'nullable',
             'faculty_id' => 'nullable',
-            'department_id' => 'nullable'
+            'department_id' => 'nullable',
+            'note' => 'nullable'
         ];
     }
 }
