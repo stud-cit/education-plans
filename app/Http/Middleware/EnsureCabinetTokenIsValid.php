@@ -35,7 +35,7 @@ class EnsureCabinetTokenIsValid
 
             $model = User::select(
                 'id',
-                'asu_id',
+                'asu_id', // Do not delete, it is used for logging
                 'name',
                 'faculty_id',
                 // 'faculty_name',
