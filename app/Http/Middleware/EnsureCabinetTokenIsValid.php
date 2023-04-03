@@ -35,7 +35,7 @@ class EnsureCabinetTokenIsValid
 
             $model = User::select(
                 'id',
-                // 'asu_id',
+                'asu_id',
                 'name',
                 'faculty_id',
                 // 'faculty_name',
