@@ -67,6 +67,11 @@ class User extends Authenticatable
         self::ROOT
     ];
 
+    /**
+     * Includes roles:
+     * TRAINING_DEPARTMENT, PRACTICE_DEPARTMENT,
+     * EDUCATIONAL_DEPARTMENT_DEPUTY, EDUCATIONAL_DEPARTMENT_CHIEF
+     */
     public const REPRESENTATIVE_DEPARTMENT_ROLES = [
         self::TRAINING_DEPARTMENT,
         self::PRACTICE_DEPARTMENT,
@@ -74,6 +79,10 @@ class User extends Authenticatable
         self::EDUCATIONAL_DEPARTMENT_CHIEF
     ];
 
+    /**
+     * Includes roles:
+     * ADMIN, ROOT
+     */
     public const PRIVILEGED_ROLES = [
         self::ADMIN,
         self::ROOT
