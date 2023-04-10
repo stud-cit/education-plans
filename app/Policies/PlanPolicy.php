@@ -69,14 +69,14 @@ class PlanPolicy
 
         if (
             $user->possibility(User::FACULTY_INSTITUTE) && $plan->isNotTemplate() &&
-            $user->isFacultyMine($plan->faculty_id) && $user->isPlanMine($plan->author_id)
+            $user->isFacultyMine($plan->faculty_id)
         ) {
             return true;
         }
 
         if (
             $user->possibility(User::DEPARTMENT) && $plan->isNotTemplate() &&
-            $user->isDepartmentMine($plan->department_id) && $user->isPlanMine($plan->author_id)
+            $user->isDepartmentMine($plan->department_id)
         ) {
 
             return true;
@@ -98,11 +98,17 @@ class PlanPolicy
             return true;
         }
 
-        if ($user->possibility(User::FACULTY_INSTITUTE) && $user->isPlanMine($plan->author_id)) {
+        if (
+            $user->possibility(User::FACULTY_INSTITUTE) &&
+            $user->isFacultyMine($plan->faculty_id)
+        ) {
             return true;
         }
 
-        if ($user->possibility(User::DEPARTMENT) && $user->isPlanMine($plan->author_id)) {
+        if (
+            $user->possibility(User::DEPARTMENT) &&
+            $user->isDepartmentMine($plan->department_id)
+        ) {
             return true;
         }
 
