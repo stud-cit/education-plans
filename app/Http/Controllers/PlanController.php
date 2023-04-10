@@ -346,7 +346,8 @@ class PlanController extends Controller
                     } elseif (
                         isset($control_form[$this->getLastFormControl($value['hoursModules'])]) &&
                         ($control_form[$this->getLastFormControl($value['hoursModules'])] !=
-                            $item['control_form'])
+                            $item['control_form']) && 
+                        $value['asu_id'] != 9040 // пропускаємо дисципліну Інтегрований курс Основи академічного письма
                     ) {
                         Subject::find($value['id'])->update(['verification' => 0]);
                         $errors++;
