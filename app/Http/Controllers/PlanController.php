@@ -19,6 +19,7 @@ use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\indexPlanRequest;
+use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
 use App\ExternalServices\Asu\Profession;
 use App\Http\Requests\CatalogPdfRequest;
@@ -33,7 +34,6 @@ use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
-use App\Models\CatalogEducationProgram;
 
 class PlanController extends Controller
 {
@@ -319,6 +319,7 @@ class PlanController extends Controller
         $planId = $plan->id;
         $errors = 0;
         $comment = 'Не відповідає освітній програмі:<br>';
+
         $control_form = [
             1 => 'іспит',
             2 => 'диф. залік',
@@ -326,56 +327,69 @@ class PlanController extends Controller
             8 => 'захист'
         ];
 
-        $model = Subject::with('hoursModules', 'cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+        $verificationMessage = [
+            'user_id' => $request['user_id'],
+            'comment' => null,
+            'status' => true
+        ];
+
+        $model = Subject::with([
+            'hoursModules' => function ($q) use ($control_form) {
+                return $q->whereIn('form_control_id', array_keys($control_form));
+            }, 'cycle'
+        ])->whereHas('cycle', function ($queryCycle) use ($planId) {
             $queryCycle->where('plan_id', $planId);
         })->get();
 
         $program = $modelOP->getProgramId($request->program_op_id);
 
-        $components = array_filter($program['component'], function ($value) {
+        $components = collect($program['component'])->filter(function ($value) {
             return in_array($value['group_id'], [7, 8, 9, 10]);
-        });
+        })->keyBy('subject');
+
+        $certificatesSubjects = [];
+        $notCertificatesSubjects = [];
 
         foreach ($model as $value) {
-            foreach ($components as $item) {
-                if ($item['subject'] == $value['title']) {
-                    if (intval($item['credit_col']) != $value['credits']) {
-                        Subject::find($value['id'])->update(['verification' => 0]);
-                        $errors++;
-                        $comment .= 'Не вірна кількість кредитів в дисципліні ' . $item['subject'] . ';<br>';
-                    } elseif (
-                        isset($control_form[$this->getLastFormControl($value['hoursModules'])]) &&
-                        ($control_form[$this->getLastFormControl($value['hoursModules'])] !=
-                            $item['control_form']) && 
-                        $value['asu_id'] != 9040 // пропускаємо дисципліну Інтегрований курс Основи академічного письма
-                    ) {
-                        Subject::find($value['id'])->update(['verification' => 0]);
-                        $errors++;
-                        $comment .= 'Не вірна остання форма контролю в дисципліні ' . $item['subject'] . ';<br>';
-                    } else {
-                        Subject::find($value['id'])->update(['verification' => 1]);
-                    }
-                }
+            $component = $components[$value['title']] ?? null;
+
+            if (is_null($component)) {
+                continue;
+            }
+
+            $controlForm = null;
+
+            if (count($value['hoursModules'])) {
+                $controlForm = $control_form[$value['hoursModules']->last()['form_control_id']];
+            }
+
+            if (intval($component['credit_col']) !== $value['credits']) {
+                $notCertificatesSubjects[] = $value['id'];
+                $errors++;
+                $comment .= 'Не вірна кількість кредитів в дисципліні ' . $component['subject'] . ';<br>';
+            } elseif (
+                (!isset($controlForm) && ($controlForm !== $component['control_form'])) &&
+                $value['asu_id'] !== 9040 // пропускаємо дисципліну Інтегрований курс Основи академічного письма
+            ) {
+                $notCertificatesSubjects[] = $value['id'];
+                $errors++;
+                $comment .= 'Не вірна остання форма контролю в дисципліні ' . $component['subject'] . ';<br>';
+            } else {
+                $certificatesSubjects[] = $value['id'];
             }
         }
 
-        // if (count($model) != count($components)) {
-        //     $errors++;
-        //     $comment .= 'Не вірна кількість дисциплін.';
-        // }
+        if (count($certificatesSubjects)) {
+            Subject::whereIn('id', $certificatesSubjects)->update(array('verification' => 1));
+        }
+
+        if (count($notCertificatesSubjects)) {
+            Subject::whereIn('id', $notCertificatesSubjects)->update(array('verification' => 0));
+        }
 
         if ($errors > 0) {
-            $data = [
-                'user_id' => $request['user_id'],
-                'comment' => $comment,
-                'status' => false
-            ];
-        } else {
-            $data = [
-                'user_id' => $request['user_id'],
-                'comment' => null,
-                'status' => true
-            ];
+            $verificationMessage['comment'] = $comment;
+            $verificationMessage['status'] = false;
         }
 
         $plan->verification()->updateOrCreate(
@@ -383,7 +397,7 @@ class PlanController extends Controller
                 "plan_id" => $plan->id,
                 'verification_statuses_id' => 1
             ],
-            $data
+            $verificationMessage
         );
 
         $plan->update([
@@ -391,17 +405,6 @@ class PlanController extends Controller
         ]);
 
         return $this->success(__('messages.Updated'), 200);
-    }
-
-    public function getLastFormControl($hoursModules)
-    {
-        $result = null;
-        foreach ($hoursModules as $value) {
-            if (in_array($value['form_control_id'], [1, 2, 3, 8])) {
-                $result = $value['form_control_id'];
-            }
-        }
-        return $result;
     }
 
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
