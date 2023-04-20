@@ -225,6 +225,11 @@ class Plan extends Model
         return $this->hasMany(Signature::class);
     }
 
+    public function author()
+    {
+        return $this->hasOne(User::class, 'id', 'author_id');
+    }
+
     public function scopeOfUserType($query, $type)
     {
         switch ($type) {

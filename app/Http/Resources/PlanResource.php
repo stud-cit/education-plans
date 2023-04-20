@@ -30,6 +30,7 @@ class PlanResource extends JsonResource
             'user_verifications' => VerificationPlanResource::collection($this->user_verifications),
             'user_verifications_old' => $this->user_verifications,
             'author_id' => $this->author_id,
+            'author' => $this->author->name,
             'parent_id' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
             'actions' => $this->actions(),
             'published' => $this->published,
