@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Plan;
 use App\Models\User;
 use App\Models\CatalogSpeciality;
 use App\Models\SpecialitySubject;
@@ -34,8 +35,8 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('manage-study-terms', fn (User $user) => $user->possibility(User::PRIVILEGED_ROLES));
 
-        Gate::define('copy-plan', function (User $user) {
-            return $user->possibility();
+        Gate::define('copy-plan', function (User $user, Plan $plan) {
+            return $user->possibility() && $plan->isNotShort();
         });
 
         Gate::define('restore-catalog-group', function (User $user) {
@@ -143,7 +144,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('delete-catalog-education-program', function (User $user, CatalogEducationProgram $catalogEducationProgram) {
             if ($user->possibility(User::FACULTY_INSTITUTE)) {
-               return $user->isFacultyMine($catalogEducationProgram->faculty_id);
+                return $user->isFacultyMine($catalogEducationProgram->faculty_id);
             }
 
             if ($user->possibility(User::DEPARTMENT)) {

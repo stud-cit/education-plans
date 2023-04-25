@@ -66,6 +66,10 @@ class Plan extends Model
         'published' => 'boolean'
     ];
 
+    const TEMPLATE = 1;
+    const PLAN = 2;
+    const SHORT = 3;
+
     public function getStatusAttribute()
     {
         $data = array_column($this->verification->toArray(), 'status');
@@ -270,7 +274,12 @@ class Plan extends Model
 
     public function isNotTemplate()
     {
-        return $this->parent_id !== null ? true : false;
+        return $this->type_id !== self::TEMPLATE ? true : false;
+    }
+
+    public function isNotShort()
+    {
+        return $this->type_id !== self::SHORT ? true : false;
     }
 
     public function actions()
@@ -280,7 +289,7 @@ class Plan extends Model
 
         return [
             'preview' => $policy->viewAny($user),
-            'copy' =>  Gate::allows('copy-plan'),
+            'copy' =>  Gate::allows('copy-plan', $this),
             'edit' => $policy->update($user, $this),
             'delete' => $policy->delete($user, $this),
         ];
