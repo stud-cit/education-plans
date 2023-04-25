@@ -56,6 +56,28 @@ class Profession extends ASU
         return $title;
     }
 
+    public function getTitleProfession($id, $keys): string
+    {
+        if (!$this->getProfessions()->contains('id', $id)) {
+            return self::NOT_FOUND;
+        }
+
+        $profession = $this->getFixedProfession($id);
+
+        if (gettype($keys) === "array") {
+            $professionName = '';
+
+            foreach ($keys as $key) {
+                $professionName .= $profession[$key] . ' ';
+            }
+
+        } else {
+            $professionName = $profession[$keys];
+        }
+
+        return trim($professionName);
+    }
+
     private function getFixedProfession($id)
     {
         $profession = $this->getProfessions()->firstWhere('id', $id);

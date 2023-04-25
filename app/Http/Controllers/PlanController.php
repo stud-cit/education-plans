@@ -197,6 +197,37 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
+        $title = '';
+        $professions = new Profession();
+        $words = [
+            [ 'id' =>  $validated['speciality_id'], 'labels' => ['code', 'title'], 'type' => 'profession' ],
+            [ 'id' =>  $validated['education_program_id'], 'labels' => 'title' , 'type' => 'profession' ],
+            [ 'id' =>  $validated['education_level_id'], 'labels' => 'title', 'model' => '\App\Models\EducationLevel', 'type' => 'model' ],
+            [ 'id' =>  0, 'labels' => 'year',  'type' => 'request'],
+        ];
+
+        foreach ($words as $word) {
+            switch ($word['type']) {
+                case 'profession' :
+                    if (!is_null($word['id'])) {
+                        $title.= $professions->getTitleProfession($word['id'], $word['labels']) . " ";
+                    }
+                    break;
+                case 'model' :
+                    $t = $word['model']::find($word['id']);
+                    clock('$t', $t);
+                    $title.= $t[$word['labels']] . " ";
+                    break;
+                case 'request':
+                        $title.= $validated[$word['labels']] . " ";
+                    break;
+
+                default ;
+            }
+        }
+
+        $validated['title'] = trim($title);
+
         $plan->update($validated);
 
         $user = Auth::user();
