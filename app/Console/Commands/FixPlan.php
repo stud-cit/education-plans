@@ -37,13 +37,13 @@ class FixPlan extends Command
      */
     public function handle()
     {
-        $plans = \App\Models\Plan::whereNull('field_knowledge_id')->select('id', 'parent_id', 'education_program_id', 'specialization_id');
+        $plans = \App\Models\Plan::whereNotNull('parent_id')->select('id', 'parent_id');
 
         $this->table(
             ['id', 'parent_id'],
             $plans->get()->toArray()
         );
 
-        $plans->update(['education_program_id' => null, 'specialization_id' => null]);
+        $plans->update(['type_id' => 2]);
     }
 }
