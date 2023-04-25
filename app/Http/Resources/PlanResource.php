@@ -32,7 +32,7 @@ class PlanResource extends JsonResource
             'author_id' => $this->author_id,
             'author' => $this->author->name,
             //'parent_id' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
-            'type' => $this->type->title,
+            'type_id' => $this->type->title,
             'actions' => $this->actions(),
             'published' => $this->published,
             'need_verification' => $this->need_verification
