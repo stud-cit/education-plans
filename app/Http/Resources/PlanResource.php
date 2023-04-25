@@ -31,7 +31,8 @@ class PlanResource extends JsonResource
             'user_verifications_old' => $this->user_verifications,
             'author_id' => $this->author_id,
             'author' => $this->author->name,
-            'parent_id' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
+            //'parent_id' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
+            'type' => $this->type->title,
             'actions' => $this->actions(),
             'published' => $this->published,
             'need_verification' => $this->need_verification

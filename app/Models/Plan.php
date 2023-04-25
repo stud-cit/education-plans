@@ -230,6 +230,11 @@ class Plan extends Model
         return $this->hasOne(User::class, 'id', 'author_id');
     }
 
+    public function type()
+    {
+        return $this->hasOne(PlanType::class, 'id', 'type_id');
+    }
+
     public function scopeOfUserType($query, $type)
     {
         switch ($type) {

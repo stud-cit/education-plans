@@ -11,10 +11,7 @@ class PlanOrTemplate extends QueryFilter implements FilterContract
     public function handle($value): void
     {
         $this->query->when('planOrTemplate', function ($query) use ($value) {
-            if ( (int) $value === 1) {
-                return $query->whereNotNull('parent_id');
-            }
-            return $query->whereNull('parent_id');
+            return $query->where('type_id', $value);
         });
     }
 }

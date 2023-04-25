@@ -34,6 +34,7 @@ use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
+use App\Models\PlanType;
 
 class PlanController extends Controller
 {
@@ -62,13 +63,14 @@ class PlanController extends Controller
 
         $plans = Plan::select(
             'id',
+            'type_id',
             'title',
             'year',
             'faculty_id',
             'department_id',
             'published',
             'author_id',
-            'parent_id',
+            'parent_id', // remove
             'published',
             'created_at',
             'need_verification'
@@ -200,29 +202,29 @@ class PlanController extends Controller
         $title = '';
         $professions = new Profession();
         $words = [
-            [ 'id' =>  $validated['speciality_id'], 'labels' => ['code', 'title'], 'type' => 'profession' ],
-            [ 'id' =>  $validated['education_program_id'], 'labels' => 'title' , 'type' => 'profession' ],
-            [ 'id' =>  $validated['education_level_id'], 'labels' => 'title', 'model' => '\App\Models\EducationLevel', 'type' => 'model' ],
-            [ 'id' =>  0, 'labels' => 'year',  'type' => 'request'],
+            ['id' =>  $validated['speciality_id'], 'labels' => ['code', 'title'], 'type' => 'profession'],
+            ['id' =>  $validated['education_program_id'], 'labels' => 'title', 'type' => 'profession'],
+            ['id' =>  $validated['education_level_id'], 'labels' => 'title', 'model' => '\App\Models\EducationLevel', 'type' => 'model'],
+            ['id' =>  0, 'labels' => 'year',  'type' => 'request'],
         ];
 
         foreach ($words as $word) {
             switch ($word['type']) {
-                case 'profession' :
+                case 'profession':
                     if (!is_null($word['id'])) {
-                        $title.= $professions->getTitleProfession($word['id'], $word['labels']) . " ";
+                        $title .= $professions->getTitleProfession($word['id'], $word['labels']) . " ";
                     }
                     break;
-                case 'model' :
+                case 'model':
                     $t = $word['model']::find($word['id']);
                     clock('$t', $t);
-                    $title.= $t[$word['labels']] . " ";
+                    $title .= $t[$word['labels']] . " ";
                     break;
                 case 'request':
-                        $title.= $validated[$word['labels']] . " ";
+                    $title .= $validated[$word['labels']] . " ";
                     break;
 
-                default ;
+                default;
             }
         }
 
@@ -498,16 +500,12 @@ class PlanController extends Controller
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
             fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
         );
-        $types = [
-            ['title' => 'Шаблон', 'value' => 2],
-            ['title' => 'План', 'value' => 1]
-        ];
 
         return response([
             'divisions' => ProfessionsResource::collection($divisions),
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties),
-            'types' => $types
+            'types' => PlanType::select('id', 'title')->get()
         ]);
     }
 
