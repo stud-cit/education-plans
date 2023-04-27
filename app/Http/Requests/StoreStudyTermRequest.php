@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreStudyTermRequest extends FormRequest
@@ -25,7 +26,16 @@ class StoreStudyTermRequest extends FormRequest
     {
         return [
             'title' => 'required|unique:study_terms|string|max:255',
-            'year' => 'required|numeric',
+            'year' => [
+                'required',
+                'numeric',
+                Rule::unique('study_terms')->where(function ($query) {
+                    return $query->where([
+                        ['year', $this->year],
+                        ['month', $this->month],
+                    ]);
+                })
+            ],
             'month' => 'required|numeric',
             'course' => 'required|numeric',
             'module' => 'required|numeric',

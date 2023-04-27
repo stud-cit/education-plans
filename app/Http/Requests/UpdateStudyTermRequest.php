@@ -32,7 +32,16 @@ class UpdateStudyTermRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'year' => 'required|numeric',
+            'year' => [
+                'required',
+                'numeric',
+                Rule::unique('study_terms')->where(function ($query) {
+                    return $query->where([
+                        ['year', $this->year],
+                        ['month', $this->month],
+                    ]);
+                })->ignore($this->id)
+            ],
             'month' => 'required|numeric',
             'course' => 'required|numeric',
             'module' => 'required|numeric',
