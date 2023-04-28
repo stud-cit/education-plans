@@ -71,8 +71,8 @@ class Plan extends Model
     const SHORT = 3;
 
     const SHORTED_BY_YEAR = [
-        ['year' => 1, 'show' => false, 'title' => 'Згенерувати навчальний план, скорочений на 1 рік'],
-        ['year' => 2, 'show' => false, 'title' => 'Згенерувати навчальний план, скорочений на 2 роки'],
+        ['year' => 1, 'show' => false, 'label' => 'Згенерувати навчальний план, скорочений на 1 рік'],
+        ['year' => 2, 'show' => false, 'label' => 'Згенерувати навчальний план, скорочений на 2 роки'],
     ];
 
     public function getStatusAttribute()
@@ -101,7 +101,8 @@ class Plan extends Model
 
         foreach ($terms as &$value) {
             $value['show'] = $year >= 3 && $month >= 10;
-            //value['id'] // TODO: якщо скорочений план існує записати id
+            //value['id'] value['title'] // TODO: якщо скорочений план існує записати id
+            //value['label'] Навчальний план, скорочений на 2 роки // TODO: Изменить название кнопки
         }
 
         return $terms;
