@@ -2,11 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Plan;
-use App\Models\Subject;
-use App\Models\HoursModules;
-use App\Models\SemestersCredits;
-use App\Http\Resources\Plan\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanShowResource extends JsonResource
@@ -63,7 +58,8 @@ class PlanShowResource extends JsonResource
                 json_decode($this->summary_data_budget_time) : [],
             'practical_training' => $this->practical_training ?
                 json_decode($this->practical_training) : [],
-            'subject_notes' => $this->getSubjectNotes()
+            'subject_notes' => $this->getSubjectNotes(),
+            'shorted_by_year' => $this->shortedByYear
         ];
     }
 }
