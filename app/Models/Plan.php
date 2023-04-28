@@ -71,8 +71,8 @@ class Plan extends Model
     const SHORT = 3;
 
     const SHORTED_BY_YEAR = [
-        ['year' => 1, 'show' => false],
-        ['year' => 2, 'show' => false],
+        ['year' => 1, 'show' => false, 'title' => 'Згенерувати навчальний план, скорочений на 1 рік'],
+        ['year' => 2, 'show' => false, 'title' => 'Згенерувати навчальний план, скорочений на 2 роки'],
     ];
 
     public function getStatusAttribute()
