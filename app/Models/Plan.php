@@ -70,6 +70,11 @@ class Plan extends Model
     const PLAN = 2;
     const SHORT = 3;
 
+    const SHORTED_BY_YEAR = [
+        ['year' => 1, 'show' => false],
+        ['year' => 2, 'show' => false],
+    ];
+
     public function getStatusAttribute()
     {
         $data = array_column($this->verification->toArray(), 'status');
@@ -83,6 +88,23 @@ class Plan extends Model
             $result = '';
         }
         return $result;
+    }
+
+    public function getShortedByYearAttribute()
+    {
+        if ($this->form_study_id !== 1) return []; // денна форма навчання
+
+        $terms = self::SHORTED_BY_YEAR;
+        $termStudy = $this->studyTerm;
+        $year = $termStudy['year'];
+        $month = $termStudy['month'];
+
+        foreach ($terms as &$value) {
+            $value['show'] = $year >= 3 && $month >= 10;
+            //value['id'] // TODO: якщо скорочений план існує записати id
+        }
+
+        return $terms;
     }
 
     public function getUserVerificationsAttribute()
@@ -293,6 +315,62 @@ class Plan extends Model
             'edit' => $policy->update($user, $this),
             'delete' => $policy->delete($user, $this),
         ];
+    }
+
+    public function getCountExams()
+    {
+        $result = [];
+        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            if ($this->form_organization_id == 1) {
+                array_push($result, '');
+            }
+            array_push($result, $this->getCountWorks(['form_control_id' => 1], $i + 1));
+        }
+        return $result;
+    }
+
+    function getCountTests()
+    {
+        $result = [];
+        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            if ($this->form_organization_id == 1) {
+                array_push($result, '');
+            }
+            array_push($result, $this->getCountWorks(['form_control_id' => 3, 'form_control_id' => 2], $i + 1));
+        }
+        return $result;
+    }
+
+    function getCountCoursework()
+    {
+        $result = [];
+        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            if ($this->form_organization_id == 1) {
+                array_push($result, '');
+            }
+            array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
+        }
+        return $result;
+    }
+
+    function getSubjectNotes()
+    {
+        $planId = $this->id;
+        $result = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+            $queryCycle->where('plan_id', $planId);
+        })->select('note', 'asu_id')->whereNotNull('note')->get();
+        return $result;
+    }
+
+    function getCountWorks($work, $semester)
+    {
+        $planId = $this->id;
+        $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            });
+        })->where($work)->where('semester', $semester)->count();
+        return $count;
     }
 
     protected static function booted()

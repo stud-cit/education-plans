@@ -62,10 +62,11 @@ class PlanEditResource extends JsonResource
                 json_decode($this->summary_data_budget_time) : [],
             'practical_training' => $this->practical_training ?
                 json_decode($this->practical_training) : [],
-            'need_verification' => $this->need_verification
+            'need_verification' => $this->need_verification,
+            'shorted_by_year' => $this->shortedByYear
         ];
     }
-
+    // нема такого метода
     function getSumSemestersHours()
     {
         $planId = $this->id;
@@ -84,7 +85,7 @@ class PlanEditResource extends JsonResource
         }
         return $result;
     }
-
+    // нема такого метода
     function getSumSemestersCredits()
     {
         $planId = $this->id;
@@ -104,6 +105,8 @@ class PlanEditResource extends JsonResource
         return $result;
     }
 
+    // відрізняється
+    // викликають загальний метод getCountWorks
     function getCountExams()
     {
         $result = [];
@@ -115,7 +118,8 @@ class PlanEditResource extends JsonResource
         }
         return $result;
     }
-
+    // не відрізняються
+    // викликають загальний метод getCountWorks
     function getCountCoursework()
     {
         $result = [];
@@ -127,7 +131,7 @@ class PlanEditResource extends JsonResource
         }
         return $result;
     }
-
+    // не відрізняється
     function getCountWorks($work, $semester)
     {
         $planId = $this->id;
@@ -139,6 +143,7 @@ class PlanEditResource extends JsonResource
         return $count;
     }
 
+    // нема такого метода
     function getCountCreditsSelectiveDiscipline()
     {
         $planId = $this->id;
