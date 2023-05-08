@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use Error;
 use App\Models\Plan;
 use App\Models\User;
 use App\Helpers\Tree;
 use App\Models\Cycle;
 use App\Http\Constant;
 use App\Models\Subject;
+use App\Models\PlanType;
+use App\Models\StudyTerm;
 use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use Illuminate\Http\Request;
@@ -31,10 +34,11 @@ use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Resources\FacultiesResource;
 use App\ExternalServices\Asu\Qualification;
 use App\Http\Resources\ProfessionsResource;
+use App\Http\Requests\Plan\ShortPlanRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
+use Illuminate\Validation\ValidationException;
 use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
-use App\Models\PlanType;
 
 class PlanController extends Controller
 {
@@ -199,36 +203,7 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
-        $title = '';
-        $professions = new Profession();
-        $words = [
-            ['id' =>  $validated['speciality_id'], 'labels' => ['code', 'title'], 'type' => 'profession'],
-            ['id' =>  $validated['education_program_id'], 'labels' => 'title', 'type' => 'profession'],
-            ['id' =>  $validated['education_level_id'], 'labels' => 'title', 'model' => '\App\Models\EducationLevel', 'type' => 'model'],
-            ['id' =>  0, 'labels' => 'year',  'type' => 'request'],
-        ];
-
-        foreach ($words as $word) {
-            switch ($word['type']) {
-                case 'profession':
-                    if (!is_null($word['id'])) {
-                        $title .= $professions->getTitleProfession($word['id'], $word['labels']) . " ";
-                    }
-                    break;
-                case 'model':
-                    $t = $word['model']::find($word['id']);
-                    clock('$t', $t);
-                    $title .= $t[$word['labels']] . " ";
-                    break;
-                case 'request':
-                    $title .= $validated[$word['labels']] . " ";
-                    break;
-
-                default;
-            }
-        }
-
-        $validated['title'] = trim($title);
+        $validated['title'] = $plan->generatedTitle();
 
         $plan->update($validated);
 
@@ -280,6 +255,41 @@ class PlanController extends Controller
                 $this->createCycle($cycle, $clonePlan->id);
             }
         }
+        return response()->json($clonePlan);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param Plan $plan
+     * @return $id
+     */
+    public function shortPlan(ShortPlanRequest $request, Plan $plan)
+    {
+        $validated = $request->validated();
+
+        $shortedByYear = $validated['year'];
+        $sYear = $plan->studyTerm->year - $shortedByYear;
+        $month = $plan->studyTerm->month;
+        $credits = 60;
+
+        $studyTermId = StudyTerm::select('id', 'year', 'month')->where([
+            ['year', $sYear],
+            ['month', $plan->studyTerm->month]
+        ])->value('id');
+
+        if (!$studyTermId) throw ValidationException::withMessages(
+            ["Не існує терміну навчання {$sYear}р. {$month}міс.", 'Зверніться до Адміністратора.']
+        );
+
+        // TODO: записати зв'язок в таблицю shortened_plans
+        $clonePlan = $plan; //->duplicate();
+        $clonePlan->study_term_id = $studyTermId;
+        $clonePlan->title = $plan->generateTitle();
+        $clonePlan->year += $shortedByYear;
+        $clonePlan->type = Plan::SHORT;
+        $clonePlan->credits -= $credits * $shortedByYear;
+
         return response()->json($clonePlan);
     }
 

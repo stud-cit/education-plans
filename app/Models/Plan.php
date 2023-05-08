@@ -90,9 +90,19 @@ class Plan extends Model
         return $result;
     }
 
+    private function filterStatus($data, $id)
+    {
+        return array_filter($data, function ($val) use ($id) {
+            return $val == $id;
+        });
+    }
+
     public function getShortedByYearAttribute()
     {
+        if (!$this->isApprovedPlan()) return [];
+        if ($this->isNotPlan()) return [];
         if ($this->form_study_id !== 1) return []; // денна форма навчання
+
 
         $terms = self::SHORTED_BY_YEAR;
         $termStudy = $this->studyTerm;
@@ -108,16 +118,16 @@ class Plan extends Model
         return $terms;
     }
 
+    protected function isApprovedPlan(): bool
+    {
+        $data = array_column($this->verification->toArray(), 'status');
+
+        return count($this->filterStatus($data, 1)) >= 4;
+    }
+
     public function getUserVerificationsAttribute()
     {
         return $this->verification;
-    }
-
-    private function filterStatus($data, $id)
-    {
-        return array_filter($data, function ($val) use ($id) {
-            return $val == $id;
-        });
     }
 
     public function getCreatedAtAttribute($value)
@@ -300,7 +310,12 @@ class Plan extends Model
         return $this->type_id !== self::TEMPLATE ? true : false;
     }
 
-    public function isNotShort()
+    public function isNotPlan(): bool
+    {
+        return $this->type_id !== self::PLAN;
+    }
+
+    public function isNotShort(): bool
     {
         return $this->type_id !== self::SHORT ? true : false;
     }
@@ -372,6 +387,38 @@ class Plan extends Model
             });
         })->where($work)->where('semester', $semester)->count();
         return $count;
+    }
+
+    public function generateTitle(): string
+    {
+        $title = '';
+        $professions = new Profession();
+        $words = [
+            ['id' =>  $this['speciality_id'], 'labels' => ['code', 'title'], 'type' => 'profession'],
+            ['id' =>  $this['education_program_id'], 'labels' => 'title', 'type' => 'profession'],
+            ['id' =>  $this['education_level_id'], 'labels' => 'title', 'model' => '\App\Models\EducationLevel', 'type' => 'model'],
+            ['id' =>  0, 'labels' => 'year',  'type' => 'request'],
+        ];
+
+        foreach ($words as $word) {
+            switch ($word['type']) {
+                case 'profession':
+                    if (!is_null($word['id'])) {
+                        $title .= $professions->getTitleProfession($word['id'], $word['labels']) . " ";
+                    }
+                    break;
+                case 'model':
+                    $t = $word['model']::find($word['id']);
+                    $title .= $t[$word['labels']] . " ";
+                    break;
+                case 'request':
+                    $title .= $this[$word['labels']] . " ";
+                    break;
+
+                default;
+            }
+        }
+        return trim($title);
     }
 
     protected static function booted()

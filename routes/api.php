@@ -65,6 +65,7 @@ Route::prefix('v1')->group(function () {
         Route::get('plans/additional-data', [PlanController::class, 'additionalDataActionsPlan']);
         Route::get('plans/filters', [PlanController::class, 'getItemsFilters']);
         Route::get('plans/catalog-pdf', [PlanController::class, 'catalogPdf']);
+        Route::patch('/plans/short-plan/{plan}', [PlanController::class, 'shortPlan']);
         Route::Resource('plans', PlanController::class);
 
         Route::get('/verifications', [VerificationController::class, 'index']);
@@ -200,4 +201,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/upload/index', [PdfController::class, 'index']);
         Route::post('/upload', [PdfController::class, 'upload']);
     });
+
+    Route::patch('/plans/short-plan/{plan}', [PlanController::class, 'shortPlan']);
 });
