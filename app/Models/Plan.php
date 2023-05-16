@@ -68,8 +68,10 @@ class Plan extends Model
 
     public function getStatusAttribute()
     {
+        $accept = VerificationStatuses::fullPlanVerification();
+
         $data = array_column($this->verification->toArray(), 'status');
-        if (count($this->filterStatus($data, 1)) >= 4) { //ToDo check in array
+        if (count($this->filterStatus($data, 1)) >= $accept) {
             $result = 'success';
         } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
             $result = 'warning';

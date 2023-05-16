@@ -200,29 +200,29 @@ class PlanController extends Controller
         $title = '';
         $professions = new Profession();
         $words = [
-            [ 'id' =>  $validated['speciality_id'], 'labels' => ['code', 'title'], 'type' => 'profession' ],
-            [ 'id' =>  $validated['education_program_id'], 'labels' => 'title' , 'type' => 'profession' ],
-            [ 'id' =>  $validated['education_level_id'], 'labels' => 'title', 'model' => '\App\Models\EducationLevel', 'type' => 'model' ],
-            [ 'id' =>  0, 'labels' => 'year',  'type' => 'request'],
+            ['id' =>  $validated['speciality_id'], 'labels' => ['code', 'title'], 'type' => 'profession'],
+            ['id' =>  $validated['education_program_id'], 'labels' => 'title', 'type' => 'profession'],
+            ['id' =>  $validated['education_level_id'], 'labels' => 'title', 'model' => '\App\Models\EducationLevel', 'type' => 'model'],
+            ['id' =>  0, 'labels' => 'year',  'type' => 'request'],
         ];
 
         foreach ($words as $word) {
             switch ($word['type']) {
-                case 'profession' :
+                case 'profession':
                     if (!is_null($word['id'])) {
-                        $title.= $professions->getTitleProfession($word['id'], $word['labels']) . " ";
+                        $title .= $professions->getTitleProfession($word['id'], $word['labels']) . " ";
                     }
                     break;
-                case 'model' :
+                case 'model':
                     $t = $word['model']::find($word['id']);
                     clock('$t', $t);
-                    $title.= $t[$word['labels']] . " ";
+                    $title .= $t[$word['labels']] . " ";
                     break;
                 case 'request':
-                        $title.= $validated[$word['labels']] . " ";
+                    $title .= $validated[$word['labels']] . " ";
                     break;
 
-                default ;
+                default;
             }
         }
 
@@ -330,6 +330,22 @@ class PlanController extends Controller
     public function verification(StorePlanVerificationRequest $request, Plan $plan)
     {
         $validated = $request->validated();
+
+        /**
+         * verification_status_id приходить роль id,
+         * а нам потрібно id верифікації
+         */
+        if (Auth::user()->role_id !== User::ADMIN) {
+            $verificationStatusId = VerificationStatuses::where(
+                [
+                    ['role_id', $validated['verification_status_id']],
+                    ['type', 'plan']
+                ]
+            )->value('id');
+
+            $validated['verification_status_id'] = $verificationStatusId;
+        }
+
         $plan->verification()->updateOrCreate(
             [
                 "plan_id" => $plan->id,

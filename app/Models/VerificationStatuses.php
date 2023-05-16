@@ -41,4 +41,11 @@ class VerificationStatuses extends Model
     {
         return VerificationStatuses::select('id', 'title')->where('type', 'education-program')->count();
     }
+
+    public static function fullPlanVerification()
+    {
+        return VerificationStatuses::select('id')
+            ->where('type', 'plan')
+            ->count() - 1;
+    }
 }
