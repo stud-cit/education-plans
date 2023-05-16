@@ -266,6 +266,8 @@ class PlanController extends Controller
      */
     public function shortPlan(ShortPlanRequest $request, Plan $plan)
     {
+        //place this before any script you want to calculate time
+        $time_start = microtime(true);
         $validated = $request->validated();
 
         $shortedByYear = $validated['year'];
@@ -289,9 +291,72 @@ class PlanController extends Controller
         $clonePlan->year += $shortedByYear;
         $clonePlan->type = Plan::SHORT;
         $clonePlan->credits -= $credits * $shortedByYear;
+        // dd($clonePlan->toArray());
 
-        return response()->json($clonePlan);
+        $array = json_decode($clonePlan->schedule_education_process, JSON_OBJECT_AS_ARRAY);
+
+        $a = [];
+        foreach ($array['courses'] as $index => $item) {
+            if ($index !== $shortedByYear - 1) {
+
+                $a['courses'][] = $this->cutCourse($item, $shortedByYear, ['course'], false);
+            }
+        }
+
+        $clonePlan->hours_weeks_semesters = $this->cutCourse(
+            json_decode($clonePlan->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY),
+            $shortedByYear,
+            ['course', 'semester']
+        );
+
+        $clonePlan->summary_data_budget_time = $this->cutCourse(
+            json_decode(
+                $clonePlan->summary_data_budget_time,
+                JSON_OBJECT_AS_ARRAY
+            ),
+            $shortedByYear,
+            ['course']
+        );
+
+        $time_end = microtime(true);
+        $execution_time = ($time_end - $time_start) / 60;
+        echo '<b>Total Execution Time:</b> ' . $execution_time . ' Mins';
+        return response()->json($clonePlan->hours_weeks_semesters);
     }
+
+    public function cutCourse($json, $course, array $keys, $checkCourse = true)
+    {
+        if (!$json) return null;
+
+        // $array = json_decode($json, JSON_OBJECT_AS_ARRAY);
+        $array = $json;
+
+        $b = [];
+        $index = 1;
+        foreach ($array as $item) {
+            if ($item['course'] === $course && $checkCourse) {
+                continue;
+            }
+
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $item)) {
+                    switch ($key) {
+                        case 'course':
+                            $item[$key] = $item[$key] - $course;
+                            break;
+                        case 'semester':
+                            $item[$key] = $index;
+                            break;
+                    }
+                }
+            }
+            $b[] = $item;
+            $index++;
+        }
+
+        return  $b;
+    }
+
 
     function createCycle($cycle, $plan_id, $cycleId = null)
     {
