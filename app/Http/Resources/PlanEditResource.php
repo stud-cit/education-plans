@@ -120,9 +120,9 @@ class PlanEditResource extends JsonResource
     {
         $result = [];
         for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-            if ($this->form_organization_id == 1) {
-                array_push($result, '');
-            }
+            // if ($this->form_organization_id == 1) {
+            //     array_push($result, '');
+            // }
             array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
         }
         return $result;
