@@ -118,15 +118,15 @@ class PlanEditResource extends JsonResource
         $result = [];
         $hoursWeeksSemesters = $this->jsonDecodeToArray($this->hours_weeks_semesters);
         foreach ($this->getSumSemestersHours() as $index => $item) {
-            if ($item > $hoursWeeksSemesters[$index]) {
-                $result[] = $index + 1;
+            if ($item > $hoursWeeksSemesters[$index]['hour']) {
+                $result[] = $index;
             }
         }
 
         if (empty($result)) {
             return null;
         } else {
-            return "Перевищена кількість годин у " . implode(', ', $result) . $this->form_organization_id == 3 ? " семестрі." : " модулі.";
+            return "Перевищена кількість годин у " . implode(', ', $result) . ($this->form_organization_id == 3 ? " семестрі." : " модулі.");
         }
     }
 
