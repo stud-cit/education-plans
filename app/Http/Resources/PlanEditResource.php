@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Setting;
 use App\Models\Subject;
 use App\Models\HoursModules;
 use App\Models\SemestersCredits;
@@ -50,21 +51,166 @@ class PlanEditResource extends JsonResource
             'published' => $this->published,
             'schedule_education_process' => $this->schedule_education_process ?
                 json_decode($this->schedule_education_process) : null,
+            'signatures' => SignatureResource::collection($this->signatures),
+            'program_op_id' => $this->program_op_id,
+            'need_verification' => $this->need_verification,
+            'summary_data_budget_time' => $this->summary_data_budget_time ?
+                json_decode($this->summary_data_budget_time) : [],
+            'practical_training' => $this->practical_training ?
+                json_decode($this->practical_training) : [],
+
             'sum_semesters_credits' => $this->getSumSemestersCredits(),
             'sum_semesters_hours' => $this->getSumSemestersHours(),
             'count_exams' => $this->getCountExams(),
             'count_coursework' => $this->getCountCoursework(),
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
-            'signatures' => SignatureResource::collection($this->signatures),
-            'program_op_id' => $this->program_op_id,
             'exams_table' => $this->getExamsTable($this->cycles),
-            'summary_data_budget_time' => $this->summary_data_budget_time ?
-                json_decode($this->summary_data_budget_time) : [],
-            'practical_training' => $this->practical_training ?
-                json_decode($this->practical_training) : [],
-            'need_verification' => $this->need_verification
+
+            'errors' => $this->setErrors(),
         ];
     }
+
+    function setErrors()
+    {
+        $messages = [];
+
+        if ($this->sumSemestersCreditsHasErrors()) {
+            $messages[] = $this->sumSemestersCreditsHasErrors();
+        }
+
+        if ($this->hoursWeeksSemestersHasErrors()) {
+            $messages[] = $this->hoursWeeksSemestersHasErrors();
+        }
+
+        if ($this->semesterExamHasErrors()) {
+            $messages[] = $this->semesterExamHasErrors();
+        }
+
+        if ($this->courseWorksHasErrors()) {
+            $messages[] = $this->courseWorksHasErrors();
+        }
+
+
+        clock($messages);
+        return $messages;
+    }
+
+    function sumSemestersCreditsHasErrors()
+    {
+        $result = [];
+        $quantityCreditsSemester = $this->getOptions('quantity-credits-semester');
+
+        foreach ($this->getSumSemestersCredits() as $index => $value) {
+            if ($value > $quantityCreditsSemester) {
+                $result[] = $index + 1;
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість кредитів у " . implode(', ', $result) . " семестрі.";
+        }
+    }
+
+    function hoursWeeksSemestersHasErrors()
+    {
+        $result = [];
+        $hoursWeeksSemesters = $this->jsonDecodeToArray($this->hours_weeks_semesters);
+
+        clock($hoursWeeksSemesters);
+
+        foreach ($this->getSumSemestersHours() as $index => $item) {
+            if ($item > $this->sumArray(
+                array_filter($hoursWeeksSemesters, function ($i) use ($index) {
+                    return $i['semester'] == $index + 1;
+                }),
+                'hour'
+            )) {
+                clock($index);
+                $result[] = $index + 1;
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість годин у " . implode(', ', $result) . " семестрі.";
+        }
+    }
+
+    function semesterExamHasErrors()
+    {
+        $result = [];
+        $numberExams = $this->getOptions('exam');
+
+        foreach ($this->getCountExams() as $index => $value) {
+            if ($value > $numberExams) {
+                $result[] = $index + 1;
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість екзаменів у " . implode(', ', $result) . " семестрі.";
+        }
+    }
+
+    function courseWorksHasErrors()
+    {
+        $result = [];
+        $numberExams = $this->getOptions('coursework');
+
+        foreach ($this->getCountCoursework() as $index => $value) {
+            if ($value > $numberExams) {
+                $result[] = $index + 1;
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість курсових робіт у " . implode(', ', $result) . " семестрі.";
+        }
+    }
+
+    function getOptions($key)
+    {
+        // TODO: set cache options;
+        $options = Setting::select('id', 'key', 'value')->pluck('value', 'key');
+        // TODO: KEY EXIST?
+        return $options[$key];
+    }
+
+    function jsonDecodeToArray($json)
+    {
+        return $json ? json_decode($json, true) : null;
+    }
+
+    function getErrorsSemestersHours()
+    {
+        $result = [];
+        foreach ($this->sum_semesters_hours as $index => $item) {
+            if ($item > $this->sumArray(
+                array_filter($this->hours_weeks_semesters, function ($i) use ($index) {
+                    return $i['semester'] == $index + 1;
+                }),
+                'hour'
+            )) {
+                $result[] = $index + 1;
+            }
+        }
+        return implode(', ', $result);
+    }
+
+    function sumArray($array, $field)
+    {
+        return array_reduce($array, function ($prev, $curr) use ($field) {
+            return $prev + $curr[$field];
+        }, 0);
+    }
+
 
     function getSumSemestersHours()
     {
@@ -75,6 +221,7 @@ class PlanEditResource extends JsonResource
                 $queryCycle->where('plan_id', $planId);
             });
         })->get();
+
         foreach ($semestersWithHours as $value) {
             if (isset($result[$value['semester']])) {
                 $result[$value['semester']] += $value['hour'];
@@ -107,11 +254,12 @@ class PlanEditResource extends JsonResource
     function getCountExams()
     {
         $result = [];
+        // for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+        //     $result[$i + 1] = 0;
+        // }
         for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-            $result[$i + 1] = 0;
-        }
-        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-            $result[$i + 1] += $this->getCountWorks(['form_control_id' => 1], $i + 1);
+            // $result[$i + 1] += $this->getCountWorks(['form_control_id' => 1], $i + 1);
+            array_push($result, $this->getCountWorks(['form_control_id' => 1], $i + 1));
         }
         return $result;
     }
