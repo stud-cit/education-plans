@@ -117,17 +117,8 @@ class PlanEditResource extends JsonResource
     {
         $result = [];
         $hoursWeeksSemesters = $this->jsonDecodeToArray($this->hours_weeks_semesters);
-
-        clock($hoursWeeksSemesters);
-
         foreach ($this->getSumSemestersHours() as $index => $item) {
-            if ($item > $this->sumArray(
-                array_filter($hoursWeeksSemesters, function ($i) use ($index) {
-                    return $i['semester'] == $index + 1;
-                }),
-                'hour'
-            )) {
-                clock($index);
+            if ($item > $hoursWeeksSemesters[$index]) {
                 $result[] = $index + 1;
             }
         }
@@ -135,7 +126,7 @@ class PlanEditResource extends JsonResource
         if (empty($result)) {
             return null;
         } else {
-            return "Перевищена кількість годин у " . implode(', ', $result) . " семестрі.";
+            return "Перевищена кількість годин у " . implode(', ', $result) . $this->form_organization_id == 3 ? " семестрі." : " модулі.";
         }
     }
 
@@ -216,17 +207,17 @@ class PlanEditResource extends JsonResource
     {
         $planId = $this->id;
         $result = [];
-        $semestersWithHours = HoursModules::select('semester', 'hour', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+        $semestersWithHours = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
             $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
                 $queryCycle->where('plan_id', $planId);
             });
         })->get();
 
         foreach ($semestersWithHours as $value) {
-            if (isset($result[$value['semester']])) {
-                $result[$value['semester']] += $value['hour'];
+            if (isset($result[$value['module']])) {
+                $result[$value['module']] += $value['hour'];
             } else {
-                $result += [$value['semester'] => $value['hour']];
+                $result += [$value['module'] => $value['hour']];
             }
         }
         return $result;
