@@ -101,7 +101,7 @@ class PlanShowResource extends JsonResource
       $planId = $this->id;
       $result = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
         $queryCycle->where('plan_id', $planId);
-      })->select('note')->whereNotNull('note')->get();
+      })->select('note', 'id')->whereNotNull('note')->get();
       return $result;
     }
 
