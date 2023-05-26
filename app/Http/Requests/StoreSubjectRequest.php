@@ -23,8 +23,9 @@ class StoreSubjectRequest extends FormRequest
      */
     public function rules()
     {
-        return [ 
-            'asu_id' => 'nullable', 
+        return [
+            'plan_id' => 'required',
+            'asu_id' => 'nullable',
             'cycle_id' => 'required|exists:App\Models\Cycle,id',
             'credits' => 'required|numeric|digits_between:1,3',
             'hours' => 'numeric',
@@ -33,7 +34,20 @@ class StoreSubjectRequest extends FormRequest
             'selective_discipline_id' => 'nullable',
             'faculty_id' => 'nullable',
             'department_id' => 'nullable',
-            'note' => 'nullable'
+            'note' => 'nullable',
+            'selectiveDiscipline' => 'boolean',
+
+            'hours_modules.*.course' => 'required|numeric',
+            'hours_modules.*.form_control_id' => 'required|numeric',
+            'hours_modules.*.hour' => 'required|numeric',
+            'hours_modules.*.individual_task_id' => 'required|numeric',
+            'hours_modules.*.module' => 'required|numeric',
+            'hours_modules.*.semester' => 'required|numeric',
+
+            'semesters_credits.*.course' => 'required|numeric',
+            'semesters_credits.*.credit' => 'required|numeric',
+            'semesters_credits.*.semester' => 'required|numeric',
+
         ];
     }
 }
