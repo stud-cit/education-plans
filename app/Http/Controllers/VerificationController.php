@@ -14,9 +14,8 @@ class VerificationController extends Controller
      */
     public function index()
     {
-        /** TODO: temp fix */
-        $data = VerificationStatuses::where('type', 'plan')->get();
-        //->orderBy('order')->get();
+        $data = VerificationStatuses::where('type', 'plan')->orderBy('order')->get();
+
         return response()->json($data, 200);
     }
 
