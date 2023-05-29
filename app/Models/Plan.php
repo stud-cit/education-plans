@@ -95,6 +95,12 @@ class Plan extends Model
         });
     }
 
+    public function getStatusOP()
+    {
+        return $this->verification()->select('id', 'verification_statuses_id', 'status')
+            ->where('verification_statuses_id', 1)->value('status');
+    }
+
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('d.m.Y H:i');
