@@ -67,6 +67,7 @@ class PlanEditResource extends JsonResource
             'exams_table' => $this->getExamsTable($this->cycles),
 
             'errors' => $this->setErrors(),
+            'status_op' => $this->getStatusOP()
         ];
     }
 
@@ -74,24 +75,27 @@ class PlanEditResource extends JsonResource
     {
         $messages = [];
 
-        if ($this->sumSemestersCreditsHasErrors()) {
-            $messages[] = $this->sumSemestersCreditsHasErrors();
+        $sumSemestersCreditsHasErrors = $this->sumSemestersCreditsHasErrors();
+        $hoursWeeksSemestersHasErrors = $this->hoursWeeksSemestersHasErrors();
+        $semesterExamHasErrors = $this->semesterExamHasErrors();
+        $courseWorksHasErrors = $this->courseWorksHasErrors();
+
+        if ($sumSemestersCreditsHasErrors) {
+            $messages[] = $sumSemestersCreditsHasErrors;
         }
 
-        if ($this->hoursWeeksSemestersHasErrors()) {
-            $messages[] = $this->hoursWeeksSemestersHasErrors();
+        if ($hoursWeeksSemestersHasErrors) {
+            $messages[] = $hoursWeeksSemestersHasErrors;
         }
 
-        if ($this->semesterExamHasErrors()) {
-            $messages[] = $this->semesterExamHasErrors();
+        if ($semesterExamHasErrors) {
+            $messages[] = $semesterExamHasErrors;
         }
 
-        if ($this->courseWorksHasErrors()) {
-            $messages[] = $this->courseWorksHasErrors();
+        if ($courseWorksHasErrors) {
+            $messages[] = $courseWorksHasErrors;
         }
 
-
-        clock($messages);
         return $messages;
     }
 
@@ -117,9 +121,16 @@ class PlanEditResource extends JsonResource
     {
         $result = [];
         $hoursWeeksSemesters = $this->jsonDecodeToArray($this->hours_weeks_semesters);
+
+        if (!$hoursWeeksSemesters) {
+            return null;
+        }
+
         foreach ($this->getSumSemestersHours() as $index => $item) {
-            if ($item > $hoursWeeksSemesters[$index]['hour']) {
-                $result[] = $index;
+            if (isset($hoursWeeksSemesters[$index])) {
+                if ($item > $hoursWeeksSemesters[$index]['hour']) {
+                    $result[] = $index;
+                }
             }
         }
 
@@ -201,13 +212,12 @@ class PlanEditResource extends JsonResource
             return $prev + $curr[$field];
         }, 0);
     }
-
-
     function getSumSemestersHours()
     {
         $planId = $this->id;
         $result = [];
-        $semestersWithHours = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+
+        $semestersWithHours = HoursModules::select('id', 'module', 'hour')->with('subject.id')->whereHas('subject', function ($querySubject) use ($planId) {
             $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
                 $queryCycle->where('plan_id', $planId);
             });
@@ -217,9 +227,12 @@ class PlanEditResource extends JsonResource
             if (isset($result[$value['module']])) {
                 $result[$value['module']] += $value['hour'];
             } else {
+                // $result[$value['module']] = $value['hour'];
+
                 $result += [$value['module'] => $value['hour']];
             }
         }
+        clock($result);
         return $result;
     }
 
