@@ -73,8 +73,16 @@ class PlanEditResource extends JsonResource
 
     function setErrors()
     {
-        $messages = [];
 
+        // TODO: Remove commented code
+        // define("MODULE_CYCLING", 1); // Модульно циклова
+        // loop over plans
+        // $amount_module = $this->studyTerm->module;
+        // $form_organization_id = $this->form_organization_id;
+        // $amount_module = $form_organization_id === MODULE_CYCLING ? $amount_module * 2 : $amount_module;
+        // $this->fix1($amount_module, $this->study_term_id, $form_organization_id);
+
+        $messages = [];
         $sumSemestersCreditsHasErrors = $this->sumSemestersCreditsHasErrors();
         $hoursWeeksSemestersHasErrors = $this->hoursWeeksSemestersHasErrors();
         $semesterExamHasErrors = $this->semesterExamHasErrors();
@@ -97,6 +105,60 @@ class PlanEditResource extends JsonResource
         }
 
         return $messages;
+    }
+    //TODO: remove this function
+    function fix1($amount_module, $study_term_id, $form_organization_id)
+    {
+        $planId = $this->id;
+
+        // $semestersWithHours = SemestersCredits::select('id', 'credit', 'course', 'semester', 'subject_id as s_id')->with('subject.id')->whereHas('subject', function ($querySubject) use ($planId) {
+        //     $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+        //         $queryCycle->where('plan_id', $planId);
+        //     });
+        // })
+        //     // ->get();
+        //     ->pluck('s_id');
+        // clock('s_ids', $semestersWithHours->unique()->values()->all());
+        // return;
+
+        $semestersWithHours = HoursModules::select('id', 'course', 'semester', 'module', 'hour', 'subject_id as s_id')->with('subject.id')->whereHas('subject', function ($querySubject) use ($planId) {
+            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            });
+        })
+            // ->get();
+            ->pluck('s_id');
+        clock('s_ids', $semestersWithHours->unique()->values()->all());
+        return;
+        $module = 0;
+        foreach ($semestersWithHours as $item) {
+            $module++;
+
+            if ($form_organization_id === 1) { // Модульно циклова
+                if ($study_term_id === 3 || $study_term_id === 6) { // 1 рік 4міс 3 сем then update only modules
+                    $item->update(['module' => $module]);
+                }
+
+                if ($study_term_id === 1) { // Термін навчання 3 роки 10 місяців
+                    $item->update(['module' => $module, 'course' => (int)round($item->semester / 2)]);
+                }
+            }
+
+            if ($form_organization_id === 3) { // form_organization_id 3 модульно семестрова
+
+                if ($study_term_id === 3 || $study_term_id === 1) {
+                    $item->update(['module' => $module]);
+                }
+
+                if ($study_term_id === 6 || $study_term_id === 7 || $study_term_id === 8) {
+                    $item->update(['module' => $module, 'course' => (int)round($item->semester / 2)]);
+                }
+            }
+
+            if ($module % $amount_module === 0) {
+                $module = 0;
+            }
+        }
     }
 
     function sumSemestersCreditsHasErrors()
@@ -121,15 +183,18 @@ class PlanEditResource extends JsonResource
     {
         $result = [];
         $hoursWeeksSemesters = $this->jsonDecodeToArray($this->hours_weeks_semesters);
-
         if (!$hoursWeeksSemesters) {
             return null;
         }
 
-        foreach ($this->getSumSemestersHours() as $index => $item) {
+        $resetSumSemesterHours = array_values($this->getSumSemestersHours()); // reset idx
+        // $getSumSemestersHours //idx 1,2,3,4
+        // $hoursWeeksSemesters   //idx 0,1,2,3
+        foreach ($resetSumSemesterHours as $index => $item) {
             if (isset($hoursWeeksSemesters[$index])) {
                 if ($item > $hoursWeeksSemesters[$index]['hour']) {
-                    $result[] = $index;
+                    $newIndx = $index;
+                    $result[] = $newIndx + 1;
                 }
             }
         }
@@ -232,7 +297,6 @@ class PlanEditResource extends JsonResource
                 $result += [$value['module'] => $value['hour']];
             }
         }
-        clock($result);
         return $result;
     }
 
