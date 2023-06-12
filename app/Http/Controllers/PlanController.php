@@ -215,7 +215,6 @@ class PlanController extends Controller
                     break;
                 case 'model':
                     $t = $word['model']::find($word['id']);
-                    clock('$t', $t);
                     $title .= $t[$word['labels']] . " ";
                     break;
                 case 'request':

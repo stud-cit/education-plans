@@ -49,6 +49,8 @@ class Plan extends Model
         'program_op_id',
         'summary_data_budget_time',
         'practical_training',
+        'comment',
+        'not_conventional',
         'need_verification'
     ];
 
@@ -63,7 +65,9 @@ class Plan extends Model
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
-        'published' => 'boolean'
+        'published' => 'boolean',
+        'not_conventional' => 'boolean',
+        'need_verification' => 'boolean',
     ];
 
     public function getStatusAttribute()

@@ -67,7 +67,9 @@ class PlanEditResource extends JsonResource
             'exams_table' => $this->getExamsTable($this->cycles),
 
             'errors' => $this->setErrors(),
-            'status_op' => $this->getStatusOP()
+            'status_op' => $this->getStatusOP(),
+            'comment' => $this->comment ? $this->comment : '',
+            'not_conventional' => $this->not_conventional,
         ];
     }
 
