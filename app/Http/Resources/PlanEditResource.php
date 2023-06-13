@@ -170,7 +170,8 @@ class PlanEditResource extends JsonResource
 
         foreach ($this->getSumSemestersCredits() as $index => $value) {
             if ($value > $quantityCreditsSemester) {
-                $result[] = $index + 1;
+                // $result[] = $index + 1;
+                $result[] = $index;
             }
         }
 
