@@ -43,7 +43,9 @@ class UpdatePlanRequest extends FormRequest
             'summary_data_budget_time' => 'nullable|json',
             'practical_training' => 'nullable|json',
             'published' => 'required',
-            'need_verification' => 'boolean'
+            'need_verification' => 'boolean',
+            'not_conventional' => 'nullable|boolean',
+            'comment' => 'nullable|string|max:400'
         ];
     }
 }

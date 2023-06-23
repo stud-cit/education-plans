@@ -408,6 +408,22 @@ class PlanController extends Controller
     public function verification(StorePlanVerificationRequest $request, Plan $plan)
     {
         $validated = $request->validated();
+
+        /**
+         * verification_status_id приходить роль id,
+         * а нам потрібно id верифікації
+         */
+        if (Auth::user()->role_id !== User::ADMIN) {
+            $verificationStatusId = VerificationStatuses::where(
+                [
+                    ['role_id', $validated['verification_status_id']],
+                    ['type', 'plan']
+                ]
+            )->value('id');
+
+            $validated['verification_status_id'] = $verificationStatusId;
+        }
+
         $plan->verification()->updateOrCreate(
             [
                 "plan_id" => $plan->id,

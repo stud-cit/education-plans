@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreSubjectRequest;
+use App\Models\Plan;
+use App\Models\User;
 use App\Models\Subject;
 use App\Models\HoursModules;
-use App\Models\SemestersCredits;
 use App\Models\PlanVerification;
-use App\Models\Plan;
-use Illuminate\Support\Facades\Auth;
+use App\Models\SemestersCredits;
 use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreSubjectRequest;
 
 class SubjectController extends Controller
 {
@@ -43,37 +45,41 @@ class SubjectController extends Controller
     {
         $validated = $request->validated();
 
-        if($request['selectiveDiscipline']) {
-          $validated['asu_id'] = null;
+        clock($validated);
+        if ($request['selectiveDiscipline']) {
+            $validated['asu_id'] = null;
         }
 
-        $subject = Subject::create($validated);
+        DB::transaction(function () use ($validated) {
+            $subject = Subject::create($validated);
 
-        $hoursModules = collect($request['hours_modules']);
-        $semestersCredits = collect($request['semesters_credits']);
+            $hoursModules = collect($validated['hours_modules']);
+            $semestersCredits = collect($validated['semesters_credits']);
 
-        $hoursModules->transform(function ($item, $key) use ($subject) {
-          unset($item['checkHour']);
-          $item['subject_id'] = $subject->id;
-          return $item;
+            $hoursModules->transform(function ($item, $key) use ($subject) {
+                // unset($item['checkHour']);
+                // unset($item['hasTask']);
+                $item['subject_id'] = $subject->id;
+                return $item;
+            });
+
+            $semestersCredits->transform(function ($item, $key) use ($subject) {
+                $item['subject_id'] = $subject->id;
+                return $item;
+            });
+
+            Plan::find($validated['plan_id'])->update([
+                'need_verification' => false
+            ]);
+
+            $user = Auth::user();
+            if ($user->role_id == User::FACULTY_INSTITUTE || $user->role_id == User::DEPARTMENT) {
+                PlanVerification::where("plan_id", $validated['plan_id'])->delete();
+            }
+
+            HoursModules::insert($hoursModules->toArray());
+            SemestersCredits::insert($semestersCredits->toArray());
         });
-
-        $semestersCredits->transform(function ($item, $key) use ($subject) {
-          $item['subject_id'] = $subject->id;
-          return $item;
-        });
-
-        Plan::find($request['plan_id'])->update([
-          'need_verification' => false
-        ]);
-
-        $user = Auth::user();
-        if($user->role_id == 6 || $user->role_id == 7) {
-          PlanVerification::where("plan_id", $request['plan_id'])->delete();
-        }
-
-        HoursModules::insert($hoursModules->toArray());
-        SemestersCredits::insert($semestersCredits->toArray());
 
         return $this->success(__('messages.Created'), 201);
     }
@@ -111,10 +117,10 @@ class SubjectController extends Controller
     {
         $validated = $request->validated();
 
-        if($request['selectiveDiscipline']) {
-          $validated['asu_id'] = null;
+        if ($request['selectiveDiscipline']) {
+            $validated['asu_id'] = null;
         } else {
-          $validated['selective_discipline_id'] = null;
+            $validated['selective_discipline_id'] = null;
         }
 
         $subject->update($validated);
@@ -125,40 +131,40 @@ class SubjectController extends Controller
         $hoursModules = [];
         $semestersCredits = [];
         foreach ($request['hours_modules'] as $key => $value) {
-          array_push($hoursModules, [
-            "course" => $value['course'],
-            "form_control_id" => $value['form_control_id'],
-            "hour" => $value['hour'],
-            "individual_task_id" => $value['individual_task_id'],
-            "module" => $value['module'],
-            "semester" => $value['semester'],
-            "subject_id" => $subject->id
-          ]);
+            array_push($hoursModules, [
+                "course" => $value['course'],
+                "form_control_id" => $value['form_control_id'],
+                "hour" => $value['hour'],
+                "individual_task_id" => $value['individual_task_id'],
+                "module" => $value['module'],
+                "semester" => $value['semester'],
+                "subject_id" => $subject->id
+            ]);
         }
         foreach ($request['semesters_credits'] as $key => $value) {
-          array_push($semestersCredits, [
-            "course" => $value['course'],
-            "credit" => $value['credit'],
-            "semester" => $value['semester'],
-            "subject_id" => $subject->id
-          ]);
+            array_push($semestersCredits, [
+                "course" => $value['course'],
+                "credit" => $value['credit'],
+                "semester" => $value['semester'],
+                "subject_id" => $subject->id
+            ]);
         }
         HoursModules::insert($hoursModules);
         SemestersCredits::insert($semestersCredits);
 
         Plan::find($request['plan_id'])->update([
-          'need_verification' => false
+            'need_verification' => false
         ]);
 
         $user = Auth::user();
-        if($user->role_id == 6 || $user->role_id == 7) {
-          PlanVerification::where("plan_id", $request['plan_id'])->delete();
+        if ($user->role_id == 6 || $user->role_id == 7) {
+            PlanVerification::where("plan_id", $request['plan_id'])->delete();
         }
 
         Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($request) {
-          $queryCycle->where('plan_id', $request['plan_id']);
+            $queryCycle->where('plan_id', $request['plan_id']);
         })->update([
-          'verification' => 1
+            'verification' => 1
         ]);
 
         return $this->success(__('messages.Updated'), 200);

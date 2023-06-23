@@ -49,6 +49,8 @@ class Plan extends Model
         'program_op_id',
         'summary_data_budget_time',
         'practical_training',
+        'comment',
+        'not_conventional',
         'need_verification'
     ];
 
@@ -63,7 +65,9 @@ class Plan extends Model
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
-        'published' => 'boolean'
+        'published' => 'boolean',
+        'not_conventional' => 'boolean',
+        'need_verification' => 'boolean',
     ];
 
     const TEMPLATE = 1;
@@ -77,8 +81,10 @@ class Plan extends Model
 
     public function getStatusAttribute()
     {
+        $accept = VerificationStatuses::fullPlanVerification();
+
         $data = array_column($this->verification->toArray(), 'status');
-        if (count($this->filterStatus($data, 1)) >= 4) { //ToDo check in array
+        if (count($this->filterStatus($data, 1)) >= $accept) {
             $result = 'success';
         } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
             $result = 'warning';
@@ -128,6 +134,12 @@ class Plan extends Model
     public function getUserVerificationsAttribute()
     {
         return $this->verification;
+    }
+
+    public function getStatusOP()
+    {
+        return $this->verification()->select('id', 'verification_statuses_id', 'status')
+            ->where('verification_statuses_id', 1)->value('status');
     }
 
     public function getCreatedAtAttribute($value)
