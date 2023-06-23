@@ -28,6 +28,7 @@ class AddTypeIdToPlans extends Migration
     {
         Schema::table('plans', function (Blueprint $table) {
             $table->dropForeign(['type_id']);
+            $table->dropColumn(['type_id']);
         });
     }
 }
