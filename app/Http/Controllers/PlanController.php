@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Error;
 use App\Models\Plan;
 use App\Models\User;
 use App\Helpers\Tree;
@@ -203,7 +202,7 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['title'] = $plan->generatedTitle();
+        $validated['title'] = $plan->generateTitle();
 
         $plan->update($validated);
 
@@ -331,7 +330,7 @@ class PlanController extends Controller
         // $array = json_decode($json, JSON_OBJECT_AS_ARRAY);
         $array = $json;
 
-        $b = [];
+        $result = [];
         $index = 1;
         foreach ($array as $item) {
             if ($item['course'] === $course && $checkCourse) {
@@ -350,11 +349,11 @@ class PlanController extends Controller
                     }
                 }
             }
-            $b[] = $item;
+            $result[] = $item;
             $index++;
         }
 
-        return  $b;
+        return  $result;
     }
 
 
