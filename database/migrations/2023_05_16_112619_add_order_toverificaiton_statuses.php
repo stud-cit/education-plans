@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTypeIdToPlans extends Migration
+class AddOrderToverificaitonStatuses extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddTypeIdToPlans extends Migration
      */
     public function up()
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->foreignId('type_id')->after('parent_id')->default(1)
-                ->constrained('plan_types');
+        Schema::table('verification_statuses', function (Blueprint $table) {
+            $table->integer('order')->nullable();
         });
     }
 
@@ -26,9 +25,8 @@ class AddTypeIdToPlans extends Migration
      */
     public function down()
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->dropForeign(['type_id']);
-            $table->dropColumn(['type_id']);
+        Schema::table('verification_statuses', function (Blueprint $table) {
+            $table->dropColumn(['order']);
         });
     }
 }
