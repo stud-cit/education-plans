@@ -17,23 +17,23 @@ class Subject extends Model
     public $timestamps = false;
 
     protected $fillable = [
-      'asu_id',
-      'cycle_id',
-      'selective_discipline_id',
-      'credits',
-      'hours',
-      'practices',
-      'laboratories',
-      'verification',
-      'faculty_id',
-      'department_id',
-      'note'
+        'asu_id',
+        'cycle_id',
+        'selective_discipline_id',
+        'credits',
+        'hours',
+        'practices',
+        'laboratories',
+        'verification',
+        'faculty_id',
+        'department_id',
+        'note'
     ];
 
     protected $appends = ['title'];
 
     protected $casts = [
-      'asu_id' => 'integer'
+        'asu_id' => 'integer'
     ];
 
     public function selectiveDiscipline()
@@ -67,10 +67,10 @@ class Subject extends Model
     public function individualTasks()
     {
         return $this->getSemestersOnFormControl([Constant::FORM_CONTROL['PROTECTION']])
-                ->orWhereIn('individual_task_id', [
-                        Constant::INDIVIDUAL_TASKS['CONTROL_WORK'],
-                        Constant::INDIVIDUAL_TASKS['COURSE_WORK']
-                ]);
+            ->orWhereIn('individual_task_id', [
+                Constant::INDIVIDUAL_TASKS['CONTROL_WORK'],
+                Constant::INDIVIDUAL_TASKS['COURSE_WORK']
+            ]);
     }
 
 
@@ -92,5 +92,10 @@ class Subject extends Model
             ->selectRaw('(GROUP_CONCAT(DISTINCT semester)) as semester')
             ->whereIn('form_control_id', $form_control_ids)
             ->groupBy('subject_id');
+    }
+
+    public function subjectNotBelongAttestationCycle(): bool
+    {
+        return $this->cycle->list_cycle_id !== Cycle::ATTESTATION;
     }
 }

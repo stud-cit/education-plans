@@ -56,8 +56,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])
             ->name('plans.verificationOP.store');
-        Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy')
-            ->middleware('can:copy-plan');
+        Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
         Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
         Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
         Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');
@@ -201,6 +200,4 @@ Route::prefix('v1')->group(function () {
         Route::get('/upload/index', [PdfController::class, 'index']);
         Route::post('/upload', [PdfController::class, 'upload']);
     });
-
-    Route::patch('/plans/short-plan/{plan}', [PlanController::class, 'shortPlan']);
 });
