@@ -98,6 +98,11 @@ class PlanEditResource extends JsonResource
         $hoursWeeksSemestersHasErrors = $this->hoursWeeksSemestersHasErrors();
         $semesterExamHasErrors = $this->semesterExamHasErrors();
         $courseWorksHasErrors = $this->courseWorksHasErrors();
+        $checkCredit = $this->checkCredit();
+
+        if ($checkCredit) {
+            $messages[] = $checkCredit;
+        }
 
         if ($sumSemestersCreditsHasErrors) {
             $messages[] = $sumSemestersCreditsHasErrors;
@@ -117,6 +122,23 @@ class PlanEditResource extends JsonResource
 
         return $messages;
     }
+
+    function checkCredit(): ?string
+    {
+        $planId = $this->id;
+
+        $sum = Subject::select('credits')->with('cycle')
+            ->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            })->sum('credits');
+
+        if ($sum > $this->credits) {
+            return "Перевищена загальна кількість кредитів: $sum із $this->credits";
+        }
+
+        return null;
+    }
+
     //TODO: remove this function
     function fix1($amount_module, $study_term_id, $form_organization_id)
     {
