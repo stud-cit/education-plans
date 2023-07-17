@@ -341,16 +341,15 @@ class PlanController extends Controller
 
         $clonePlan->type_id = Plan::SHORT;
         $clonePlan->study_term_id = $studyTermId;
-        $clonePlan->title = $plan->generateTitle();
         $clonePlan->year += $this->shortedByYear;
+        $clonePlan->title = $clonePlan->generateTitle();
         $clonePlan->credits -= $credits * $this->shortedByYear;
 
         $array = json_decode($clonePlan->schedule_education_process, JSON_OBJECT_AS_ARRAY);
-
         $newScheduleEducationProcess = [];
 
         foreach ($array['courses'] as $index => $item) {
-            if ($index !== $this->shortedByYear - 1) {
+            if ($index > $this->shortedByYear - 1) { //  1 >= 1
                 $newScheduleEducationProcess[] = $this->cutCourse($item, ['course'], false);
             }
         }
@@ -365,7 +364,7 @@ class PlanController extends Controller
 
         $clonePlan->summary_data_budget_time = $this->cutCourse(
             json_decode($clonePlan->summary_data_budget_time, JSON_OBJECT_AS_ARRAY),
-            ['course']
+            ['course'],
         );
 
         ShortenedPlan::create([
@@ -398,7 +397,7 @@ class PlanController extends Controller
         $index = 1;
 
         foreach ($data as $item) {
-            if ($item['course'] === $course && $checkCourse) {
+            if ($item['course'] <= $course && $checkCourse) {
                 continue;
             }
 
