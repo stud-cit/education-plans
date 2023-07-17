@@ -43,7 +43,7 @@ class PlanEditResource extends JsonResource
             'education_program_id' => $this->education_program_id,
             'qualification_id' => $this->qualification_id,
             'field_knowledge_id' => $this->field_knowledge_id,
-            'cycles' => $this->cycles->whereNull('cycle_id')->toArray(),
+            'cycles' => CycleEditResource::collection($this->cycles->whereNull('cycle_id')),
             'hours_weeks_semesters' => $this->hours_weeks_semesters ?
                 json_decode($this->hours_weeks_semesters) : null,
             'created_at' => $this->created_at,
