@@ -45,6 +45,11 @@ class Cycle extends Model
         return $this->belongsTo(ListCycle::class);
     }
 
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
+    }
+
     public function getTitleAttribute()
     {
         return $this->listCycle->title;
