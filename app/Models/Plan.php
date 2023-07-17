@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\Policies\PlanPolicy;
+use App\Models\ShortenedPlan;
 use App\Observers\PlanObserver;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -103,22 +104,30 @@ class Plan extends Model
         });
     }
 
+
     public function getShortedByYearAttribute()
     {
         if (!$this->isApprovedPlan()) return [];
         if ($this->isNotPlan()) return [];
         if ($this->form_study_id !== 1) return []; // денна форма навчання
 
-
         $terms = self::SHORTED_BY_YEAR;
         $termStudy = $this->studyTerm;
         $year = $termStudy['year'];
         $month = $termStudy['month'];
 
+        $shortenedPlan = $this->shortedPlan->keyBy('shortened_by_year');
+
         foreach ($terms as &$value) {
             $value['show'] = $year >= 3 && $month >= 10;
-            //value['id'] value['title'] // TODO: якщо скорочений план існує записати id
-            //value['label'] Навчальний план, скорочений на 2 роки // TODO: Изменить название кнопки
+            $y = $value['year'];
+            if (isset($shortenedPlan[$y])) {
+                $btnName = trans_choice('variables.shortened_plan', $y, ['value' => $y]);
+
+                $value['id'] =  $shortenedPlan[$y]['plan_id'];
+                $value['title'] = "$btnName | $this->title";
+                $value['label'] = $btnName;
+            }
         }
 
         return $terms;
@@ -126,9 +135,7 @@ class Plan extends Model
 
     protected function isApprovedPlan(): bool
     {
-        $data = array_column($this->verification->toArray(), 'status');
-
-        return count($this->filterStatus($data, 1)) >= 4;
+        return $this->verification->sum('status') >= 6;
     }
 
     public function getUserVerificationsAttribute()
@@ -189,6 +196,11 @@ class Plan extends Model
 
         $professions = new Profession();
         return $professions->getTitle($this->education_program_id, 'title', true, ['label' => 'after']);
+    }
+
+    public function shortedPlan()
+    {
+        return $this->hasMany(ShortenedPlan::class, 'parent_id');
     }
 
     public function formStudy()

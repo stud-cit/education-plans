@@ -22,6 +22,8 @@ class Cycle extends Model
 
     protected $touches = ['listCycle'];
 
+    const ATTESTATION = 10;
+
     public function subjects()
     {
         return $this->hasMany(Subject::class, 'cycle_id')->with('selectiveDiscipline');
@@ -30,13 +32,13 @@ class Cycle extends Model
     public function cycles()
     {
         return $this->hasMany(Cycle::class, 'cycle_id')->with([
-          'cycles',
-          'subjects.semestersCredits',
-          'subjects.hoursModules.formControl',
-          'subjects.exams',
-          'subjects.test',
-          'subjects.individualTasks',
-          'subjects.hoursModules.individualTask'
+            'cycles',
+            'subjects.semestersCredits',
+            'subjects.hoursModules.formControl',
+            'subjects.exams',
+            'subjects.test',
+            'subjects.individualTasks',
+            'subjects.hoursModules.individualTask'
         ]);
     }
 

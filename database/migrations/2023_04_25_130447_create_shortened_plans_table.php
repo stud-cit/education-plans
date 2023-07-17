@@ -16,9 +16,9 @@ class CreateShortenedPlansTable extends Migration
         Schema::create('shortened_plans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('plan_id')->constrained()->onDelete('cascade');
-            $table->foreignId('parent_id')->constrained('shortened_plans', 'plan_id')->onDelete('cascade');
+            $table->foreignId('parent_id')->constrained('plans')->onDelete('cascade');
             $table->integer('shortened_by_year');
-            $table->unique(['plan_id', 'parent_id', 'shortened_by_year'], 'unique_shortened_plan');
+            $table->unique(['parent_id', 'shortened_by_year'], 'unique_shortened_plan');
             $table->timestamps();
         });
     }

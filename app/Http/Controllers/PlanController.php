@@ -13,6 +13,7 @@ use App\Models\StudyTerm;
 use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use Illuminate\Http\Request;
+use App\Models\ShortenedPlan;
 use App\ExternalServices\Op\OP;
 use App\Models\PlanVerification;
 use App\Models\SemestersCredits;
@@ -20,6 +21,7 @@ use App\Models\CatalogSpeciality;
 use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\indexPlanRequest;
 use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
@@ -35,6 +37,7 @@ use App\ExternalServices\Asu\Qualification;
 use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\Plan\ShortPlanRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
+use App\Http\Resources\Plan\ShortPlanResource;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
@@ -201,7 +204,6 @@ class PlanController extends Controller
     public function update(UpdatePlanRequest $request, Plan $plan)
     {
         $validated = $request->validated();
-
         $validated['title'] = $plan->generateTitle();
 
         $plan->update($validated);
@@ -228,6 +230,11 @@ class PlanController extends Controller
 
     public function copy(Plan $plan)
     {
+
+        if (!Gate::allows('copy-plan', $plan)) {
+            abort(403);
+        }
+
         $model = $plan->load([
             'cycles.cycles',
             'cycles.subjects.semestersCredits',
@@ -239,15 +246,9 @@ class PlanController extends Controller
 
         $clonePlan = $plan->duplicate();
 
-        // $user = Auth::user();
-        // if ($user->possibility(User::PRIVILEGED_ROLES) && $plan->parent_id !== null) {
         $clonePlan->parent_id = $plan->id;
         $clonePlan->type_id = Plan::PLAN;
         $clonePlan->update();
-        // } elseif (!in_array($user->role_id, User::PRIVILEGED_ROLES) && $plan->parent_id === null) {
-        //     $clonePlan->parent_id = $plan->id;
-        //     $clonePlan->update();
-        // }
 
         foreach ($model->cycles as $cycle) {
             if ($cycle['cycle_id'] == null) {
@@ -256,106 +257,6 @@ class PlanController extends Controller
         }
         return response()->json($clonePlan);
     }
-
-    /**
-     * Undocumented function
-     *
-     * @param Plan $plan
-     * @return $id
-     */
-    public function shortPlan(ShortPlanRequest $request, Plan $plan)
-    {
-        //place this before any script you want to calculate time
-        $time_start = microtime(true);
-        $validated = $request->validated();
-
-        $shortedByYear = $validated['year'];
-        $sYear = $plan->studyTerm->year - $shortedByYear;
-        $month = $plan->studyTerm->month;
-        $credits = 60;
-
-        $studyTermId = StudyTerm::select('id', 'year', 'month')->where([
-            ['year', $sYear],
-            ['month', $plan->studyTerm->month]
-        ])->value('id');
-
-        if (!$studyTermId) throw ValidationException::withMessages(
-            ["Не існує терміну навчання {$sYear}р. {$month}міс.", 'Зверніться до Адміністратора.']
-        );
-
-        // TODO: записати зв'язок в таблицю shortened_plans
-        $clonePlan = $plan; //->duplicate();
-        $clonePlan->study_term_id = $studyTermId;
-        $clonePlan->title = $plan->generateTitle();
-        $clonePlan->year += $shortedByYear;
-        $clonePlan->type = Plan::SHORT;
-        $clonePlan->credits -= $credits * $shortedByYear;
-        // dd($clonePlan->toArray());
-
-        $array = json_decode($clonePlan->schedule_education_process, JSON_OBJECT_AS_ARRAY);
-
-        $a = [];
-        foreach ($array['courses'] as $index => $item) {
-            if ($index !== $shortedByYear - 1) {
-
-                $a['courses'][] = $this->cutCourse($item, $shortedByYear, ['course'], false);
-            }
-        }
-
-        $clonePlan->hours_weeks_semesters = $this->cutCourse(
-            json_decode($clonePlan->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY),
-            $shortedByYear,
-            ['course', 'semester']
-        );
-
-        $clonePlan->summary_data_budget_time = $this->cutCourse(
-            json_decode(
-                $clonePlan->summary_data_budget_time,
-                JSON_OBJECT_AS_ARRAY
-            ),
-            $shortedByYear,
-            ['course']
-        );
-
-        $time_end = microtime(true);
-        $execution_time = ($time_end - $time_start) / 60;
-        echo '<b>Total Execution Time:</b> ' . $execution_time . ' Mins';
-        return response()->json($clonePlan->hours_weeks_semesters);
-    }
-
-    public function cutCourse($json, $course, array $keys, $checkCourse = true)
-    {
-        if (!$json) return null;
-
-        // $array = json_decode($json, JSON_OBJECT_AS_ARRAY);
-        $array = $json;
-
-        $result = [];
-        $index = 1;
-        foreach ($array as $item) {
-            if ($item['course'] === $course && $checkCourse) {
-                continue;
-            }
-
-            foreach ($keys as $key) {
-                if (array_key_exists($key, $item)) {
-                    switch ($key) {
-                        case 'course':
-                            $item[$key] = $item[$key] - $course;
-                            break;
-                        case 'semester':
-                            $item[$key] = $index;
-                            break;
-                    }
-                }
-            }
-            $result[] = $item;
-            $index++;
-        }
-
-        return  $result;
-    }
-
 
     function createCycle($cycle, $plan_id, $cycleId = null)
     {
@@ -401,6 +302,203 @@ class PlanController extends Controller
         }
         foreach ($cycle['cycles'] as $v) {
             $this->createCycle($v, $plan_id, $cloneCycle->id);
+        }
+    }
+
+    private $shortedByYear = 1;
+    /**
+     * Generate short plan
+     *
+     * @param Plan $plan
+     * @return ShortPlanResource
+     */
+    public function shortPlan(ShortPlanRequest $request, Plan $plan)
+    {
+        $validated = $request->validated();
+
+        $this->shortedByYear = $validated['shortened_by_year'];
+
+        $model = $plan->load([
+            'cycles.cycles',
+            'cycles.subjects.semestersCredits',
+            'cycles.subjects.hoursModules',
+        ]);
+
+        $clonePlan = $plan->duplicate();
+
+        $sYear = $clonePlan->studyTerm->year - $this->shortedByYear;
+        $month = $clonePlan->studyTerm->month;
+        $credits = 60; // TODO: move to admin panel
+
+        $studyTermId = StudyTerm::select('id', 'year', 'month')->where([
+            ['year', $sYear],
+            ['month', $clonePlan->studyTerm->month]
+        ])->value('id');
+
+        if (!$studyTermId) throw ValidationException::withMessages(
+            ["Не існує терміну навчання {$sYear}р. {$month}міс.", 'Зверніться до Адміністратора.']
+        );
+
+        $clonePlan->type_id = Plan::SHORT;
+        $clonePlan->study_term_id = $studyTermId;
+        $clonePlan->year += $this->shortedByYear;
+        $clonePlan->title = $clonePlan->generateTitle();
+        $clonePlan->credits -= $credits * $this->shortedByYear;
+
+        $array = json_decode($clonePlan->schedule_education_process, JSON_OBJECT_AS_ARRAY);
+        $newScheduleEducationProcess = [];
+
+        foreach ($array['courses'] as $index => $item) {
+            if ($index > $this->shortedByYear - 1) { //  1 >= 1
+                $newScheduleEducationProcess[] = $this->cutCourse($item, ['course'], false);
+            }
+        }
+
+        $array['courses'] = $newScheduleEducationProcess;
+        $clonePlan->schedule_education_process = $array;
+
+        $clonePlan->hours_weeks_semesters = $this->cutCourse(
+            json_decode($clonePlan->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY),
+            ['course', 'semester']
+        );
+
+        $clonePlan->summary_data_budget_time = $this->cutCourse(
+            json_decode($clonePlan->summary_data_budget_time, JSON_OBJECT_AS_ARRAY),
+            ['course'],
+        );
+
+        ShortenedPlan::create([
+            'plan_id' => $clonePlan->id,
+            'parent_id' => $plan->id,
+            'shortened_by_year' => $this->shortedByYear
+        ]);
+
+        $clonePlan->save();
+
+        foreach ($model->cycles as $cycle) {
+            if ($cycle['cycle_id'] == null) {
+                $this->createCycleCutSubject($cycle, $clonePlan->id);
+            }
+        }
+
+        return new ShortPlanResource([
+            'id' => $clonePlan->id,
+            'title' => $clonePlan->title,
+            'shorted_by_year' => $plan->shortedByYear
+        ]);
+    }
+
+    public function cutCourse(array $data, array $keys, $checkCourse = true): array
+    {
+        if (!$data) return null;
+
+        $course = $this->shortedByYear;
+        $result = [];
+        $index = 1;
+
+        foreach ($data as $item) {
+            if ($item['course'] <= $course && $checkCourse) {
+                continue;
+            }
+
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $item)) {
+                    switch ($key) {
+                        case 'course':
+                            $item[$key] = $item[$key] - $course;
+                            break;
+                        case 'semester':
+                            $item[$key] = $index;
+                            break;
+                        case 'module':
+                            $item[$key] = $index;
+                            break;
+                    }
+                }
+            }
+            $result[] = $item;
+            $index++;
+        }
+
+        return  $result;
+    }
+
+    function createCycleCutSubject($cycle, $plan_id, $cycleId = null)
+    {
+        $cloneCycle = Cycle::create([
+            "title" => $cycle['title'],
+            "cycle_id" => $cycleId,
+            "list_cycle_id" => $cycle['list_cycle_id'],
+            "credit" => $cycle['credit'],
+            "plan_id" => $plan_id,
+            "has_discipline" => $cycle['has_discipline']
+        ]);
+
+        // SUBJECT
+        foreach ($cycle['subjects'] as $subject) {
+            $cloneSubject = Subject::create([
+                "asu_id" => $subject['asu_id'],
+                "cycle_id" => $cloneCycle->id,
+                "selective_discipline_id" => $subject['selective_discipline_id'],
+                "credits" => $subject['credits'],
+                "hours" => $subject['hours'],
+                "practices" => $subject['practices'],
+                "laboratories" => $subject['laboratories'],
+                "faculty_id" => $subject['faculty_id'],
+                "department_id" => $subject['department_id']
+            ]);
+
+            $semestersCreditsCollection = $subject->semestersCredits;
+
+            $semestersCredits = $this->cutCourse(
+                $semestersCreditsCollection->toArray(),
+                ['course', 'semester']
+            );
+
+            $hoursModules = $this->cutCourse(
+                $subject->hoursModules->toArray(),
+                ['course', 'module', 'semester']
+            );
+
+            /**
+             * array_sum return double
+             */
+            $sumHour = array_sum(array_column($hoursModules, 'hour'));
+            $sumCredit = array_sum(array_column($semestersCredits, 'credit'));
+
+            if (($sumHour + $sumCredit) == 0 && $cloneSubject->subjectNotBelongAttestationCycle()) {
+                $cloneSubject->delete();
+                continue;
+            }
+
+            foreach ($hoursModules as $hoursModule) {
+                HoursModules::create([
+                    "course" => $hoursModule['course'],
+                    "hour" => $hoursModule['hour'],
+                    "subject_id" => $cloneSubject->id,
+                    "form_control_id" => $hoursModule['form_control_id'],
+                    "individual_task_id" => $hoursModule['individual_task_id'],
+                    "module" => $hoursModule['module'],
+                    "semester" => $hoursModule['semester']
+                ]);
+            }
+
+            foreach ($semestersCredits as $semestersCredit) {
+                SemestersCredits::create([
+                    "course" => $semestersCredit['course'],
+                    "subject_id" => $cloneSubject->id,
+                    "credit" => $semestersCredit['credit'],
+                    "semester" => $semestersCredit['semester']
+                ]);
+            }
+        }
+        // TODO: how delete empty cycle
+        // if ($cloneCycle->subjects->isEmpty()) {
+        //     // $cloneCycle->delete();
+        // }
+
+        foreach ($cycle['cycles'] as $cycle) {
+            $this->createCycleCutSubject($cycle, $plan_id, $cloneCycle->id);
         }
     }
 

@@ -58,7 +58,6 @@ class PlanEditResource extends JsonResource
                 json_decode($this->summary_data_budget_time) : [],
             'practical_training' => $this->practical_training ?
                 json_decode($this->practical_training) : [],
-
             'sum_semesters_credits' => $this->getSumSemestersCredits(),
             'sum_semesters_hours' => $this->getSumSemestersHours(),
             'count_exams' => $this->getCountExams(),
@@ -75,7 +74,11 @@ class PlanEditResource extends JsonResource
             'practical_training' => $this->practical_training ?
                 json_decode($this->practical_training) : [],
             'need_verification' => $this->need_verification,
-            'shorted_by_year' => $this->shortedByYear
+            'shorted_by_year' => $this->shortedByYear,
+            'errors' => $this->setErrors(),
+            'status_op' => $this->getStatusOP(),
+            'comment' => $this->comment ? $this->comment : '',
+            'not_conventional' => $this->not_conventional,
         ];
     }
 
@@ -286,6 +289,7 @@ class PlanEditResource extends JsonResource
             return $prev + $curr[$field];
         }, 0);
     }
+
     function getSumSemestersHours()
     {
         $planId = $this->id;
