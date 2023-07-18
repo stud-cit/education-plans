@@ -349,7 +349,7 @@ class PlanController extends Controller
         $newScheduleEducationProcess = [];
 
         foreach ($array['courses'] as $index => $item) {
-            if ($index > $this->shortedByYear - 1) { //  1 >= 1
+            if ($index > $this->shortedByYear - 1) {
                 $newScheduleEducationProcess[] = $this->cutCourse($item, ['course'], false);
             }
         }
@@ -366,6 +366,18 @@ class PlanController extends Controller
             json_decode($clonePlan->summary_data_budget_time, JSON_OBJECT_AS_ARRAY),
             ['course'],
         );
+
+        if (!$plan->not_conventional) {
+            foreach ($plan->verification as $item) {
+                PlanVerification::create([
+                    'plan_id' => $clonePlan->id,
+                    'user_id' => $item['user_id'],
+                    'verification_statuses_id' => $item['verification_statuses_id'],
+                    'status' => $item['status'],
+                    'comment' => $item['comment']
+                ]);
+            }
+        }
 
         ShortenedPlan::create([
             'plan_id' => $clonePlan->id,
