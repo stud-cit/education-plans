@@ -82,45 +82,17 @@ class PlanEditResource extends JsonResource
         ];
     }
 
-    function setErrors()
+    function setErrors(): array
     {
+        $messages = [
+            $this->sumSemestersCreditsHasErrors(),
+            $this->hoursWeeksSemestersHasErrors(),
+            $this->semesterExamHasErrors(),
+            $this->courseWorksHasErrors(),
+            $this->checkCredit(),
+        ];
 
-        // TODO: Remove commented code
-        // define("MODULE_CYCLING", 1); // Модульно циклова
-        // loop over plans
-        // $amount_module = $this->studyTerm->module;
-        // $form_organization_id = $this->form_organization_id;
-        // $amount_module = $form_organization_id === MODULE_CYCLING ? $amount_module * 2 : $amount_module;
-        // $this->fix1($amount_module, $this->study_term_id, $form_organization_id);
-
-        $messages = [];
-        $sumSemestersCreditsHasErrors = $this->sumSemestersCreditsHasErrors();
-        $hoursWeeksSemestersHasErrors = $this->hoursWeeksSemestersHasErrors();
-        $semesterExamHasErrors = $this->semesterExamHasErrors();
-        $courseWorksHasErrors = $this->courseWorksHasErrors();
-        $checkCredit = $this->checkCredit();
-
-        if ($checkCredit) {
-            $messages[] = $checkCredit;
-        }
-
-        if ($sumSemestersCreditsHasErrors) {
-            $messages[] = $sumSemestersCreditsHasErrors;
-        }
-
-        if ($hoursWeeksSemestersHasErrors) {
-            $messages[] = $hoursWeeksSemestersHasErrors;
-        }
-
-        if ($semesterExamHasErrors) {
-            $messages[] = $semesterExamHasErrors;
-        }
-
-        if ($courseWorksHasErrors) {
-            $messages[] = $courseWorksHasErrors;
-        }
-
-        return $messages;
+        return array_filter($messages);
     }
 
     function checkCredit(): ?string
@@ -139,61 +111,6 @@ class PlanEditResource extends JsonResource
         return null;
     }
 
-    //TODO: remove this function
-    function fix1($amount_module, $study_term_id, $form_organization_id)
-    {
-        $planId = $this->id;
-
-        // $semestersWithHours = SemestersCredits::select('id', 'credit', 'course', 'semester', 'subject_id as s_id')->with('subject.id')->whereHas('subject', function ($querySubject) use ($planId) {
-        //     $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-        //         $queryCycle->where('plan_id', $planId);
-        //     });
-        // })
-        //     // ->get();
-        //     ->pluck('s_id');
-        // clock('s_ids', $semestersWithHours->unique()->values()->all());
-        // return;
-
-        $semestersWithHours = HoursModules::select('id', 'course', 'semester', 'module', 'hour', 'subject_id as s_id')->with('subject.id')->whereHas('subject', function ($querySubject) use ($planId) {
-            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
-                $queryCycle->where('plan_id', $planId);
-            });
-        })
-            // ->get();
-            ->pluck('s_id');
-        clock('s_ids', $semestersWithHours->unique()->values()->all());
-        return;
-        $module = 0;
-        foreach ($semestersWithHours as $item) {
-            $module++;
-
-            if ($form_organization_id === 1) { // Модульно циклова
-                if ($study_term_id === 3 || $study_term_id === 6) { // 1 рік 4міс 3 сем then update only modules
-                    $item->update(['module' => $module]);
-                }
-
-                if ($study_term_id === 1) { // Термін навчання 3 роки 10 місяців
-                    $item->update(['module' => $module, 'course' => (int)round($item->semester / 2)]);
-                }
-            }
-
-            if ($form_organization_id === 3) { // form_organization_id 3 модульно семестрова
-
-                if ($study_term_id === 3 || $study_term_id === 1) {
-                    $item->update(['module' => $module]);
-                }
-
-                if ($study_term_id === 6 || $study_term_id === 7 || $study_term_id === 8) {
-                    $item->update(['module' => $module, 'course' => (int)round($item->semester / 2)]);
-                }
-            }
-
-            if ($module % $amount_module === 0) {
-                $module = 0;
-            }
-        }
-    }
-
     function sumSemestersCreditsHasErrors()
     {
         $result = [];
@@ -201,7 +118,6 @@ class PlanEditResource extends JsonResource
 
         foreach ($this->getSumSemestersCredits() as $index => $value) {
             if ($value > $quantityCreditsSemester) {
-                // $result[] = $index + 1;
                 $result[] = $index;
             }
         }
@@ -221,9 +137,8 @@ class PlanEditResource extends JsonResource
             return null;
         }
 
-        $resetSumSemesterHours = array_values($this->getSumSemestersHours()); // reset idx
-        // $getSumSemestersHours //idx 1,2,3,4
-        // $hoursWeeksSemesters   //idx 0,1,2,3
+        $resetSumSemesterHours = array_values($this->getSumSemestersHours());
+
         foreach ($resetSumSemesterHours as $index => $item) {
             if (isset($hoursWeeksSemesters[$index])) {
                 if ($item > $hoursWeeksSemesters[$index]['hour']) {
@@ -327,8 +242,6 @@ class PlanEditResource extends JsonResource
             if (isset($result[$value['module']])) {
                 $result[$value['module']] += $value['hour'];
             } else {
-                // $result[$value['module']] = $value['hour'];
-
                 $result += [$value['module'] => $value['hour']];
             }
         }
@@ -359,11 +272,8 @@ class PlanEditResource extends JsonResource
     function getCountExams()
     {
         $result = [];
-        // for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-        //     $result[$i + 1] = 0;
-        // }
+
         for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-            // $result[$i + 1] += $this->getCountWorks(['form_control_id' => 1], $i + 1);
             array_push($result, $this->getCountWorks(['form_control_id' => 1], $i + 1));
         }
         return $result;
@@ -374,9 +284,6 @@ class PlanEditResource extends JsonResource
     {
         $result = [];
         for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-            // if ($this->form_organization_id == 1) {
-            //     array_push($result, '');
-            // }
             array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
         }
         return $result;
