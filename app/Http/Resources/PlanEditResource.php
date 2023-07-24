@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Plan;
 use App\Models\Setting;
 use App\Models\Subject;
 use App\Models\HoursModules;
@@ -64,6 +65,7 @@ class PlanEditResource extends JsonResource
             'count_coursework' => $this->getCountCoursework(),
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
             'exams_table' => $this->getExamsTable($this->cycles),
+            'short_plan' => $this->type_id === Plan::SHORT,
 
             'errors' => $this->setErrors(),
             'status_op' => $this->getStatusOP(),

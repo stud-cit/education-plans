@@ -22,6 +22,7 @@ class Cycle extends Model
 
     protected $touches = ['listCycle'];
 
+    const PRACTICAL_TRAINING = 9;
     const ATTESTATION = 10;
 
     public function subjects()

@@ -52,7 +52,8 @@ class Plan extends Model
         'practical_training',
         'comment',
         'not_conventional',
-        'need_verification'
+        'need_verification',
+        'type_id'
     ];
 
     protected $casts = [

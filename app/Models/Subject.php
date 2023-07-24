@@ -94,8 +94,18 @@ class Subject extends Model
             ->groupBy('subject_id');
     }
 
+    public function notPartSpecialCycle(): bool
+    {
+        return $this->subjectNotBelongAttestationCycle() || $this->subjectNotBelongPracticalTraining();
+    }
+
     public function subjectNotBelongAttestationCycle(): bool
     {
         return $this->cycle->list_cycle_id !== Cycle::ATTESTATION;
+    }
+
+    public function subjectNotBelongPracticalTraining(): bool
+    {
+        return $this->list_cycle_id !== Cycle::PRACTICAL_TRAINING;
     }
 }

@@ -377,6 +377,8 @@ class PlanController extends Controller
                     'comment' => $item['comment']
                 ]);
             }
+        } else {
+            $clonePlan->need_verification = false;
         }
 
         ShortenedPlan::create([
@@ -478,7 +480,7 @@ class PlanController extends Controller
             $sumHour = array_sum(array_column($hoursModules, 'hour'));
             $sumCredit = array_sum(array_column($semestersCredits, 'credit'));
 
-            if (($sumHour + $sumCredit) == 0 && $cloneSubject->subjectNotBelongAttestationCycle()) {
+            if (($sumHour + $sumCredit) == 0 && $cloneSubject->notPartSpecialCycle()) {
                 $cloneSubject->delete();
                 continue;
             }

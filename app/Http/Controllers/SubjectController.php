@@ -45,7 +45,6 @@ class SubjectController extends Controller
     {
         $validated = $request->validated();
 
-        clock($validated);
         if ($request['selectiveDiscipline']) {
             $validated['asu_id'] = null;
         }
