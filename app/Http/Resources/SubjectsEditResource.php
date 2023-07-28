@@ -51,26 +51,37 @@ class SubjectsEditResource extends JsonResource
         foreach ($hours_weeks_semesters as $key => $value) { // пробігаємося по масику тижнів
             $sumHoursModules += $value->week * $hours_modules[$key]->hour; // перемножаємо кількість тижнів на години для кожного модуля і сумуємо результат
         }
-        return round($sumHoursModules) == $sumHours; // не пам'ятаю для чого писав round (скоріш за все тогошо є в годинах не цілі числа). тут порівнюємо чи співпадає кількість годин навантаження з розподіленими годинами
+        return $sumHoursModules == $sumHours;
     }
 
     function checkCountHours()
     {
         $sumHours = $this->hours + $this->practices + $this->laboratories; // беремо суму годин практичних, лекцій, лабораторних
-        return (
-            $this->credits * 30 * ($this->getOptions('min-classroom-load') / 100) > $sumHours || // кредити дисципліни множимо на 30 (це константа) і множимо на мінімальне аудиторне навантаження по дисципліні у відсотках (налаштування -> загальні обмеження), ділимо на 100 і перевіряємо за загальним навантаженням. результат має бути такий що відсоток мінімального навантаження не повинен бути більше кількості годин
+        return ($this->credits * 30 * ($this->getOptions('min-classroom-load') / 100) > $sumHours || // кредити дисципліни множимо на 30 (це константа) і множимо на мінімальне аудиторне навантаження по дисципліні у відсотках (налаштування -> загальні обмеження), ділимо на 100 і перевіряємо за загальним навантаженням. результат має бути такий що відсоток мінімального навантаження не повинен бути більше кількості годин
             $this->credits * 30 * ($this->getOptions('max-classroom-load') / 100) < $sumHours // теж саме тільки з максимальним відсотком навантаження
-        );// суть така що години повинні бути в межах цих відсотків обрахованих формулою
+        ); // суть така що години повинні бути в межах цих відсотків обрахованих формулою
     }
 
     function checkLastHourModule()
     {
-        $lastItem = $this->whenLoaded('hoursModules') // беремо розподілені години
-            ->where('form_control_id', 10) // шукаємо в яких стоїть форма контролю "Без атестації"
-            ->where('hour', '!=', 0) // шукаємо де стоять години
-            ->pluck('module')
-            ->last();
-        return $lastItem; // повертаємо номер модуля в якому є години але немає форми контролю
+        $res = null;
+        $semesters_credits = $this->whenLoaded('semestersCredits')->toArray();
+        $hours_modules = $this->whenLoaded('hoursModules')->toArray();
+        $semestersCredits = array_filter($semesters_credits, function ($item) {
+            return isset($item['credit']) && $item['credit'];
+        });
+        $lastSemestersCredits = end($semestersCredits);
+        if ($lastSemestersCredits) {
+            $hoursModules = array_filter($hours_modules, function ($item) use ($lastSemestersCredits) {
+                return $item['semester'] == $lastSemestersCredits['semester'];
+            });
+            $lastItem = end($hoursModules);
+
+            if ($lastItem && $lastItem['form_control_id'] == 10) {
+                $res = array_search($lastItem, $hours_modules);
+            }
+        }
+        return $res;
     }
 
     function checkCountHoursSemester()
@@ -108,7 +119,7 @@ class SubjectsEditResource extends JsonResource
 
     function checkHasCreditsSemester()
     {
-        return count($this->semestersCredits->where('credit', '!=', 0)) > 0; // перевіряємо ци є кредити хоча б в одному семестрі
+        return count($this->semestersCredits->where('credit', '!=', 0)) > 0 ? true : false; // перевіряємо ци є кредити хоча б в одному семестрі
     }
 
     function getOptions($key)
