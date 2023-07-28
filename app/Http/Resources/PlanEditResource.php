@@ -66,21 +66,11 @@ class PlanEditResource extends JsonResource
             'count_credits_selective_discipline' => $this->getCountCreditsSelectiveDiscipline(),
             'exams_table' => $this->getExamsTable($this->cycles),
             'short_plan' => $this->type_id === Plan::SHORT,
-
             'errors' => $this->setErrors(),
             'status_op' => $this->getStatusOP(),
             'comment' => $this->comment ? $this->comment : '',
             'not_conventional' => $this->not_conventional,
-            'summary_data_budget_time' => $this->summary_data_budget_time ?
-                json_decode($this->summary_data_budget_time) : [],
-            'practical_training' => $this->practical_training ?
-                json_decode($this->practical_training) : [],
-            'need_verification' => $this->need_verification,
             'shorted_by_year' => $this->shortedByYear,
-            'errors' => $this->setErrors(),
-            'status_op' => $this->getStatusOP(),
-            'comment' => $this->comment ? $this->comment : '',
-            'not_conventional' => $this->not_conventional,
         ];
     }
 
