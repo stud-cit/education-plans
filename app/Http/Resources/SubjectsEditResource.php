@@ -48,8 +48,8 @@ class SubjectsEditResource extends JsonResource
         $sumHours = $this->hours + $this->practices + $this->laboratories; // беремо суму годин практичних, лекцій, лабораторних
         $hours_modules = $this->whenLoaded('hoursModules'); // тянемо розподілені години за модулями
         $hours_weeks_semesters = json_decode($this->cycle->plan->hours_weeks_semesters); // тянемо кількість тижнів у модульному атестаційному циклі (загальна інформація нижня таблиця)
-        foreach ($hours_weeks_semesters as $key => $value) { // пробігаємося по масику тижнів
-            $sumHoursModules += $value->week * $hours_modules[$key]->hour; // перемножаємо кількість тижнів на години для кожного модуля і сумуємо результат
+        foreach ($hours_modules as $key => $value) { // пробігаємося по масику тижнів
+            $sumHoursModules += $hours_weeks_semesters[$key]->week * $value->hour; // перемножаємо кількість тижнів на години для кожного модуля і сумуємо результат
         }
         return $sumHoursModules == $sumHours;
     }
