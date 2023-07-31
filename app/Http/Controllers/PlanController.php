@@ -306,6 +306,8 @@ class PlanController extends Controller
     }
 
     private $shortedByYear = 1;
+    private $formOrganization = 1;
+
     /**
      * Generate short plan
      *
@@ -325,7 +327,7 @@ class PlanController extends Controller
         ]);
 
         $clonePlan = $plan->duplicate();
-
+        $this->formOrganization = $clonePlan->form_organization_id;
         $sYear = $clonePlan->studyTerm->year - $this->shortedByYear;
         $month = $clonePlan->studyTerm->month;
         $credits = 60; // TODO: move to admin panel
@@ -377,6 +379,7 @@ class PlanController extends Controller
                     'comment' => $item['comment']
                 ]);
             }
+            $clonePlan->need_verification = true;
         } else {
             $clonePlan->need_verification = false;
         }
@@ -422,10 +425,18 @@ class PlanController extends Controller
                             $item[$key] = $item[$key] - $course;
                             break;
                         case 'semester':
-                            $item[$key] = $index;
+                            if ($this->formOrganization === 1) {
+                                $item[$key] = $item[$key] - $course * 2;
+                            } else if ($this->formOrganization === 3) {
+                                $item[$key] = $item[$key] - $course * 2;
+                            }
                             break;
                         case 'module':
-                            $item[$key] = $index;
+                            if ($this->formOrganization === 1) {
+                                $item[$key] = $index;
+                            } else if ($this->formOrganization === 3) {
+                                $item[$key] = $item[$key] - $course * 2;
+                            }
                             break;
                     }
                 }
