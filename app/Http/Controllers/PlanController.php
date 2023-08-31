@@ -246,8 +246,13 @@ class PlanController extends Controller
 
         $clonePlan = $plan->duplicate();
 
+        $user = Auth::user();
+
+        if (!$user->possibility(User::PRIVILEGED_ROLES)) {
+            $clonePlan->type_id = Plan::PLAN;
+        }
+
         $clonePlan->parent_id = $plan->id;
-        $clonePlan->type_id = Plan::PLAN;
         $clonePlan->update();
 
         foreach ($model->cycles as $cycle) {
