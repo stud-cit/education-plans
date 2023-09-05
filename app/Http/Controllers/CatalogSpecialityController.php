@@ -240,7 +240,7 @@ class CatalogSpecialityController extends Controller
     public function storeSignatures(StoreSignatureRequest $request, CatalogSpeciality $catalogSpeciality)
     {
         $validated = $request->validated();
-        clock($validated);
+
         $catalogSpeciality->signatures()->whereNotIn('id', array_column($validated['signatures'], 'id'))->delete();
 
         foreach ($validated['signatures'] as $signature) {
