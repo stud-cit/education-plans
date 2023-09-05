@@ -17,7 +17,12 @@ class Subjects extends ASU
     {
         $isExists = $this->getSubjects()->contains('id', $id);
 
-        return $isExists ? $this->getSubjects()->firstWhere('id', $id)['title_en'] : self::NOT_FOUND;
+        if (!$isExists) {
+            return self::NOT_FOUND;
+        }
+
+        $en_title = $this->getSubjects()->firstWhere('id', $id)['title_en'];
+        return $en_title ? $en_title : 'Відсутній відповідник англійською мовою';
     }
 
     public function getSubjects(): Collection
