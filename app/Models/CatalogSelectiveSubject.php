@@ -6,7 +6,6 @@ use App\Traits\Subject;
 use App\Models\EducationLevel;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
-use App\Models\CatalogEducationLevel;
 use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\HasAsuDivisionsNameTrait;

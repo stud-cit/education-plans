@@ -14,7 +14,6 @@ class CatalogSpecialityEditResource extends JsonResource
      */
     public function toArray($request)
     {
-        clock($this);
         return [
             'id' => $this->id,
             'owners' => $this->owners

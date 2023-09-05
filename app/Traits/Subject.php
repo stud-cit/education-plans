@@ -8,7 +8,6 @@ use App\Models\Teacher;
 use App\Models\CatalogSubject;
 use App\Models\LanguageSubject;
 use App\ExternalServices\Asu\Subjects;
-use App\Helpers\Filters\FilterBuilder;
 
 trait Subject
 {

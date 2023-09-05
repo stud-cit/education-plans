@@ -18,7 +18,7 @@ class CycleShowResource extends JsonResource
             "id" => $this->id,
             "cycle_id" => $this->cycle_id,
             "plan_id" => $this->plan_id,
-            "title" => clock($this->title),
+            "title" => $this->title,
             "credit" => $this->credit,
             "subjects" => SubjectsShowResource::collection($this->subjects),
             "cycles" => CycleShowResource::collection($this->cycles)

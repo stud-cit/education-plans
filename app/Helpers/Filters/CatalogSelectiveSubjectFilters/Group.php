@@ -9,7 +9,6 @@ class Group extends QueryFilter implements FilterContract
 {
     public function handle($value): void
     {
-        clock("year:", $this->query);
         $this->query->whereHas('catalog', function ($query) use ($value) {
             $query->when('group_id', function ($query) use ($value) {
                 return $query->where('group_id', $value);
