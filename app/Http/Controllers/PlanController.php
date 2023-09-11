@@ -374,8 +374,24 @@ class PlanController extends Controller
             ['course'],
         );
 
-        if (!$plan->not_conventional) {
+        foreach ($model->cycles as $cycle) {
+            if ($cycle['cycle_id'] == null) {
+                $this->createCycleCutSubject($cycle, $clonePlan->id);
+            }
+        }
+
+        // $clonePlan->save(); // todo: When do need save?
+        clock('Is has error', $clonePlan->isHasErrors());
+
+        $isHasErrors = $clonePlan->isHasErrors();
+
+        if (!$plan->not_conventional) { // normal plan
             foreach ($plan->verification as $item) {
+
+                if ($isHasErrors && $item['verification_statuses_id'] === 12) {
+                    continue;
+                }
+
                 PlanVerification::create([
                     'plan_id' => $clonePlan->id,
                     'user_id' => $item['user_id'],
@@ -389,19 +405,13 @@ class PlanController extends Controller
             $clonePlan->need_verification = false;
         }
 
+        $clonePlan->save();
+
         ShortenedPlan::create([
             'plan_id' => $clonePlan->id,
             'parent_id' => $plan->id,
             'shortened_by_year' => $this->shortedByYear
         ]);
-
-        $clonePlan->save();
-
-        foreach ($model->cycles as $cycle) {
-            if ($cycle['cycle_id'] == null) {
-                $this->createCycleCutSubject($cycle, $clonePlan->id);
-            }
-        }
 
         return new ShortPlanResource([
             'id' => $clonePlan->id,

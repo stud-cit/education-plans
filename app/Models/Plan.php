@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Models\Setting;
+use App\Models\Subject;
 use Illuminate\Support\Str;
+use App\Models\HoursModules;
 use App\Policies\PlanPolicy;
 use App\Models\ShortenedPlan;
 use App\Observers\PlanObserver;
+use App\Models\SemestersCredits;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
@@ -381,18 +385,18 @@ class Plan extends Model
         }
         return $result;
     }
-
-    function getCountCoursework()
-    {
-        $result = [];
-        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-            if ($this->form_organization_id == 1) {
-                array_push($result, '');
-            }
-            array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
-        }
-        return $result;
-    }
+    // !old
+    // function getCountCoursework()
+    // {
+    //     $result = [];
+    //     for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+    //         if ($this->form_organization_id == 1) {
+    //             array_push($result, '');
+    //         }
+    //         array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
+    //     }
+    //     return $result;
+    // }
 
     function getSubjectNotes()
     {
@@ -444,6 +448,196 @@ class Plan extends Model
             }
         }
         return trim($title);
+    }
+
+    public function isHasErrors(): bool
+    {
+        return (bool) count($this->setErrors());
+    }
+
+    public function setErrors(): array
+    {
+        $messages = [
+            $this->sumSemestersCreditsHasErrors(),
+            $this->hoursWeeksSemestersHasErrors(),
+            $this->semesterExamHasErrors(),
+            $this->courseWorksHasErrors(),
+            $this->checkCredit(),
+        ];
+        clock('messages', $messages);
+        return array_filter($messages);
+    }
+
+    public function sumSemestersCreditsHasErrors()
+    {
+        $result = [];
+        $quantityCreditsSemester = $this->getOptions('quantity-credits-semester');
+
+        foreach ($this->getSumSemestersCredits() as $index => $value) {
+            if ($value > $quantityCreditsSemester) {
+                $result[] = $index;
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість кредитів у " . implode(', ', $result) . " семестрі.";
+        }
+    }
+
+    public function hoursWeeksSemestersHasErrors()
+    {
+        $result = [];
+
+        $hoursWeeksSemesters = $this->jsonDecodeToArray($this->hours_weeks_semesters);
+        if (!$hoursWeeksSemesters) {
+            return null;
+        }
+
+        $resetSumSemesterHours = array_values($this->getSumSemestersHours());
+
+        foreach ($resetSumSemesterHours as $index => $item) {
+            if (isset($hoursWeeksSemesters[$index])) {
+                if ($item > $hoursWeeksSemesters[$index]['hour']) {
+                    $newIndx = $index;
+                    $result[] = $newIndx + 1;
+                }
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість годин у " . implode(', ', $result) . ($this->form_organization_id == 3 ? " семестрі." : " модулі.");
+        }
+    }
+
+    public function semesterExamHasErrors()
+    {
+        $result = [];
+        $numberExams = $this->getOptions('exam');
+
+        foreach ($this->getCountExams() as $index => $value) {
+            if ($value > $numberExams) {
+                $result[] = $index + 1;
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість екзаменів у " . implode(', ', $result) . " семестрі.";
+        }
+    }
+
+    public function courseWorksHasErrors()
+    {
+        $result = [];
+        $numberExams = $this->getOptions('coursework');
+
+        foreach ($this->getCountCoursework() as $index => $value) {
+            if ($value > $numberExams) {
+                $result[] = $index + 1;
+            }
+        }
+
+        if (empty($result)) {
+            return null;
+        } else {
+            return "Перевищена кількість курсових робіт у " . implode(', ', $result) . " семестрі.";
+        }
+    }
+
+    public function checkCredit(): ?string
+    {
+        $planId = $this->id;
+
+        $sum = Subject::select('credits')->with('cycle')
+            ->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            })->sum('credits');
+
+        if ($sum > $this->credits) {
+            return "Перевищена загальна кількість кредитів: $sum із $this->credits";
+        }
+
+        return null;
+    }
+
+    public function getCountCreditsSelectiveDiscipline()
+    {
+        $planId = $this->id;
+        $count = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+            $queryCycle->where('plan_id', $planId);
+        })->sum('credits');
+        return intval($count);
+    }
+
+    public function getSumSemestersCredits()
+    {
+        $planId = $this->id;
+        $result = [];
+        $semestersWithCredits = SemestersCredits::select('semester', 'credit', 'subject_id')->with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
+            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            });
+        })->get();
+        foreach ($semestersWithCredits as $value) {
+            if (isset($result[$value['semester']])) {
+                $result[$value['semester']] += $value['credit'];
+            } else {
+                $result += [$value['semester'] => $value['credit']];
+            }
+        }
+        return $result;
+    }
+
+    public function getSumSemestersHours()
+    {
+        $planId = $this->id;
+        $result = [];
+
+        $semestersWithHours = HoursModules::select('id', 'module', 'hour')->with('subject.id')->whereHas('subject', function ($querySubject) use ($planId) {
+            $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                $queryCycle->where('plan_id', $planId);
+            });
+        })->get();
+
+        foreach ($semestersWithHours as $value) {
+            if (isset($result[$value['module']])) {
+                $result[$value['module']] += $value['hour'];
+            } else {
+                $result += [$value['module'] => $value['hour']];
+            }
+        }
+        return $result;
+    }
+
+    public function getCountCoursework()
+    {
+        $result = [];
+        for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
+        }
+        return $result;
+    }
+
+    private function getOptions($key)
+    {
+        // TODO: set cache options;
+        $options = Setting::select('id', 'key', 'value')->pluck('value', 'key');
+        // TODO: KEY EXIST?
+        return $options[$key];
+    }
+
+    private function jsonDecodeToArray($string)
+    {
+        if (gettype($string) === 'string') {
+            return $string ? json_decode($string, true) : null;
+        }
+
+        return $string;
     }
 
     protected static function booted()
