@@ -385,7 +385,7 @@ class PlanController extends Controller
         if (!$plan->not_conventional) { // normal plan
             foreach ($plan->verification as $item) {
 
-                if ($isHasErrors && $item['verification_statuses_id'] === 12) {
+                if ($item['verification_statuses_id'] === 12) {
                     continue;
                 }
 
