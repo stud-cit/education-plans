@@ -464,7 +464,7 @@ class Plan extends Model
             $this->courseWorksHasErrors(),
             $this->checkCredit(),
         ];
-        clock('messages', $messages);
+
         return array_filter($messages);
     }
 

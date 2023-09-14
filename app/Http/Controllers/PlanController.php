@@ -380,9 +380,6 @@ class PlanController extends Controller
             }
         }
 
-        // $clonePlan->save(); // todo: When do need save?
-        clock('Is has error', $clonePlan->isHasErrors());
-
         $isHasErrors = $clonePlan->isHasErrors();
 
         if (!$plan->not_conventional) { // normal plan

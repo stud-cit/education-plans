@@ -270,7 +270,7 @@ class CatalogSelectiveSubjectController extends Controller
         $user = Auth::user();
 
         $divisions = VerificationStatuses::select('id', 'title')->where('type', 'subject')->get();
-        clock($divisions->toArray());
+
         $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
         $faculties = $asu->getFaculties()->when(
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),

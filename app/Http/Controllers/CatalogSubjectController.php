@@ -121,7 +121,7 @@ class CatalogSubjectController extends Controller
     public function getCatalogs()
     {
         $catalogs = CatalogSubject::whereHas('group')->select('id', 'year', 'group_id')->orderBy('year', 'desc')->get();
-        clock($catalogs->toArray());
+
         return CatalogSubjectNameResource::collection($catalogs);
     }
 
@@ -142,7 +142,7 @@ class CatalogSubjectController extends Controller
             ->first();
 
         $result = new CatalogSubjectDisciplineResource($data);
-        $result->subjects = $result->subjects->filter( fn ($s) => $s->status === 'success');
+        $result->subjects = $result->subjects->filter(fn ($s) => $s->status === 'success');
 
         return $result;
     }
