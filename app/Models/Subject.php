@@ -96,7 +96,7 @@ class Subject extends Model
 
     public function notPartSpecialCycle(): bool
     {
-        return $this->subjectNotBelongAttestationCycle() || $this->subjectNotBelongPracticalTraining();
+        return !in_array($this->cycle->list_cycle_id, [Cycle::ATTESTATION, Cycle::PRACTICAL_TRAINING]);
     }
 
     public function subjectNotBelongAttestationCycle(): bool
