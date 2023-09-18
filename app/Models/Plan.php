@@ -143,9 +143,27 @@ class Plan extends Model
         return $this->verification->sum('status') >= 6;
     }
 
+    public function getApprovedPlanAttribute(): bool
+    {
+        return $this->verification->sum('status') >= 6;
+    }
+
     public function getUserVerificationsAttribute()
     {
         return $this->verification;
+    }
+
+    public function getBasePlanDataAttribute()
+    {
+        $relation = $this->basePlan;
+
+        if ($relation->isEmpty()) return null;
+
+        $base_id = $relation->firstWhere('plan_id', $this->id)->parent_id;
+
+        $title = Plan::select('title')->where('id', $base_id)->value('title');
+
+        return ['base_id' => $base_id, 'title' => $title];
     }
 
     public function getStatusOP()
@@ -206,6 +224,11 @@ class Plan extends Model
     public function shortedPlan()
     {
         return $this->hasMany(ShortenedPlan::class, 'parent_id');
+    }
+
+    public function basePlan()
+    {
+        return $this->hasMany(ShortenedPlan::class, 'plan_id');
     }
 
     public function formStudy()

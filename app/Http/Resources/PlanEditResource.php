@@ -71,6 +71,8 @@ class PlanEditResource extends JsonResource
             'comment' => $this->comment ? $this->comment : '',
             'not_conventional' => $this->not_conventional,
             'shorted_by_year' => $this->shortedByYear,
+            'basePlan' => $this->basePlanData,
+            'approvedPlan' => $this->approvedPlan
         ];
     }
 }
