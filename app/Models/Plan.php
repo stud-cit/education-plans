@@ -221,6 +221,17 @@ class Plan extends Model
         return $professions->getTitle($this->education_program_id, 'title', true, ['label' => 'after']);
     }
 
+    public function getEducationProgramIdNameWithTypeAttribute(): array
+    {
+        if (!$this->education_program_id) return null;
+
+        $professions = new Profession();
+        return [
+            $professions->getTitle($this->education_program_id, 'title', false),
+            $professions->getTitle($this->education_program_id, 'label', false)
+        ];
+    }
+
     public function shortedPlan()
     {
         return $this->hasMany(ShortenedPlan::class, 'parent_id');
