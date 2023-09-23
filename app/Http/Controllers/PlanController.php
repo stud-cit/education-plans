@@ -36,9 +36,11 @@ use App\Http\Resources\FacultiesResource;
 use App\ExternalServices\Asu\Qualification;
 use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\Plan\ShortPlanRequest;
+use App\Http\Requests\Plan\SignedPlanRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Resources\Plan\ShortPlanResource;
 use Illuminate\Validation\ValidationException;
+use App\Http\Resources\Plan\SignedPlanResource;
 use App\Http\Requests\StorePlanVerificationRequest;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 
@@ -765,5 +767,34 @@ class PlanController extends Controller
 
             return $result->filter(fn ($s) => $s->status === 'success');
         }
+    }
+
+    public function getSignedPlans(SignedPlanRequest $request)
+    {
+        $validated = $request->validated();
+
+        $plans = Plan::with(
+            'verification',
+            'cycles.cycles'
+        )->select(
+            'id',
+            'title',
+            'year',
+            'education_program_id',
+            'faculty_id',
+            'department_id',
+            'qualification_id',
+            'field_knowledge_id',
+            'speciality_id',
+            'education_level_id',
+            'type_id',
+        )->plan()->where('department_id', $validated['department_id'])
+            // ->when($validated['department_id'] ?? false, function ($q) use ($validated) {
+            //     return $q->where('department_id', $validated['department_id']);
+            // })
+            ->get()
+            ->where('approvedPlan', true);
+
+        return SignedPlanResource::collection($plans);
     }
 }

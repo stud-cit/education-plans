@@ -239,4 +239,5 @@ return [
     'asu_key_scipub' => env('ASU_KEY_SCIPUB'),
     'cabinet_app_token' => env('CABINET_APP_TOKEN'),
     'cabinet_app_url' => env('CABINET_APP_URL'),
+    'protect_api_key' => env('PROTECT_API_KEY'),
 ];

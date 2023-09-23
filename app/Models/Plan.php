@@ -357,6 +357,11 @@ class Plan extends Model
         $query->where('published', 1);
     }
 
+    public function scopePlan($query)
+    {
+        $query->where('type_id', self::PLAN);
+    }
+
     public function isNotTemplate()
     {
         return $this->type_id !== self::TEMPLATE ? true : false;

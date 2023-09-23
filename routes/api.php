@@ -200,4 +200,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/upload/index', [PdfController::class, 'index']);
         Route::post('/upload', [PdfController::class, 'upload']);
     });
+
+    Route::get('/signed-plans', [PlanController::class, 'getSignedPlans'])->middleware('protectApi');
 });

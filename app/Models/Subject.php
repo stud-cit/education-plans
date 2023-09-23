@@ -108,4 +108,18 @@ class Subject extends Model
     {
         return $this->list_cycle_id !== Cycle::PRACTICAL_TRAINING;
     }
+
+    public function getLastFormControlAttribute()
+    {
+        $title = '';
+
+        $this->hoursModules->last(function ($item) use (&$title) {
+            if ($item['form_control_id'] !== 10) {
+                $title = $item->formControl->title;
+                return $item;
+            };
+        });
+
+        return $title;
+    }
 }
