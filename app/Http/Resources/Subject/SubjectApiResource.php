@@ -18,7 +18,7 @@ class SubjectApiResource extends JsonResource
         return [
             "id" => $this->id,
             "credits" => $this->credits,
-            "title" => $this->title,
+            "title" => $this->selective_discipline_id ? $this->selectiveDiscipline->title : $this->title,
             "form_control" => $this->lastFormControl,
         ];
     }
