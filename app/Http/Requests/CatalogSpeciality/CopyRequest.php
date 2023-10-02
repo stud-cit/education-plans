@@ -24,16 +24,23 @@ class CopyRequest extends FormRequest
      */
     public function rules()
     {
-        // make true message
         return [
             'year' => [
                 'required', 'date_format:Y',
                 Rule::unique('catalog_subjects')->where(function ($query) {
                     return $query->where('year', $this->year)
+                        ->where('catalog_education_level_id', $this->catalog_education_level_id)
                         ->where('speciality_id', $this->speciality_id);
                 })
             ],
             'speciality_id' => 'required|integer',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'year.unique' => "Такий каталог вже існує!",
         ];
     }
 }
