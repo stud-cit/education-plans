@@ -99,6 +99,10 @@ trait Subject
 
     public function lecturersSave($teachers)
     {
+        if (is_null($teachers)) {
+            return;
+        }
+
         $lectures = array_map(function ($teacher) {
             $teacher['type'] = Teacher::LECTOR;
             return $teacher;

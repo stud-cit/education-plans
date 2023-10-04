@@ -7,7 +7,6 @@ use App\Helpers\Helpers;
 use App\Models\SubjectHelper;
 use App\Models\CatalogSpeciality;
 use App\Models\SpecialitySubject;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\SpecialitySubject\SpecialitySubjectResource;
 use App\Http\Requests\SpecialitySubject\IndexSpecialitySubjectRequest;
 use App\Http\Requests\SpecialitySubject\StoreSpecialitySubjectRequest;
@@ -43,7 +42,6 @@ class SpecialitySubjectController extends Controller
             'title',
             'published',
         )
-            // ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->paginate($perPage);
 

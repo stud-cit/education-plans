@@ -35,7 +35,7 @@ class UpdateSpecialitySubjectRequest extends FormRequest
             'title' => 'required|string|max:255',
             'title_en' => 'nullable|string|max:255',
             'language' => 'required',
-            'lecturers' => 'required',
+            'lecturers' => 'nullable',
             'practice' => 'required',
             'faculty_id' => 'required|numeric',
             'department_id' => 'required|numeric',
