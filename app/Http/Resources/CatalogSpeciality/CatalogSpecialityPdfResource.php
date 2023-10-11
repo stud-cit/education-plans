@@ -22,7 +22,7 @@ class CatalogSpecialityPdfResource extends JsonResource
                 'department' => $this->departmentName,
                 'speciality' => $this->specialityIdName,
                 'education_level' => $this->educationLevel->title,
-                'year' => $this->year,
+                'year' => (int) $this->year,
             ],
             'subjects' => CatalogSelectiveSubjectShowResource::collection($this->subjects),
             'signatures' => CatalogSignaturesResource::collection($this->signatures),
