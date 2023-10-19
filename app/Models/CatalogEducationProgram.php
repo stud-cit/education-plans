@@ -39,7 +39,8 @@ class CatalogEducationProgram extends Model
     ];
 
     protected $casts = [
-        'need_verification' => 'boolean'
+        'need_verification' => 'boolean',
+        'year' => 'integer',
     ];
 
     public function subjects()
