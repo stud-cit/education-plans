@@ -87,26 +87,37 @@ class Plan extends Model
 
     public function getStatusAttribute()
     {
+        $result = '';
         $accept = VerificationStatuses::fullPlanVerification();
-
         $data = array_column($this->verification->toArray(), 'status');
-        if (count($this->filterStatus($data, 1)) >= $accept) {
+        $hasVerification = count($data) > 0;
+
+        if (!$hasVerification) return $result;
+
+        if ($this->countStatuses($data, 1) >= $accept) {
             $result = 'success';
-        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) == 0) {
+        } elseif ($this->countStatuses($data, 0) == 0) {
             $result = 'warning';
-        } elseif (count($data) > 0 && count($this->filterStatus($data, 0)) >= 0) {
+        } elseif ($this->countStatuses($data, 0) >= 0) {
             $result = 'error';
-        } else {
-            $result = '';
         }
+
         return $result;
     }
 
-    private function filterStatus($data, $id)
+    /**
+     *
+     * @param array $data
+     * @param integer $status
+     * @return integer
+     */
+    private function countStatuses(array $data, int $status): int
     {
-        return array_filter($data, function ($val) use ($id) {
-            return $val == $id;
+        $filtered = array_filter($data, function ($val) use ($status) {
+            return $val == $status;
         });
+
+        return count($filtered);
     }
 
 

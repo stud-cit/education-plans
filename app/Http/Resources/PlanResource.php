@@ -27,15 +27,13 @@ class PlanResource extends JsonResource
             'department' => $this->departmentName,
             'created_at' => $this->created_at,
             'status' => $this->status,
-            'user_verifications' => VerificationPlanResource::collection($this->user_verifications),
-            'user_verifications_old' => $this->user_verifications,
             'author_id' => $this->author_id,
             'author' => $this->author->name,
-            //'parent_id' =>  $this->parent_id ? __('variables.Plan') : __('variables.Template'),
             'type_id' => $this->type->title,
             'actions' => $this->actions(),
             'published' => $this->published,
-            'need_verification' => $this->need_verification
+            'need_verification' => $this->need_verification,
+            'verification' => $this->approvedPlan ? __('variables.Verified') : __('variables.NotVerified'),
         ];
     }
 }
