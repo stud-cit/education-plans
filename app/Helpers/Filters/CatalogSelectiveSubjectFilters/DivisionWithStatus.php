@@ -31,8 +31,8 @@ class DivisionWithStatus extends QueryFilter implements FilterContract
 
                 break;
 
-            case $modelVerificationStatuses::NOT_VERIFIED:
-               $this->query->whereHas('verifications', function ($query) use ($division) {
+            case $modelVerificationStatuses::REJECTED:
+                $this->query->whereHas('verifications', function ($query) use ($division) {
                     $query->where('verification_status_id', (int) $division)
                         ->where('status', false);
                 });

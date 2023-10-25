@@ -16,14 +16,14 @@ class VerificationStatuses extends Model
     public const OP = 1;
     public const NOT_CHECKED = 1;
     public const VERIFIED = 2;
-    public const NOT_VERIFIED = 3;
+    public const REJECTED = 3;
 
     public function getDivisionStatuses()
     {
         return [
             ['id' => self::NOT_CHECKED, 'title' => __('variables.NotChecked')],
             ['id' => self::VERIFIED, 'title' => __('variables.Verified')],
-            ['id' => self::NOT_VERIFIED, 'title' => __('variables.NotVerified')],
+            ['id' => self::REJECTED, 'title' => __('variables.Rejected')],
         ];
     }
 
