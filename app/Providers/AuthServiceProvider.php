@@ -84,7 +84,8 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('create-speciality-subject', function (User $user, $catalog_id) {
-            $catalog = CatalogSpeciality::with('owners')->where('id', $catalog_id)->first();
+            $catalog = CatalogSpeciality::select('id', 'department_id')
+                ->with('owners')->where('id', $catalog_id)->first();
 
             if ($catalog->isVerified()) {
                 return false;
@@ -115,13 +116,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define(
             'toggle-need-verification-speciality-catalog',
             function (User $user, CatalogSpeciality $catalogSpeciality) {
-                if ($user->isDepartmentMine($catalogSpeciality->department_id)) {
-                    return true;
-                }
 
-                return
-                    $user->possibility([User::ROOT, User::ADMIN]) ||
-                    $user->isOwner($catalogSpeciality->user_id);
+                if ($user->isDepartmentMine($catalogSpeciality->department_id)) return true;
+
+                if ($catalogSpeciality->department_id === $user->id) return true;
+
+                return $user->possibility([User::ROOT, User::ADMIN]);
             }
         );
 
@@ -173,7 +173,6 @@ class AuthServiceProvider extends ServiceProvider
             }
 
             $ids = array_column($catalog->owners->toArray(), 'department_id');
-
             return
                 $user->possibility([User::ROOT, User::ADMIN]) ||
                 in_array($user->department_id, $ids) && $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) ||
