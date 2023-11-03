@@ -36,7 +36,7 @@ class UpdateCatalogSelectiveSubjectRequest extends FormRequest
             'title' => 'required|string|max:255', // ?
             'title_en' => 'nullable|string|max:255', // ?
             'language' => 'required', // TODO: how validate?
-            'lecturers' => 'required',
+            'lecturers' => 'nullable',
             'practice' => 'required',
             'list_fields_knowledge' => 'required|json', //json
             'faculty_id' => 'required|numeric',
