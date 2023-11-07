@@ -41,7 +41,7 @@ class CatalogSelectiveSubjectPolicy
      */
     public function create(User $user)
     {
-        return $user->possibility([User::ADMIN, User::ROOT, User::DEPARTMENT]);
+        return $user->possibility([User::ADMIN, User::ROOT, User::FACULTY_INSTITUTE, User::DEPARTMENT]);
     }
 
     /**

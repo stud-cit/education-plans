@@ -85,6 +85,11 @@ class CatalogSelectiveSubject extends Model
         return $this->catalog()->where('selective_discipline_id', 1);
     }
 
+    public function scopePublished($query)
+    {
+        $query->where('published', 1);
+    }
+
     public function scopeOfUserType($query, $type)
     {
         switch ($type) {
@@ -92,9 +97,11 @@ class CatalogSelectiveSubject extends Model
             case User::PRACTICE_DEPARTMENT:
             case User::EDUCATIONAL_DEPARTMENT_DEPUTY:
             case User::EDUCATIONAL_DEPARTMENT_CHIEF:
-            case User::FACULTY_INSTITUTE:
                 return $query->published();
-
+            case User::FACULTY_INSTITUTE:
+                return $query->published()->where('faculty_id', Auth::user()->faculty_id)->orWhere(function ($query) {
+                    $query->where('user_id', Auth::id())->where('published', false);
+                });
             case User::DEPARTMENT:
                 return $query->published()
                     ->orWhere(function ($query) {
