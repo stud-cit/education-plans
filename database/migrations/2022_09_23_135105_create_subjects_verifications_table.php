@@ -17,7 +17,7 @@ class CreateSubjectsVerificationsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('verification_status_id')->constrained();
-            $table->foreignId('subject_id')->constrained();
+            $table->foreignId('subject_id')->constrained('catalog_selective_subjects');
             $table->boolean('status');
             $table->text('comment')->nullable(true);
             $table->timestamps();
