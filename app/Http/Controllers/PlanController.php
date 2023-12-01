@@ -41,7 +41,9 @@ use App\Http\Requests\StoreGeneralPlanRequest;
 use App\Http\Resources\Plan\ShortPlanResource;
 use Illuminate\Validation\ValidationException;
 use App\Http\Resources\Plan\SignedPlanResource;
+use App\Http\Requests\Plan\SignedPlanByIdRequest;
 use App\Http\Requests\StorePlanVerificationRequest;
+use App\Http\Resources\Plan\SignedPlanIdSemesterResource;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 
 class PlanController extends Controller
@@ -796,5 +798,32 @@ class PlanController extends Controller
             ->where('approvedPlan', true);
 
         return SignedPlanResource::collection($plans);
+    }
+
+    public function getSignedPlansById(SignedPlanByIdRequest $request)
+    {
+        $validated = $request->validated();
+
+        $plan = Plan::select(
+            'id',
+            'title',
+            'year',
+            'education_program_id',
+            'faculty_id',
+            'department_id',
+            'qualification_id',
+            'field_knowledge_id',
+            'speciality_id',
+            'education_level_id',
+            'type_id',
+        )->with([
+            'verification',
+            'cycles.cycles',
+            'cycles.subjects.semestersCredits',
+        ])->where('id', $validated['id'])->first();
+
+        if (!$plan->approvedPlan) return response(['message' => 'Plan does not approved!'], 200);
+
+        return new SignedPlanIdSemesterResource($plan);
     }
 }
