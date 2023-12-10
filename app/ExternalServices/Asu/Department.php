@@ -8,13 +8,14 @@ class Department extends ASU
 {
     private const MEDICAL_INSTITUTE = 383;
     private const POSTGRADUATE_MEDICAL_FACULTY = 382;
+    private const REJECTED_DEPARTMENTS = [self::POSTGRADUATE_MEDICAL_FACULTY, 1746, 1741];
 
     public function getFaculties(): Collection
     {
         $filtered = $this->getDepartments()->filter(function ($value) {
             return $value['unit_type'] == self::ID_FACULTY || $value['unit_type'] == self::ID_INSTITUTE;
         })->reject(function ($value) {
-            return $value['id'] == self::POSTGRADUATE_MEDICAL_FACULTY;
+            return in_array($value['id'], self::REJECTED_DEPARTMENTS);
         });
 
         return $filtered->values();
