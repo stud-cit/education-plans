@@ -38,7 +38,7 @@ class SubjectsShowResource extends JsonResource
             "individual_tasks" => $this->getIndividualTasks($this->whenLoaded('hoursModules')),
             "total_volume_hour" => $this->credits * Constant::NUMBER_HOURS_IN_CREDIT,
             "note" => $this->note,
-            "subjects" => SubjectsEditResource::collection($this->subjects)
+            "subjects" => SubjectsShowResource::collection($this->subjects)
         ];
     }
 
