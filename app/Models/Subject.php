@@ -27,7 +27,8 @@ class Subject extends Model
         'verification',
         'faculty_id',
         'department_id',
-        'note'
+        'note',
+        'subject_id'
     ];
 
     protected $appends = ['title'];
@@ -44,6 +45,18 @@ class Subject extends Model
     public function cycle()
     {
         return $this->belongsTo(Cycle::class);
+    }
+
+    public function subjects() {
+        return $this->hasMany(Subject::class, 'subject_id')->with([
+            'subjects',
+            'semestersCredits',
+            'hoursModules.formControl',
+            'exams',
+            'test',
+            'individualTasks',
+            'hoursModules.individualTask'
+        ]);
     }
 
     public function hoursModules()
@@ -121,5 +134,14 @@ class Subject extends Model
         });
 
         return $title;
+    }
+
+    public function checkCountCreditSubjects()
+    {
+        $subjectsId = $this->id;
+        $count = Subject::with('subjects')->whereHas('subjects', function ($querySubjects) use ($subjectsId) {
+            $querySubjects->where('subject_id', $subjectsId);
+        })->sum('credits');
+        return $count > $this->credits;
     }
 }

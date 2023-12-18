@@ -19,6 +19,7 @@ class SubjectsEditResource extends JsonResource
         return [
             "id" => $this->id,
             "cycle_id" => $this->cycle_id,
+            "subject_id" => $this->subject_id,
             "selective_discipline_id" => $this->selective_discipline_id,
             "asu_id" => $this->asu_id,
             "credits" => $this->credits,
@@ -37,7 +38,8 @@ class SubjectsEditResource extends JsonResource
             'checkCountHours' => $this->checkCountHours(),
             'checkLastHourModule' => $this->checkLastHourModule(),
             'checkCountHoursSemester' => $this->checkCountHoursSemester(),
-            'checkHasCreditsSemester' => $this->checkHasCreditsSemester()
+            'checkHasCreditsSemester' => $this->checkHasCreditsSemester(),
+            "subjects" => SubjectsEditResource::collection($this->subjects)
         ];
     }
 

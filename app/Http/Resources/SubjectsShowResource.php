@@ -18,6 +18,7 @@ class SubjectsShowResource extends JsonResource
         return [
             "id" => $this->id,
             "cycle_id" => $this->cycle_id,
+            "subject_id" => $this->subject_id,
             "list_cycle_id" => $this->cycle->list_cycle_id,
             "selective_discipline_id" => $this->selective_discipline_id,
             "asu_id" => $this->asu_id,
@@ -36,7 +37,8 @@ class SubjectsShowResource extends JsonResource
 //            "individual_tasks" => count($this->individualTasks) ? $this->individualTasks->first()->semester : '',
             "individual_tasks" => $this->getIndividualTasks($this->whenLoaded('hoursModules')),
             "total_volume_hour" => $this->credits * Constant::NUMBER_HOURS_IN_CREDIT,
-            "note" => $this->note
+            "note" => $this->note,
+            "subjects" => SubjectsEditResource::collection($this->subjects)
         ];
     }
 

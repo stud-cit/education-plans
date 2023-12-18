@@ -265,7 +265,7 @@ class Plan extends Model
 
     public function cycles()
     {
-        return $this->hasMany(Cycle::class)->with('subjects');
+        return $this->hasMany(Cycle::class)->with('subjects.subjects');
     }
 
     public function getExamsTable($cycles)

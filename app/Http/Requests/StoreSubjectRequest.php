@@ -26,6 +26,7 @@ class StoreSubjectRequest extends FormRequest
         return [
             'plan_id' => 'required',
             'asu_id' => 'nullable',
+            'subject_id' => 'nullable',
             'cycle_id' => 'required|exists:App\Models\Cycle,id',
             'credits' => 'required|numeric|digits_between:1,3',
             'hours' => 'numeric',

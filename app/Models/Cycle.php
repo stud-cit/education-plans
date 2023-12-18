@@ -27,7 +27,7 @@ class Cycle extends Model
 
     public function subjects()
     {
-        return $this->hasMany(Subject::class, 'cycle_id')->with('selectiveDiscipline');
+        return $this->hasMany(Subject::class, 'cycle_id')->with('selectiveDiscipline')->whereNull('subject_id');
     }
 
     public function cycles()
