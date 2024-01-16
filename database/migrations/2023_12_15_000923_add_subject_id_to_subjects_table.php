@@ -14,7 +14,7 @@ class AddSubjectIdToSubjectsTable extends Migration
     public function up()
     {
         Schema::table('subjects', function (Blueprint $table) {
-            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
+            $table->foreignId('subject_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 
@@ -25,6 +25,10 @@ class AddSubjectIdToSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subjects');
+        if (Schema::hasColumn('subjects', 'subject_id')) {
+            Schema::table('subjects', function (Blueprint $table) {
+                $table->dropConstrainedForeignId('subject_id');
+            });
+        }
     }
 }
