@@ -55,6 +55,7 @@ class User extends Authenticatable
     public const FACULTY_INSTITUTE = 6;
     public const DEPARTMENT = 7;
     public const ROOT = 8;
+    public const GUEST = 9;
 
     public const ALL_ROLES = [
         self::ADMIN,
@@ -64,7 +65,8 @@ class User extends Authenticatable
         self::EDUCATIONAL_DEPARTMENT_CHIEF,
         self::FACULTY_INSTITUTE,
         self::DEPARTMENT,
-        self::ROOT
+        self::ROOT,
+        self::GUEST,
     ];
 
     /**
@@ -103,6 +105,13 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    public static function except($roleId, $role): bool
+    {
+        $roles = array_filter(self::ALL_ROLES, fn ($r) => $r != $role);
+
+        return in_array($roleId, $roles);
     }
 
     public function getFacultyNameAttribute()
