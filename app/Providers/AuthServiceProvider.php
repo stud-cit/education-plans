@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage-study-terms', fn (User $user) => $user->possibility(User::PRIVILEGED_ROLES));
 
         Gate::define('copy-plan', function (User $user, Plan $plan) {
-            return $user->possibility() && $plan->isNotShort();
+            return User::except($user->role_id, User::GUEST) && $plan->isNotShort();
         });
 
         Gate::define('restore-catalog-group', function (User $user) {
