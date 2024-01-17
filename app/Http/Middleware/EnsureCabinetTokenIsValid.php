@@ -44,7 +44,7 @@ class EnsureCabinetTokenIsValid
                 'email', // Чи треба нам емейл
                 'role_id'
             )->where("asu_id", $user['guid'])->first();
-
+            clock($model);
             if ($model) {
                 $new = [
                     'name' => "{$user['surname']} {$user['name']} {$user['patronymic']}",
@@ -60,8 +60,18 @@ class EnsureCabinetTokenIsValid
 
                 return $next($request);
             } else {
+                $user = $response['result'];
 
-                return response(['message' => __('auth.not_allowed_user')], 403);
+                $newUser = User::create([
+                    'name' => "{$user['surname']} {$user['name']} {$user['patronymic']}",
+                    'asu_id' => $user['guid'],
+                    'email' => $user['email']
+                ]);
+
+                Auth::login($newUser);
+
+                return $next($request);
+                //return response(['message' => __('auth.not_allowed_user')], 403);
             }
         } else if (in_array($response['status'], Constant::ASU_ERRORS)) {
 

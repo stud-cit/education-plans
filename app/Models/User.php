@@ -47,6 +47,10 @@ class User extends Authenticatable
         'department_id' => 'int'
     ];
 
+    protected $attributes = [
+        'role_id' => self::GUEST,
+    ];
+
     public const ADMIN = 1;
     public const TRAINING_DEPARTMENT = 2;
     public const PRACTICE_DEPARTMENT = 3;
