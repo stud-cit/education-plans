@@ -13,8 +13,15 @@ class PlanVerification extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
+    const FULL_VERIFICATION = 6;
+
     public function role()
     {
         return $this->hasOne(VerificationStatuses::class, 'id', 'verification_statuses_id');
+    }
+
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
     }
 }

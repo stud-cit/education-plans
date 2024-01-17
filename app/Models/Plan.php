@@ -17,6 +17,7 @@ use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
+use Illuminate\Database\Eloquent\Builder;
 use App\ExternalServices\Asu\Qualification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -151,12 +152,12 @@ class Plan extends Model
 
     protected function isApprovedPlan(): bool
     {
-        return $this->verification->sum('status') >= 6;
+        return $this->verification->sum('status') >= PlanVerification::FULL_VERIFICATION;
     }
 
     public function getApprovedPlanAttribute(): bool
     {
-        return $this->verification->sum('status') >= 6;
+        return $this->verification->sum('status') >= PlanVerification::FULL_VERIFICATION;
     }
 
     public function getUserVerificationsAttribute()
@@ -368,7 +369,10 @@ class Plan extends Model
                         $query->where('faculty_id', '=', Auth::user()->faculty_id)->whereNull('department_id')
                             ->orWhere('department_id', '=', Auth::user()->department_id);
                     });
-
+            case User::GUEST:
+                return $query->where('type_id', '!=', self::TEMPLATE)->whereHas('verification', function (Builder $query) {
+                    $query->where('status', true);
+                }, '>=', PlanVerification::FULL_VERIFICATION);
             default:
                 return $query;
         }
