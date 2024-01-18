@@ -737,7 +737,11 @@ class PlanController extends Controller
             'divisions' => ProfessionsResource::collection($divisions),
             'verificationsStatus' => $verificationsStatus,
             'faculties' => FacultiesResource::collection($faculties),
-            'types' => PlanType::select('id', 'title')->get()
+            'types' => PlanType::select('id', 'title')
+                ->when(
+                    $user->possibility(User::GUEST),
+                    fn ($q) => $q->where('id', '!=', Plan::TEMPLATE)
+                )->get(),
         ]);
     }
 
