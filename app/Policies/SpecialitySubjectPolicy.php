@@ -55,6 +55,9 @@ class SpecialitySubjectPolicy
      */
     public function update(User $user, SpecialitySubject $specialitySubject)
     {
+        if ($user->isDepartmentMine($specialitySubject->department_id)) {
+            return true;
+        }
 
         $catalog = CatalogSpeciality::with('owners')
             ->where('id', $specialitySubject->catalog_subject_id)
@@ -63,15 +66,15 @@ class SpecialitySubjectPolicy
         if ($catalog) {
             $ids = array_column($catalog->owners->toArray(), 'department_id');
 
-            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) &&
-                $user->isOwner($specialitySubject->user_id) ||
-                in_array($user->department_id, $ids) && $user->possibility(User::DEPARTMENT) ||
+            if (count($ids) == 0) {
+                return $user->possibility(User::PRIVILEGED_ROLES);
+            }
+
+            return in_array($user->department_id, $ids) && $user->possibility([User::DEPARTMENT]) ||
                 $user->possibility(User::PRIVILEGED_ROLES);
         }
 
-        return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) &&
-            $user->isOwner($specialitySubject->user_id) ||
-            $user->possibility(User::PRIVILEGED_ROLES);
+        return false;
     }
 
     /**
@@ -83,19 +86,30 @@ class SpecialitySubjectPolicy
      */
     public function delete(User $user, SpecialitySubject $specialitySubject)
     {
+        if ($user->isDepartmentMine($specialitySubject->department_id)) {
+            return true;
+        }
+
         $catalog = CatalogSpeciality::with('owners')
             ->where('id', $specialitySubject->catalog_subject_id)
             ->first();
+
         if ($catalog) {
             $ids = array_column($catalog->owners->toArray(), 'department_id');
 
-            return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) ||
-                in_array($user->department_id, $ids) && $user->possibility([User::DEPARTMENT]) ||
+            if (count($ids) == 0) {
+                return $user->possibility(User::PRIVILEGED_ROLES);
+            }
+
+            return in_array($user->department_id, $ids) && $user->possibility([User::DEPARTMENT]) ||
                 $user->possibility(User::PRIVILEGED_ROLES);
         }
 
-        return $user->possibility([User::DEPARTMENT, User::FACULTY_INSTITUTE]) ||
-            $user->possibility(User::PRIVILEGED_ROLES);
+        return false;
+    }
+
+    protected function updateDelete($user, $specialitySubject)
+    {
     }
 
     /**
