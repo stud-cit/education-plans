@@ -35,6 +35,14 @@ class AuthServiceProvider extends ServiceProvider
 
         Gate::define('manage-study-terms', fn (User $user) => $user->possibility(User::PRIVILEGED_ROLES));
 
+        Gate::define('generate-short-plan', function (User $user, Plan $plan) {
+            if ($user->role_id === User::GUEST) return false;
+
+            if ($user->isFacultyMine($plan->faculty_id)) return true;
+
+            return $user->possibility(User::PRIVILEGED_ROLES);
+        });
+
         Gate::define('copy-plan', function (User $user, Plan $plan) {
             return User::except($user->role_id, User::GUEST) && $plan->isNotShort();
         });

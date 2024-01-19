@@ -171,7 +171,9 @@ class PlanController extends Controller
             'signatures'
         ]);
 
-        return new PlanShowResource($model);
+        return (new PlanShowResource($model))->additional(['actions' => [
+            'can_generate_short_plan' => Gate::allows('generate-short-plan', $plan)
+        ]]);
     }
 
     /**
@@ -327,6 +329,10 @@ class PlanController extends Controller
      */
     public function shortPlan(ShortPlanRequest $request, Plan $plan)
     {
+        if (!Gate::allows('generate-short-plan', $plan)) {
+            abort(403);
+        }
+
         $validated = $request->validated();
 
         $this->shortedByYear = $validated['shortened_by_year'];
