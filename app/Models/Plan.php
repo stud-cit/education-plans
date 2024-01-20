@@ -328,7 +328,7 @@ class Plan extends Model
 
     public function verification()
     {
-        return $this->hasMany(PlanVerification::class);
+        return $this->hasMany(PlanVerification::class)->where('verification_statuses_id', '!=', 1);
     }
 
     public function signatures()
