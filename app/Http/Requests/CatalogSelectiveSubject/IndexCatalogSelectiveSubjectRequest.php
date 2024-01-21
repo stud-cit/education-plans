@@ -24,7 +24,7 @@ class IndexCatalogSelectiveSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'year' => 'integer',
+            'year' => 'required|integer',
             'group' => 'integer',
             'faculty' => 'integer',
             'department' => 'integer',
