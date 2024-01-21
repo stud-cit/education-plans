@@ -44,7 +44,7 @@ class EnsureCabinetTokenIsValid
                 'email', // Чи треба нам емейл
                 'role_id'
             )->where("asu_id", $user['guid'])->first();
-            clock($model);
+
             if ($model) {
                 $new = [
                     'name' => "{$user['surname']} {$user['name']} {$user['patronymic']}",
