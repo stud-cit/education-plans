@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
 use App\ExternalServices\Asu\Qualification;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -26,6 +27,7 @@ class Plan extends Model
     use HasFactory;
     use HasAsuDivisionsNameTrait;
     use \Bkwld\Cloner\Cloneable;
+    use SoftDeletes;
 
     protected $cloneable_relations = ['signatures'];
 
