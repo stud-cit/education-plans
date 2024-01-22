@@ -210,7 +210,10 @@ class PlanController extends Controller
     public function update(UpdatePlanRequest $request, Plan $plan)
     {
         $validated = $request->validated();
-        $validated['title'] = $plan->generateTitle();
+
+        if ($plan->isNotTemplate()) {
+            $validated['title'] = $plan->generateTitle();
+        }
 
         $plan->update($validated);
 
