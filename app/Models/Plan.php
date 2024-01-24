@@ -153,12 +153,12 @@ class Plan extends Model
 
     protected function isApprovedPlan(): bool
     {
-        return $this->verification->sum('status') >= 6;
+        return $this->verification->sum('status') >= 5;
     }
 
     public function getApprovedPlanAttribute(): bool
     {
-        return $this->verification->sum('status') >= 6;
+        return $this->verification->sum('status') >= 5;
     }
 
     public function getUserVerificationsAttribute()
