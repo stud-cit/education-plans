@@ -355,9 +355,7 @@ class Plan extends Model
             case User::PRACTICE_DEPARTMENT:
             case User::EDUCATIONAL_DEPARTMENT_DEPUTY:
             case User::EDUCATIONAL_DEPARTMENT_CHIEF:
-                return $query->whereHas('verification', function ($query) {
-                    $query->where('verification_statuses_id', VerificationStatuses::OP)->where('status', true);
-                });
+                return $query->where('need_verification', true);
 
             case User::FACULTY_INSTITUTE:
                 return $query->whereNull(['parent_id', 'faculty_id'])
