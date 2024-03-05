@@ -161,6 +161,7 @@ return [
         'education_program_id' => 'Освітня програма',
         'value' => 'Значення',
         'group_id' => 'група',
+        'manual_position' => 'Підрозділ'
     ],
 
 ];
