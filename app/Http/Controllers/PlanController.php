@@ -819,6 +819,7 @@ class PlanController extends Controller
             'qualification_id',
             'field_knowledge_id',
             'speciality_id',
+            'specialization_id',
             'education_level_id',
             'type_id',
         )->with([
