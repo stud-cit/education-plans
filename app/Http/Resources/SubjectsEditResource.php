@@ -64,6 +64,9 @@ class SubjectsEditResource extends JsonResource
         ); // суть така що години повинні бути в межах цих відсотків обрахованих формулою
     }
 
+    /**
+     * This function to be synchronized with frontend
+     */
     function checkLastHourModule()
     {
         $res = null;
@@ -72,14 +75,17 @@ class SubjectsEditResource extends JsonResource
         $semestersCredits = array_filter($semesters_credits, function ($item) {
             return isset($item['credit']) && $item['credit'];
         });
+
         $lastSemestersCredits = end($semestersCredits);
         if ($lastSemestersCredits) {
             $hoursModules = array_filter($hours_modules, function ($item) use ($lastSemestersCredits) {
                 return $item['semester'] == $lastSemestersCredits['semester'];
             });
-            $lastItem = end($hoursModules);
 
-            if ($lastItem && $lastItem['form_control_id'] == 10) {
+            $filtered = array_filter($hoursModules, fn ($item) => $item['hour'] > 0);
+            $lastItem = end($filtered);
+
+            if ($lastItem && $lastItem['form_control_id'] == Constant::FORM_CONTROL['NO_CERTIFICATIONS']) {
                 $res = array_search($lastItem, $hours_modules);
             }
         }
@@ -90,7 +96,7 @@ class SubjectsEditResource extends JsonResource
     {
         $res = [];
         $semesters_credits = $this->whenLoaded('semestersCredits'); // беремо розподіл кредитів на вивчення за семестрами (нижня таблиця в дисципліні)
-        $hours_weeks_semesters = json_decode($this->cycle->plan->hours_weeks_semesters); // тянемо кількість тижнів у модульному атестаційному циклі (загальна інформація нижня таблиця) 
+        $hours_weeks_semesters = json_decode($this->cycle->plan->hours_weeks_semesters); // тянемо кількість тижнів у модульному атестаційному циклі (загальна інформація нижня таблиця)
         $hours_modules = $this->whenLoaded('hoursModules'); // години за модулями
         for ($index = 0; $index < count($semesters_credits); $index++) {
             $semesterItem = $semesters_credits[$index];
