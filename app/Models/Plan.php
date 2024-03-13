@@ -17,6 +17,7 @@ use App\Helpers\Filters\FilterBuilder;
 use Illuminate\Database\Eloquent\Model;
 use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
+use Illuminate\Database\Eloquent\Builder;
 use App\ExternalServices\Asu\Qualification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -358,20 +359,34 @@ class Plan extends Model
                 return $query->where('need_verification', true);
 
             case User::FACULTY_INSTITUTE:
-                return $query->whereNull(['parent_id', 'faculty_id'])
+                return $query->whereNull(['faculty_id'])
                     ->orWhere('faculty_id', '=', Auth::user()->faculty_id)
                     ->orWhereNull('faculty_id');
 
             case User::DEPARTMENT:
                 return $query->whereNull(['faculty_id', 'department_id'])
+                    ->whereType(self::TEMPLATE)->verified()
                     ->orWhere(function ($query) {
-                        $query->where('faculty_id', '=', Auth::user()->faculty_id)->whereNull('department_id')
+                        $query->myFaculty()->verified()
+                            ->whereNull('department_id')
                             ->orWhere('department_id', '=', Auth::user()->department_id);
                     });
 
             default:
                 return $query;
         }
+    }
+
+    public function scopeVerified($query)
+    {
+        $query->whereHas('verification', function (Builder $query) {
+            $query->where('status', true);
+        }, '>=', 5); // PlanVerification::FULL_VERIFICATION
+    }
+
+    public function scopeMyFaculty($query)
+    {
+        $query->where('faculty_id', '=', Auth::user()->faculty_id);
     }
 
     public function scopePublished($query)
@@ -382,6 +397,11 @@ class Plan extends Model
     public function scopePlan($query)
     {
         $query->where('type_id', self::PLAN);
+    }
+
+    public function scopeWhereType($query, $type)
+    {
+        $query->where('type_id', $type);
     }
 
     public function isNotTemplate()
