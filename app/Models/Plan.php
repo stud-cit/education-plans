@@ -363,7 +363,7 @@ class Plan extends Model
                     ->orWhereNull('faculty_id');
 
             case User::DEPARTMENT:
-                return $query->whereNull(['parent_id', 'faculty_id', 'department_id'])
+                return $query->whereNull(['faculty_id', 'department_id'])
                     ->orWhere(function ($query) {
                         $query->where('faculty_id', '=', Auth::user()->faculty_id)->whereNull('department_id')
                             ->orWhere('department_id', '=', Auth::user()->department_id);
