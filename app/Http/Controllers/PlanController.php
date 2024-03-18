@@ -211,16 +211,33 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
+        $role_id = Auth::user()->role_id;
+
+        $plan->load(['verification']);
+
         if ($plan->isNotTemplate()) {
             $validated['title'] = $plan->generateTitle();
         }
 
-        $plan->update($validated);
+        $hasAnyVerification = $plan->verification->isNotEmpty();
+        $emptyVerification = $plan->verification->isEmpty();
 
-        $user = Auth::user();
-        if ($user->role_id == User::FACULTY_INSTITUTE || $user->role_id == User::DEPARTMENT) {
-            PlanVerification::where("plan_id", $plan->id)->delete();
+        if ($role_id == User::FACULTY_INSTITUTE || $role_id == User::DEPARTMENT) {
+
+            if ($hasAnyVerification) {
+                PlanVerification::where("plan_id", $plan->id)->delete();
+                $plan->update(['need_verification' => false, 'not_conventional' => false, 'comment' => null]);
+                unset($validated['need_verification'], $validated['not_conventional'], $validated['comment']);
+            }
+
+            // fix for bad updated plan
+            if ($emptyVerification && $plan->not_conventional && $plan->isClean('not_conventional')) {
+                $plan->update(['not_conventional' => false, 'comment' => null]);
+                unset($validated['not_conventional'], $validated['comment']);
+            }
         }
+
+        $plan->update($validated);
 
         return $this->success(__('messages.Updated'), 201);
     }
