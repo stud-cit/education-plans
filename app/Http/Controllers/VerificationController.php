@@ -14,7 +14,7 @@ class VerificationController extends Controller
      */
     public function index()
     {
-        $data = VerificationStatuses::where('type', 'plan')->orderBy('order')->get();
+        $data = VerificationStatuses::where('type', 'plan')->where('id', '!=', 1)->orderBy('order')->get();
 
         return response()->json($data, 200);
     }

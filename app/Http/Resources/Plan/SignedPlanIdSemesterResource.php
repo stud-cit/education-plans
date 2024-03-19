@@ -28,6 +28,7 @@ class SignedPlanIdSemesterResource extends JsonResource
             'qualification' => $this->qualificationIdName,
             'field_knowledge' => $this->fieldKnowledgeIdName,
             'speciality' => $this->specialityIdName,
+            'specialization' => $this->specializationIdName,
             'education_level' => $this->educationLevel->title,
             'cycles' => CycleApiSemesterResource::collection($this->cycles->whereNull('cycle_id')),
         ];

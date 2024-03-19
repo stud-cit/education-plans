@@ -26,7 +26,7 @@ class UpdateSignatureRequest extends FormRequest
         return [
             'plan_id' => 'required|exists:App\Models\Plan,id',
             'position_id' => 'required|exists:App\Models\Position,id',
-            'manual_position' => 'required|string|max:255',
+            'manual_position' => 'nullable|string|max:255',
             'asu_id' => 'required|max:60',
         ];
     }

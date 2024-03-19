@@ -19,6 +19,7 @@ use App\ExternalServices\Asu\Profession;
 use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Builder;
 use App\ExternalServices\Asu\Qualification;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -27,6 +28,7 @@ class Plan extends Model
     use HasFactory;
     use HasAsuDivisionsNameTrait;
     use \Bkwld\Cloner\Cloneable;
+    use SoftDeletes;
 
     protected $cloneable_relations = ['signatures'];
 
@@ -329,7 +331,7 @@ class Plan extends Model
 
     public function verification()
     {
-        return $this->hasMany(PlanVerification::class);
+        return $this->hasMany(PlanVerification::class)->where('verification_statuses_id', '!=', 1);
     }
 
     public function signatures()
@@ -354,19 +356,19 @@ class Plan extends Model
             case User::PRACTICE_DEPARTMENT:
             case User::EDUCATIONAL_DEPARTMENT_DEPUTY:
             case User::EDUCATIONAL_DEPARTMENT_CHIEF:
-                return $query->whereHas('verification', function ($query) {
-                    $query->where('verification_statuses_id', VerificationStatuses::OP)->where('status', true);
-                });
+                return $query->where('need_verification', true);
 
             case User::FACULTY_INSTITUTE:
-                return $query->whereNull(['parent_id', 'faculty_id'])
+                return $query->whereNull(['faculty_id'])
                     ->orWhere('faculty_id', '=', Auth::user()->faculty_id)
                     ->orWhereNull('faculty_id');
 
             case User::DEPARTMENT:
-                return $query->whereNull(['parent_id', 'faculty_id', 'department_id'])
+                return $query->whereNull(['faculty_id', 'department_id'])
+                    ->whereType(self::TEMPLATE)->verified()
                     ->orWhere(function ($query) {
-                        $query->where('faculty_id', '=', Auth::user()->faculty_id)->whereNull('department_id')
+                        $query->myFaculty()->verified()
+                            ->whereNull('department_id')
                             ->orWhere('department_id', '=', Auth::user()->department_id);
                     });
             case User::GUEST:
@@ -378,6 +380,18 @@ class Plan extends Model
         }
     }
 
+    public function scopeVerified($query)
+    {
+        $query->whereHas('verification', function (Builder $query) {
+            $query->where('status', true);
+        }, '>=', 5); // PlanVerification::FULL_VERIFICATION
+    }
+
+    public function scopeMyFaculty($query)
+    {
+        $query->where('faculty_id', '=', Auth::user()->faculty_id);
+    }
+
     public function scopePublished($query)
     {
         $query->where('published', 1);
@@ -386,6 +400,11 @@ class Plan extends Model
     public function scopePlan($query)
     {
         $query->where('type_id', self::PLAN);
+    }
+
+    public function scopeWhereType($query, $type)
+    {
+        $query->where('type_id', $type);
     }
 
     public function isNotTemplate()

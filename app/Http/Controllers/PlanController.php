@@ -212,14 +212,34 @@ class PlanController extends Controller
     public function update(UpdatePlanRequest $request, Plan $plan)
     {
         $validated = $request->validated();
-        $validated['title'] = $plan->generateTitle();
+
+        $role_id = Auth::user()->role_id;
+
+        $plan->load(['verification']);
+
+        if ($plan->isNotTemplate()) {
+            $validated['title'] = $plan->generateTitle();
+        }
+
+        $hasAnyVerification = $plan->verification->isNotEmpty();
+        $emptyVerification = $plan->verification->isEmpty();
+
+        if ($role_id == User::FACULTY_INSTITUTE || $role_id == User::DEPARTMENT) {
+
+            if ($hasAnyVerification) {
+                PlanVerification::where("plan_id", $plan->id)->delete();
+                $plan->update(['need_verification' => false, 'not_conventional' => false, 'comment' => null]);
+                unset($validated['need_verification'], $validated['not_conventional'], $validated['comment']);
+            }
+
+            // fix for bad updated plan
+            if ($emptyVerification && $plan->not_conventional && $plan->isClean('not_conventional')) {
+                $plan->update(['not_conventional' => false, 'comment' => null]);
+                unset($validated['not_conventional'], $validated['comment']);
+            }
+        }
 
         $plan->update($validated);
-
-        $user = Auth::user();
-        if ($user->role_id == User::FACULTY_INSTITUTE || $user->role_id == User::DEPARTMENT) {
-            PlanVerification::where("plan_id", $plan->id)->delete();
-        }
 
         return $this->success(__('messages.Updated'), 201);
     }
@@ -826,6 +846,7 @@ class PlanController extends Controller
             'qualification_id',
             'field_knowledge_id',
             'speciality_id',
+            'specialization_id',
             'education_level_id',
             'type_id',
         )->with([
