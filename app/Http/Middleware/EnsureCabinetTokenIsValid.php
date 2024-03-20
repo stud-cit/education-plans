@@ -8,7 +8,7 @@ use App\Http\Constant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use App\ExternalServices\Asu\Department;
+use App\Http\Controllers\UserActivityController;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class EnsureCabinetTokenIsValid
@@ -62,13 +62,16 @@ class EnsureCabinetTokenIsValid
             } else {
                 $user = $response['result'];
 
-                $newUser = User::create([
-                    'name' => "{$user['surname']} {$user['name']} {$user['patronymic']}",
-                    'asu_id' => $user['guid'],
-                    'email' => $user['email']
-                ]);
+                $newUser = new User;
+                $newUser->name = "{$user['surname']} {$user['name']} {$user['patronymic']}";
+                $newUser->asu_id = $user['guid'];
+                $newUser->email = $user['email'];
+
+                $newUser->saveQuietly();
 
                 Auth::login($newUser);
+
+                UserActivityController::addToLogV2('Створено нового користувача', 'Користувач', $newUser);
 
                 return $next($request);
                 //return response(['message' => __('auth.not_allowed_user')], 403);
