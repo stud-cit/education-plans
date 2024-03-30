@@ -47,7 +47,8 @@ class Subject extends Model
         return $this->belongsTo(Cycle::class);
     }
 
-    public function subjects() {
+    public function subjects()
+    {
         return $this->hasMany(Subject::class, 'subject_id')->with([
             'subjects',
             'semestersCredits',
@@ -143,5 +144,15 @@ class Subject extends Model
             $querySubjects->where('subject_id', $subjectsId);
         })->sum('credits');
         return $count > $this->credits;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::deleting(function ($subject) { // before delete() method call this
+            $subject->subjects()->each(function ($related) {
+                $related->delete(); // direct deletion
+            });
+        });
     }
 }
