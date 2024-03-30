@@ -600,7 +600,7 @@ class Plan extends Model
         if (empty($result)) {
             return null;
         } else {
-            return "Перевищена кількість екзаменів у " . implode(', ', $result) . " семестрі.";
+            return "Перевищена кількість екзаменів у " . implode(', ', $result) . ($this->form_organization_id == 3 ? " семестрі." : " модулі.");
         }
     }
 
