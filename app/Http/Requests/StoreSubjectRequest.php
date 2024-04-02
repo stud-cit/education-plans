@@ -28,7 +28,7 @@ class StoreSubjectRequest extends FormRequest
             'asu_id' => 'nullable',
             'subject_id' => 'nullable',
             'cycle_id' => 'required|exists:App\Models\Cycle,id',
-            'credits' => 'required|numeric|digits_between:1,3',
+            'credits' => 'required|numeric',
             'hours' => 'numeric',
             'practices' => 'numeric',
             'laboratories' => 'numeric',
