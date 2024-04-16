@@ -10,7 +10,7 @@ class ListCycle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'general', 'list_cycle_id'];
+    protected $fillable = ['title', 'general'];
 
     protected $casts = [
         'general' => 'boolean'
