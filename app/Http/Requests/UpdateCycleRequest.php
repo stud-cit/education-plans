@@ -25,7 +25,8 @@ class UpdateCycleRequest extends FormRequest
     {
         return [
             'credit' => 'numeric|digits_between:1,3',
-            'has_discipline' => 'boolean'
+            'has_discipline' => 'boolean',
+            'list_cycle_id' => 'exists:App\Models\ListCycle,id'
         ];
     }
 }
