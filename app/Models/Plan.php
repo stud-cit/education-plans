@@ -83,11 +83,6 @@ class Plan extends Model
     const PLAN = 2;
     const SHORT = 3;
 
-    const SHORTED_BY_YEAR = [
-        ['year' => 1, 'show' => false, 'label' => 'Згенерувати навчальний план, скорочений на 1 рік'],
-        ['year' => 2, 'show' => false, 'label' => 'Згенерувати навчальний план, скорочений на 2 роки'],
-    ];
-
     public function getStatusAttribute()
     {
         $result = '';
@@ -126,27 +121,23 @@ class Plan extends Model
 
     public function getShortedByYearAttribute()
     {
-        if (!$this->isApprovedPlan()) return [];
-        if ($this->isNotPlan()) return [];
-        if ($this->form_study_id !== 1) return []; // денна форма навчання
+        $terms = [];
+        $shortenedPlan = $this->shortedPlan;
 
-        $terms = self::SHORTED_BY_YEAR;
-        $termStudy = $this->studyTerm;
-        $year = $termStudy['year'];
-        $month = $termStudy['month'];
+        foreach ($shortenedPlan->toArray() as $item) {
+            $btnTitle = trans_choice(
+                'variables.shortened_plan',
+                $item['shortened_by_year'],
+                ['value' => $item['shortened_by_year']]
+            );
+            $label = isset($item['year']) ? " ({$item['year']})" : "";
 
-        $shortenedPlan = $this->shortedPlan->keyBy('shortened_by_year');
-
-        foreach ($terms as &$value) {
-            $value['show'] = $year >= 3 && $month >= 10;
-            $y = $value['year'];
-            if (isset($shortenedPlan[$y])) {
-                $btnName = trans_choice('variables.shortened_plan', $y, ['value' => $y]);
-
-                $value['id'] =  $shortenedPlan[$y]['plan_id'];
-                $value['title'] = "$btnName | $this->title";
-                $value['label'] = $btnName;
-            }
+            array_push($terms, [
+                'id' => $item['plan_id'],
+                'title' => "$btnTitle | $this->title",
+                'label' => "$btnTitle$label",
+                'year' => $item['shortened_by_year'],
+            ]);
         }
 
         return $terms;
@@ -384,7 +375,7 @@ class Plan extends Model
     {
         $query->whereHas('verification', function (Builder $query) {
             $query->where('status', true);
-        }, '>=', 5); // PlanVerification::FULL_VERIFICATION
+        }, '>=', PlanVerification::FULL_VERIFICATION);
     }
 
     public function scopeMyFaculty($query)
@@ -435,6 +426,11 @@ class Plan extends Model
         ];
     }
 
+    public function canGenerateShortPlan(): bool
+    {
+        return Gate::allows('generate-short-plan', $this);
+    }
+
     public function getCountExams()
     {
         $result = [];
@@ -458,18 +454,6 @@ class Plan extends Model
         }
         return $result;
     }
-    // !old
-    // function getCountCoursework()
-    // {
-    //     $result = [];
-    //     for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
-    //         if ($this->form_organization_id == 1) {
-    //             array_push($result, '');
-    //         }
-    //         array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
-    //     }
-    //     return $result;
-    // }
 
     function getSubjectNotes()
     {

@@ -3,10 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Models\Plan;
-use App\Models\Setting;
-use App\Models\Subject;
-use App\Models\HoursModules;
-use App\Models\SemestersCredits;
 use App\Http\Resources\VerificationPlanResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -72,7 +68,10 @@ class PlanEditResource extends JsonResource
             'not_conventional' => $this->not_conventional,
             'shorted_by_year' => $this->shortedByYear,
             'basePlan' => $this->basePlanData,
-            'approvedPlan' => $this->approvedPlan
+            'approvedPlan' => $this->approvedPlan,
+            'actions' => [
+                'can_generate_short_plan' => $this->canGenerateShortPlan(),
+            ],
         ];
     }
 }

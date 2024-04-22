@@ -38,9 +38,16 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('generate-short-plan', function (User $user, Plan $plan) {
             if ($user->role_id === User::GUEST) return false;
 
-            if ($user->isFacultyMine($plan->faculty_id)) return true;
+            if (!$plan->approvedPlan) return false;
+            if ($plan->isNotPlan()) return false;
+            if ($plan->form_study_id !== 1) return false; // денна форма навчання
 
-            return $user->possibility(User::PRIVILEGED_ROLES);
+            $termStudy = $plan->studyTerm;
+            $term = $termStudy->year >= 3 && $termStudy->month >= 10;
+
+            if ($term && $user->isFacultyMine($plan->faculty_id)) return true;
+
+            return $term && $user->possibility(User::PRIVILEGED_ROLES);
         });
 
         Gate::define('copy-plan', function (User $user, Plan $plan) {

@@ -165,7 +165,6 @@ class PlanController extends Controller
             'cycles.subjects.semestersCredits',
             'cycles.subjects.exams',
             'cycles.subjects.test',
-            //            'cycles.subjects.individualTasks',
             'cycles.subjects.hoursModules.formControl',
             'cycles.subjects.hoursModules.individualTask',
             'signatures'
@@ -252,6 +251,11 @@ class PlanController extends Controller
      */
     public function destroy(Plan $plan)
     {
+        if ($plan->type_id === Plan::SHORT) {
+            $relation = ShortenedPlan::where('plan_id', $plan->id)->first();
+            $relation->delete();
+        }
+
         $plan->delete();
         return response()->json(['message' => __('messages.Deleted')], 204);
     }
@@ -356,6 +360,7 @@ class PlanController extends Controller
         $validated = $request->validated();
 
         $this->shortedByYear = $validated['shortened_by_year'];
+        $year = $validated['year'];
 
         $model = $plan->load([
             'cycles.cycles',
@@ -380,7 +385,7 @@ class PlanController extends Controller
 
         $clonePlan->type_id = Plan::SHORT;
         $clonePlan->study_term_id = $studyTermId;
-        $clonePlan->year += $this->shortedByYear;
+        $clonePlan->year = $year;
         $clonePlan->title = $clonePlan->generateTitle();
         $clonePlan->credits -= $credits * $this->shortedByYear;
 
@@ -439,7 +444,8 @@ class PlanController extends Controller
         ShortenedPlan::create([
             'plan_id' => $clonePlan->id,
             'parent_id' => $plan->id,
-            'shortened_by_year' => $this->shortedByYear
+            'shortened_by_year' => $this->shortedByYear,
+            'year' => $year,
         ]);
 
         return new ShortPlanResource([
@@ -561,10 +567,6 @@ class PlanController extends Controller
                 ]);
             }
         }
-        // TODO: how delete empty cycle
-        // if ($cloneCycle->subjects->isEmpty()) {
-        //     // $cloneCycle->delete();
-        // }
 
         foreach ($cycle['cycles'] as $cycle) {
             $this->createCycleCutSubject($cycle, $plan_id, $cloneCycle->id);

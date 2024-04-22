@@ -25,24 +25,8 @@ class ShortPlanRequest extends FormRequest
     public function rules()
     {
         return [
-            'shortened_by_year' => [
-                'required',
-                'integer',
-                'min:1',
-                'max:2',
-                Rule::unique('shortened_plans')->where(function ($query) {
-                    return $query->where('parent_id', $this->plan->id)
-                        ->where('shortened_by_year', $this->shortened_by_year);
-                })
-
-            ],
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'shortened_by_year.unique' => 'Такий скорочений план вже існує.',
+            'shortened_by_year' => 'required|integer|min:1|max:2',
+            'year' => 'required|numeric|digits:4'
         ];
     }
 }
