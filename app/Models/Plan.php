@@ -226,7 +226,7 @@ class Plan extends Model
         return $professions->getTitle($this->education_program_id, 'title', true, ['label' => 'after']);
     }
 
-    public function getEducationProgramIdNameWithTypeAttribute(): array
+    public function getEducationProgramIdNameWithTypeAttribute()
     {
         if (!$this->education_program_id) return null;
 
