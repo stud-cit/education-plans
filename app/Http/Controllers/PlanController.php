@@ -419,25 +419,22 @@ class PlanController extends Controller
 
         $isHasErrors = $clonePlan->isHasErrors();
 
-        if (!$plan->not_conventional) { // normal plan
-            foreach ($plan->verification as $item) {
+        foreach ($plan->verification as $item) {
 
-                if ($item['verification_statuses_id'] === 12) {
-                    continue;
-                }
-
-                PlanVerification::create([
-                    'plan_id' => $clonePlan->id,
-                    'user_id' => $item['user_id'],
-                    'verification_statuses_id' => $item['verification_statuses_id'],
-                    'status' => $item['status'],
-                    'comment' => $item['comment']
-                ]);
+            if ($item['verification_statuses_id'] === 12) {
+                continue;
             }
-            $clonePlan->need_verification = true;
-        } else {
-            $clonePlan->need_verification = false;
+
+            PlanVerification::create([
+                'plan_id' => $clonePlan->id,
+                'user_id' => $item['user_id'],
+                'verification_statuses_id' => $item['verification_statuses_id'],
+                'status' => $item['status'],
+                'comment' => $item['comment']
+            ]);
         }
+
+        $clonePlan->need_verification = true;
 
         $clonePlan->save();
 
