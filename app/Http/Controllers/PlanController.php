@@ -364,6 +364,7 @@ class PlanController extends Controller
 
         $model = $plan->load([
             'cycles.cycles',
+            'cycles.subjects.subjects',
             'cycles.subjects.semestersCredits',
             'cycles.subjects.hoursModules',
         ]);
@@ -507,17 +508,28 @@ class PlanController extends Controller
         ]);
 
         // SUBJECT
-        foreach ($cycle['subjects'] as $subject) {
+        $this->copySubjects($cycle['subjects'], $cloneCycle->id);
+
+        foreach ($cycle['cycles'] as $cycle) {
+            $this->createCycleCutSubject($cycle, $plan_id, $cloneCycle->id);
+        }
+    }
+
+    private function copySubjects($subjects, $cycleId, $subject_id = null)
+    {
+        foreach ($subjects as $subject) {
+
             $cloneSubject = Subject::create([
                 "asu_id" => $subject['asu_id'],
-                "cycle_id" => $cloneCycle->id,
+                "cycle_id" => $cycleId,
                 "selective_discipline_id" => $subject['selective_discipline_id'],
                 "credits" => $subject['credits'],
                 "hours" => $subject['hours'],
                 "practices" => $subject['practices'],
                 "laboratories" => $subject['laboratories'],
                 "faculty_id" => $subject['faculty_id'],
-                "department_id" => $subject['department_id']
+                "department_id" => $subject['department_id'],
+                "subject_id" => $subject_id
             ]);
 
             $semestersCreditsCollection = $subject->semestersCredits;
@@ -537,8 +549,12 @@ class PlanController extends Controller
              */
             $sumHour = array_sum(array_column($hoursModules, 'hour'));
             $sumCredit = array_sum(array_column($semestersCredits, 'credit'));
+            $sumHourAndCredits = ($sumHour + $sumCredit) == 0;
 
-            if (($sumHour + $sumCredit) == 0 && $cloneSubject->notPartSpecialCycle()) {
+            $hasSubSubjects = count($subject->subjects->toArray()) > 0;
+            $notHasSubject = !$hasSubSubjects;
+
+            if ($sumHourAndCredits && $cloneSubject->notPartSpecialCycle() && $notHasSubject) {
                 $cloneSubject->delete();
                 continue;
             }
@@ -563,13 +579,16 @@ class PlanController extends Controller
                     "semester" => $semestersCredit['semester']
                 ]);
             }
-        }
 
-        foreach ($cycle['cycles'] as $cycle) {
-            $this->createCycleCutSubject($cycle, $plan_id, $cloneCycle->id);
+            if ($hasSubSubjects) {
+                $this->copySubjects(
+                    $subject->subjects,
+                    $cycleId,
+                    $cloneSubject->id
+                );
+            }
         }
     }
-
     public function verification(StorePlanVerificationRequest $request, Plan $plan)
     {
         $validated = $request->validated();
