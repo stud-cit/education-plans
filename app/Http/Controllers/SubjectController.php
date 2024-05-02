@@ -56,8 +56,6 @@ class SubjectController extends Controller
             $semestersCredits = collect($validated['semesters_credits']);
 
             $hoursModules->transform(function ($item, $key) use ($subject) {
-                // unset($item['checkHour']);
-                // unset($item['hasTask']);
                 $item['subject_id'] = $subject->id;
                 return $item;
             });
@@ -67,12 +65,18 @@ class SubjectController extends Controller
                 return $item;
             });
 
-            Plan::find($validated['plan_id'])->update([
-                'need_verification' => false
-            ]);
+            $plan = Plan::find($validated['plan_id']);
 
             $user = Auth::user();
-            if ($user->role_id == User::FACULTY_INSTITUTE || $user->role_id == User::DEPARTMENT) {
+            if (
+                ($plan->type_id !== Plan::SHORT) &&
+                ($user->role_id == User::FACULTY_INSTITUTE || $user->role_id == User::DEPARTMENT)
+            ) {
+                $plan->update([
+                    'need_verification' => false,
+                    'not_conventional' => false,
+                    'comment' => null
+                ]);
                 PlanVerification::where("plan_id", $validated['plan_id'])->delete();
             }
 
@@ -151,13 +155,15 @@ class SubjectController extends Controller
         HoursModules::insert($hoursModules);
         SemestersCredits::insert($semestersCredits);
 
-        Plan::find($request['plan_id'])->update([
-            'need_verification' => false
-        ]);
+        $plan = Plan::find($validated['plan_id']);
 
         $user = Auth::user();
-        if ($user->role_id == 6 || $user->role_id == 7) {
-            PlanVerification::where("plan_id", $request['plan_id'])->delete();
+        if (
+            ($plan->type_id !== Plan::SHORT) &&
+            ($user->role_id == User::FACULTY_INSTITUTE || $user->role_id == User::DEPARTMENT)
+        ) {
+            $plan->update(['need_verification' => false, 'not_conventional' => false, 'comment' => null]);
+            PlanVerification::where("plan_id", $validated['plan_id'])->delete();
         }
 
         Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($request) {
