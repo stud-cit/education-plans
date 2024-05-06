@@ -223,7 +223,7 @@ class PlanController extends Controller
         $hasAnyVerification = $plan->verification->isNotEmpty();
         $emptyVerification = $plan->verification->isEmpty();
 
-        if ($this->isNotShort() && ($role_id == User::FACULTY_INSTITUTE || $role_id == User::DEPARTMENT)) {
+        if ($plan->isNotShort() && ($role_id == User::FACULTY_INSTITUTE || $role_id == User::DEPARTMENT)) {
 
             if ($hasAnyVerification) {
                 PlanVerification::where("plan_id", $plan->id)->delete();
