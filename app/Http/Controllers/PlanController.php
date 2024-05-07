@@ -840,12 +840,10 @@ class PlanController extends Controller
             'speciality_id',
             'education_level_id',
             'type_id',
-        )->plan()->where('department_id', $validated['department_id'])
-            // ->when($validated['department_id'] ?? false, function ($q) use ($validated) {
-            //     return $q->where('department_id', $validated['department_id']);
-            // })
-            ->get()
-            ->where('approvedPlan', true);
+        )->plan()
+            ->where('department_id', $validated['department_id'])
+            ->verified()
+            ->get();
 
         return SignedPlanResource::collection($plans);
     }

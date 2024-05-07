@@ -21,6 +21,7 @@ class SubjectSemesterApiResource extends JsonResource
             "title" => $this->selective_discipline_id ? $this->selectiveDiscipline->title : $this->title,
             "form_control" => $this->lastFormControl,
             "semesters" => SemesterCreditResource::collection($this->whenLoaded('semestersCredits')),
+            "subjects" => SubjectSemesterApiResource::collection($this->subjects),
 
         ];
     }

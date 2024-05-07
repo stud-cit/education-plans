@@ -20,6 +20,7 @@ class SubjectApiResource extends JsonResource
             "credits" => $this->credits,
             "title" => $this->selective_discipline_id ? $this->selectiveDiscipline->title : $this->title,
             "form_control" => $this->lastFormControl,
+            "subjects" => SubjectApiResource::collection($this->subjects),
         ];
     }
 }
