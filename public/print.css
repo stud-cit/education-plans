@@ -1,0 +1,174 @@
+.pdf {
+    padding-bottom: 200px !important;
+}
+.pdf,
+.pdf .pdf_table {
+    font-family: "Roboto", sans-serif;
+}
+
+.pdf .pdf_title,
+.pdf .pdf_subtitle,
+.pdf .pdf_faculty {
+    text-align: center;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.pdf .pdf_faculty-line {
+    text-align: center;
+    font-size: 14px;
+    padding: 0 50px;
+    border-top: 1px solid;
+    margin: 20px auto;
+    width: fit-content;
+    width: -moz-fit-content;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.pdf .pdf_subtitle {
+    margin-bottom: 25px;
+}
+
+.pdf .pdf_table th {
+    font-size: 15px;
+    line-height: 1.2;
+    color: black;
+}
+
+.pdf .pdf_table td {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.pdf .pdf_table-group {
+    font-size: 17px;
+    line-height: 1;
+    text-align: center;
+}
+
+.pdf .pdf__signatures {
+    padding-top: 60px;
+}
+
+.pdf .pdf__signatures .left {
+    float: left;
+}
+.pdf .pdf__signatures .right {
+    float: right;
+    margin-left: auto;
+}
+.pdf .pdf_subscribe {
+    font-size: 15px;
+}
+
+.pdf .pdf_table .pdf_table-noresult {
+    text-align: center;
+    font-size: 20px;
+    text-transform: uppercase;
+    font-weight: 300;
+    line-height: 3;
+}
+.pdf .pdf__signatures .agreed {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.pdf .pdf__signature {
+    margin-bottom: 20px;
+}
+.pdf .pdf__signature .title {
+    font-size: 16px;
+}
+.pdf .pdf__signature .field {
+    font-size: 16px;
+    text-align: center;
+}
+
+.pdf .pdf__signature .field span {
+    font-size: 14px;
+    border-top: 1px solid rgba(0, 0, 0, 0.6);
+    text-align: center;
+    line-height: 1.5;
+    width: 100%;
+    display: block;
+    margin-top: 20px;
+}
+
+.pdf .pdf__signature .col {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+@media print {
+    .pdf {
+        padding-bottom: 0 !important;
+    }
+    .pdf,
+    .pdf .pdf_table {
+        font-family: "Times New Roman", sans-serif;
+        color: black;
+        display: table;
+        /*overflow-x: ;*/
+    }
+
+    .pdf .pdf_title,
+    .pdf .pdf_subtitle,
+    .pdf .pdf_faculty {
+        font-size: 10.5pt;
+        color: black;
+    }
+
+    .pdf .pdf_faculty-line {
+        font-size: 7pt;
+        color: black;
+    }
+
+    .pdf .pdf_subtitle {
+        margin-bottom: 25px;
+    }
+
+    .pdf .pdf_table th {
+        font-size: 9pt;
+        line-height: 1.2;
+        color: black;
+    }
+
+    .pdf .pdf_table td {
+        font-size: 9pt;
+        line-height: 1.2;
+    }
+
+    .pdf .pdf_table-group {
+        font-size: 11pt;
+    }
+    .pdf .pdf_subscribe {
+        font-size: 10pt;
+    }
+
+    .pdf .pdf_table-noresult {
+        font-size: 10pt;
+    }
+    .pdf .pdf__signatures {
+        padding-top: 50px;
+    }
+    .pdf .pdf__signature {
+        margin-bottom: 15px;
+    }
+    .pdf .pdf__signatures .title {
+        font-size: 11pt;
+    }
+    .pdf .pdf__signature .field {
+        font-size: 11pt;
+    }
+    .pdf .pdf__signature .field span {
+        font-size: 8pt;
+        margin-top: 15px;
+    }
+    .pdf .pdf__signatures .agreed {
+        font-size: 11pt;
+        margin-bottom: 0;
+    }
+    .d-print-none {
+        display: none;
+    }
+}

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\PdfController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,9 @@ if (config('app.debug')) {
     Route::get('/', function () {
         return view('welcome');
     });
+
+    Route::get('/pdf/{id}', [PdfController::class, 'pdfview']);
+
     Route::get('/catalogs', function () {
         DB::table('catalog_subjects')
             ->whereNotNull('catalog_education_level_id')

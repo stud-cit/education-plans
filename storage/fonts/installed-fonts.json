@@ -1,0 +1,12 @@
+{
+    "pt serif": {
+        "italic": "C:\\xampp\\htdocs\\education-plans\\storage\\fonts\/pt_serif_italic_9850817a9f144330069fd71ead518b94",
+        "bold_italic": "C:\\xampp\\htdocs\\education-plans\\storage\\fonts\/pt_serif_bold_italic_4b6713dc94d565a7037baac606046894",
+        "normal": "C:\\xampp\\htdocs\\education-plans\\storage\\fonts\/pt_serif_normal_800f00a5f7dfec72575b07dcea7cef7d",
+        "bold": "pt_serif_bold_39bd1bf90def61cab6c4d094c8841d35"
+    },
+    "times new roman": {
+        "normal": "C:\\xampp\\htdocs\\education-plans\\storage\\fonts\/times_new_roman_normal_35dd7dcac21e72c2a5556bded5fa0f6b",
+        "bold": "times_new_roman_bold_95a1400a1629b2206660232cdb4a2f64"
+    }
+}
