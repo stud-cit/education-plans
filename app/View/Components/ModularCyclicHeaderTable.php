@@ -7,14 +7,16 @@ use Illuminate\View\Component;
 class ModularCyclicHeaderTable extends Component
 {
     public $plan;
+    public $hoursWeeksSemesters;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($plan)
+    public function __construct($plan, $hoursWeeksSemesters)
     {
         $this->plan = $plan;
+        $this->hoursWeeksSemesters =  $hoursWeeksSemesters;
     }
 
     /**

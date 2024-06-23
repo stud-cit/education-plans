@@ -1,219 +1,29 @@
-/* @import url(reset.css); */
-/* @import url(print.css); */
-/* @font-face {
-    font-family: "Times New Roman";
-    font-style: normal;
-    font-weight: 400;
-    src: url(../fonts/times.ttf);
-} */
-
-/* @page {
-    size: A4 landscape;
-    margin: 15mm 10mm;
-} */
-/* brake page */
-/* table {
-    page-break-inside: auto;
-}
-
 tr {
     page-break-inside: avoid;
     page-break-after: auto;
-} */
+}
 
-/* thead {
-    display: table-header-group;
-} */
-
-/* tfoot {
-    display: table-footer-group;
-} */
-
-/* table {
-    width: 100%;
-    table-layout: fixed;
-} */
-
-/* td,
-th {
-    word-wrap: break-word;
-} */
-
-/* end page */
-/* body {
-    font-family: "Times New Roman";
-} */
-
-/* .page-break {
+.page-break {
     page-break-after: always;
-} */
-
-/* .table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-}
-.table,
-tbody,
-th,
-td {
-    border: 1px solid;
 }
 
-.plan-title-table td {
-    width: 30px;
-    max-width: 40px;
-    overflow: hidden;
-} */
-/*
-.subtable {
-    font-size: 8pt;
-    text-align: center;
+thead {
+    display: table-header-group; /* Застосовується для повторення заголовків на кожній сторінці */
 }
 
-.table-subtitle {
-    font-size: 10pt;
-    font-weight: bold;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-.table-bold {
-    font-weight: bold;
-}
-
-.table tr {
-    min-height: 10pt;
-    height: 10pt;
-}
-
-.table td {
-    min-width: 15px;
-    padding: 2px;
-}
-
-.title {
-    text-transform: uppercase;
-    font-size: 14pt;
-    font-weight: bold;
-    text-align: center;
-}
-
-.title-subtitle {
-    font-size: 10pt;
-    font-weight: bold;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-.faculty {
-    text-align: center;
-    font-weight: bold;
-    font-size: 10pt;
-}
-
-.table-title {
-    text-transform: uppercase;
-    font-size: 14pt;
-    font-weight: bold;
-    text-align: center;
-}
-
-.table-text {
-    font-size: 10pt;
-    white-space: nowrap;
-}
-
-.table-week {
-    text-transform: uppercase;
-    text-align: center;
-    font-size: 8pt;
-}
-
-.table-month,
-td {
-    font-size: 8pt;
-    text-align: center;
-}
-
-.table-sing {
-    font-size: 7pt;
-}
-
-.table-plan {
-    font-size: 8pt;
-    text-align: center;
-    vertical-align: middle;
-}
-
-table .signature {
-    text-align: center;
-    vertical-align: bottom;
-}
-
-table .signature-position {
-    font-size: 12pt;
-    vertical-align: top;
-}
-
-table .signature-position .approved {
-    font-size: 8pt;
-}
-
-table .signature-position .name {
-    vertical-align: bottom;
-}
-
-table .signature-position .second {
-    text-transform: uppercase;
-    display: inline;
-}
-
-/* table tfoot {
-    border: 2px solid black;
-} */
-
-/* table tfoot tr {
-    border: 2px solid black;
-} */
-
-/* .border-table {
-    border-collapse: collapse;
-    border: 1px solid black;
-} */
-
-/* .table-plan thead {
-    display: table-row-group;
-}
-
-.debug {
-    border: dashed red;
-}
-
-.text-center {
-    text-align: center;
-}
-
-
-.text-bold {
-    font-weight: bold;
-}
-
-.summary td {
-    border: 2px solid black;
-}
-*/
 body {
     font-family: "Times New Roman";
+    letter-spacing: 1px;
+}
+
+.no-letter-spacing {
+    letter-spacing: normal;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
-    width: 100%;
 }
-
 .collapsed {
     border-collapse: collapse;
 }
@@ -298,6 +108,7 @@ table .signature {
     text-align: left;
 }
 .text-center {
+    font-size: 10pt;
     text-align: center;
 }
 
@@ -310,53 +121,9 @@ table .signature-position.name {
     vertical-align: bottom;
 }
 
-tfoot {
-    /* border: none !important; */
-}
-
-/* table tfoot tr {
-    border: 2px solid black;
-} */
-
 .border-table {
     border: 1px solid black;
 }
-/*
-*/
-.by-created-pdf {
-    display: none;
-    text-align: right;
-    opacity: 0.6;
-    font-size: 8pt;
-}
-
 .table-plan thead {
     display: table-row-group;
-}
-
-.print {
-    position: relative;
-}
-/* @media print {
-    .by-created-pdf {
-        display: block;
-    }
-
-    .print.no-verification:before {
-        bottom: 0px;
-        left: 10px;
-        content: "План не верифіковано";
-        position: fixed;
-        opacity: 0.6;
-        font-size: 8pt;
-    }
-
-    @page {
-        size: A4 landscape;
-    }
-} */
-
-@page {
-    /* size: A4 landscape; */
-    /* margin: 15mm 5mm; */
 }

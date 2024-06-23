@@ -1,62 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Helpers;
 
 use App\Models\Plan;
 use App\Http\Constant;
 use App\Models\Subject;
 use App\Models\HoursModules;
-use Illuminate\Http\Request;
-use App\Helpers\GeneratePlanPdf;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Gate;
 use Barryvdh\Snappy\Facades\SnappyPdf;
-use Illuminate\Support\Facades\Storage;
 
-class PdfController extends Controller
+class GeneratePlanPdf
 {
 
-    public function index()
-    {
-        return Storage::download('doc/manual.pdf');
-    }
-
-    public function upload(Request $request)
-    {
-        if (!Gate::allows('upload-manual')) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'doc' => 'required|file|mimes:pdf',
-        ]);
-
-        $request->file('doc')->storeAs('doc', 'manual.pdf');
-
-        return $this->success(__('messages.Updated'));
-    }
-
-    public function generatePDF(Request $request, $id)
-    {
-        $pdf = new GeneratePlanPdf;
-        $pdf($id);
-    }
-
-    private $totalPlan;
-    const FORM_ORGANIZATIONS = [
+    private const FORM_ORGANIZATIONS = [
         'modular_cyclic' => 1,
         'semester' => 3,
     ];
 
-    const FORM_ORGANIZATIONS_TABLE = [
+    private const FORM_ORGANIZATIONS_TABLE = [
         self::FORM_ORGANIZATIONS['modular_cyclic'] => 2,
         self::FORM_ORGANIZATIONS['semester'] => 1,
     ];
 
-
     private $model;
     private $updated_cycles;
-    public function pdfview($id)
+    private $totalPlan;
+    private $code = 0;
+    private $pdf;
+
+    public function __invoke($id)
     {
         $this->model = Plan::with([
             'verification',
@@ -72,7 +44,22 @@ class PdfController extends Controller
             'cycles.subjects.hoursModules.formControl',
             'cycles.subjects.hoursModules.individualTask',
             'signatures.position'
-        ])->verified()->find($id);
+        ])->select('*')->verified()->find($id);
+
+        $this->generate();
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function generate()
+    {
+        if (!$this->model) {
+            $this->code = -1;
+            return $this->code;
+        }
 
         $professions = [
             [
@@ -111,6 +98,7 @@ class PdfController extends Controller
 
         $scheduleEducationProcess = json_decode($this->model->schedule_education_process, JSON_OBJECT_AS_ARRAY);
         $hoursWeeksSemesters = json_decode($this->model->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY);
+
         $this->updateCycles(collect($this->getCyclesRow($this->model->cycles)));
 
         $data = [
@@ -147,20 +135,35 @@ class PdfController extends Controller
             'subject_notes' => $this->getSubjectNotes(),
         ];
 
+        $this->pdf = SnappyPdf::loadView('pdf.plan', $data);
+        $this->pdf->setPaper('a4')->setOrientation('landscape');
+
+        $this->code = 1;
+        return $this->code;
+    }
+
+    public function consoleSave()
+    {
+        $path = 'plans/';
+        $fileName = "{$this->model->guid}.pdf";
+        $publicPath = public_path("{$path}{$fileName}");
+        $this->pdf->save($publicPath, true);
+    }
+
+    public function save()
+    {
         $path = 'plans/';
         $fileName = "{$this->model->guid}.pdf";
 
-        $pdf = SnappyPdf::loadView('pdf.plan', $data);
-        $pdf->setPaper('a4')->setOrientation('landscape');
-        return $pdf->inline('invoice.pdf');
+        $this->pdf->save("{$path}{$fileName}", true);
     }
 
-    function fill($length): array
+    private function fill($length): array
     {
         return array_fill(0, $length, 0);
     }
 
-    function getCountExams()
+    private function getCountExams()
     {
         $result = [];
         for ($i = 0; $i < $this->model->studyTerm->semesters; $i++) {
@@ -172,7 +175,7 @@ class PdfController extends Controller
         return $result;
     }
 
-    function getCountTests()
+    private function getCountTests()
     {
         $result = [];
         for ($i = 0; $i < $this->model->studyTerm->semesters; $i++) {
@@ -184,7 +187,7 @@ class PdfController extends Controller
         return $result;
     }
 
-    function getCountCoursework()
+    private function getCountCoursework()
     {
         $result = [];
         for ($i = 0; $i < $this->model->studyTerm->semesters; $i++) {
@@ -196,7 +199,7 @@ class PdfController extends Controller
         return $result;
     }
 
-    function getCountWorks($work, $semester)
+    private function getCountWorks($work, $semester)
     {
         $planId = $this->model->id;
         $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
@@ -231,7 +234,7 @@ class PdfController extends Controller
                     $subject->total_volume_hour = $subject->credits * Constant::NUMBER_HOURS_IN_CREDIT;
                     $subject->individual_work = $subject->total_volume_hour - $subject->hours - $subject->practices - $subject->laboratories;
 
-                    $subject->subjects->transform(function ($subject2, $i) {
+                    $subject->subjects->transform(function ($subject2) {
 
 
                         $subject2->hours_modules = $subject2->hoursModules;
@@ -293,7 +296,7 @@ class PdfController extends Controller
         return  $cyclesArray;
     }
 
-    function GlobalSumPropertyInArray(Collection $items, $prop): float
+    private function GlobalSumPropertyInArray(Collection $items, $prop): float
     {
         $sum = $items->sum($prop);
 
@@ -304,10 +307,8 @@ class PdfController extends Controller
         }
         return round($sum, 2);
     }
-    public $updated_cycles1 = [];
 
-
-    public function updateCycles(Collection $cycles)
+    private function updateCycles(Collection $cycles)
     {
         $prev = 0;
         $total_cycles = [];
@@ -355,7 +356,7 @@ class PdfController extends Controller
         ];
     }
 
-    function getSumSemestersCredits($subjects)
+    private function getSumSemestersCredits($subjects)
     {
         $semestersCredits = [];
 
@@ -388,7 +389,7 @@ class PdfController extends Controller
         return $semestersCredits;
     }
 
-    function getHoursModulesTotal($obj, $inside_hour = false)
+    private function getHoursModulesTotal($obj, $inside_hour = false)
     {
 
         $hours_modules_total = [];
@@ -424,7 +425,7 @@ class PdfController extends Controller
         return array_map(fn ($val) => round($val, 2), $hours_modules_total);
     }
 
-    function getSimpleHoursModulesTotal($items)
+    private function getSimpleHoursModulesTotal($items)
     {
         $hours_modules_total = [];
 
@@ -458,7 +459,7 @@ class PdfController extends Controller
     }
 
 
-    function totalClassroom($subject): int
+    private function totalClassroom($subject): int
     {
         return $subject->hours + $subject->practices + $subject->laboratories;
     }
@@ -480,7 +481,7 @@ class PdfController extends Controller
         return trim($individual_tasks);
     }
 
-    function getSubjectNotes()
+    private function getSubjectNotes()
     {
         $planId = $this->model->id;
         $result = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {

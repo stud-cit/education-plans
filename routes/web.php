@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\PlanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,7 @@ if (config('app.debug')) {
     });
 
     Route::get('/pdf/{id}', [PdfController::class, 'pdfview']);
+    // Route::get('/pdf/{plan}', [PlanController::class, 'generatePdf']);
 
     Route::get('/catalogs', function () {
         DB::table('catalog_subjects')

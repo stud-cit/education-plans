@@ -15,6 +15,7 @@ use App\Models\HoursModules;
 use Illuminate\Http\Request;
 use App\Models\ShortenedPlan;
 use App\ExternalServices\Op\OP;
+use App\Helpers\GeneratePlanPdf;
 use App\Models\PlanVerification;
 use App\Models\SemestersCredits;
 use App\Models\CatalogSpeciality;
@@ -619,6 +620,13 @@ class PlanController extends Controller
                 'status' => $validated['status']
             ]
         );
+
+        if ($plan->approvedPlan) {
+            $pdf = new GeneratePlanPdf;
+            $pdf($plan->id);
+            $pdf->save();
+        }
+
         $this->success(__('messages.Updated'), 200);
     }
 
@@ -831,6 +839,7 @@ class PlanController extends Controller
         )->select(
             'id',
             'title',
+            'guid',
             'year',
             'education_program_id',
             'faculty_id',
@@ -855,6 +864,7 @@ class PlanController extends Controller
         $plan = Plan::select(
             'id',
             'title',
+            'guid',
             'year',
             'education_program_id',
             'faculty_id',

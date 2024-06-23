@@ -1,6 +1,6 @@
 <thead>
     @php
-    $hoursWeeksSemesters = json_decode($plan->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY);
+    if (!function_exists('getMaxHour')) {
     function getMaxHour($semester, $index, $obj) {
     foreach ($obj as $item) {
     if ($item['semester'] === $semester && $item['index'] === $index) {
@@ -8,6 +8,7 @@
     }
     }
     return null;
+    }
     }
 
     $courseArray = range(1,$plan->studyTerm['course']);

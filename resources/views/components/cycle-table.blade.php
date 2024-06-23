@@ -11,9 +11,13 @@
     <td class="border-table">{{ $cycle['index'] }}</td>
     <td class="border-table">
         {{ $cycle['asu_id'] ? $cycle['title'] : $cycle['selective_discipline']['title'] }}
-        @if ($cycle['note'])
+        @if (!is_null($cycle['note']))
         <sup>
-            {{ array_search($cycle['id'], array_column($plan['subject_notes'], 'id')) + 1 }}
+
+            <!-- @php
+            print_r($subjectNotes);
+            @endphp -->
+            {{ array_search($cycle['id'], array_column($subjectNotes, 'id')) + 1 }}
         </sup>
         @endif
     </td>
@@ -21,7 +25,7 @@
     <td class="border-table">{{ $cycle['exams_count'] }}</td>
     <td class="border-table">{{ $cycle['test_count'] }} </td>
     <!--Заліки-->
-    <td class="border-table">{{$cycle['individual_tasks']}}</td>
+    <td class="border-table">{{ $cycle['individual_tasks']}}</td>
     <td class="border-table">{{ $cycle['credits'] > 0 ? $cycle['credits'] : '' }}</td>
     <td class="border-table">{{ $cycle['total_volume_hour'] > 0 ? $cycle['total_volume_hour'] : '' }}</td>
     <td class="border-table">{{ $cycle['total_classroom'] > 0 ? $cycle['total_classroom'] : '' }}</td>

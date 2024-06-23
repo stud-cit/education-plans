@@ -2,9 +2,7 @@
 <thead>
 
     @php
-
-    $hoursWeeksSemesters = json_decode($plan->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY);
-
+    if (!function_exists('getMaxHour')) {
     function getMaxHour($semester, $obj) {
     foreach ($obj as $item) {
     if ($item['semester'] === $semester) {
@@ -13,16 +11,13 @@
     }
     return null;
     }
+    }
 
     $courseArray = range(1,$plan->studyTerm['course']);
     $semesterArray = range(1, $plan->studyTerm['semesters']);
     @endphp
 
-    <tr class="table-subtitle">
-        <td class="border-table table-subtitle" colspan="100%">
-            V. ПЛАН НАВЧАЛЬНОГО ПРОЦЕСУ
-        </td>
-    </tr>
+    <caption class="table-subtitle">V. ПЛАН НАВЧАЛЬНОГО ПРОЦЕСУ</td>
     <tr>
         <td class="border-table" rowspan="6">№</td>
         <td class="border-table" rowspan="6">Назви навчальних дисциплін</td>
