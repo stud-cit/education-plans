@@ -77,7 +77,10 @@
     <tr>
         @foreach($semesterArray as $semester)
         @for($index = 1; $index <= 2; $index++) <td class="border-table" rowspan="1" colspan="1">
-            @if($maxHour = getMaxHour($semester, $index, $hoursWeeksSemesters))
+            @php
+            $maxHour = getMaxHour($semester, $index, $hoursWeeksSemesters);
+            @endphp
+            @if($maxHour)
             {{ $maxHour['week'] }}
             @endif
             </td>
