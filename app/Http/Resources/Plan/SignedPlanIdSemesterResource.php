@@ -19,6 +19,7 @@ class SignedPlanIdSemesterResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'guid' => $this->guid,
             'year' => $this->year,
             'education_program' => $this->educationProgramIdNameWithType ? $this->educationProgramIdNameWithType[0] : null,
             'education_program_type' => $this->educationProgramIdNameWithType ? $this->educationProgramIdNameWithType[1] : null,
