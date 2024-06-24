@@ -2,8 +2,8 @@
 <thead>
 
     @php
-    if (!function_exists('getMaxHour')) {
-    function getMaxHour($semester, $obj) {
+    if (!function_exists('getMaxHourSemester')) {
+    function getMaxHourSemester($semester, $obj) {
     foreach ($obj as $item) {
     if ($item['semester'] === $semester) {
     return $item;
@@ -64,7 +64,10 @@
     <tr>
         @foreach($semesterArray as $semester)
         <td class="border-table">
-            @if($maxHour = getMaxHour($semester, $hoursWeeksSemesters))
+            @php
+            $maxHour = getMaxHourSemester($semester, $hoursWeeksSemesters)
+            @endphp
+            @if($maxHour)
             {{ $maxHour['week'] }}
             @endif
         </td>
