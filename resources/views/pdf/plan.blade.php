@@ -5,7 +5,7 @@
     <!-- <meta name=" viewport" content="width=device-width, initial-scale=1.0"> -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{{ $title }}</title>
-    <link rel="stylesheet" href="{{ asset('pdf.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/pdf.css') }}" type="text/css">
 </head>
 
 <body>
