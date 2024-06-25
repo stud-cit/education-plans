@@ -5,7 +5,150 @@
     <!-- <meta name=" viewport" content="width=device-width, initial-scale=1.0"> -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{{ $title }}</title>
-    <link rel="stylesheet" href="{{ asset('css/pdf.css') }}" type="text/css">
+    <!-- <link rel="stylesheet" href="{{ asset('css/pdf.css') }}" type="text/css"> -->
+
+    <style>
+        @font-face {
+            font-family: "Times New Roman";
+            src: url(../fonts/times.ttf) format('ttf');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        thead {
+            display: table-header-group;
+            /* Застосовується для повторення заголовків на кожній сторінці */
+        }
+
+        body {
+            font-family: "Times New Roman", Times, serif;
+            letter-spacing: 1px;
+        }
+
+        .no-letter-spacing {
+            letter-spacing: normal;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .collapsed {
+            border-collapse: collapse;
+        }
+
+        .plan-title-table td {
+            width: 30px;
+            max-width: 40px;
+            overflow: hidden;
+        }
+
+        .subtable {
+            font-size: 8pt;
+            text-align: center;
+        }
+
+        .table-bold {
+            font-weight: bold;
+        }
+
+        .table tr {
+            min-height: 10pt;
+            height: 10pt;
+        }
+
+        .table td {
+            min-width: 15px;
+            padding: 1px;
+        }
+
+        .table-title {
+            text-transform: uppercase;
+            font-size: 14pt;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table-subtitle {
+            font-size: 10pt;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .table-faculty {
+            text-align: center;
+            font-weight: bold;
+            font-size: 10pt;
+        }
+
+        .table-text {
+            font-size: 10pt;
+            white-space: nowrap;
+        }
+
+        .table-week {
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 8pt;
+        }
+
+        .table-month {
+            font-size: 8pt;
+            text-align: center;
+        }
+
+        .table-sing {
+            font-size: 7pt;
+        }
+
+        .table-plan {
+            font-size: 8pt;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        table .signature {
+            text-align: center;
+            vertical-align: bottom;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-center {
+            font-size: 10pt;
+            text-align: center;
+        }
+
+        table .signature-position {
+            font-size: 12pt;
+            vertical-align: top;
+        }
+
+        table .signature-position.name {
+            vertical-align: bottom;
+        }
+
+        .border-table {
+            border: 1px solid black;
+        }
+
+        .table-plan thead {
+            display: table-row-group;
+        }
+    </style>
 </head>
 
 <body>
