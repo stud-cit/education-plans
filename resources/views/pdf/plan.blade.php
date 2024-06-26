@@ -2,17 +2,14 @@
 <html lang="uk">
 
 <head>
-    <!-- <meta name=" viewport" content="width=device-width, initial-scale=1.0"> -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{{ $title }}</title>
-    <!-- <link rel="stylesheet" href="{{ asset('css/pdf.css') }}" type="text/css"> -->
-
     <style>
-        @font-face {
-            font-family: "Times New Roman";
-            src: url(../fonts/times.ttf) format('ttf');
-            font-weight: normal;
-            font-style: normal;
+        @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            letter-spacing: 1px;
         }
 
         tr {
@@ -27,11 +24,6 @@
         thead {
             display: table-header-group;
             /* Застосовується для повторення заголовків на кожній сторінці */
-        }
-
-        body {
-            font-family: "Times New Roman", Times, serif;
-            letter-spacing: 1px;
         }
 
         .no-letter-spacing {
@@ -380,7 +372,7 @@
                     <td>&nbsp;</td>
 
                     @if (isset($exams_table[$i]))
-                    <td colspan="{{ $count }}" class="border-table">{{ $exams_table[$i] ? $i + 1 : '' }}</td>
+                    <td colspan="{{ $count }}" class="border-table text-center">{{ $exams_table[$i] ? $i + 1 : '' }}</td>
                     <td colspan="{{ $examsTitle }}" class="border-table text-center">
                         {{ $exams_table[$i] ? $exams_table[$i]['title'] : '' }}
                     </td>
