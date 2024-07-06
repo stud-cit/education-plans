@@ -88,6 +88,14 @@ class CatalogSpeciality extends Model
         return $this->hasMany(OwnerCatalogSubject::class, 'catalog_subject_id', 'id');
     }
 
+
+    public function scopeVerified($query)
+    {
+        $query->whereHas('verifications', function (Builder $query) {
+            $query->where('status', true);
+        }, '>=', VerificationStatuses::fullCatalogSpecialityVerification());
+    }
+
     public function scopeFilterBy($query, $filters)
     {
         $namespace = 'App\Helpers\Filters\CatalogSpecialityFilters';

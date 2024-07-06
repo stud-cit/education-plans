@@ -19,6 +19,7 @@ use App\Helpers\GeneratePlanPdf;
 use App\Models\PlanVerification;
 use App\Models\SemestersCredits;
 use App\Models\CatalogSpeciality;
+use App\Helpers\GenerateCatalogPdf;
 use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
@@ -625,6 +626,9 @@ class PlanController extends Controller
             $pdf = new GeneratePlanPdf;
             $pdf($plan->id);
             $pdf->save();
+            $catalogPdf = new GenerateCatalogPdf($plan->id);
+            $catalogPdf->generateCatalogSpecialityPdf();
+            $catalogPdf->generateCatalogEducationPdf();
         }
 
         $this->success(__('messages.Updated'), 200);

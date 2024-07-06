@@ -177,6 +177,7 @@ return [
 
         Bkwld\Cloner\ServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class
     ],
 
     /*
@@ -233,6 +234,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'mPDF' => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class
+
     ],
 
     'asu_key' => env('ASU_KEY'),
