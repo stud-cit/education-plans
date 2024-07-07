@@ -204,5 +204,5 @@ Route::prefix('v1')->group(function () {
     Route::get('/signed-plans-by-id', [PlanController::class, 'getSignedPlansById'])
         ->middleware('protectApi');
 
-    Route::get('/plans/{id}/generate', [PdfController::class, 'generatePDF']);
+    // Route::get('/test/catalog-pdf', [PdfController::class, 'catalogPdf']);
 });
