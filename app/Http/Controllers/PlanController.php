@@ -82,11 +82,14 @@ class PlanController extends Controller
             'department_id',
             'published',
             'author_id',
-            'parent_id', // remove
             'published',
             'created_at',
-            'need_verification'
-        )->with(['verification.role', 'verification'])
+            'need_verification',
+            'speciality_id',
+            'education_level_id',
+            'education_program_id',
+            'study_term_id'
+        )->with(['verification.role', 'verification', 'studyTerm'])
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)

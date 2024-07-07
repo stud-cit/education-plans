@@ -97,4 +97,11 @@ class Helpers
             ? $arr[$items_per_page]
             : Constant::PAGINATE;
     }
+
+    static public function calculateEndYear($year, $studyTerm): int
+    {
+        $studyTermYear = $studyTerm->year;
+        $studyTermMonth = $studyTerm->month ? 1 : 0;
+        return $year + $studyTermYear + $studyTermMonth;
+    }
 }
