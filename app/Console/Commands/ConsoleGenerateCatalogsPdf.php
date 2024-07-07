@@ -2,25 +2,25 @@
 
 namespace App\Console\Commands;
 
+use App\Helpers\GenerateCatalogPdf;
 use App\Models\Plan;
 use Illuminate\Console\Command;
-use App\Helpers\GeneratePlanPdf as Generate;
 
-class ConsoleGeneratePlanPdf extends Command
+class ConsoleGenerateCatalogsPdf extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'plan:generatePdf';
+    protected $signature = 'plan:generateCatalogPdf';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Generate pdfs for verified plans';
+    protected $description = 'Generate pdf catalogs to verified plans';
 
     /**
      * Create a new command instance.
@@ -42,9 +42,9 @@ class ConsoleGeneratePlanPdf extends Command
         $plans = Plan::with('verification')->select('id')->plan()->verified()->get();
 
         $this->withProgressBar($plans, function ($plan) {
-            $pdf = new Generate;
-            $pdf($plan->id);
-            $pdf->consoleSave();
+            $pdf = new GenerateCatalogPdf($plan->id);
+            $pdf->generateCatalogSpecialityPdf();
+            $pdf->generateCatalogEducationPdf();
         });
 
         return 0;

@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "barryvdh/laravel-snappy": "^1.0",
         "bkwld/cloner": "^3.10",
+        "carlos-meneses/laravel-mpdf": "^2.1",
         "doctrine/dbal": "^3.5",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

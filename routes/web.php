@@ -20,7 +20,12 @@ if (config('app.debug')) {
         return view('welcome');
     });
 
-    Route::get('/pdf/{id}', [PdfController::class, 'pdfview']);
+    // Route::get('/pdf/{id}', [PdfController::class, 'pdfview']);
+    Route::get('/test-catalog-pdf', [PdfController::class, 'catalogPdf']);
+    Route::get('/test-catalog-pdf1', [PdfController::class, 'catalogPdf1']);
+    Route::get('/test', [PdfController::class, 'test']);
+    Route::get('generate-pdf', [PdfController::class, 'generateMYPDF']);
+    Route::get('new', [PdfController::class, 'generateSomePDF']);
     // Route::get('/pdf/{plan}', [PlanController::class, 'generatePdf']);
 
     Route::get('/catalogs', function () {

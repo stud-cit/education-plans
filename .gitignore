@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /public/plans
+/public/catalogs/*
 /public/mix-manifest.json
 /public/css
 /public/js
