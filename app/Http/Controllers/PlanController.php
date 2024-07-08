@@ -598,6 +598,11 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
+        // split two roles
+        if ($validated['verification_status_id'] === User::EDUCATIONAL_DEPARTMENT_CHIEF) {
+            $validated['verification_status_id'] = User::EDUCATIONAL_DEPARTMENT_DEPUTY;
+        }
+
         /**
          * verification_status_id приходить роль id,
          * а нам потрібно id верифікації

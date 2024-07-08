@@ -63,7 +63,6 @@ class PlanEditResource extends JsonResource
             'exams_table' => $this->getExamsTable($this->cycles),
             'short_plan' => $this->type_id === Plan::SHORT,
             'errors' => $this->setErrors(),
-            'status_op' => $this->getStatusOP(),
             'comment' => $this->comment ? $this->comment : '',
             'not_conventional' => $this->not_conventional,
             'shorted_by_year' => $this->shortedByYear,

@@ -171,12 +171,6 @@ class Plan extends Model
         return ['base_id' => $base_id, 'title' => $title];
     }
 
-    public function getStatusOP()
-    {
-        return $this->verification()->select('id', 'verification_statuses_id', 'status')
-            ->where('verification_statuses_id', 1)->value('status');
-    }
-
     public function getCreatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('d.m.Y H:i');
@@ -322,7 +316,7 @@ class Plan extends Model
 
     public function verification()
     {
-        return $this->hasMany(PlanVerification::class)->where('verification_statuses_id', '!=', 1);
+        return $this->hasMany(PlanVerification::class);
     }
 
     public function signatures()
