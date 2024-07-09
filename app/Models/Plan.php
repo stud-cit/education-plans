@@ -60,7 +60,8 @@ class Plan extends Model
         'comment',
         'not_conventional',
         'need_verification',
-        'type_id'
+        'type_id',
+        'verification_comments'
     ];
 
     protected $casts = [
@@ -77,6 +78,7 @@ class Plan extends Model
         'published' => 'boolean',
         'not_conventional' => 'boolean',
         'need_verification' => 'boolean',
+        'verification_comments' => 'json'
     ];
 
     const TEMPLATE = 1;

@@ -71,6 +71,7 @@ class PlanEditResource extends JsonResource
             'actions' => [
                 'can_generate_short_plan' => $this->canGenerateShortPlan(),
             ],
+            'verification_comments' => $this->verification_comments
         ];
     }
 }

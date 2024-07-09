@@ -231,8 +231,17 @@ class PlanController extends Controller
         if ($plan->isNotShort() && ($role_id == User::FACULTY_INSTITUTE || $role_id == User::DEPARTMENT)) {
 
             if ($hasAnyVerification) {
+                $verifications = PlanVerification::where("plan_id", $plan->id)->get();
+                $comments = $verifications->whereNotNull('comment');
+
                 PlanVerification::where("plan_id", $plan->id)->delete();
-                $plan->update(['need_verification' => false, 'not_conventional' => false, 'comment' => null]);
+
+                $plan->update([
+                    'need_verification' => false,
+                    'not_conventional' => false,
+                    'comment' => null,
+                    'verification_comments' => $comments
+                ]);
                 unset($validated['need_verification'], $validated['not_conventional'], $validated['comment']);
             }
 
@@ -607,7 +616,7 @@ class PlanController extends Controller
          * verification_status_id приходить роль id,
          * а нам потрібно id верифікації
          */
-        if (Auth::user()->role_id !== User::ADMIN) {
+        if (Auth::user()->role_id !== User::ADMIN && Auth::user()->role_id !== User::ROOT) {
             $verificationStatusId = VerificationStatuses::where(
                 [
                     ['role_id', $validated['verification_status_id']],
@@ -640,100 +649,6 @@ class PlanController extends Controller
         }
 
         $this->success(__('messages.Updated'), 200);
-    }
-
-    public function verificationOP(Request $request, Plan $plan)
-    {
-        $modelOP = new OP();
-        $planId = $plan->id;
-        $errors = 0;
-        $comment = 'Не відповідає освітній програмі:<br>';
-
-        $control_form = [
-            1 => 'іспит',
-            2 => 'диф. залік',
-            3 => 'залік',
-            8 => 'захист'
-        ];
-
-        $verificationMessage = [
-            'user_id' => $request['user_id'],
-            'comment' => null,
-            'status' => true
-        ];
-
-        $model = Subject::with([
-            'hoursModules' => function ($q) use ($control_form) {
-                return $q->whereIn('form_control_id', array_keys($control_form));
-            }, 'cycle'
-        ])->whereHas('cycle', function ($queryCycle) use ($planId) {
-            $queryCycle->where('plan_id', $planId);
-        })->get();
-
-        $program = $modelOP->getProgramId($request->program_op_id);
-
-        $components = collect($program['component'])->filter(function ($value) {
-            return in_array($value['group_id'], [7, 8, 9, 10]);
-        })->keyBy('subject');
-
-        $certificatesSubjects = [];
-        $notCertificatesSubjects = [];
-
-        foreach ($model as $value) {
-            $component = $components[$value['title']] ?? null;
-
-            if (is_null($component)) {
-                continue;
-            }
-
-            $controlForm = null;
-
-            if (count($value['hoursModules'])) {
-                $controlForm = $control_form[$value['hoursModules']->last()['form_control_id']];
-            }
-
-            if (intval($component['credit_col']) !== $value['credits']) {
-                $notCertificatesSubjects[] = $value['id'];
-                $errors++;
-                $comment .= 'Не вірна кількість кредитів в дисципліні ' . $component['subject'] . ';<br>';
-            } elseif (
-                (!isset($controlForm) && ($controlForm !== $component['control_form'])) &&
-                $value['asu_id'] !== 9040 // пропускаємо дисципліну Інтегрований курс Основи академічного письма
-            ) {
-                $notCertificatesSubjects[] = $value['id'];
-                $errors++;
-                $comment .= 'Не вірна остання форма контролю в дисципліні ' . $component['subject'] . ';<br>';
-            } else {
-                $certificatesSubjects[] = $value['id'];
-            }
-        }
-
-        if (count($certificatesSubjects)) {
-            Subject::whereIn('id', $certificatesSubjects)->update(array('verification' => 1));
-        }
-
-        if (count($notCertificatesSubjects)) {
-            Subject::whereIn('id', $notCertificatesSubjects)->update(array('verification' => 0));
-        }
-
-        if ($errors > 0) {
-            $verificationMessage['comment'] = $comment;
-            $verificationMessage['status'] = false;
-        }
-
-        $plan->verification()->updateOrCreate(
-            [
-                "plan_id" => $plan->id,
-                'verification_statuses_id' => 1
-            ],
-            $verificationMessage
-        );
-
-        $plan->update([
-            "program_op_id" => $request->program_op_id
-        ]);
-
-        return $this->success(__('messages.Updated'), 200);
     }
 
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
