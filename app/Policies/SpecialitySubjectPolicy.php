@@ -55,6 +55,10 @@ class SpecialitySubjectPolicy
      */
     public function update(User $user, SpecialitySubject $specialitySubject)
     {
+        if ($user->possibility(User::PRIVILEGED_ROLES)) {
+            return true;
+        }
+
         if ($user->isDepartmentMine($specialitySubject->department_id)) {
             return true;
         }

@@ -99,8 +99,6 @@ class CatalogSelectiveSubjectController extends Controller
     {
         $validated = $request->validated();
 
-        // $validated['user_id'] = Auth::id();
-
         $subject = CatalogSelectiveSubject::create($validated);
 
         $subject->languages()->createMany($validated['language']);
@@ -159,6 +157,7 @@ class CatalogSelectiveSubjectController extends Controller
     {
         $validated = $request->validated();
 
+        clock($validated);
         $model = $catalogSelectiveSubject->load([
             'languages',
             'lecturers',

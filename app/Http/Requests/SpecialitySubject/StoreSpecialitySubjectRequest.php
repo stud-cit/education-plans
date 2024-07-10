@@ -47,14 +47,8 @@ class StoreSpecialitySubjectRequest extends FormRequest
             'types_educational_activities' => 'required|string|max:2000',
             'number_acquirers' => 'required|max:255',
             'limitation' => 'required|json',
+            'url' => 'nullable|url',
             'published' => 'nullable|boolean'
         ];
     }
-
-    // public function messages()
-    // {
-    //     return [
-    //         'asu_id.unique' => 'В даному каталозі дисципліна вже існує.',
-    //     ];
-    // }
 }

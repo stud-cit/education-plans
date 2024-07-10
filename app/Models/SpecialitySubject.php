@@ -34,6 +34,7 @@ class SpecialitySubject extends Model
         'number_acquirers',
         'entry_requirements_applicants',
         'limitation',
+        'url',
         'published',
     ];
 
@@ -77,7 +78,6 @@ class SpecialitySubject extends Model
     {
         static::creating(function ($catalog) {
             $catalog->user_id = Auth::id();
-            // $catalog->user_id =  1; //Auth::id();
         });
     }
 }

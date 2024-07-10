@@ -33,6 +33,7 @@ class SpecialitySubjectShowResource extends JsonResource
             'types_educational_activities' => $this->types_educational_activities,
             'number_acquirers' => $this->number_acquirers,
             'limitation' => $this->limitationName,
+            'url' => $this->url,
             'user_id' => $this->user_id,
         ];
     }

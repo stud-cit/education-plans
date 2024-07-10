@@ -49,6 +49,7 @@ class StoreCatalogSelectiveSubjectRequest extends FormRequest
             'types_educational_activities' => 'required|string|max:2000',
             'number_acquirers' => 'required|max:255',
             'limitation' => 'required|json',
+            'url' => 'nullable|url',
             'published' => 'nullable|boolean'
         ];
     }

@@ -35,6 +35,7 @@ class SpecialitySubjectEditResource extends JsonResource
             'types_educational_activities' => $this->types_educational_activities,
             'number_acquirers' => $this->number_acquirers,
             'limitation' => json_decode($this->limitation),
+            'url' => $this->url,
             'published' => $this->published
         ];
     }

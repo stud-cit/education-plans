@@ -153,7 +153,7 @@ Route::prefix('v1')->group(function () {
         ])->middleware('can:copy-catalog-speciality');
         Route::patch('/catalog-specialties/owners/{catalog_speciality}', [
             CatalogSpecialityController::class, 'owners'
-        ]); //->middleware('can:owner-catalog-speciality');
+        ]);
         Route::patch('/catalog-specialties/signature/{catalog_speciality}', [
             CatalogSpecialityController::class, 'storeSignatures'
         ]);
@@ -210,6 +210,4 @@ Route::prefix('v1')->group(function () {
     Route::get('/signed-plans', [PlanController::class, 'getSignedPlans'])->middleware('protectApi');
     Route::get('/signed-plans-by-id', [PlanController::class, 'getSignedPlansById'])
         ->middleware('protectApi');
-
-    // Route::get('/test/catalog-pdf', [PdfController::class, 'catalogPdf']);
 });

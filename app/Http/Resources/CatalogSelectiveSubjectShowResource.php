@@ -36,6 +36,7 @@ class CatalogSelectiveSubjectShowResource extends JsonResource
             'types_educational_activities' => $this->types_educational_activities,
             'number_acquirers' => $this->number_acquirers,
             'limitation' => $this->limitationName,
+            'url' => $this->url,
             'verifications' => $this->verifications,
             'status' => $this->status,
             'need_verification' => $this->need_verification,

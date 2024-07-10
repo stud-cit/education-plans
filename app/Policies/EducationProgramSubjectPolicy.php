@@ -54,6 +54,10 @@ class EducationProgramSubjectPolicy
      */
     public function update(User $user, EducationProgramSubject $educationProgramSubject)
     {
+        if ($user->possibility(User::PRIVILEGED_ROLES)) {
+            return true;
+        }
+
         if ($user->isDepartmentMine($educationProgramSubject->department_id)) {
             return true;
         }

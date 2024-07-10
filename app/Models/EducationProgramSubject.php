@@ -33,6 +33,7 @@ class EducationProgramSubject extends Model
         'number_acquirers',
         'entry_requirements_applicants',
         'limitation',
+        'url',
         'published',
     ];
 
