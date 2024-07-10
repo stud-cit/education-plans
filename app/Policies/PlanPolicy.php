@@ -59,29 +59,30 @@ class PlanPolicy
      */
     public function update(User $user, Plan $plan)
     {
-        if ($user->possibility(User::PRIVILEGED_ROLES)) {
-            return true;
+        if (!$plan->archived()) {
+            if ($user->possibility(User::PRIVILEGED_ROLES)) {
+                return true;
+            }
+
+            if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES)) {
+                return true;
+            }
+
+            if (
+                $user->possibility(User::FACULTY_INSTITUTE) && $plan->isNotTemplate() &&
+                $user->isFacultyMine($plan->faculty_id)
+            ) {
+                return true;
+            }
+
+            if (
+                $user->possibility(User::DEPARTMENT) && $plan->isNotTemplate() &&
+                $user->isDepartmentMine($plan->department_id)
+            ) {
+
+                return true;
+            }
         }
-
-        if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES)) {
-            return true;
-        }
-
-        if (
-            $user->possibility(User::FACULTY_INSTITUTE) && $plan->isNotTemplate() &&
-            $user->isFacultyMine($plan->faculty_id)
-        ) {
-            return true;
-        }
-
-        if (
-            $user->possibility(User::DEPARTMENT) && $plan->isNotTemplate() &&
-            $user->isDepartmentMine($plan->department_id)
-        ) {
-
-            return true;
-        }
-
         return false;
     }
 
@@ -94,28 +95,30 @@ class PlanPolicy
      */
     public function delete(User $user, Plan $plan)
     {
-        if ($user->possibility(User::PRIVILEGED_ROLES)) {
-            return true;
-        }
+        if (!$plan->archived()) {
 
-        if (
-            $user->possibility(User::FACULTY_INSTITUTE) &&
-            $user->isFacultyMine($plan->faculty_id)
-        ) {
-            return true;
-        }
+            if ($user->possibility(User::PRIVILEGED_ROLES)) {
+                return true;
+            }
 
-        if (
-            $user->possibility(User::DEPARTMENT) &&
-            $user->isDepartmentMine($plan->department_id)
-        ) {
-            return true;
-        }
+            if (
+                $user->possibility(User::FACULTY_INSTITUTE) &&
+                $user->isFacultyMine($plan->faculty_id)
+            ) {
+                return true;
+            }
 
-        if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $user->isPlanMine($plan->author_id)) {
-            return true;
-        }
+            if (
+                $user->possibility(User::DEPARTMENT) &&
+                $user->isDepartmentMine($plan->department_id)
+            ) {
+                return true;
+            }
 
+            if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $user->isPlanMine($plan->author_id)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -128,7 +131,31 @@ class PlanPolicy
      */
     public function restore(User $user, Plan $plan)
     {
-        //
+        if ($plan->archived()) {
+
+            if ($user->possibility(User::PRIVILEGED_ROLES)) {
+                return true;
+            }
+
+            if (
+                $user->possibility(User::FACULTY_INSTITUTE) &&
+                $user->isFacultyMine($plan->faculty_id)
+            ) {
+                return true;
+            }
+
+            if (
+                $user->possibility(User::DEPARTMENT) &&
+                $user->isDepartmentMine($plan->department_id)
+            ) {
+                return true;
+            }
+
+            if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $user->isPlanMine($plan->author_id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

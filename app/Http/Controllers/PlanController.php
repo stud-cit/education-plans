@@ -88,7 +88,8 @@ class PlanController extends Controller
             'speciality_id',
             'education_level_id',
             'education_program_id',
-            'study_term_id'
+            'study_term_id',
+            'deleted_at'
         )->with(['verification.role', 'verification', 'studyTerm'])
             ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
@@ -272,6 +273,13 @@ class PlanController extends Controller
 
         $plan->delete();
         return response()->json(['message' => __('messages.Deleted')], 204);
+    }
+
+    public function restore(Plan $plan)
+    {
+        $plan->onlyTrashed()->restore();
+
+        $this->success('Відновлено', 200);
     }
 
     public function copy(Plan $plan)

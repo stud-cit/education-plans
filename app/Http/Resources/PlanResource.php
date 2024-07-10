@@ -40,6 +40,7 @@ class PlanResource extends JsonResource
             'verification' => $this->approvedPlan ? __('variables.Verified') : __('variables.NotVerified'),
             'catalog_education_programs' => $this->catalogEducationPrograms(),
             'catalog_speciality' => $this->catalogSpeciality(),
+            'deleted_at' => $this->deleted_at
         ];
     }
 

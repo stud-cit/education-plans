@@ -54,8 +54,6 @@ Route::prefix('v1')->group(function () {
     Route::middleware('cabinetAuth')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
-        Route::patch('/plans/verification-op/{plan}', [PlanController::class, 'verificationOP'])
-            ->name('plans.verificationOP.store');
         Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
         Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
         Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
@@ -65,7 +63,16 @@ Route::prefix('v1')->group(function () {
         Route::get('plans/filters', [PlanController::class, 'getItemsFilters']);
         Route::get('plans/catalog-pdf', [PlanController::class, 'catalogPdf']);
         Route::patch('/plans/short-plan/{plan}', [PlanController::class, 'shortPlan']);
-        Route::Resource('plans', PlanController::class);
+
+        Route::controller(PlanController::class)->group(function () {
+            Route::get('/plans', 'index');
+            Route::get('/plans/{plan}', 'show')->withTrashed();
+            Route::post('/plans', 'store');
+            Route::get('/plans/{plan}/edit', 'edit');
+            Route::match(['put', 'patch'], '/plans/{plan}', 'update');
+            Route::delete('/plans/{plan}', 'destroy');
+            Route::patch('/plans/restore/{plan}', [PlanController::class, 'restore'])->withTrashed();
+        });
 
         Route::get('/verifications', [VerificationController::class, 'index']);
         Route::get('/verification-subject-statuses', [VerificationController::class, 'getVerificationSubjectStatuses']);
