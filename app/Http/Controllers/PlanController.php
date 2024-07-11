@@ -8,6 +8,7 @@ use App\Helpers\Tree;
 use App\Models\Cycle;
 use App\Http\Constant;
 use App\Models\Subject;
+use App\Helpers\Helpers;
 use App\Models\PlanType;
 use App\Models\StudyTerm;
 use Illuminate\Support\Str;
@@ -40,11 +41,14 @@ use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\Plan\ShortPlanRequest;
 use App\Http\Requests\Plan\SignedPlanRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
+use App\Http\Resources\Api\CatalogPdfResource;
 use App\Http\Resources\Plan\ShortPlanResource;
 use Illuminate\Validation\ValidationException;
 use App\Http\Resources\Plan\SignedPlanResource;
 use App\Http\Requests\Plan\SignedPlanByIdRequest;
+use App\Http\Resources\Api\EducationPlanResource;
 use App\Http\Requests\StorePlanVerificationRequest;
+use App\Http\Resources\Api\EducationPlanShowResource;
 use App\Http\Resources\Plan\SignedPlanIdSemesterResource;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 
@@ -819,5 +823,82 @@ class PlanController extends Controller
         if (!$plan->approvedPlan) return response(['message' => 'Plan does not approved!'], 200);
 
         return new SignedPlanIdSemesterResource($plan);
+    }
+
+    public function educationPlans()
+    {
+        $plans = Plan::with('verification')->select(
+            'id',
+            'title',
+            'guid',
+            'year',
+            'education_program_id',
+            'faculty_id',
+            'department_id',
+            'qualification_id',
+            'field_knowledge_id',
+            'speciality_id',
+            'education_level_id',
+            'type_id',
+        )->whereIn('type_id', [Plan::PLAN, Plan::SHORT])
+            ->verified()
+            ->paginate();
+
+        return EducationPlanResource::collection($plans);
+    }
+
+    public function educationPlanShow(Request $request, string $guid)
+    {
+        $model = Plan::with([
+            'verification',
+            'formStudy:id,title',
+            'educationLevel:id,title',
+            'formOrganization:id,title',
+            'studyTerm:id,title,year,month,course,module,semesters',
+            'cycles.cycles',
+            'cycles.subjects.subjects',
+            'cycles.subjects.semestersCredits',
+            'cycles.subjects.exams',
+            'cycles.subjects.test',
+            'cycles.subjects.hoursModules.formControl',
+            'cycles.subjects.hoursModules.individualTask',
+            'signatures'
+        ])->verified()->where('guid', $guid)->first();
+
+        $endYear = Helpers::calculateEndYear($model->year, $model->studyTerm);
+
+        return (new EducationPlanShowResource($model))->additional(['catalogs' => [
+            'educationProgram' => $this->educationProgram($model, $endYear),
+            'speciality' => $this->speciality($model, $endYear),
+        ]]);
+    }
+
+
+    private function educationProgram($plan, $endYear)
+    {
+        $catalog = CatalogEducationProgram::with(['subjects', 'verifications', 'educationLevel', 'signatures'])
+            ->where('selective_discipline_id', CatalogEducationProgram::EDUCATION_PROGRAM)
+            ->where('education_program_id', $plan['education_program_id'])
+            ->where('catalog_education_level_id', $plan['education_level_id'])
+            ->whereBetween('year', [$plan['year'], $endYear])
+            ->verified()
+            ->orderBy('year', 'asc')
+            ->get();
+
+        return CatalogPdfResource::collection($catalog);
+    }
+
+    private function speciality($plan, $endYear)
+    {
+        $catalog = CatalogSpeciality::with(['subjects', 'verifications', 'educationLevel', 'signatures'])
+            ->where('selective_discipline_id', CatalogSpeciality::SPECIALITY)
+            ->where('speciality_id', $plan['speciality_id'])
+            ->where('catalog_education_level_id', $plan['education_level_id'])
+            ->whereBetween('year', [$plan['year'],  $endYear])
+            ->verified()
+            ->orderBy('year', 'asc')
+            ->get();
+
+        return CatalogPdfResource::collection($catalog);
     }
 }

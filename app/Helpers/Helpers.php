@@ -14,7 +14,7 @@ class Helpers
      * @param array $newKeys
      * @return array
      */
-    static public function replaceKeysInArray(array $array, array $newKeys): array
+    public static function replaceKeysInArray(array $array, array $newKeys): array
     {
         $newArray = [];
 
@@ -39,7 +39,7 @@ class Helpers
      * @return array
      */
 
-    static public function uniqueByFields(array $source, array $fields): array
+    public static function uniqueByFields(array $source, array $fields): array
     {
         $filtered = array_reduce($source, function ($filtered, $item) use ($fields) {
             $key = array_reduce($fields, function ($key, $field) use ($item) {
@@ -59,7 +59,7 @@ class Helpers
      * @return Collection
      */
 
-    static public function searchCollection(Collection $collection, array $options): Collection
+    public static function searchCollection(Collection $collection, array $options): Collection
     {
         $result = [];
 
@@ -83,7 +83,7 @@ class Helpers
      * @param $columns
      */
 
-    static public function removeColumnInArray(&$array, $columns)
+    public static function removeColumnInArray(&$array, $columns)
     {
         array_walk($array, function (&$a) use ($columns) {
             foreach ($columns as $column)
@@ -91,14 +91,14 @@ class Helpers
         });
     }
 
-    static public function getPerPage($items_per_page, $arr)
+    public static function getPerPage($items_per_page, $arr)
     {
         return array_key_exists($items_per_page, $arr)
             ? $arr[$items_per_page]
             : Constant::PAGINATE;
     }
 
-    static public function calculateEndYear($year, $studyTerm): int
+    public static function calculateEndYear($year, $studyTerm): int
     {
         $studyTermYear = $studyTerm->year;
         $studyTermMonth = $studyTerm->month ? 1 : 0;

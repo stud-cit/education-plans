@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'cabinetAuth' => \App\Http\Middleware\EnsureCabinetTokenIsValid::class,
         'protectApi' => \App\Http\Middleware\ProtectApi::class,
+        'verifyAsuApiKey' => \App\Http\Middleware\VerifyAsuApiKey::class,
     ];
 }

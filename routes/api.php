@@ -210,4 +210,12 @@ Route::prefix('v1')->group(function () {
     Route::get('/signed-plans', [PlanController::class, 'getSignedPlans'])->middleware('protectApi');
     Route::get('/signed-plans-by-id', [PlanController::class, 'getSignedPlansById'])
         ->middleware('protectApi');
+
+    // API for education plans
+    Route::get('education-plans', [PlanController::class, 'educationPlans'])
+        ->middleware('verifyAsuApiKey')
+        ->name('ep.index');
+    Route::get('education-plans/{guid}', [PlanController::class, 'educationPlanShow'])
+        ->middleware('verifyAsuApiKey')
+        ->name('ep.show');
 });

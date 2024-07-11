@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Api;
 
+use App\Helpers\Helpers;
 use App\Models\Plan;
 use App\Models\Subject;
 use App\Models\HoursModules;
+use App\Http\Resources\CycleShowResource;
+use App\Http\Resources\SignatureShowResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PlanShowResource extends JsonResource
+class EducationPlanShowResource extends JsonResource
 {
-
     /**
      * Transform the resource into an array.
      *
@@ -53,7 +55,6 @@ class PlanShowResource extends JsonResource
             'count_exams' => $this->getCountExams(),
             'count_tests' => $this->getCountTests(),
             'count_coursework' => $this->getCountCoursework(),
-            'status' => $this->status,
             'notes' => $this->notes,
             'exams_table' => $this->getExamsTable($this->cycles),
             'individual_task_semester' => $this->getIndividualTaskSemester($this->cycles),
@@ -62,11 +63,6 @@ class PlanShowResource extends JsonResource
             'practical_training' => $this->practical_training ?
                 json_decode($this->practical_training) : [],
             'subject_notes' => $this->getSubjectNotes(),
-            'shorted_by_year' => $this->shortedByYear,
-            'short_plan' => $this->type_id === Plan::SHORT,
-            'actions' => [
-                'can_generate_short_plan' => $this->canGenerateShortPlan(),
-            ],
         ];
     }
 }

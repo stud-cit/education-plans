@@ -244,4 +244,5 @@ return [
     'cabinet_app_token' => env('CABINET_APP_TOKEN'),
     'cabinet_app_url' => env('CABINET_APP_URL'),
     'protect_api_key' => env('PROTECT_API_KEY'),
+    'protect_asu_api_key' => env('PROTECT_ASU_API_KEY')
 ];

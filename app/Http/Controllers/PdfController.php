@@ -145,7 +145,7 @@ class PdfController extends Controller
             'totalPlan' => $this->totalPlan,
             'FORM_ORGANIZATIONS' => self::FORM_ORGANIZATIONS,
             'FORM_ORGANIZATIONS_TABLE' => self::FORM_ORGANIZATIONS_TABLE,
-            'count_exams' => $this->getCountExams(),
+            'count_exams' => $this->model->getCountExams(),
             'count_tests' => $this->getCountTests(),
             'count_coursework' => $this->getCountCoursework(),
             'subject_notes' => $this->getSubjectNotes(),

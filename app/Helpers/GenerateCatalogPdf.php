@@ -16,15 +16,12 @@ class GenerateCatalogPdf
     private int $id;
     private int $endYear;
     private Plan $plan;
-    // private const speDir = '//catalogs//speciality//';
-    // private const edDir = '//catalogs//educationProgram//';
-
 
     public function __construct(int $id)
     {
         $this->id = $id;
         $this->plan = $this->findPlan();
-        $this->endYear = $this->calculateEndYear($this->plan->year, $this->plan->studyTerm);
+        $this->endYear = Helpers::calculateEndYear($this->plan->year, $this->plan->studyTerm);
     }
 
     public function GenerateCatalogSpecialityPdf()
@@ -45,7 +42,6 @@ class GenerateCatalogPdf
         $data = $this->prepareDate($catalog);
 
         $path = $this->createDirIfNotExists('//catalogs//speciality//');
-        // $path =  $path = public_path() . '//catalogs//speciality//';
         $fileName = "{$this->plan->guid}.pdf";
 
         $pdf = LaravelMpdf::loadView('pdf.speciality', ['data' => $data]);
@@ -70,7 +66,6 @@ class GenerateCatalogPdf
         $data = $this->prepareDate($catalog);
 
         $path = $this->createDirIfNotExists('//catalogs//educationProgram//');
-        // $path = public_path() . '//catalogs//educationProgram//';
         $fileName = "{$this->plan->guid}.pdf";
 
         $pdf = LaravelMpdf::loadView('pdf.educationProgram', ['data' => $data]);
@@ -82,13 +77,6 @@ class GenerateCatalogPdf
         return Plan::with('studyTerm')
             ->select('id', 'guid', 'year', 'speciality_id', 'education_level_id', 'education_program_id', 'study_term_id')
             ->where('id', $this->id)->first();
-    }
-
-    private function calculateEndYear($year, $studyTerm): int
-    {
-        $studyTermYear = $studyTerm->year;
-        $studyTermMonth = $studyTerm->month ? 1 : 0;
-        return $year + $studyTermYear + $studyTermMonth;
     }
 
     protected function getShortNames($listNames)
@@ -123,7 +111,7 @@ class GenerateCatalogPdf
                     $subject->practiceTitle = $subject->getShortNames($subject->practice);
                     $subject->faculty = $subject->facultyName;
                     $subject->department = $subject->departmentName;
-                    $subject->listFieldsKnowledgeName = $subject->list_fields_knowledge ? $subject->listFieldsKnowledgeName : null; // TODO: prepare
+                    $subject->listFieldsKnowledgeName = $subject->list_fields_knowledge ? $subject->listFieldsKnowledgeName : null;
                     $subject->educationLevel = $subject->catalog_education_level_id ? $subject->educationLevel->title : null;
                     $subject->generalCompetence = $subject->general_competence;
                     $subject->learningOutcomes = $subject->learning_outcomes;

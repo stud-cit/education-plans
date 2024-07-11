@@ -13,10 +13,6 @@
         {{ $cycle['asu_id'] ? $cycle['title'] : $cycle['selective_discipline']['title'] }}
         @if (!is_null($cycle['note']))
         <sup>
-
-            <!-- @php
-            print_r($subjectNotes);
-            @endphp -->
             {{ array_search($cycle['id'], array_column($subjectNotes, 'id')) + 1 }}
         </sup>
         @endif
