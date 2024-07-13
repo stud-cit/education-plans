@@ -19,7 +19,7 @@ class PlanEditResource extends JsonResource
         return [
             'id' => $this->id,
             'guid' => $this->guid,
-            'title' => $this->title,
+            'title' => $this->planTitle,
             'faculty' => $this->facultyName,
             'faculty_id' => $this->faculty_id,
             'department_id' => $this->department_id,
@@ -71,7 +71,9 @@ class PlanEditResource extends JsonResource
             'actions' => [
                 'can_generate_short_plan' => $this->canGenerateShortPlan(),
             ],
-            'verification_comments' => $this->verification_comments
+            'verification_comments' => $this->verification_comments,
+            'type_id' => $this->type_id,
+            'duplicate_message' => $this->duplicate_message
         ];
     }
 }

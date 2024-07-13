@@ -61,7 +61,9 @@ class Plan extends Model
         'not_conventional',
         'need_verification',
         'type_id',
-        'verification_comments'
+        'verification_comments',
+        'duplicate_message',
+        'version',
     ];
 
     protected $casts = [
@@ -103,6 +105,15 @@ class Plan extends Model
         }
 
         return $result;
+    }
+
+    public function getPlanTitleAttribute()
+    {
+        if (is_null($this->version)) {
+            return  $this->title;
+        }
+
+        return "{$this->title} Версія {$this->version}";
     }
 
     /**

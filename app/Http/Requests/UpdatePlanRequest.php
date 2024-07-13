@@ -45,7 +45,9 @@ class UpdatePlanRequest extends FormRequest
             'published' => 'required',
             'need_verification' => 'boolean',
             'not_conventional' => 'nullable|boolean',
-            'comment' => 'nullable|string|max:400'
+            'comment' => 'nullable|string|max:400',
+            'duplicate_message' => 'nullable|string|max:255'
+
         ];
     }
 }

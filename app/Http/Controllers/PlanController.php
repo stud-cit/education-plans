@@ -38,6 +38,7 @@ use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Resources\FacultiesResource;
 use App\ExternalServices\Asu\Qualification;
 use App\Http\Resources\ProfessionsResource;
+use App\Http\Requests\Plan\DuplicateRequest;
 use App\Http\Requests\Plan\ShortPlanRequest;
 use App\Http\Requests\Plan\SignedPlanRequest;
 use App\Http\Requests\StoreGeneralPlanRequest;
@@ -81,6 +82,7 @@ class PlanController extends Controller
             'id',
             'type_id',
             'title',
+            'version',
             'year',
             'faculty_id',
             'department_id',
@@ -319,6 +321,50 @@ class PlanController extends Controller
             }
         }
         return response()->json($clonePlan);
+    }
+
+    public function searchDuplicate(DuplicateRequest $request)
+    {
+        $present = false;
+        $version = 0;
+        $validated = $request->validated();
+
+        $plan = Plan::select('id', 'year', 'speciality_id', 'education_program_id', 'type_id', 'version')
+            ->where([
+                ['year', '=', $validated['year']],
+                ['speciality_id', '=', $validated['speciality_id']],
+                ['education_program_id', '=', $validated['education_program_id']],
+                ['type_id', '=', Plan::PLAN]
+            ])
+            ->where('id', '!=', $validated['id'])
+            ->orderBy('version', 'desc')->get();
+
+        if ($plan->count() > 0) {
+            $present = true;
+            $first = $plan->first();
+            $version = $first->version;
+        }
+
+        return response()->json([
+            'data' => [
+                'hasDuplicate' => $present,
+                'version' => $version,
+            ]
+        ]);
+    }
+
+    public function markAsDuplicate(Request $request, Plan $plan)
+    {
+        $validated = $request->validate([
+            'duplicate_message' => 'required|max:255',
+            'version' => 'required|numeric'
+        ]);
+        clock($validated);
+        $plan->duplicate_message = $validated['duplicate_message'];
+        $plan->version = $validated['version'] + 1;
+        $plan->save();
+
+        $this->success('Ok', 200);
     }
 
     function createCycle($cycle, $plan_id, $cycleId = null)

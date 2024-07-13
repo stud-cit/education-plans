@@ -20,7 +20,7 @@ class PlanResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'title' => $this->title,
+            'title' => $this->planTitle,
             'year' => $this->year,
             'study_term_id' => $this->study_term_id,
             'faculty_id' => $this->faculty_id,

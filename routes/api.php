@@ -63,6 +63,8 @@ Route::prefix('v1')->group(function () {
         Route::get('plans/filters', [PlanController::class, 'getItemsFilters']);
         Route::get('plans/catalog-pdf', [PlanController::class, 'catalogPdf']);
         Route::patch('/plans/short-plan/{plan}', [PlanController::class, 'shortPlan']);
+        Route::get('/plans/search-duplicate', [PlanController::class, 'searchDuplicate']);
+        Route::patch('/plans/mark-duplicate/{plan}', [PlanController::class, 'markAsDuplicate']);
 
         Route::controller(PlanController::class)->group(function () {
             Route::get('/plans', 'index');
