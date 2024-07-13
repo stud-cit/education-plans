@@ -22,6 +22,7 @@ class GenerateCatalogPdf
         $this->id = $id;
         $this->plan = $this->findPlan();
         $this->endYear = Helpers::calculateEndYear($this->plan->year, $this->plan->studyTerm);
+        ini_set('memory_limit', '512M');
     }
 
     public function GenerateCatalogSpecialityPdf()
