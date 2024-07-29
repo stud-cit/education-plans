@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use App\Models\Setting;
 use App\Models\Subject;
+use App\Helpers\Helpers;
 use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use App\Policies\PlanPolicy;
@@ -708,6 +709,33 @@ class Plan extends Model
         }
 
         return $string;
+    }
+
+    public function hasCatalogSpeciality()
+    {
+        $endYear = Helpers::calculateEndYear($this->year, $this->studyTerm);
+
+        return CatalogSpeciality::with(['subjects', 'verifications', 'educationLevel'])
+            ->where('selective_discipline_id', CatalogSpeciality::SPECIALITY)
+            ->where('speciality_id', $this->speciality_id)
+            ->where('catalog_education_level_id', $this->education_level_id)
+            ->whereBetween('year', [$this->year,  $endYear])
+            ->verified()
+            ->count() > 0;
+    }
+
+
+    public function hasCatalogEducationPrograms()
+    {
+        $endYear = Helpers::calculateEndYear($this->year, $this->studyTerm);
+
+        return CatalogEducationProgram::with(['subjects', 'verifications', 'educationLevel'])
+            ->where('selective_discipline_id', CatalogEducationProgram::EDUCATION_PROGRAM)
+            ->where('education_program_id', $this->education_program_id)
+            ->where('catalog_education_level_id', $this->education_level_id)
+            ->whereBetween('year', [$this->year, $endYear])
+            ->verified()
+            ->count() > 0;
     }
 
     protected static function booted()

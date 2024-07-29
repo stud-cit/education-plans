@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Plan;
 
-use App\Http\Resources\Cycle\CycleApiResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Cycle\CycleApiSemesterResource;
 
@@ -31,6 +30,10 @@ class SignedPlanIdSemesterResource extends JsonResource
             'speciality' => $this->specialityIdName,
             'specialization' => $this->specializationIdName,
             'education_level' => $this->educationLevel->title,
+            'doc_markers' => [
+                'op' => $this->hasCatalogEducationPrograms(),
+                'speciality' =>  $this->hasCatalogSpeciality()
+            ],
             'cycles' => CycleApiSemesterResource::collection($this->cycles->whereNull('cycle_id')),
         ];
     }

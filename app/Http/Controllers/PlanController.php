@@ -860,7 +860,9 @@ class PlanController extends Controller
             'specialization_id',
             'education_level_id',
             'type_id',
+            'study_term_id'
         )->with([
+            'studyTerm',
             'verification',
             'cycles.cycles',
             'cycles.subjects.semestersCredits',
@@ -918,7 +920,6 @@ class PlanController extends Controller
             'speciality' => $this->speciality($model, $endYear),
         ]]);
     }
-
 
     private function educationProgram($plan, $endYear)
     {
