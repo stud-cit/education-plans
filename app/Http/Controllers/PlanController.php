@@ -274,7 +274,7 @@ class PlanController extends Controller
     {
         if ($plan->type_id === Plan::SHORT) {
             $relation = ShortenedPlan::where('plan_id', $plan->id)->first();
-            $relation->delete();
+            ($relation) ? $relation->delete() : '';
         }
 
         $plan->delete();
@@ -342,7 +342,7 @@ class PlanController extends Controller
         if ($plan->count() > 0) {
             $present = true;
             $first = $plan->first();
-            $version = $first->version;
+            $version = $first->version ? $first->version : 0;
         }
 
         return response()->json([
