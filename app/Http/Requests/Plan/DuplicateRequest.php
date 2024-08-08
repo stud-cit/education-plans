@@ -27,7 +27,8 @@ class DuplicateRequest extends FormRequest
             'id' => 'required',
             'year' => 'required',
             'speciality_id' => 'required',
-            'education_program_id' => 'required'
+            'education_program_id' => 'required',
+            'study_term_id' => 'required'
         ];
     }
 }

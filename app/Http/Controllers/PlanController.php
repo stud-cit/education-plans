@@ -329,16 +329,17 @@ class PlanController extends Controller
         $version = 0;
         $validated = $request->validated();
 
-        $plan = Plan::select('id', 'year', 'speciality_id', 'education_program_id', 'type_id', 'version')
+        $plan = Plan::select('id', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
             ->where([
                 ['year', '=', $validated['year']],
                 ['speciality_id', '=', $validated['speciality_id']],
                 ['education_program_id', '=', $validated['education_program_id']],
+                ['study_term_id', '=', $validated['study_term_id']],
                 ['type_id', '=', Plan::PLAN]
             ])
             ->where('id', '!=', $validated['id'])
             ->orderBy('version', 'desc')->get();
-
+        
         if ($plan->count() > 0) {
             $present = true;
             $first = $plan->first();
@@ -359,7 +360,7 @@ class PlanController extends Controller
             'duplicate_message' => 'required|max:255',
             'version' => 'required|numeric'
         ]);
-        clock($validated);
+
         $plan->duplicate_message = $validated['duplicate_message'];
         $plan->version = $validated['version'] + 1;
         $plan->save();
