@@ -108,7 +108,19 @@ class Profession extends ASU
 
     public function getSpecializations(int $id): array
     {
-        return $this->getFiltered(self::SPECIALIZATION_ID, $id);
+        $arr = $this->getFiltered(self::SPECIALIZATION_ID, $id);
+
+        // todo: need fix
+        $arr [] = [
+            "id" => 2640,
+            "parent_id" => 1458,
+            "code" => "014.021",
+            "title" => "Англійська мова та зарубіжна література",
+            "label_id" => 3,
+            "label" => "спеціалізація",
+        ];
+
+        return $arr;
     }
 
     public function getSpecialties(int $id): array
@@ -252,13 +264,11 @@ class Profession extends ASU
             return $this->findParentKeysByEducationPrograms($p, $professionsAll);
         })->values();
 
-
         return $prof->filter(function ($p) {
             if (isset($p)) {
                 return in_array($p['label_id'], [self::EDUCATION_PROGRAM_ID, self::EDUCATION_PROGRAM_ONP_ID, self::EDUCATION_PROGRAM_OPP_ID]);
             }
         });
-
         //ToDO Нужно исправить вложенность, проблема в findParentKeysByEducationPrograms записывает лишний спеціалізація 1462 1431
         //        return $professions->map(function ($p) use ($professionsAll) {
         //            return $this->findParentKeysByEducationPrograms($p, $professionsAll);
