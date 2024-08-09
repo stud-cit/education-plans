@@ -33,7 +33,7 @@ class Profession extends ASU
      * @return string
      */
     public function getTitle($id, $key, $quote = false, $with = []): string
-    {
+    {        
         if (!$this->getProfessions()->contains('id', $id)) {
             return self::NOT_FOUND;
         }
@@ -80,7 +80,7 @@ class Profession extends ASU
     private function getFixedProfession($id)
     {
         $profession = $this->getProfessions()->firstWhere('id', $id);
-
+        
         return $this->fixLabelEducationProgram($profession);
     }
 
@@ -112,7 +112,7 @@ class Profession extends ASU
 
         // todo: need fix
         $arr [] = [
-            "id" => 2640,
+            "id" => 1640,
             "parent_id" => 1458,
             "code" => "014.021",
             "title" => "Англійська мова та зарубіжна література",
