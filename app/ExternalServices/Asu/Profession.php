@@ -254,6 +254,14 @@ class Profession extends ASU
                 "label_id" => 10,
                 "label" => "Освітньо-професійна програма"
             ],
+            [
+                "id" => 1432,
+                "parent_id" => 1459,
+                "code" => "014.021.01",
+                "title" => "Англійська та німецька мови та літератури",
+                "label_id" => 10,
+                "label" => "Освітньо-професійна програма"
+            ],
         );
 
         $professions = $professionsAll->filter(fn ($p) => in_array($p['label_id'], [
