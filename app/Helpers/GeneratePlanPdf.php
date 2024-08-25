@@ -27,9 +27,16 @@ class GeneratePlanPdf
     private $totalPlan;
     private $code = 0;
     private $pdf;
+    private $public;
 
-    public function __invoke($id)
+    /**
+     * @param int $id
+     * @param bool $verified
+     */
+    public function __invoke($id, $public = true)
     {
+        $this->public = $public;
+
         $this->model = Plan::with([
             'verification',
             'formStudy',
@@ -44,7 +51,9 @@ class GeneratePlanPdf
             'cycles.subjects.hoursModules.formControl',
             'cycles.subjects.hoursModules.individualTask',
             'signatures.position'
-        ])->select('*')->verified()->find($id);
+        ])->select('*')
+        // ->when($verified , fn($q) => $q->verified() )
+        ->find($id);
 
         $this->generate();
     }
@@ -133,6 +142,8 @@ class GeneratePlanPdf
             'count_tests' => $this->getCountTests(),
             'count_coursework' => $this->getCountCoursework(),
             'subject_notes' => $this->getSubjectNotes(),
+            'verificated' => $this->model->approvedPlan,
+            'public' => $this->public,
         ];
 
         $this->pdf = SnappyPdf::loadView('pdf.plan', $data);
@@ -156,6 +167,11 @@ class GeneratePlanPdf
         $fileName = "{$this->model->guid}.pdf";
 
         $this->pdf->save("{$path}{$fileName}", true);
+    }
+
+    public function download()
+    {
+        return $this->pdf->download("{$this->model->title}.pdf");
     }
 
     private function fill($length): array

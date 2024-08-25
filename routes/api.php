@@ -65,6 +65,7 @@ Route::prefix('v1')->group(function () {
         Route::patch('/plans/short-plan/{plan}', [PlanController::class, 'shortPlan']);
         Route::get('/plans/search-duplicate', [PlanController::class, 'searchDuplicate']);
         Route::patch('/plans/mark-duplicate/{plan}', [PlanController::class, 'markAsDuplicate']);
+        Route::get('/plans/download/{plan}', [PlanController::class, 'downloadPdf']);
 
         Route::controller(PlanController::class)->group(function () {
             Route::get('/plans', 'index');

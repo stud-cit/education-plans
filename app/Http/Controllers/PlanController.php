@@ -288,6 +288,13 @@ class PlanController extends Controller
         $this->success('Відновлено', 200);
     }
 
+    public function downloadPdf(Plan $plan)
+    {
+        $pdf = new GeneratePlanPdf;
+        $pdf($plan->id, false);
+        return $pdf->download();
+    }
+
     public function copy(Plan $plan)
     {
 

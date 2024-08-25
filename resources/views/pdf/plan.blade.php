@@ -81,7 +81,7 @@
         .table-faculty {
             text-align: center;
             font-weight: bold;
-            font-size: 10pt;
+            font-size: 12pt;
         }
 
         .table-text {
@@ -140,10 +140,27 @@
         .table-plan thead {
             display: table-row-group;
         }
+        .by-created-pdf {
+            position: absolute;
+            right: 0;
+            white-space: nowrap;
+            text-align: right;
+            color: gray;
+            font-size: 8pt;
+        }
     </style>
 </head>
 
 <body>
+    @if($verificated)
+    <div class="by-created-pdf">
+        Створено сервісом "Каталог навчальних планів"
+    </div>
+    @else 
+    <div class="by-created-pdf">
+        Навчальний план не верифіковано
+    </div>
+    @endif
     <table class="table plan-title-table">
         <tbody>
             <tr class="table-title">
@@ -485,6 +502,15 @@
             @endforeach
 
         </tbody>
+    </table>
+
+    <table class="table table-plan" width="100%">
+        @if ($verificated && $public == false)
+        <x-signature :plan="$plan" />
+        @endif
+        @if($public)
+        <x-public-signature :plan="$plan" />
+        @endif
     </table>
 </body>
 
