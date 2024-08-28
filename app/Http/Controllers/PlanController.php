@@ -874,9 +874,9 @@ class PlanController extends Controller
             'verification',
             'cycles.cycles',
             'cycles.subjects.semestersCredits',
-        ])->where('id', $validated['id'])->first();
+        ])->where('id', $validated['id'])->verified()->first();
 
-        if (!$plan->approvedPlan) return response(['message' => 'Plan does not approved!'], 200);
+        if (!$plan) return response(['message' => 'Plan does not approved!'], 200);
 
         return new SignedPlanIdSemesterResource($plan);
     }
