@@ -278,7 +278,7 @@ class Plan extends Model
 
         $subjects = [];
         $_subjects->subjects->map(function ($subject) use (&$subjects) {
-            $semester = $subject->hoursModules->filter(fn ($item) => $item->form_control_id != 10 || $item->individual_task_id != 3)->last();
+            $semester = $subject->hoursModules->filter(fn($item) => $item->form_control_id != 10 || $item->individual_task_id != 3)->last();
             $subjects[] = [
                 'title' => $subject->title,
                 'semester' => $semester->semester ?? ''
@@ -296,7 +296,7 @@ class Plan extends Model
 
         $subjects = [];
         $_subjects->subjects->map(function ($subject) use (&$subjects) {
-            $semester = $subject->hoursModules->filter(fn ($item) => $item->form_control_id != 1 && ($item->form_control_id != 10 || $item->individual_task_id != 3))->last();
+            $semester = $subject->hoursModules->filter(fn($item) => $item->form_control_id != 1 && ($item->form_control_id != 10 || $item->individual_task_id != 3))->last();
             $subjects[] = $semester->semester ?? '';
         });
 
@@ -689,6 +689,9 @@ class Plan extends Model
     {
         $result = [];
         for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
+            if ($this->form_organization_id == 1) {
+                array_push($result, '');
+            }
             array_push($result, $this->getCountWorks(['individual_task_id' => 2], $i + 1));
         }
         return $result;
