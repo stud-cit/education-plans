@@ -154,7 +154,8 @@
 <body>
     @if($verificated)
     <div class="by-created-pdf">
-        Створено сервісом "Каталог навчальних планів"
+        Верифіковано в Особистому кабінеті <br>
+        Сумського державного університету
     </div>
     @else 
     <div class="by-created-pdf">
@@ -174,12 +175,17 @@
             <tr class="table-text">
                 <td colspan="25">Затверджено рішенням вченої ради.</td>
             </tr>
+            @if(!$public)
             <tr class="table-text">
                 <td colspan="25">Протокол від <span class="no-letter-spacing">____._____________._____р.№____</span></td>
             </tr>
+            @endif
             <tr class="table-text">
-                <td colspan="25">Голова ради <span class=" no-letter-spacing">________________________</span> Анатолій ВАСИЛЬЄВ</td>
+                <td colspan="25">Голова ради
+                 @if(!$public) <span class="no-letter-spacing">________________________</span> @endif
+                 Анатолій ВАСИЛЬЄВ</td>
             </tr>
+            @if(!$public)
             <tr class="table-text">
                 <td colspan="7" class="text-center">(підпис)</td>
             </tr>
@@ -189,6 +195,7 @@
             <tr class="table-text">
                 <td colspan="7" class="text-center">М.П.</td>
             </tr>
+            @endif
             <tr></tr>
             <tr>
                 <td colspan="100%" align="center" class="table-title">НАВЧАЛЬНИЙ ПЛАН</td>
@@ -205,8 +212,9 @@
                     @elseif (isset($item['key']))
                     {{$item['key']}}
                     @else
-                    <div style="border-bottom: 1px solid black; height: 10pt;"></div>
-
+                        @if(!$public)
+                        <div style="border-bottom: 1px solid black; height: 10pt;"></div>
+                        @endif
                     @endif
                 </td>
                 @endforeach

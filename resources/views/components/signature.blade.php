@@ -18,7 +18,7 @@
         <tr>
             <td class="signature no-letter-spacing">________________</td>
             <td>&nbsp;</td>
-            <td colspan="7" class="signature-position name text-left">{{ $signature->name }} {{ $signature->surname }}</td>
+            <td colspan="7" class="signature-position name text-left">{{ $signature->name }} {{ mb_strtoupper($signature->surname) }}</td>
         </tr>
         <tr>
             <td class="text-center">(підпис)</td>
