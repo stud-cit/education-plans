@@ -97,7 +97,7 @@ class PlanController extends Controller
             'study_term_id',
             'deleted_at'
         )->with(['verification.role', 'verification', 'studyTerm'])
-            ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn ($query) => $query->published())
+            ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
@@ -126,9 +126,7 @@ class PlanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function create()
-    {
-    }
+    public function create() {}
 
     /**
      * Returns additional data for creating or editing a plan.
@@ -333,7 +331,7 @@ class PlanController extends Controller
     public function searchDuplicate(DuplicateRequest $request)
     {
         $present = false;
-        $version = 0;
+        $version = 1;
         $validated = $request->validated();
 
         $plan = Plan::select('id', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
@@ -346,11 +344,11 @@ class PlanController extends Controller
             ])
             ->where('id', '!=', $validated['id'])
             ->orderBy('version', 'desc')->get();
-        
+
         if ($plan->count() > 0) {
             $present = true;
             $first = $plan->first();
-            $version = $first->version ? $first->version : 0;
+            $version = $first->version ? $first->version : 1;
         }
 
         return response()->json([
@@ -368,10 +366,11 @@ class PlanController extends Controller
             'version' => 'required|numeric'
         ]);
 
-        $plan->duplicate_message = $validated['duplicate_message'];
-        $plan->version = $validated['version'] + 1;
-        $plan->save();
+        $newVersion = $validated['version'] + 1;
 
+        $plan->duplicate_message = $validated['duplicate_message'];
+        $plan->version = $newVersion;
+        $plan->save();
         $this->success('Ok', 200);
     }
 
@@ -775,7 +774,7 @@ class PlanController extends Controller
         $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
         $faculties = $asu->getFaculties()->when(
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
-            fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
+            fn($collections) => $collections->filter(fn($faculty) => $faculty['id'] == $user->faculty_id)
         );
 
         return response([
@@ -785,7 +784,7 @@ class PlanController extends Controller
             'types' => PlanType::select('id', 'title')
                 ->when(
                     $user->possibility(User::GUEST),
-                    fn ($q) => $q->where('id', '!=', Plan::TEMPLATE)
+                    fn($q) => $q->where('id', '!=', Plan::TEMPLATE)
                 )->get(),
         ]);
     }
@@ -805,7 +804,7 @@ class PlanController extends Controller
 
             $result = CatalogSpecialityPdfResource::collection($catalog);
 
-            return $result->filter(fn ($s) => $s->status === 'success');
+            return $result->filter(fn($s) => $s->status === 'success');
         } else if (array_key_exists('education_program_id', $validated)) {
 
             $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
@@ -818,7 +817,7 @@ class PlanController extends Controller
 
             $result = CatalogSpecialityPdfResource::collection($catalog);
 
-            return $result->filter(fn ($s) => $s->status === 'success');
+            return $result->filter(fn($s) => $s->status === 'success');
         }
     }
 

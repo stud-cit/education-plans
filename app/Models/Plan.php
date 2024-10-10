@@ -108,15 +108,6 @@ class Plan extends Model
         return $result;
     }
 
-    public function getPlanTitleAttribute()
-    {
-        if (is_null($this->version)) {
-            return  $this->title;
-        }
-
-        return "{$this->title} Версія {$this->version}";
-    }
-
     /**
      *
      * @param array $data
@@ -518,6 +509,11 @@ class Plan extends Model
                 default;
             }
         }
+
+        if ($this->version) {
+            $title .= " Версія {$this->version}";
+        }
+
         return trim($title);
     }
 
