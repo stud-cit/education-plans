@@ -59,6 +59,10 @@ class SpecialitySubjectPolicy
             return true;
         }
 
+        if ($user->isFacultyMine($specialitySubject->faculty_id) && $user->possibility(User::FACULTY_INSTITUTE)) {
+            return true;
+        }
+
         if ($user->isDepartmentMine($specialitySubject->department_id)) {
             return true;
         }
@@ -90,6 +94,10 @@ class SpecialitySubjectPolicy
      */
     public function delete(User $user, SpecialitySubject $specialitySubject)
     {
+        if ($user->isFacultyMine($specialitySubject->faculty_id) && $user->possibility(User::FACULTY_INSTITUTE)) {
+            return true;
+        }
+
         if ($user->isDepartmentMine($specialitySubject->department_id)) {
             return true;
         }
@@ -112,9 +120,7 @@ class SpecialitySubjectPolicy
         return false;
     }
 
-    protected function updateDelete($user, $specialitySubject)
-    {
-    }
+    protected function updateDelete($user, $specialitySubject) {}
 
     /**
      * Determine whether the user can restore the model.

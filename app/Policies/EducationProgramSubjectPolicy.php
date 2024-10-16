@@ -93,6 +93,10 @@ class EducationProgramSubjectPolicy
      */
     public function delete(User $user, EducationProgramSubject $educationProgramSubject)
     {
+        if ($user->isFacultyMine($educationProgramSubject->faculty_id) && $user->possibility(User::FACULTY_INSTITUTE)) {
+            return true;
+        }
+
         if ($user->isDepartmentMine($educationProgramSubject->department_id)) {
             return true;
         }
