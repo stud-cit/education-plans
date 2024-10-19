@@ -349,12 +349,12 @@ class Plan extends Model
                 return $query->where('need_verification', true);
 
             case User::FACULTY_INSTITUTE:
-                return $query->withTrashed()->whereNull(['faculty_id'])
+                return $query->whereNull(['faculty_id'])
                     ->orWhere('faculty_id', '=', Auth::user()->faculty_id)
                     ->orWhereNull('faculty_id');
 
             case User::DEPARTMENT:
-                return $query->withTrashed()->whereNull(['faculty_id', 'department_id'])
+                return $query->whereNull(['faculty_id', 'department_id'])
                     ->whereType(self::TEMPLATE)->verified()
                     ->orWhere(function ($query) {
                         $query->myFaculty()->verified()
@@ -366,7 +366,7 @@ class Plan extends Model
                     $query->where('status', true);
                 }, '>=', PlanVerification::FULL_VERIFICATION);
             default:
-                return $query->withTrashed();
+                return $query;
         }
     }
 

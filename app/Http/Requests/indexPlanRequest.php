@@ -33,6 +33,7 @@ class indexPlanRequest extends FormRequest
             'planOrTemplate' => 'numeric',
             'page' => 'integer',
             'items_per_page' => 'integer',
+            'archived' => 'nullable|boolean',
             'sort_by' => ['nullable', Rule::in(['title', 'year', 'created_at', 'type_id'])],
             'sort_desc' => ['nullable', Rule::in(['true', 'false'])]
         ];

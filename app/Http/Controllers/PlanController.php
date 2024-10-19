@@ -318,6 +318,7 @@ class PlanController extends Controller
         }
 
         $clonePlan->parent_id = $plan->id;
+        $clonePlan->duplicate_message = null;
         $clonePlan->update();
 
         foreach ($model->cycles as $cycle) {
