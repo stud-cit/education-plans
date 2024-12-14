@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use Illuminate\Http\Request;
 use App\Models\ShortenedPlan;
+use Illuminate\Support\Carbon;
 use App\ExternalServices\Op\OP;
 use App\Helpers\GeneratePlanPdf;
 use App\Models\PlanVerification;
@@ -36,6 +37,7 @@ use App\Http\Resources\PlanEditResource;
 use App\Http\Resources\PlanShowResource;
 use App\Http\Requests\UpdateCycleRequest;
 use App\Http\Resources\FacultiesResource;
+use Illuminate\Support\Facades\Validator;
 use App\ExternalServices\Asu\Qualification;
 use App\Http\Resources\ProfessionsResource;
 use App\Http\Requests\Plan\DuplicateRequest;
@@ -881,24 +883,35 @@ class PlanController extends Controller
         return new SignedPlanIdSemesterResource($plan);
     }
 
-    public function educationPlans()
+    public function educationPlans(Request $request)
     {
-        $plans = Plan::with('verification')->select(
-            'id',
-            'title',
-            'guid',
-            'year',
-            'education_program_id',
-            'faculty_id',
-            'department_id',
-            'qualification_id',
-            'field_knowledge_id',
-            'speciality_id',
-            'education_level_id',
-            'type_id',
+        $validated = Validator::make($request->all(), [
+            'days' => 'nullable|numeric',
+        ])->validate();
+
+        $days = $validated['days'] ?? false;
+
+        $plans = Plan::with('verification')->selectRaw("
+            id,
+            title,
+            guid,
+            year,
+            education_program_id,
+            faculty_id,
+            department_id,
+            qualification_id,
+            field_knowledge_id,
+            speciality_id,
+            education_level_id,
+            type_id,
+            DATE_FORMAT(updated_at, '%Y-%m-%d %H:%i:%s') as formatted_updated_at"
         )->whereIn('type_id', [Plan::PLAN, Plan::SHORT])
+            ->when($days, function ($query) use ($days) {
+                $dateThreshold = Carbon::now()->subDays($days);
+                return $query->where('updated_at', '>=', $dateThreshold);
+            })
             ->verified()
-            ->paginate();
+            ->get();
 
         return EducationPlanResource::collection($plans);
     }

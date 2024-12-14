@@ -34,6 +34,7 @@ class EducationPlanResource extends JsonResource
             'speciality_id' => $this->speciality_id,
             'education_level_id' => $this->education_level_id,
             'education_level' => $this->educationLevel->title,
+            'updated_at' => $this->formatted_updated_at
         ];
     }
 }
