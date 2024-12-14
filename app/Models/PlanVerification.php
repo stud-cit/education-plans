@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Observers\VerificationObserver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PlanVerification extends Model
 {
@@ -23,5 +24,10 @@ class PlanVerification extends Model
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    protected static function booted()
+    {
+        PlanVerification::observe(VerificationObserver::class);
     }
 }
