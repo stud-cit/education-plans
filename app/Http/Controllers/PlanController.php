@@ -387,38 +387,9 @@ class PlanController extends Controller
             "plan_id" => $plan_id,
             "has_discipline" => $cycle['has_discipline']
         ]);
-        foreach ($cycle['subjects'] as $subject) {
-            $cloneSubject = Subject::create([
-                "asu_id" => $subject['asu_id'],
-                "cycle_id" => $cloneCycle->id,
-                "selective_discipline_id" => $subject['selective_discipline_id'],
-                "credits" => $subject['credits'],
-                "hours" => $subject['hours'],
-                "practices" => $subject['practices'],
-                "laboratories" => $subject['laboratories'],
-                "faculty_id" => $subject['faculty_id'],
-                "department_id" => $subject['department_id']
-            ]);
-            foreach ($subject->hoursModules as $hoursModule) {
-                HoursModules::create([
-                    "course" => $hoursModule['course'],
-                    "hour" => $hoursModule['hour'],
-                    "subject_id" => $cloneSubject->id,
-                    "form_control_id" => $hoursModule['form_control_id'],
-                    "individual_task_id" => $hoursModule['individual_task_id'],
-                    "module" => $hoursModule['module'],
-                    "semester" => $hoursModule['semester']
-                ]);
-            }
-            foreach ($subject->semestersCredits as $semestersCredit) {
-                SemestersCredits::create([
-                    "course" => $semestersCredit['course'],
-                    "subject_id" => $cloneSubject->id,
-                    "credit" => $semestersCredit['credit'],
-                    "semester" => $semestersCredit['semester']
-                ]);
-            }
-        }
+
+        $this->copySubjectsWithoutCutting($cycle['subjects'], $cloneCycle->id);
+
         foreach ($cycle['cycles'] as $v) {
             $this->createCycle($v, $plan_id, $cloneCycle->id);
         }
@@ -671,6 +642,57 @@ class PlanController extends Controller
             }
         }
     }
+
+    private function copySubjectsWithoutCutting($subjects, $cycleId, $subject_id = null)
+    {
+        foreach ($subjects as $subject) {
+
+            $cloneSubject = Subject::create([
+                "asu_id" => $subject['asu_id'],
+                "cycle_id" => $cycleId,
+                "selective_discipline_id" => $subject['selective_discipline_id'],
+                "credits" => $subject['credits'],
+                "hours" => $subject['hours'],
+                "practices" => $subject['practices'],
+                "laboratories" => $subject['laboratories'],
+                "faculty_id" => $subject['faculty_id'],
+                "department_id" => $subject['department_id'],
+                "subject_id" => $subject_id
+            ]);
+
+            $hasSubSubjects = count($subject->subjects->toArray()) > 0;
+
+            foreach ($subject->hoursModules as $hoursModule) {
+                HoursModules::create([
+                    "course" => $hoursModule['course'],
+                    "hour" => $hoursModule['hour'],
+                    "subject_id" => $cloneSubject->id,
+                    "form_control_id" => $hoursModule['form_control_id'],
+                    "individual_task_id" => $hoursModule['individual_task_id'],
+                    "module" => $hoursModule['module'],
+                    "semester" => $hoursModule['semester']
+                ]);
+            }
+
+            foreach ($subject->semestersCredits as $semestersCredit) {
+                SemestersCredits::create([
+                    "course" => $semestersCredit['course'],
+                    "subject_id" => $cloneSubject->id,
+                    "credit" => $semestersCredit['credit'],
+                    "semester" => $semestersCredit['semester']
+                ]);
+            }
+
+            if ($hasSubSubjects) {
+                $this->copySubjectsWithoutCutting(
+                    $subject->subjects,
+                    $cycleId,
+                    $cloneSubject->id
+                );
+            }
+        }
+    }
+
     public function verification(StorePlanVerificationRequest $request, Plan $plan)
     {
         $validated = $request->validated();
@@ -891,7 +913,8 @@ class PlanController extends Controller
 
         $days = $validated['days'] ?? false;
 
-        $plans = Plan::with('verification')->selectRaw("
+        $plans = Plan::with('verification')->selectRaw(
+            "
             id,
             title,
             guid,
