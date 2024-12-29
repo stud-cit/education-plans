@@ -6,6 +6,12 @@ use Illuminate\Support\Collection;
 
 class Schedule extends ASU
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->asu_key = config('app.asu_key');
+    }
+
     protected function getData(): Collection
     {
         $url = $this->url('getGraphs');
