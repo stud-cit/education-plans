@@ -479,6 +479,14 @@ class PlanController extends Controller
                 continue;
             }
 
+            if ($item['verification_statuses_id'] === 1) { // deleted_at
+                continue;
+            }
+
+            if ($item['verification_statuses_id'] === 5) { // deleted_at
+                continue;
+            }
+
             PlanVerification::create([
                 'plan_id' => $clonePlan->id,
                 'user_id' => $item['user_id'],
@@ -488,7 +496,7 @@ class PlanController extends Controller
             ]);
         }
 
-        $clonePlan->need_verification = true;
+        $clonePlan->need_verification = !$isHasErrors;
 
         $clonePlan->save();
 

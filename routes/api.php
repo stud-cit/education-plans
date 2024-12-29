@@ -115,8 +115,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/education-programs/{id}', [AsuController::class, 'getEducationPrograms'])->name('asu.education-programs');
         Route::get('/education-programs', [AsuController::class, 'getAllEducationPrograms']);
         Route::get('/specialities', [AsuController::class, 'getAllSpecialities']);
-
         Route::get('/subjects', [AsuController::class, 'getSubjects'])->name('asu.subjects');
+        Route::get('/asu/schedules', [AsuController::class, 'getSchedules']);
+        Route::get('/asu/schedules/{id}', [AsuController::class, 'getScheduleById']);
+
         Route::get('/programs', [OpController::class, 'programs'])->name('op.programs');
 
         Route::get('/user', function (Request $request) {
@@ -142,33 +144,41 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('catalog-subjects', CatalogSubjectController::class);
 
         Route::patch('/catalog-selective-subjects/verification/{catalog_selective_subject}', [
-            CatalogSelectiveSubjectController::class, 'verification'
+            CatalogSelectiveSubjectController::class,
+            'verification'
         ]);
         Route::patch('/catalog-selective-subjects/toggle-to-verification/{catalog_selective_subject}', [
-            CatalogSelectiveSubjectController::class, 'toggleToVerification'
+            CatalogSelectiveSubjectController::class,
+            'toggleToVerification'
         ]);
         Route::get('catalog-selective-subjects/filters', [CatalogSelectiveSubjectController::class, 'getItemsFilters']);
         Route::Resource('catalog-selective-subjects', CatalogSelectiveSubjectController::class);
 
         Route::get('/catalog-specialties/filters', [CatalogSpecialityController::class, 'getItemsFilters']);
         Route::patch('/catalog-specialties/copy/{catalog_speciality}', [
-            CatalogSpecialityController::class, 'copy'
+            CatalogSpecialityController::class,
+            'copy'
         ])->middleware('can:copy-catalog-speciality');
         Route::patch('/catalog-specialties/owners/{catalog_speciality}', [
-            CatalogSpecialityController::class, 'owners'
+            CatalogSpecialityController::class,
+            'owners'
         ]);
         Route::patch('/catalog-specialties/signature/{catalog_speciality}', [
-            CatalogSpecialityController::class, 'storeSignatures'
+            CatalogSpecialityController::class,
+            'storeSignatures'
         ]);
         Route::delete('/catalog-specialties/delete/{catalog_speciality}', [
-            CatalogSpecialityController::class, 'delete'
+            CatalogSpecialityController::class,
+            'delete'
         ])->middleware('can:delete-catalog-speciality,catalog_speciality');
 
         Route::patch('/catalog-specialties/verification/{catalog_speciality}', [
-            CatalogSpecialityController::class, 'verification'
+            CatalogSpecialityController::class,
+            'verification'
         ]);
         Route::patch('/catalog-specialties/toggle-to-verification/{catalog_speciality}', [
-            CatalogSpecialityController::class, 'toggleToVerification'
+            CatalogSpecialityController::class,
+            'toggleToVerification'
         ]);
 
         Route::get('/catalog-specialties/generate-pdf', [CatalogSpecialityController::class, 'pdf']);
@@ -180,25 +190,31 @@ Route::prefix('v1')->group(function () {
         Route::get('/catalog-education-programs/filters', [CatalogEducationProgramController::class, 'getItemsFilters']);
 
         Route::patch('/catalog-education-programs/copy/{catalog_education_program}', [
-            CatalogEducationProgramController::class, 'copy'
+            CatalogEducationProgramController::class,
+            'copy'
         ])->middleware('can:copy-catalog-education-program');
 
         Route::patch('/catalog-education-programs/owners/{catalog_education_program}', [
-            CatalogEducationProgramController::class, 'owners'
+            CatalogEducationProgramController::class,
+            'owners'
         ]);
         Route::patch('/catalog-education-programs/signature/{catalog_education_program}', [
-            CatalogEducationProgramController::class, 'storeSignatures'
+            CatalogEducationProgramController::class,
+            'storeSignatures'
         ]);
 
         Route::delete('/catalog-education-programs/delete/{catalog_education_program}', [
-            CatalogEducationProgramController::class, 'delete'
+            CatalogEducationProgramController::class,
+            'delete'
         ])->middleware('can:delete-catalog-education-program,catalog_education_program');
 
         Route::patch('/catalog-education-programs/verification/{catalog_education_program}', [
-            CatalogEducationProgramController::class, 'verification'
+            CatalogEducationProgramController::class,
+            'verification'
         ]);
         Route::patch('/catalog-education-programs/toggle-to-verification/{catalog_education_program}', [
-            CatalogEducationProgramController::class, 'toggleToVerification'
+            CatalogEducationProgramController::class,
+            'toggleToVerification'
         ]);
 
         Route::get('/catalog-education-programs/generate-pdf', [CatalogEducationProgramController::class, 'pdf']);
