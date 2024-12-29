@@ -2,7 +2,6 @@
 
 namespace App\ExternalServices\Asu;
 
-use App\ExternalServices\Asu\ASU;
 use Illuminate\Support\Collection;
 
 class Schedule extends ASU
