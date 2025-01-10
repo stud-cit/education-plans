@@ -18,6 +18,8 @@ class Department extends ASU
             return in_array($value['id'], self::REJECTED_DEPARTMENTS);
         });
 
+        $filtered->push($this->addSpecialItem());
+
         return $filtered->values();
     }
 
@@ -181,6 +183,20 @@ class Department extends ASU
             'faculty_id' => $facultyId,
             'faculty_name' => $facultyName
         ];
+    }
+
+    public function addSpecialItem()
+    {
+        $special = [
+            "id" => 0,
+            "faculty_id" => 0,
+            "unit_type" => self::ID_INSTITUTE,
+            "department_id" => 0,
+            "name" => "Кафедри загальноуніверситетського рівня",
+            "short_name" => "КЗР"
+        ];
+
+        return $special;
     }
 
     public function getDepartments(): Collection
