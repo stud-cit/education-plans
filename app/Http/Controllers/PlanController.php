@@ -337,7 +337,7 @@ class PlanController extends Controller
         $version = 1;
         $validated = $request->validated();
 
-        $plan = Plan::select('id', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
+        $plan = Plan::withTrashed()->select('id', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
             ->where([
                 ['year', '=', $validated['year']],
                 ['speciality_id', '=', $validated['speciality_id']],
