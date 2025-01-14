@@ -283,7 +283,7 @@ class PlanController extends Controller
 
     public function restore(Plan $plan)
     {
-        $plan->onlyTrashed()->restore();
+        $plan->restore();
 
         $this->success('Відновлено', 200);
     }

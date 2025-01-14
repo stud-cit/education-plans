@@ -47,4 +47,15 @@ class PlanObserver
 
         UserActivityController::addToLog(__('variables.replicating'), 'План', "Початковий план {$matches[0]}");
     }
+
+    /**
+     * Handle the Plan "restored" event.
+     * 
+     * @param  \App\Models\Plan  $plan
+     * @return void
+     */
+    public function restored(Plan $plan)
+    {
+        UserActivityController::addToLog(__('variables.restored'), 'План', "План {$plan->id}");
+    }
 }

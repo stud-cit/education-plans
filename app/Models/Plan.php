@@ -12,6 +12,7 @@ use App\Policies\PlanPolicy;
 use App\Models\ShortenedPlan;
 use App\Observers\PlanObserver;
 use App\Models\SemestersCredits;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
@@ -65,6 +66,7 @@ class Plan extends Model
         'verification_comments',
         'duplicate_message',
         'version',
+        'deleted_at'
     ];
 
     protected $casts = [
@@ -756,6 +758,7 @@ class Plan extends Model
                 $plan->department_id = $user->department_id;
             }
         });
+
         Plan::observe(PlanObserver::class);
     }
 }
