@@ -46,9 +46,9 @@
     <td class="border-table">{{ $cycle['index'] }}.{{ $subjectIndex + 1 }}</td>
     <td class="border-table">
         {{ $subject['asu_id'] ? $subject['title'] : $subject['selective_discipline']['title'] }}
-        @if ($subject['note'])
+        @if (isset($subject['note']))
         <sup>
-            {{ array_search($subject['id'], array_column($plan['subject_notes'], 'id')) + 1 }}
+            {{ array_search($subject['id'], array_column($subjectNotes, 'id')) + 1 }}
         </sup>
         @endif
     </td>
