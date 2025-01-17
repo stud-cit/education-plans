@@ -307,8 +307,10 @@ class PlanController extends Controller
             'cycles.subjects.semestersCredits',
             'cycles.subjects.hoursModules',
         ]);
+        $result = preg_replace('/Версія \d+$/u', '', $plan->title);
+        $result = trim($result);
 
-        $plan->title = "Копія " . $plan->title;
+        $plan->title = "Копія $result";
         $plan->need_verification = false;
 
         $clonePlan = $plan->duplicate();
@@ -321,6 +323,7 @@ class PlanController extends Controller
 
         $clonePlan->parent_id = $plan->id;
         $clonePlan->duplicate_message = null;
+        $clonePlan->version = null;
         $clonePlan->update();
 
         foreach ($model->cycles as $cycle) {
