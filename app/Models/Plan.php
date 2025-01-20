@@ -150,7 +150,7 @@ class Plan extends Model
         return $terms;
     }
 
-    protected function isApprovedPlan(): bool
+    public function isApprovedPlan(): bool
     {
         return $this->verification->sum('status') >= PlanVerification::FULL_VERIFICATION;
     }
