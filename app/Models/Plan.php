@@ -467,7 +467,7 @@ class Plan extends Model
         $planId = $this->id;
         $result = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
             $queryCycle->where('plan_id', $planId);
-        })->select('note', 'asu_id')->whereNotNull('note')->get();
+        })->select('id', 'note', 'asu_id')->whereNotNull('note')->get();
         return $result;
     }
 
