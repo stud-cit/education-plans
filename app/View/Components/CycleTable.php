@@ -6,18 +6,19 @@ use Illuminate\View\Component;
 
 class CycleTable extends Component
 {
-    public $cycles, $plan, $const, $subjectNotes;
+    public $cycles, $plan, $const, $subjectNotes, $individualTaskSemester;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($cycles, $plan, $const, $subjectNotes)
+    public function __construct($cycles, $plan, $const, $subjectNotes, $individualTaskSemester)
     {
         $this->cycles = $cycles;
         $this->plan = $plan;
         $this->const = $const;
         $this->subjectNotes = $subjectNotes;
+        $this->individualTaskSemester = $individualTaskSemester;
     }
 
     /**

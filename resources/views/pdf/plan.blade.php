@@ -428,7 +428,7 @@
         <x-semester-header-table :plan="$plan" :hoursWeeksSemesters="$hoursWeeksSemesters" />
         @endif
         <tbody>
-            <x-cycle-table :cycles="$cycles" :plan="$plan" :const="$FORM_ORGANIZATIONS_TABLE" :subjectNotes="$subject_notes" />
+            <x-cycle-table :cycles="$cycles" :plan="$plan" :const="$FORM_ORGANIZATIONS_TABLE" :subjectNotes="$subject_notes" :individualTaskSemester="$individual_task_semester" />
 
             <tr class="table-bold">
                 <td class="border-table">&nbsp;</td>

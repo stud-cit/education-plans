@@ -52,8 +52,7 @@ class GeneratePlanPdf
             'cycles.subjects.hoursModules.individualTask',
             'signatures.position'
         ])->select('*')
-        // ->when($verified , fn($q) => $q->verified() )
-        ->find($id);
+            ->find($id);
 
         $this->generate();
     }
@@ -144,6 +143,7 @@ class GeneratePlanPdf
             'subject_notes' => $this->getSubjectNotes(),
             'verificated' => $this->model->approvedPlan,
             'public' => $this->public,
+            'individual_task_semester' => $this->model->getIndividualTaskSemester($this->model->cycles),
         ];
 
         $this->pdf = SnappyPdf::loadView('pdf.plan', $data);
@@ -438,7 +438,7 @@ class GeneratePlanPdf
             }
         }
 
-        return array_map(fn ($val) => round($val, 2), $hours_modules_total);
+        return array_map(fn($val) => round($val, 2), $hours_modules_total);
     }
 
     private function getSimpleHoursModulesTotal($items)
@@ -471,7 +471,7 @@ class GeneratePlanPdf
             }
         }
 
-        return array_map(fn ($val) => round($val, 2), $hours_modules_total);
+        return array_map(fn($val) => round($val, 2), $hours_modules_total);
     }
 
 
@@ -482,7 +482,6 @@ class GeneratePlanPdf
 
     private function getIndividualTasks($hours_modules)
     {
-
         $individual_tasks = '';
         $hours_modules->groupBy('individualTask.id')->map(function ($individual_task, $key) use (&$individual_tasks) {
             if (in_array($key, [

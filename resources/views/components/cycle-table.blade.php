@@ -21,7 +21,7 @@
     <td class="border-table">{{ $cycle['exams_count'] }}</td>
     <td class="border-table">{{ $cycle['test_count'] }} </td>
     <!--Заліки-->
-    <td class="border-table">{{ $cycle['individual_tasks']}}</td>
+    <td class="border-table">{{ $cycle['individual_tasks']}} {{ $cycle['list_cycle_id'] == 10 ? $individualTaskSemester[$cycle['index'] - 1] : '' }}</td>
     <td class="border-table">{{ $cycle['credits'] > 0 ? $cycle['credits'] : '' }}</td>
     <td class="border-table">{{ $cycle['total_volume_hour'] > 0 ? $cycle['total_volume_hour'] : '' }}</td>
     <td class="border-table">{{ $cycle['total_classroom'] > 0 ? $cycle['total_classroom'] : '' }}</td>
