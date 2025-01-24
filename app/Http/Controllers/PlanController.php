@@ -277,7 +277,16 @@ class PlanController extends Controller
             ($relation) ? $relation->delete() : '';
         }
 
+        if ($plan->type_id === Plan::PLAN) {
+            $plan->version = null;
+            $plan->duplicate_message = null;
+            $plan->title = Plan::removeVerstionFromTitle($plan->title);
+
+            $plan->saveQuietly();
+        }
+
         $plan->delete();
+
         return response()->json(['message' => __('messages.Deleted')], 204);
     }
 
@@ -307,8 +316,8 @@ class PlanController extends Controller
             'cycles.subjects.semestersCredits',
             'cycles.subjects.hoursModules',
         ]);
-        $result = preg_replace('/Версія \d+$/u', '', $plan->title);
-        $result = trim($result);
+
+        $result = Plan::removeVerstionFromTitle($plan->title);
 
         $plan->title = "Копія $result";
         $plan->need_verification = false;
@@ -340,7 +349,7 @@ class PlanController extends Controller
         $version = 1;
         $validated = $request->validated();
 
-        $plan = Plan::withTrashed()->select('id', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
+        $plan = Plan::select('id', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
             ->where([
                 ['year', '=', $validated['year']],
                 ['speciality_id', '=', $validated['speciality_id']],

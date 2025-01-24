@@ -519,6 +519,12 @@ class Plan extends Model
         return trim($title);
     }
 
+    public static function removeVerstionFromTitle(string $title): string
+    {
+        $result = preg_replace('/Версія \d+$/u', '', $title);
+        return trim($result);
+    }
+
     public function isHasErrors(): bool
     {
         return (bool) count($this->setErrors());
