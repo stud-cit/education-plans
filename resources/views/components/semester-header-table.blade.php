@@ -25,7 +25,7 @@
         <td class="border-table" rowspan="6">Кількість кредитів ЄКТС</td>
         <td class="border-table" rowspan="1" colspan="6">Кількість годин</td>
         <td class="border-table" rowspan="1" colspan="{{ $plan->studyTerm['semesters'] }}">
-            Розподіл годин на тиждень за курсами, семестрами і модульними атестаційними циклами
+            Розподіл годин на тиждень за курсами, семестрами і модульними циклами
         </td>
     </tr>
     <tr>

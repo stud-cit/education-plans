@@ -24,7 +24,7 @@
         <td class="border-table" rowspan="8" width="50">Кількість кредитів ЄКТС</td>
         <td class="border-table" rowspan="1" colspan="6">Кількість годин</td>
         <td class="border-table" rowspan="1" colspan="{{ $plan->studyTerm['semesters'] * 2 }}">
-            Розподіл годин на тиждень за курсами, семестрами і модульними атестаційними циклами
+            Розподіл годин на тиждень за курсами, семестрами і модульними циклами
         </td>
     </tr>
     <tr>
@@ -56,7 +56,7 @@
         <td class="border-table" rowspan="4">лекції</td>
         <td class="border-table" rowspan="4">практичні, семінарські</td>
         <td class="border-table" rowspan="4">лабораторні</td>
-        <td class="border-table" rowspan="1" colspan="{{ $plan->studyTerm['semesters'] * 2 }}">Модульні атестаційні цикли</td>
+        <td class="border-table" rowspan="1" colspan="{{ $plan->studyTerm['semesters'] * 2 }}">Модульні цикли</td>
     </tr>
     <tr>
         @foreach($courseArray as $course)
