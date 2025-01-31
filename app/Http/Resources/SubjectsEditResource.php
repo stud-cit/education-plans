@@ -59,7 +59,7 @@ class SubjectsEditResource extends JsonResource
     function checkCountHours()
     {
         $sumHours = $this->hours + $this->practices + $this->laboratories; // беремо суму годин практичних, лекцій, лабораторних
-        return ($this->credits * 30 * ($this->getOptions('min-classroom-load') / 100) > $sumHours || // кредити дисципліни множимо на 30 (це константа) і множимо на мінімальне аудиторне навантаження по дисципліні у відсотках (налаштування -> загальні обмеження), ділимо на 100 і перевіряємо за загальним навантаженням. результат має бути такий що відсоток мінімального навантаження не повинен бути більше кількості годин
+        return ($this->credits * 30 * ($this->minClassroomLoad() / 100) > $sumHours || // кредити дисципліни множимо на 30 (це константа) і множимо на мінімальне аудиторне навантаження по дисципліні у відсотках (налаштування -> загальні обмеження), ділимо на 100 і перевіряємо за загальним навантаженням. результат має бути такий що відсоток мінімального навантаження не повинен бути більше кількості годин
             $this->credits * 30 * ($this->getOptions('max-classroom-load') / 100) < $sumHours // теж саме тільки з максимальним відсотком навантаження
         ); // суть така що години повинні бути в межах цих відсотків обрахованих формулою
     }
@@ -82,7 +82,7 @@ class SubjectsEditResource extends JsonResource
                 return $item['semester'] == $lastSemestersCredits['semester'];
             });
 
-            $filtered = array_filter($hoursModules, fn ($item) => $item['hour'] > 0);
+            $filtered = array_filter($hoursModules, fn($item) => $item['hour'] > 0);
             $lastItem = end($filtered);
 
             if ($lastItem && $lastItem['form_control_id'] == Constant::FORM_CONTROL['NO_CERTIFICATIONS']) {
@@ -118,7 +118,7 @@ class SubjectsEditResource extends JsonResource
                 return $prev + $curr;
             }, 0); // сумуємо години
 
-            if ($semesterItem->credit * 30 * ($this->getOptions('min-classroom-load') / 100) > $sumHoursModules || $semesterItem->credit * 30 * ($this->getOptions('max-classroom-load') / 100) < $sumHoursModules) { // перевіряємо діапазон
+            if ($semesterItem->credit * 30 * ($this->minClassroomLoad() / 100) > $sumHoursModules || $semesterItem->credit * 30 * ($this->getOptions('max-classroom-load') / 100) < $sumHoursModules) { // перевіряємо діапазон
                 $res[] = $semesterItem->semester;
             }
         }
@@ -128,6 +128,21 @@ class SubjectsEditResource extends JsonResource
     function checkHasCreditsSemester()
     {
         return count($this->semestersCredits->where('credit', '!=', 0)) > 0 ? true : false; // перевіряємо ци є кредити хоча б в одному семестрі
+    }
+
+    function minClassroomLoad()
+    {
+        $minClassroomLoad = null;
+
+        switch ($this->cycle->plan->education_level_id) {
+            case 4:
+                $minClassroomLoad = $this->getOptions('min-classroom-load-masters');
+                break;
+            default:
+                $minClassroomLoad = $this->getOptions('min-classroom-load');
+        }
+
+        return $minClassroomLoad;
     }
 
     function getOptions($key)
