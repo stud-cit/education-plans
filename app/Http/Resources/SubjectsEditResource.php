@@ -53,7 +53,8 @@ class SubjectsEditResource extends JsonResource
         foreach ($hours_modules as $key => $value) { // пробігаємося по масику тижнів
             $sumHoursModules += $hours_weeks_semesters[$key]->week * $value->hour; // перемножаємо кількість тижнів на години для кожного модуля і сумуємо результат
         }
-        return $sumHoursModules == $sumHours;
+        clock("checkCountHoursModules", ['sumHoursModules' => round($sumHoursModules, 2), 'sumHours' => round($sumHours, 2)]);
+        return round($sumHoursModules, 2) == round($sumHours, 2);
     }
 
     function checkCountHours()
@@ -136,6 +137,8 @@ class SubjectsEditResource extends JsonResource
 
         switch ($this->cycle->plan->education_level_id) {
             case 4:
+            case 10:
+            case 11:
                 $minClassroomLoad = $this->getOptions('min-classroom-load-masters');
                 break;
             default:
