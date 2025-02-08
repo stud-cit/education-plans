@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSubjectRequest extends FormRequest
@@ -25,14 +26,14 @@ class StoreSubjectRequest extends FormRequest
     {
         return [
             'plan_id' => 'required',
-            'asu_id' => 'nullable',
+            'asu_id' => [Rule::requiredIf($this->selective_discipline == false)],
             'subject_id' => 'nullable',
             'cycle_id' => 'required|exists:App\Models\Cycle,id',
             'credits' => 'required|numeric',
             'hours' => 'numeric',
             'practices' => 'numeric',
             'laboratories' => 'numeric',
-            'selective_discipline_id' => 'nullable',
+            'selective_discipline_id' => [Rule::requiredIf($this->selective_discipline === true)],
             'faculty_id' => 'nullable',
             'department_id' => 'nullable',
             'note' => 'nullable',
