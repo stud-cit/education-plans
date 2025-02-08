@@ -8,7 +8,6 @@ use App\Models\Subject;
 use App\Models\HoursModules;
 use App\Models\PlanVerification;
 use App\Models\SemestersCredits;
-use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreSubjectRequest;
