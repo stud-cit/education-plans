@@ -26,14 +26,14 @@ class StoreSubjectRequest extends FormRequest
     {
         return [
             'plan_id' => 'required',
-            'asu_id' => [Rule::requiredIf($this->selective_discipline == false)],
+            'asu_id' => [Rule::requiredIf($this->selectiveDiscipline === false)],
             'subject_id' => 'nullable',
             'cycle_id' => 'required|exists:App\Models\Cycle,id',
             'credits' => 'required|numeric',
             'hours' => 'numeric',
             'practices' => 'numeric',
             'laboratories' => 'numeric',
-            'selective_discipline_id' => [Rule::requiredIf($this->selective_discipline === true)],
+            'selective_discipline_id' => [Rule::requiredIf($this->selectiveDiscipline === true)],
             'faculty_id' => 'nullable',
             'department_id' => 'nullable',
             'note' => 'nullable',
