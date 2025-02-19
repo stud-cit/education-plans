@@ -26,6 +26,7 @@ use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\indexPlanRequest;
 use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
@@ -870,8 +871,11 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
+        $now = Carbon::now();
+        $year = $now->year;
+
         $plans = Plan::with(
-            'verification',
+            'verification:id,plan_id,status',
             'cycles.cycles'
         )->select(
             'id',
@@ -888,6 +892,7 @@ class PlanController extends Controller
             'type_id',
         )->plan()
             ->where('department_id', $validated['department_id'])
+            ->whereIn('year', [$year, $year - 1])
             ->verified()
             ->get();
 
