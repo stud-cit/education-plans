@@ -33,7 +33,7 @@ class Profession extends ASU
      * @return string
      */
     public function getTitle($id, $key, $quote = false, $with = []): string
-    {        
+    {
         if (!$this->getProfessions()->contains('id', $id)) {
             return self::NOT_FOUND;
         }
@@ -80,7 +80,7 @@ class Profession extends ASU
     private function getFixedProfession($id)
     {
         $profession = $this->getProfessions()->firstWhere('id', $id);
-        
+
         return $this->fixLabelEducationProgram($profession);
     }
 
@@ -111,7 +111,7 @@ class Profession extends ASU
         $arr = $this->getFiltered(self::SPECIALIZATION_ID, $id);
 
         // todo: need fix
-        $arr [] = [
+        $arr[] = [
             "id" => 1640,
             "parent_id" => 1458,
             "code" => "014.021",
@@ -175,7 +175,7 @@ class Profession extends ASU
             return [
                 'id' => (int) $item['id'],
                 'title' => "{$item['code']} $ucFirstTitle ($type)",
-                'speciality_id' => $item['speciality_id'],
+                'speciality_id' => $item['speciality_id'] ?? null,
                 'specialization_id' => $item['specialization_id']
             ];
         });
@@ -264,8 +264,10 @@ class Profession extends ASU
             ],
         );
 
-        $professions = $professionsAll->filter(fn ($p) => in_array($p['label_id'], [
-            self::EDUCATION_PROGRAM_ID, self::EDUCATION_PROGRAM_ONP_ID, self::EDUCATION_PROGRAM_OPP_ID
+        $professions = $professionsAll->filter(fn($p) => in_array($p['label_id'], [
+            self::EDUCATION_PROGRAM_ID,
+            self::EDUCATION_PROGRAM_ONP_ID,
+            self::EDUCATION_PROGRAM_OPP_ID
         ]));
 
         $prof = $professions->map(function ($p) use ($professionsAll) {
