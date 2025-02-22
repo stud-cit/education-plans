@@ -244,7 +244,7 @@ class GeneratePlanPdf
                     $subject->list_cycle_id = $subject->cycle->list_cycle_id;
                     $subject->total_classroom = $this->totalClassroom($subject);
                     $subject->semesters_credits_computed = $subject->semestersCredits->pluck('credit', 'semester');
-                    $subject->exams_count = $subject->exams->count() ? (int)$subject->exams->first()->semester : '';
+                    $subject->exams_count = $subject->exams->count() ? $subject->exams->first()->semester : '';
                     $subject->test_count = $subject->test->count() ? $subject->test->first()->semester : '';
                     $subject->individual_tasks = $this->getIndividualTasks($subject->hoursModules);
                     $subject->total_volume_hour = $subject->credits * Constant::NUMBER_HOURS_IN_CREDIT;
@@ -259,7 +259,7 @@ class GeneratePlanPdf
                         $subject2->semesters_credits_computed =
                             $subject2->semestersCredits->pluck('credit', 'semester');
                         $subject2->exams_count = $subject2->exams->count() ?
-                            (int)$subject2->exams->first()->semester : '';
+                            $subject2->exams->first()->semester : '';
                         $subject2->test_count = $subject2->test->count() ?
                             $subject2->test->first()->semester : '';
                         $subject2->individual_tasks = $this->getIndividualTasks($subject2->hoursModules);
