@@ -334,6 +334,12 @@ class PlanController extends Controller
         $clonePlan->parent_id = $plan->id;
         $clonePlan->duplicate_message = null;
         $clonePlan->version = null;
+
+        if ($plan->isShortPlan2024()) {
+            $clonePlan->version = 3;
+            $clonePlan->title = $clonePlan->generateTitle();
+        }
+
         $clonePlan->update();
 
         foreach ($model->cycles as $cycle) {

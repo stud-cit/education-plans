@@ -409,8 +409,17 @@ class Plan extends Model
         return $this->type_id !== self::PLAN;
     }
 
+    public function isShortPlan2024(): bool
+    {
+        return $this->type_id === self::SHORT && $this->year === 2024;
+    }
+
     public function isNotShort(): bool
     {
+        if ($this->isShortPlan2024() && $this->isApprovedPlan()) {
+            return true;
+        }
+
         return $this->type_id !== self::SHORT ? true : false;
     }
 
