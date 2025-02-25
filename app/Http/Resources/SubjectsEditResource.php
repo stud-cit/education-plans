@@ -53,7 +53,7 @@ class SubjectsEditResource extends JsonResource
         foreach ($hours_modules as $key => $value) { // пробігаємося по масику тижнів
             $sumHoursModules += $hours_weeks_semesters[$key]->week * $value->hour; // перемножаємо кількість тижнів на години для кожного модуля і сумуємо результат
         }
-        clock("checkCountHoursModules", ['sumHoursModules' => round($sumHoursModules, 2), 'sumHours' => round($sumHours, 2)]);
+
         return round($sumHoursModules, 2) == round($sumHours, 2);
     }
 

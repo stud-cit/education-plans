@@ -16,7 +16,6 @@ use App\Models\HoursModules;
 use Illuminate\Http\Request;
 use App\Models\ShortenedPlan;
 use Illuminate\Support\Carbon;
-use App\ExternalServices\Op\OP;
 use App\Helpers\GeneratePlanPdf;
 use App\Models\PlanVerification;
 use App\Models\SemestersCredits;
@@ -26,7 +25,6 @@ use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\indexPlanRequest;
 use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
@@ -334,10 +332,24 @@ class PlanController extends Controller
         $clonePlan->parent_id = $plan->id;
         $clonePlan->duplicate_message = null;
         $clonePlan->version = null;
+        $clonePlan->created_at = now();
+        $clonePlan->updated_at = now();
 
         if ($plan->isShortPlan2024()) {
+            $clonePlan->type_id = Plan::SHORT;
             $clonePlan->version = 3;
             $clonePlan->title = $clonePlan->generateTitle();
+
+            $short = ShortenedPlan::firstWhere('plan_id', $model->id);
+
+            if ($short) {
+                ShortenedPlan::create([
+                    'plan_id' => $clonePlan->id,
+                    'parent_id' => $short->parent_id,
+                    'shortened_by_year' => $short->shortened_by_year,
+                    'year' => $short->year,
+                ]);
+            }
         }
 
         $clonePlan->update();

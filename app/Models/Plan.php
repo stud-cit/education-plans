@@ -66,7 +66,9 @@ class Plan extends Model
         'verification_comments',
         'duplicate_message',
         'version',
-        'deleted_at'
+        'deleted_at',
+        'created_at',
+        'updated_at',
     ];
 
     protected $casts = [
