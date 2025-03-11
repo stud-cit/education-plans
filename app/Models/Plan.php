@@ -12,7 +12,6 @@ use App\Policies\PlanPolicy;
 use App\Models\ShortenedPlan;
 use App\Observers\PlanObserver;
 use App\Models\SemestersCredits;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
@@ -91,11 +90,12 @@ class Plan extends Model
     const TEMPLATE = 1;
     const PLAN = 2;
     const SHORT = 3;
+    const PROJECT = 4;
 
     public function getStatusAttribute()
     {
         $result = '';
-        $accept = VerificationStatuses::fullPlanVerification();
+        $accept = VerificationStatuses::fullPlanVerification($this->type_id);
         $data = array_column($this->verification->toArray(), 'status');
         $hasVerification = count($data) > 0;
 
@@ -154,17 +154,42 @@ class Plan extends Model
 
     public function isApprovedPlan(): bool
     {
-        return $this->verification->sum('status') >= PlanVerification::FULL_VERIFICATION;
+        return $this->verification->sum('status') >= $this->fullVerification();
     }
 
     public function getApprovedPlanAttribute(): bool
     {
-        return $this->verification->sum('status') >= PlanVerification::FULL_VERIFICATION;
+        return $this->verification->sum('status') >= $this->fullVerification();
+    }
+
+    protected function fullVerification(): int
+    {
+        switch ($this->type_id) {
+            case self::TEMPLATE:
+            case self::PLAN:
+            case self::SHORT:
+                return PlanVerification::FULL_VERIFICATION;
+            case self::PROJECT:
+                return PlanVerification::PROJECT_VERIFICATION;
+        }
+        return 0;
     }
 
     public function getUserVerificationsAttribute()
     {
         return $this->verification;
+    }
+
+    public function getStringTypeAttribute(): string
+    {
+        $types = [
+            self::TEMPLATE => VerificationStatuses::TYPE_PLAN,
+            self::PLAN => VerificationStatuses::TYPE_PLAN,
+            self::SHORT => VerificationStatuses::TYPE_PLAN,
+            self::PROJECT => VerificationStatuses::TYPE_PROJECT,
+        ];
+
+        return $types[$this->type_id];
     }
 
     public function getBasePlanDataAttribute()
@@ -330,6 +355,7 @@ class Plan extends Model
 
     public function signatures()
     {
+
         return $this->hasMany(Signature::class);
     }
 
@@ -368,7 +394,7 @@ class Plan extends Model
             case User::GUEST:
                 return $query->where('type_id', '!=', self::TEMPLATE)->whereHas('verification', function (Builder $query) {
                     $query->where('status', true);
-                }, '>=', PlanVerification::FULL_VERIFICATION);
+                }, '>=', $this->fullVerification());
             default:
                 return $query;
         }
@@ -378,7 +404,7 @@ class Plan extends Model
     {
         $query->whereHas('verification', function (Builder $query) {
             $query->where('status', true);
-        }, '>=', PlanVerification::FULL_VERIFICATION);
+        }, '>=', $this->fullVerification());
     }
 
     public function scopeMyFaculty($query)
@@ -425,6 +451,11 @@ class Plan extends Model
         return $this->type_id !== self::SHORT ? true : false;
     }
 
+    public function isProject(): bool
+    {
+        return $this->type_id === self::PROJECT;
+    }
+
     public function archived(): bool
     {
         return isset($this->deleted_at);
@@ -440,7 +471,8 @@ class Plan extends Model
             'copy' =>  Gate::allows('copy-plan', $this),
             'edit' => $policy->update($user, $this),
             'delete' => $policy->delete($user, $this),
-            'restore' => $policy->restore($user, $this)
+            'restore' => $policy->restore($user, $this),
+            'project' => $policy->createProject($user, $this)
         ];
     }
 
@@ -527,10 +559,14 @@ class Plan extends Model
             $title .= " Версія {$this->version}";
         }
 
+        if ($this->isProject()) {
+            $title = 'Проєкт ' . $title;
+        }
+
         return trim($title);
     }
 
-    public static function removeVerstionFromTitle(string $title): string
+    public static function removeVersionFromTitle(string $title): string
     {
         $result = preg_replace('/Версія \d+$/u', '', $title);
         return trim($result);
@@ -758,11 +794,14 @@ class Plan extends Model
 
     protected static function booted()
     {
+        parent::boot();
+
         static::creating(function ($plan) {
             $plan->author_id = Auth::id();
         });
 
         static::replicating(function ($plan) {
+
             $user = Auth::user();
             $plan->guid = Str::uuid();
             $plan->author_id = $user->id;

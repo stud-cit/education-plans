@@ -19,6 +19,12 @@ class VerificationStatuses extends Model
     public const VERIFIED = 2;
     public const REJECTED = 3;
 
+    public const TYPE_PROJECT = 'project';
+    public const TYPE_PLAN = 'plan';
+    public const TYPE_SUBJECT = 'subject';
+    public const TYPE_SPECIALITY = 'speciality';
+    public const TYPE_EDUCATION_PROGRAM = 'education-program';
+
     public function getDivisionStatuses()
     {
         return [
@@ -43,10 +49,15 @@ class VerificationStatuses extends Model
         return VerificationStatuses::select('id', 'title')->where('type', 'education-program')->count();
     }
 
-    public static function fullPlanVerification()
+    public static function fullPlanVerification(int $type)
     {
-        return VerificationStatuses::select('id')
-            ->where('type', 'plan')
-            ->count();
+        switch ($type) {
+            case Plan::PLAN:
+                return VerificationStatuses::select('id')->where('type', self::TYPE_PLAN)->count();
+            case Plan::PROJECT:
+                return VerificationStatuses::select('id')->where('type', self::TYPE_PROJECT)->count();
+            default:
+                return VerificationStatuses::select('id')->where('type', self::TYPE_PLAN)->count();
+        }
     }
 }

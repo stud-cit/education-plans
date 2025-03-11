@@ -64,6 +64,7 @@ class PlanShowResource extends JsonResource
             'subject_notes' => $this->getSubjectNotes(),
             'shorted_by_year' => $this->shortedByYear,
             'short_plan' => $this->type_id === Plan::SHORT,
+            'project' => $this->type_id === Plan::PROJECT,
             'actions' => [
                 'can_generate_short_plan' => $this->canGenerateShortPlan(),
             ],

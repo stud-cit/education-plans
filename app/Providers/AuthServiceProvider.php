@@ -51,7 +51,10 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('copy-plan', function (User $user, Plan $plan) {
-            return User::except($user->role_id, User::GUEST) && $plan->isNotShort() && !$plan->archived();
+            return User::except($user->role_id, User::GUEST)
+                && $plan->isApprovedPlan()
+                && $plan->isNotShort()
+                && ! $plan->archived();
         });
 
         Gate::define('restore-catalog-group', function (User $user) {

@@ -21,6 +21,13 @@ DB_DATABASE=:memory:
 Before run tests need run command `php artisan config:clear` <br/>
 After cleaning run `php artisan run test`
 
+## Add Project type plan
+
+```
+php artisan db:seed --class=PlanTypeProjectSeeder
+php artisan db:seed --class=VerificationStatusesProjectSeeder
+```
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

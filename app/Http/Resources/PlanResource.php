@@ -34,7 +34,7 @@ class PlanResource extends JsonResource
             'published' => $this->published,
             'need_verification' => $this->need_verification,
             'user_verifications' => VerificationPlanResource::collection($this->user_verifications),
-            'verification' => $this->approvedPlan ? __('variables.Verified') : __('variables.NotVerified'),
+            'verification' => $this->approvedPlan ? __('variables.Verified_short') : __('variables.NotVerified_short'),
             'catalog_education_programs' => $this->hasCatalogEducationPrograms(),
             'catalog_speciality' => $this->hasCatalogSpeciality(),
             'deleted_at' => $this->deleted_at

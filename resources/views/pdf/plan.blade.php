@@ -159,7 +159,7 @@
     </div>
     @else 
     <div class="by-created-pdf">
-        Навчальний план не верифіковано
+        {{ $project ? 'Проєкт навчального плану' : 'Навчальний план' }} не верифіковано
     </div>
     @endif
     <table class="table plan-title-table">
@@ -172,6 +172,7 @@
                     {{ $plan->facultyName }}
                 </td>
             </tr>
+            @if(!$project)
             <tr class="table-text">
                 <td colspan="25">Затверджено рішенням вченої ради.</td>
             </tr>
@@ -196,9 +197,10 @@
                 <td colspan="7" class="text-center">М.П.</td>
             </tr>
             @endif
+            @endif
             <tr></tr>
             <tr>
-                <td colspan="100%" align="center" class="table-title">НАВЧАЛЬНИЙ ПЛАН</td>
+                <td colspan="100%" align="center" class="table-title">{{ $planTitle }}</td>
             </tr>
             <tr></tr>
 

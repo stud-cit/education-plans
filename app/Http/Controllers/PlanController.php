@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Plan;
 use App\Models\User;
 use App\Helpers\Tree;
@@ -20,7 +21,9 @@ use App\Helpers\GeneratePlanPdf;
 use App\Models\PlanVerification;
 use App\Models\SemestersCredits;
 use App\Models\CatalogSpeciality;
+use Illuminate\Http\JsonResponse;
 use App\Helpers\GenerateCatalogPdf;
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
@@ -293,7 +296,7 @@ class PlanController extends Controller
     {
         $plan->restore();
 
-        $this->success('Відновлено', 200);
+        return $this->success('Відновлено', 200);
     }
 
     public function downloadPdf(Plan $plan)
@@ -316,7 +319,7 @@ class PlanController extends Controller
             'cycles.subjects.hoursModules',
         ]);
 
-        $result = Plan::removeVerstionFromTitle($plan->title);
+        $result = Plan::removeVersionFromTitle($plan->title);
 
         $plan->title = "Копія $result";
         $plan->need_verification = false;
@@ -326,6 +329,10 @@ class PlanController extends Controller
         $user = Auth::user();
 
         if (!$user->possibility(User::PRIVILEGED_ROLES)) {
+            $clonePlan->type_id = Plan::PLAN;
+        }
+
+        if ($model->type_id === Plan::PROJECT) {
             $clonePlan->type_id = Plan::PLAN;
         }
 
@@ -545,7 +552,7 @@ class PlanController extends Controller
         ]);
     }
 
-    public function cutCourse(array $data, array $keys, $checkCourse = true): array
+    public function cutCourse(array $data, array $keys, $checkCourse = true): ?array
     {
         if (!$data) return null;
 
@@ -749,7 +756,7 @@ class PlanController extends Controller
             $verificationStatusId = VerificationStatuses::where(
                 [
                     ['role_id', $validated['verification_status_id']],
-                    ['type', 'plan']
+                    ['type', $plan->stringType]
                 ]
             )->value('id');
 
@@ -769,15 +776,20 @@ class PlanController extends Controller
         );
 
         if ($plan->approvedPlan) {
-            $pdf = new GeneratePlanPdf;
-            $pdf($plan->id);
-            $pdf->save();
-            $catalogPdf = new GenerateCatalogPdf($plan->id);
-            $catalogPdf->generateCatalogSpecialityPdf();
-            $catalogPdf->generateCatalogEducationPdf();
+            try {
+                $pdf = new GeneratePlanPdf;
+                $pdf($plan->id);
+                $pdf->save();
+                $catalogPdf = new GenerateCatalogPdf($plan->id);
+                $catalogPdf->generateCatalogSpecialityPdf();
+                $catalogPdf->generateCatalogEducationPdf();
+            } catch (Exception $e) {
+                Log::error('generate-pdf-plan', ['message' => $e->getMessage(), 'code' => $e->getCode()]);
+                return $this->success(__('messages.Updated'));
+            }
         }
 
-        $this->success(__('messages.Updated'), 200);
+        return $this->success(__('messages.Updated'), 200);
     }
 
     public function cycleStore(StoreCycleRequest $request, Plan $plan)
@@ -1034,5 +1046,46 @@ class PlanController extends Controller
             ->get();
 
         return CatalogPdfResource::collection($catalog);
+    }
+
+    public function createProject(Plan $plan): JsonResponse
+    {
+        $this->authorize('createProject', $plan);
+
+        $model = $plan->load([
+            'cycles.cycles',
+            'cycles.subjects.semestersCredits',
+            'cycles.subjects.hoursModules',
+            'signatures',
+        ]);
+
+
+        $result = Plan::removeVersionFromTitle($plan->title);
+
+        $plan->title = "Проєкт $result";
+        $plan->need_verification = false;
+
+        $clonePlan = $plan->duplicate();
+
+        $clonePlan->type_id = Plan::PROJECT;
+        $clonePlan->parent_id = $plan->id;
+        $clonePlan->duplicate_message = null;
+        $clonePlan->version = null;
+        $clonePlan->created_at = now();
+        $clonePlan->updated_at = now();
+
+        $clonePlan->update();
+
+        $clonePlan->signatures()->each(function ($signature) {
+            $signature->delete();
+        });
+
+        foreach ($model->cycles as $cycle) {
+            if ($cycle['cycle_id'] == null) {
+                $this->createCycle($cycle, $clonePlan->id);
+            }
+        }
+
+        return response()->json($clonePlan);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Helpers\Filters\FilterBuilder;
 use App\Observers\UserObserver;
 use Laravel\Sanctum\HasApiTokens;
-use App\ExternalServices\Asu\Worker;
 use App\ExternalServices\Asu\Department;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -113,7 +112,7 @@ class User extends Authenticatable
 
     public static function except($roleId, $role): bool
     {
-        $roles = array_filter(self::ALL_ROLES, fn ($r) => $r != $role);
+        $roles = array_filter(self::ALL_ROLES, fn($r) => $r != $role);
 
         return in_array($roleId, $roles);
     }

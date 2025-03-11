@@ -55,6 +55,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('cycles', CycleController::class);
         Route::patch('/plans/verification/{plan}', [PlanController::class, 'verification'])->name('plans.verification.store');
         Route::post('/plans/copy/{plan}', [PlanController::class, 'copy'])->name('plans.copy');
+        Route::post('/plans/project/{plan}', [PlanController::class, 'createProject'])->name('plans.project');
         Route::post('/plans/cycle/{plan}', [PlanController::class, 'cycleStore'])->name('plans.cycle.store');
         Route::patch('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleUpdate'])->name('plans.cycle.update');
         Route::delete('/plans/{plan}/cycles/{cycle}', [PlanController::class, 'cycleDestroy'])->name('plans.cycle.destroy');

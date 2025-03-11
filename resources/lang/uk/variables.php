@@ -6,6 +6,8 @@ return [
     'NotChecked' => 'Не перевірено',
     'Verified' => 'Верифіковано',
     'Rejected' => 'Відхилено',
+    'Verified_short' => 'Так',
+    'NotVerified_short' => 'Ні',
     'NotVerified' => 'Не верифіковано',
     'created' => 'Створено',
     'updated' => 'Редаговано',

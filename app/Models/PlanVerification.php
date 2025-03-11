@@ -15,6 +15,7 @@ class PlanVerification extends Model
     protected $hidden = ['created_at', 'updated_at'];
 
     const FULL_VERIFICATION = 4;
+    const PROJECT_VERIFICATION = 1;
 
     public function role()
     {

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\VerificationStatuses;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Resources\VerificationSubjectStatusesResource;
 
 class VerificationController extends Controller
@@ -12,9 +14,14 @@ class VerificationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = VerificationStatuses::where('type', 'plan')->orderBy('order')->get();
+        $type = $request->input('type', VerificationStatuses::TYPE_PLAN);
+        $cacheKey = 'verification_statuses_' . $type;
+
+        $data = Cache::remember($cacheKey, now()->addMinutes(60), function () use ($type) {
+            return VerificationStatuses::select('id', 'title', 'role_id')->where('type', $type)->orderBy('order')->get();
+        });
 
         return response()->json($data, 200);
     }

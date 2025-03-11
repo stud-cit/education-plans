@@ -118,6 +118,8 @@ class GeneratePlanPdf
             'shortColspanPlan' => $this->fill(22 - 13),
             'faculty' => $this->model->facultyName,
             'title' => $this->model->title,
+            'planTitle' => $this->model->isProject() ? 'ПРОЄКТ НАВЧАЛЬНОГО ПЛАНУ' : 'НАВЧАЛЬНИЙ ПЛАН',
+            'project' => $this->model->isProject(),
             'educationLevel' => $this->model->educationLevel->title,
             'year' => $this->model->year,
             'professions' => $professions,
