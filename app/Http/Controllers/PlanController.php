@@ -282,7 +282,7 @@ class PlanController extends Controller
         if ($plan->type_id === Plan::PLAN) {
             $plan->version = null;
             $plan->duplicate_message = null;
-            $plan->title = Plan::removeVerstionFromTitle($plan->title);
+            $plan->title = Plan::removeVersionFromTitle($plan->title);
 
             $plan->saveQuietly();
         }
