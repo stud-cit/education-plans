@@ -12,6 +12,7 @@ use App\Policies\PlanPolicy;
 use App\Models\ShortenedPlan;
 use App\Observers\PlanObserver;
 use App\Models\SemestersCredits;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Filters\FilterBuilder;
@@ -173,6 +174,17 @@ class Plan extends Model
                 return PlanVerification::PROJECT_VERIFICATION;
         }
         return PlanVerification::FULL_VERIFICATION;
+    }
+
+    protected static function fullVerificationCase()
+    {
+        return "CASE 
+                WHEN type_id IN (" . implode(',', [self::TEMPLATE, self::PLAN, self::SHORT]) . ") 
+                THEN " . PlanVerification::FULL_VERIFICATION . "
+                WHEN type_id = " . self::PROJECT . " 
+                THEN " . PlanVerification::PROJECT_VERIFICATION . "
+                ELSE 0 
+            END";
     }
 
     public function getUserVerificationsAttribute()
@@ -404,7 +416,7 @@ class Plan extends Model
     {
         $query->whereHas('verification', function (Builder $query) {
             $query->where('status', true);
-        }, '>=', $this->fullVerification());
+        }, '>=', DB::raw(self::fullVerificationCase()));
     }
 
     public function scopeMyFaculty($query)

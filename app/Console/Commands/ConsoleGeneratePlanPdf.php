@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Plan;
 use Illuminate\Console\Command;
+use App\Helpers\GenerateCatalogPdf;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\GeneratePlanPdf as Generate;
 
@@ -49,6 +50,15 @@ class ConsoleGeneratePlanPdf extends Command
 
             if (file_exists($publicPath)) {
                 Log::info("file exist $publicPath");
+                $catalogPdf = new GenerateCatalogPdf($plan->id);
+                if (!file_exists("catalogs/speciality/$fileName")) {
+                    Log::info("file generated catalogs/speciality/{$fileName}");
+                    $catalogPdf->generateCatalogSpecialityPdf();
+                }
+                if (!file_exists("catalogs/educationProgram/$fileName")) {
+                    Log::info("file generated catalogs/educationProgram/{$fileName}");
+                    $catalogPdf->generateCatalogEducationPdf();
+                }
             } else {
                 $pdf = new Generate;
                 $pdf($plan->id);
