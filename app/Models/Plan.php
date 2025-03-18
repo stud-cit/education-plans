@@ -172,7 +172,7 @@ class Plan extends Model
             case self::PROJECT:
                 return PlanVerification::PROJECT_VERIFICATION;
         }
-        return 0;
+        return PlanVerification::FULL_VERIFICATION;
     }
 
     public function getUserVerificationsAttribute()
