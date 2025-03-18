@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Plan;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use App\Helpers\GeneratePlanPdf as Generate;
 
 class ConsoleGeneratePlanPdf extends Command
@@ -39,12 +40,20 @@ class ConsoleGeneratePlanPdf extends Command
      */
     public function handle()
     {
-        $plans = Plan::with('verification')->select('id')->plan()->verified()->get();
+        $plans = Plan::with('verification')->select('id', 'guid')->plan()->verified()->get();
 
         $this->withProgressBar($plans, function ($plan) {
-            $pdf = new Generate;
-            $pdf($plan->id);
-            $pdf->consoleSave();
+            $path = 'plans/';
+            $fileName = "{$plan->guid}.pdf";
+            $publicPath = public_path("{$path}{$fileName}");
+
+            if (file_exists($publicPath)) {
+                Log::info("file exist $publicPath");
+            } else {
+                $pdf = new Generate;
+                $pdf($plan->id);
+                $pdf->consoleSave();
+            }
         });
 
         return 0;
