@@ -58,6 +58,7 @@ class GeneratePlanPdf
             $this->generate();
         } catch (\Exception $e) {
             Log::error('Error generte pdf', ['id' => $id, 'message' => $e->getMessage(), 'trace' => $e->getTrace()]);
+            return;
             $this->code = -1;
         }
     }
