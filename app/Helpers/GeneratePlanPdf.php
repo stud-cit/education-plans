@@ -7,6 +7,7 @@ use App\Http\Constant;
 use App\Models\Subject;
 use App\Models\HoursModules;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Barryvdh\Snappy\Facades\SnappyPdf;
 
 class GeneratePlanPdf
@@ -160,6 +161,12 @@ class GeneratePlanPdf
         $path = 'plans/';
         $fileName = "{$this->model->guid}.pdf";
         $publicPath = public_path("{$path}{$fileName}");
+
+        if (file_exists($publicPath)) {
+            Log::info("file exist $publicPath");
+            return; // Skip generation if file exists
+        }
+
         $this->pdf->save($publicPath, true);
     }
 
