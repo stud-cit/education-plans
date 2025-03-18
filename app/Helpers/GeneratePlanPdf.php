@@ -54,8 +54,12 @@ class GeneratePlanPdf
             'signatures.position'
         ])->select('*')
             ->find($id);
-
-        $this->generate();
+        try {
+            $this->generate();
+        } catch (\Exception $e) {
+            Log::error('Error generte pdf', ['id' => $id, 'message' => $e->getMessage(), 'trace' => $e->getTrace()]);
+            $this->code = -1;
+        }
     }
 
     public function getCode()
@@ -161,11 +165,6 @@ class GeneratePlanPdf
         $path = 'plans/';
         $fileName = "{$this->model->guid}.pdf";
         $publicPath = public_path("{$path}{$fileName}");
-
-        if (file_exists($publicPath)) {
-            Log::info("file exist $publicPath");
-            return; // Skip generation if file exists
-        }
 
         $this->pdf->save($publicPath, true);
     }
