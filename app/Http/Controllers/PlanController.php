@@ -784,7 +784,11 @@ class PlanController extends Controller
                 $catalogPdf->generateCatalogSpecialityPdf();
                 $catalogPdf->generateCatalogEducationPdf();
             } catch (Exception $e) {
-                Log::error('generate-pdf-plan', ['message' => $e->getMessage(), 'code' => $e->getCode()]);
+                Log::error('generate-pdf-plan', [
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'paln_id' => $plan->id
+                ]);
                 return $this->success(__('messages.Updated'));
             }
         }
@@ -920,7 +924,7 @@ class PlanController extends Controller
             'speciality_id',
             'education_level_id',
             'type_id',
-        )->plan()
+        )->whereIn('type_id', [Plan::PLAN, Plan::PROJECT])
             ->where('department_id', $validated['department_id'])
             ->whereIn('year', [$year, $year - 1])
             ->verified()
