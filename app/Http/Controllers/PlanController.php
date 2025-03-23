@@ -261,6 +261,20 @@ class PlanController extends Controller
             }
         }
 
+        if ($plan->approvedPlan) {
+            try {
+                $pdf = new GeneratePlanPdf;
+                $pdf($plan->id);
+                $pdf->save();
+            } catch (Exception $e) {
+                Log::error('generate-pdf-plan-on-update', [
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'paln_id' => $plan->id
+                ]);
+            }
+        }
+
         $plan->update($validated);
 
         return $this->success(__('messages.Updated'), 201);
@@ -741,6 +755,8 @@ class PlanController extends Controller
 
     public function verification(StorePlanVerificationRequest $request, Plan $plan)
     {
+        $this->authorize('canVerify', $plan);
+
         $validated = $request->validated();
 
         // split two roles

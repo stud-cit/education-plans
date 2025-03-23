@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use App\Policies\PlanPolicy;
 use App\Models\ShortenedPlan;
+use App\ExternalServices\Op\OP;
 use App\Observers\PlanObserver;
 use App\Models\SemestersCredits;
 use Illuminate\Support\Facades\DB;
@@ -276,6 +277,19 @@ class Plan extends Model
             $professions->getTitle($this->education_program_id, 'label', false)
         ];
     }
+
+    public function getForbiddenToRejectVerificationAttribute(): bool
+    {
+        if ($this->approvedPlan) {
+            $op = new OP();
+            $result = $op->getPublishedDocuments();
+
+            return $result->contains('plan_id', $this->id);
+        }
+
+        return false;
+    }
+
 
     public function shortedPlan()
     {

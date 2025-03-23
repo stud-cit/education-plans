@@ -70,6 +70,7 @@ class PlanEditResource extends JsonResource
             'approvedPlan' => $this->approvedPlan,
             'actions' => [
                 'can_generate_short_plan' => $this->canGenerateShortPlan(),
+                'forbidden_to_reject_verification' => $this->forbiddenToRejectVerification,
             ],
             'verification_comments' => $this->verification_comments,
             'type_id' => $this->type_id,

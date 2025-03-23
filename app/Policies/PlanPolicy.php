@@ -95,6 +95,10 @@ class PlanPolicy
      */
     public function delete(User $user, Plan $plan)
     {
+        if ($plan->forbiddenToRejectVerification) {
+            return false;
+        }
+
         if (!$plan->archived()) {
 
             if ($user->possibility(User::PRIVILEGED_ROLES)) {
@@ -176,5 +180,10 @@ class PlanPolicy
             && in_array($plan->type_id, [Plan::TEMPLATE, Plan::PLAN])
             && $plan->isApprovedPlan()
             && ! $plan->archived();
+    }
+
+    public function canVerify(User $user, Plan $plan): bool
+    {
+        return !$plan->forbiddenToRejectVerification;
     }
 }
