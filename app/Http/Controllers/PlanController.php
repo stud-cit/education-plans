@@ -389,7 +389,7 @@ class PlanController extends Controller
         $version = 1;
         $validated = $request->validated();
 
-        $plan = Plan::select('id', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
+        $plan = Plan::select('id', 'title', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
             ->where([
                 ['year', '=', $validated['year']],
                 ['speciality_id', '=', $validated['speciality_id']],
@@ -410,6 +410,7 @@ class PlanController extends Controller
             'data' => [
                 'hasDuplicate' => $present,
                 'version' => $version,
+                'plans' => $plan,
             ]
         ]);
     }
