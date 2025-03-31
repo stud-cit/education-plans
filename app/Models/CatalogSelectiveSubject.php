@@ -40,7 +40,8 @@ class CatalogSelectiveSubject extends Model
 
     protected $casts = [
         'published' => 'boolean',
-        'need_verification' => 'boolean'
+        'need_verification' => 'boolean',
+        'updated_at' => 'datetime',
     ];
 
     public function getStatusAttribute()
@@ -59,6 +60,12 @@ class CatalogSelectiveSubject extends Model
             $result = '';
         }
         return $result;
+    }
+
+
+    public function isApproved(): bool
+    {
+        return $this->verifications->sum('status') === VerificationStatuses::fullSubjectVerification();
     }
 
     private function filterStatus($data, $id)

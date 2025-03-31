@@ -43,7 +43,7 @@ class CatalogSelectiveSubjectController extends Controller
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
         $catalog = CatalogSelectiveSubject::with(['selectiveCatalog.group', 'verifications.role'])
-            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published', 'user_id', 'need_verification')
+            ->select('id', 'title', 'faculty_id', 'department_id', 'catalog_subject_id', 'published', 'user_id', 'need_verification', 'updated_at')
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->orderBy('created_at')
@@ -157,7 +157,6 @@ class CatalogSelectiveSubjectController extends Controller
     {
         $validated = $request->validated();
 
-        clock($validated);
         $model = $catalogSelectiveSubject->load([
             'languages',
             'lecturers',
@@ -273,7 +272,7 @@ class CatalogSelectiveSubjectController extends Controller
         $verificationsStatus = $modelVerificationStatuses->getDivisionStatuses();
         $faculties = $asu->getFaculties()->when(
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
-            fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
+            fn($collections) => $collections->filter(fn($faculty) => $faculty['id'] == $user->faculty_id)
         );
 
         return response([

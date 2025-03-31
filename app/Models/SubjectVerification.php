@@ -11,6 +11,8 @@ class SubjectVerification extends Model
 
     protected $table = 'subjects_verifications';
 
+    protected $touches = ['subject'];
+
     protected $fillable = [
         'user_id',
         'verification_status_id',
@@ -22,5 +24,15 @@ class SubjectVerification extends Model
     public function role()
     {
         return $this->hasOne(VerificationStatuses::class, 'id', 'verification_status_id');
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(CatalogSelectiveSubject::class, 'subject_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

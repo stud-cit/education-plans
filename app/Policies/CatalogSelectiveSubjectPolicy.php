@@ -53,6 +53,10 @@ class CatalogSelectiveSubjectPolicy
      */
     public function update(User $user, CatalogSelectiveSubject $catalogSelectiveSubject)
     {
+        if ($catalogSelectiveSubject->isApproved()) {
+            return false;
+        }
+
         if ($user->isFacultyMine($catalogSelectiveSubject->faculty_id) && $user->possibility(User::FACULTY_INSTITUTE)) {
             return true;
         }
@@ -75,6 +79,10 @@ class CatalogSelectiveSubjectPolicy
      */
     public function delete(User $user, CatalogSelectiveSubject $catalogSelectiveSubject)
     {
+        if ($catalogSelectiveSubject->isApproved()) {
+            return false;
+        }
+
         if ($user->isFacultyMine($catalogSelectiveSubject->faculty_id) && $user->possibility(User::FACULTY_INSTITUTE)) {
             return true;
         }

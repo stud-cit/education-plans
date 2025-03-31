@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CatalogSelectiveSubjectResource extends JsonResource
@@ -25,6 +26,7 @@ class CatalogSelectiveSubjectResource extends JsonResource
             'user_verifications' => VerificationSubjectResource::collection($this->verifications),
             'need_verification' => $this->need_verification,
             'published' => $this->published,
+            'updated_at' => Carbon::parse($this->updated_at)->format('d.m.Y H:i'),
             'actions' => $this->actions(),
         ];
     }
