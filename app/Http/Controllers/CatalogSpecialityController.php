@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use ErrorException;
 use App\Models\User;
 use App\Helpers\Helpers;
-use Illuminate\Http\Request;
-use App\Models\EducationLevel;
 use App\Models\CatalogSpeciality;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +12,6 @@ use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
 use App\Policies\CatalogSpecialityPolicy;
 use App\Http\Resources\ProfessionsResource;
-use App\Http\Resources\EducationLevelResource;
 use App\Http\Requests\CatalogSpeciality\CopyRequest;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\OwnerRequest;
@@ -183,7 +179,7 @@ class CatalogSpecialityController extends Controller
 
         $faculties = $asu->getFaculties()->when(
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
-            fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
+            fn($collections) => $collections->filter(fn($faculty) => $faculty['id'] == $user->faculty_id)
         );
 
         return response([

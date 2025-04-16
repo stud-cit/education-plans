@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use ErrorException;
 use App\Models\User;
 use App\Helpers\Helpers;
-use Illuminate\Http\Request;
-use App\Models\EducationLevel;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -14,7 +12,6 @@ use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
 use App\Http\Resources\FacultiesResource;
 use App\Http\Resources\ProfessionsResource;
-use App\Http\Resources\EducationLevelResource;
 use App\Policies\CatalogEducationProgramPolicy;
 use App\Http\Requests\CatalogEducationProgram\CopyRequest;
 use App\Http\Requests\CatalogEducationProgram\IndexRequest;
@@ -183,7 +180,7 @@ class CatalogEducationProgramController extends Controller
 
         $faculties = $asu->getFaculties()->when(
             $user->possibility([User::FACULTY_INSTITUTE, User::DEPARTMENT]),
-            fn ($collections) => $collections->filter(fn ($faculty) => $faculty['id'] == $user->faculty_id)
+            fn($collections) => $collections->filter(fn($faculty) => $faculty['id'] == $user->faculty_id)
         );
 
         return response([
@@ -210,6 +207,7 @@ class CatalogEducationProgramController extends Controller
         $catalog = $catalogEducationProgram->fill([
             'year' => $validated['year'],
             'education_program_id' => $validated['education_program_id'],
+            'speciality_id' => $validated['speciality_id'],
             'user_id' => Auth::id(),
             'need_verification' => null,
         ]);
@@ -322,7 +320,9 @@ class CatalogEducationProgramController extends Controller
         $validated = $request->validated();
 
         $catalog = CatalogEducationProgram::with(['subjects', 'signatures'])
-            ->where('id', $validated['catalog_id'])->first();
+            ->where('id', $validated['catalog_id'])
+            ->first();
+
         return new CatalogSpecialityPdfResource($catalog);
     }
 }

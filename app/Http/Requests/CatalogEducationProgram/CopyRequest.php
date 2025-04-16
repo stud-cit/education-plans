@@ -26,7 +26,8 @@ class CopyRequest extends FormRequest
     {
         return [
             'year' => [
-                'required', 'date_format:Y',
+                'required',
+                'date_format:Y',
                 Rule::unique('catalog_subjects')->where(function ($query) {
                     return $query
                         ->where('year', $this->year)
@@ -34,7 +35,8 @@ class CopyRequest extends FormRequest
                         ->where('education_program_id', $this->education_program_id);
                 })
             ],
-            'education_program_id' => 'required|integer'
+            'education_program_id' => 'required|integer',
+            'speciality_id' => 'required|integer',
         ];
     }
 

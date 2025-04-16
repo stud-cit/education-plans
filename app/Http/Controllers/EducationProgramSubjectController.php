@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Teacher;
 use App\Helpers\Helpers;
-use Illuminate\Http\Request;
 use App\Models\SubjectHelper;
 use Illuminate\Support\Facades\Gate;
 use App\Models\CatalogEducationProgram;
@@ -44,7 +43,6 @@ class EducationProgramSubjectController extends Controller
             'title',
             'published',
         )
-            // ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->paginate($perPage);
 
@@ -62,7 +60,7 @@ class EducationProgramSubjectController extends Controller
                 'department' => $catalog->departmentName,
                 'faculty_id' => $catalog->faculty_id,
                 'department_id' => $catalog->department_id,
-                'owners' => $catalog->owners->map(fn ($owner) => ['id' => $owner->department_id]),
+                'owners' => $catalog->owners->map(fn($owner) => ['id' => $owner->department_id]),
                 'can_create' => Gate::allows('create-education-program-subject', $catalog->id),
                 'can_verification' => Gate::allows('can-verification-education-program-catalog', $catalog),
                 'toggle_to_verification' => Gate::allows('toggle-need-verification-education-program-catalog', $catalog),
