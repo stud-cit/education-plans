@@ -389,14 +389,17 @@ class PlanController extends Controller
         $version = 1;
         $validated = $request->validated();
 
+        $copy = Plan::select('title')->where('id', $validated['id'])->firstOrFail(); // TODO: pass on wiht request
+
         $plan = Plan::select('id', 'title', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
             ->where([
-                ['year', '=', $validated['year']],
-                ['speciality_id', '=', $validated['speciality_id']],
-                ['education_program_id', '=', $validated['education_program_id']],
-                ['study_term_id', '=', $validated['study_term_id']],
-                ['type_id', '=', Plan::PLAN]
+                ['year', $validated['year']],
+                ['speciality_id', $validated['speciality_id']],
+                ['education_program_id', $validated['education_program_id']],
+                ['study_term_id', $validated['study_term_id']],
+                ['type_id', Plan::PLAN]
             ])
+            ->when(!Str::contains($copy->title, 'Копія'), fn($query) => $query->whereNull('version'))
             ->where('id', '!=', $validated['id'])
             ->orderBy('version', 'desc')->get();
 
