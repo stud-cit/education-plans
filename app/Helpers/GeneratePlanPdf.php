@@ -92,7 +92,7 @@ class GeneratePlanPdf
             [
                 ['title' => 'Спеціалізація', 'colspan' => 6],
                 ['key' => $this->model->specialization_id_name, 'acolspan' => 6],
-                ['title' => 'Форма навчання', 'colspan' => 6],
+                ['title' => Helpers::getTitleFormEducation($this->model->year), 'colspan' => 6],
                 ['key' => $this->model->formStudy->title, 'acolspan' => 6],
             ],
             [],

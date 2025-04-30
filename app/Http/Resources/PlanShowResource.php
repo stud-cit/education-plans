@@ -3,8 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Plan;
-use App\Models\Subject;
-use App\Models\HoursModules;
+use App\Helpers\Helpers;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanShowResource extends JsonResource
@@ -27,6 +26,7 @@ class PlanShowResource extends JsonResource
             'department' => $this->departmentName,
             'department_id' => $this->department_id,
             'year' => $this->year,
+            'title_form_education' => Helpers::getTitleFormEducation($this->year),
             'form_study' => $this->formStudy,
             'form_organization' => $this->formOrganization,
             'education_level' => $this->educationLevel,

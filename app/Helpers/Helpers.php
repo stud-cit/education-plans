@@ -104,4 +104,13 @@ class Helpers
         $studyTermMonth = $studyTerm->month ? 1 : 0;
         return $year + $studyTermYear + $studyTermMonth;
     }
+
+    public static function getTitleFormEducation(int $year): string
+    {
+        if ($year >= 2024) {
+            return 'Форма здобуття освіти';
+        }
+
+        return 'Фрма навчання';
+    }
 }

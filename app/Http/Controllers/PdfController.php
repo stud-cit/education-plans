@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Plan;
 use App\Http\Constant;
 use App\Models\Subject;
+use App\Helpers\Helpers;
 use App\Models\HoursModules;
 use Illuminate\Http\Request;
 use App\Helpers\GeneratePlanPdf;
@@ -96,7 +97,7 @@ class PdfController extends Controller
             [
                 ['title' => 'Спеціалізація', 'colspan' => 6],
                 ['key' => $this->model->specialization_id_name, 'acolspan' => 6],
-                ['title' => 'Форма навчання', 'colspan' => 6],
+                ['title' => Helpers::getTitleFormEducation($this->model->year), 'colspan' => 6],
                 ['key' => $this->model->formStudy->title, 'acolspan' => 6],
             ],
             [],
@@ -425,7 +426,7 @@ class PdfController extends Controller
             }
         }
 
-        return array_map(fn ($val) => round($val, 2), $hours_modules_total);
+        return array_map(fn($val) => round($val, 2), $hours_modules_total);
     }
 
     function getSimpleHoursModulesTotal($items)
@@ -458,7 +459,7 @@ class PdfController extends Controller
             }
         }
 
-        return array_map(fn ($val) => round($val, 2), $hours_modules_total);
+        return array_map(fn($val) => round($val, 2), $hours_modules_total);
     }
 
 

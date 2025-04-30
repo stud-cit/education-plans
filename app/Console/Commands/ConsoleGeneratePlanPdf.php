@@ -41,29 +41,35 @@ class ConsoleGeneratePlanPdf extends Command
      */
     public function handle()
     {
-        $plans = Plan::with('verification')->select('id', 'guid')->plan()->verified()->get();
+        $plans = Plan::with('verification')
+            ->select('id', 'guid', 'updated_at')
+            ->where('year', '>=', 2024)
+            ->whereIn('type_id', [Plan::SHORT, Plan::PROJECT, Plan::PLAN])
+            ->verified()
+            ->get();
 
         $this->withProgressBar($plans, function ($plan) {
-            $path = 'plans/';
-            $fileName = "{$plan->guid}.pdf";
-            $publicPath = public_path("{$path}{$fileName}");
+            // $path = 'plans/';
+            // $fileName = "{$plan->guid}.pdf";
+            // $publicPath = public_path("{$path}{$fileName}");
+            $plan->updateQuietly(['updated_at' => now()]);
 
-            if (file_exists($publicPath)) {
-                Log::info("file exist $publicPath");
-                $catalogPdf = new GenerateCatalogPdf($plan->id);
-                if (!file_exists("catalogs/speciality/$fileName")) {
-                    Log::info("file generated catalogs/speciality/{$fileName}");
-                    $catalogPdf->generateCatalogSpecialityPdf();
-                }
-                if (!file_exists("catalogs/educationProgram/$fileName")) {
-                    Log::info("file generated catalogs/educationProgram/{$fileName}");
-                    $catalogPdf->generateCatalogEducationPdf();
-                }
-            } else {
-                $pdf = new Generate;
-                $pdf($plan->id);
-                $pdf->consoleSave();
-            }
+            // if (file_exists($publicPath)) {
+            //     Log::info("file exist $publicPath");
+            //     $catalogPdf = new GenerateCatalogPdf($plan->id);
+            //     if (!file_exists("catalogs/speciality/$fileName")) {
+            //         Log::info("file generated catalogs/speciality/{$fileName}");
+            //         $catalogPdf->generateCatalogSpecialityPdf();
+            //     }
+            //     if (!file_exists("catalogs/educationProgram/$fileName")) {
+            //         Log::info("file generated catalogs/educationProgram/{$fileName}");
+            //         $catalogPdf->generateCatalogEducationPdf();
+            //     }
+            // } else {
+            $pdf = new Generate;
+            $pdf($plan->id);
+            $pdf->consoleSave();
+            // }
         });
 
         return 0;

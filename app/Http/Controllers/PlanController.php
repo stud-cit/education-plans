@@ -184,9 +184,11 @@ class PlanController extends Controller
             'signatures'
         ]);
 
-        return (new PlanShowResource($model))->additional(['actions' => [
-            'can_generate_short_plan' => Gate::allows('generate-short-plan', $plan)
-        ]]);
+        return (new PlanShowResource($model))->additional([
+            'actions' => [
+                'can_generate_short_plan' => Gate::allows('generate-short-plan', $plan)
+            ],
+        ]);
     }
 
     /**
