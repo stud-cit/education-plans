@@ -209,7 +209,7 @@ class Profession extends ASU
         return (int)$specialtiesId2['id'];
     }
 
-    private function getFiltered(int $label_id, int $id = null): array
+    private function getFiltered(int $label_id, $id = null): array
     {
         $filtered = $this->getProfessions()->filter(function ($value) use ($id, $label_id) {
             if ($id) {
