@@ -69,8 +69,11 @@ class FixSubject extends Command
             $subject->hoursModules()->where('hour', 2.334)->update(['hour' => 2]); // module = 8 for full plan short 4
             $subject->cycle->plan()->update(['updated_at' => now()]);
             $subject->save();
-
-            Artisan::call('plan:generate-pdf-by-id ' . $subject->cycle->plan->id);
+            if (isset($subject->cycle->plan->id)) {
+                Artisan::call('plan:generate-pdf-by-id ' . $subject->cycle->plan->id);
+            } else {
+                Log::error('Plan ID not found for subject', ['subject_id' => $subject->id]);
+            }
         });
 
 
