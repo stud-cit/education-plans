@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Models\HoursModules;
 use Illuminate\Http\Request;
 use App\Models\ShortenedPlan;
+use App\Services\RuleService;
 use Illuminate\Support\Carbon;
 use App\Helpers\GeneratePlanPdf;
 use App\Models\PlanVerification;
@@ -137,7 +138,7 @@ class PlanController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function additionalDataActionsPlan()
+    public function additionalDataActionsPlan(RuleService $ruleService): \Illuminate\Http\JsonResponse
     {
         $asu = new Department();
         $professions = new Profession();

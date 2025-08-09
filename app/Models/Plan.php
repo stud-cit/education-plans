@@ -45,6 +45,7 @@ class Plan extends Model
         'credits',
         'number_semesters',
         'qualification_id',
+        'profession_qualification_id',
         'education_program_id',
         'field_knowledge_id',
         'year',
@@ -80,6 +81,7 @@ class Plan extends Model
         'credits' => 'int',
         'number_semesters' => 'int',
         'qualification_id' => 'int',
+        'profession_qualification_id' => 'int',
         'education_program_id' => 'int',
         'field_knowledge_id' => 'int',
         'form_organization_id' => 'int',
@@ -265,6 +267,13 @@ class Plan extends Model
 
         $professions = new Profession();
         return $professions->getTitle($this->education_program_id, 'title', true, ['label' => 'after']);
+    }
+
+    public function getProfessionQualificationNameAttribute(): string
+    {
+        if (! $this->profession_qualification_id) return 'не передбачено';
+
+        return 'Вказана професійна кваліфікація'; // todo temp
     }
 
     public function getEducationProgramIdNameWithTypeAttribute()

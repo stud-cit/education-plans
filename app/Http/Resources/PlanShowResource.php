@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Plan;
 use App\Helpers\Helpers;
+use App\Services\RuleService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PlanShowResource extends JsonResource
@@ -42,6 +43,9 @@ class PlanShowResource extends JsonResource
             'education_program_id' => $this->education_program_id,
             'qualification' => $this->qualification_id_name,
             'qualification_id' => $this->qualification_id,
+            'qualification_title' => RuleService::getRule('qualification', $this->year),
+            'profession_qualification_id' => $this->profession_qualification_id,
+            'profession_qualification' => $this->professionQualificationName,
             'field_knowledge' => $this->field_knowledge_id_name,
             'field_knowledge_id' => $this->field_knowledge_id,
             'cycles' => CycleShowResource::collection($this->cycles->whereNull('cycle_id')),

@@ -6,6 +6,7 @@ use App\Models\Plan;
 use App\Http\Constant;
 use App\Models\Subject;
 use App\Models\HoursModules;
+use App\Services\RuleService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\Snappy\Facades\SnappyPdf;
@@ -78,7 +79,7 @@ class GeneratePlanPdf
             [
                 ['title' => 'Галузь знань', 'colspan' => 6],
                 ['key' => $this->model->field_knowledge_id_name, 'acolspan' => 6],
-                ['title' => 'Кваліфікація', 'colspan' => 6],
+                ['title' => RuleService::getRule('qualification', $this->model->year), 'colspan' => 6],
                 ['key' => $this->model->qualification_id_name, 'acolspan' => 6],
             ],
             [],
@@ -108,6 +109,16 @@ class GeneratePlanPdf
                 ['key' => $this->model->year, 'acolspan' => 6],
             ],
         ];
+
+        $newElement = [
+            ['title' => '', 'colspan' => 6],
+            ['key' => '', 'acolspan' => 6],
+            ['title' => 'Професійна кваліфікація', 'colspan' => 6],
+            ['key' => $this->model->professionQualificationName, 'acolspan' => 6],
+        ];
+
+        $professions = $this->insertAtPossition($professions, 1, [], $this->model->year >= 2025);
+        $professions = $this->insertAtPossition($professions, 2, $newElement, $this->model->year >= 2025);
 
         $scheduleEducationProcess = json_decode($this->model->schedule_education_process, JSON_OBJECT_AS_ARRAY);
         $hoursWeeksSemesters = json_decode($this->model->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY);
@@ -511,5 +522,17 @@ class GeneratePlanPdf
             $queryCycle->where('plan_id', $planId);
         })->select('note', 'id')->whereNotNull('note')->get();
         return $result->toArray();
+    }
+
+    private function insertAtPossition(array $source, $position, $element, $condition)
+    {
+        if ($condition) {
+            $source = array_merge(
+                array_slice($source, 0, $position),
+                [$element],
+                array_slice($source, $position)
+            );
+        }
+        return $source;
     }
 }
