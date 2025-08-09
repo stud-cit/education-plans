@@ -28,6 +28,7 @@ class EducationPlanResource extends JsonResource
             'department' => $this->departmentName,
             'qualification' => $this->qualificationIdName,
             'qualification_id' => $this->qualification_id,
+            'profession_qualification_id' => $this->profession_qualification_id,
             'field_knowledge_id' => $this->field_knowledge_id,
             'field_knowledge' => $this->fieldKnowledgeIdName,
             'speciality' => $this->specialityIdName,

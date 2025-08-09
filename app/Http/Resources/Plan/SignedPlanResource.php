@@ -26,6 +26,7 @@ class SignedPlanResource extends JsonResource
             'department_id' => $this->department_id,
             'unit' => "{$this->facultyName} {$this->departmentName}",
             'qualification' => $this->qualificationIdName,
+            'profession_qualification' => $this->professionQualificationName,
             'field_knowledge' => $this->fieldKnowledgeIdName,
             'speciality' => $this->specialityIdName,
             'education_level' => $this->educationLevel->title,

@@ -924,6 +924,12 @@ class PlanController extends Controller
         }
     }
 
+    /**
+     * Get signed plans for OP
+     *
+     * @param SignedPlanRequest $request
+     * @return SignedPlanResource
+     */
     public function getSignedPlans(SignedPlanRequest $request)
     {
         $validated = $request->validated();
@@ -943,6 +949,7 @@ class PlanController extends Controller
             'faculty_id',
             'department_id',
             'qualification_id',
+            'profession_qualification_id',
             'field_knowledge_id',
             'speciality_id',
             'education_level_id',
@@ -956,6 +963,12 @@ class PlanController extends Controller
         return SignedPlanResource::collection($plans);
     }
 
+    /**
+     * Get signed plan by ID for OP
+     *
+     * @param SignedPlanByIdRequest $request
+     * @return SignedPlanIdSemesterResource
+     */
     public function getSignedPlansById(SignedPlanByIdRequest $request)
     {
         $validated = $request->validated();
@@ -969,6 +982,7 @@ class PlanController extends Controller
             'faculty_id',
             'department_id',
             'qualification_id',
+            'profession_qualification_id',
             'field_knowledge_id',
             'speciality_id',
             'specialization_id',
@@ -987,6 +1001,12 @@ class PlanController extends Controller
         return new SignedPlanIdSemesterResource($plan);
     }
 
+    /**
+     * API endpoint for ASU
+     *
+     * @param Request $request
+     * @return EducationPlanResource
+     */
     public function educationPlans(Request $request)
     {
         $validated = Validator::make($request->all(), [
@@ -1005,6 +1025,7 @@ class PlanController extends Controller
             faculty_id,
             department_id,
             qualification_id,
+            profession_qualification_id,
             field_knowledge_id,
             speciality_id,
             education_level_id,
@@ -1021,6 +1042,13 @@ class PlanController extends Controller
         return EducationPlanResource::collection($plans);
     }
 
+    /**
+     * Show the education plan by guid (API endpoint for ASU).
+     *
+     * @param Request $request
+     * @param string $guid
+     * @return EducationPlanShowResource
+     */
     public function educationPlanShow(Request $request, string $guid)
     {
         $model = Plan::with([
