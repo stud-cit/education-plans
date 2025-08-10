@@ -35,6 +35,7 @@ class UpdatePlanRequest extends FormRequest
             'specialization_id' => 'nullable|numeric',
             'education_program_id' => 'nullable|numeric',
             'qualification_id' => 'nullable|numeric',
+            'profession_qualification_id' => 'nullable|numeric',
             'field_knowledge_id' => 'nullable|numeric',
             'form_organization_id' => 'required|numeric',
             'credits' => 'required|numeric',
@@ -46,8 +47,7 @@ class UpdatePlanRequest extends FormRequest
             'need_verification' => 'boolean',
             'not_conventional' => 'nullable|boolean',
             'comment' => 'nullable|string|max:400',
-            'duplicate_message' => 'nullable|string|max:255'
-
+            'duplicate_message' => 'nullable|string|max:255',
         ];
     }
 }
