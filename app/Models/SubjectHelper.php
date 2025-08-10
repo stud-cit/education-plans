@@ -18,7 +18,6 @@ class SubjectHelper extends Model
     public function type()
     {
         return $this->belongsTo(CatalogHelperType::class, 'catalog_helper_type_id', 'id');
-        // ->select('id', 'title');
     }
 
     public function scopeFilterBy($query, $filters)

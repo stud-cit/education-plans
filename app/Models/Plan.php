@@ -361,7 +361,6 @@ class Plan extends Model
     public function getNotesAttribute()
     {
         $notes = new \App\Http\Controllers\NoteController;
-        clock('year in model', $this->year);
         return $notes->getNotes($this->year);
     }
 

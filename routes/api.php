@@ -104,7 +104,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('positions', PositionController::class);
         Route::apiResource('signatures', SignatureController::class)
             ->only('store', 'update', 'destroy');
-        Route::get('notes/rules/{year}', [NoteController::class, 'rules'])->name('notes.rules'); // todo: add param year
+        Route::get('notes/rules/{year}', [NoteController::class, 'rules'])->name('notes.rules');
         Route::apiResource('notes', NoteController::class)->except('show');
         Route::apiResource('list-cycles', ListCycleController::class)->only('index');
 
@@ -132,6 +132,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
         Route::get('/user-activity', [UserActivityController::class, 'index'])->name('user-activity.index');
         Route::apiResource('subject-languages', SubjectLanguageController::class);
+        Route::get('/subject-helpers/plan', [SubjectHelperController::class, 'getPlanSubjectHelpers'])->name('subject-helpers.plan');
         Route::apiResource('subject-helpers', SubjectHelperController::class);
         Route::apiResource('catalog-helper-types', CatalogHelperTypeController::class)->only('index');
 

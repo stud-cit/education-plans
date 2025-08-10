@@ -92,4 +92,18 @@ class SubjectHelperController extends Controller
         }
         return $this->success(__('messages.Deleted'), 200);
     }
+
+
+    public function getPlanSubjectHelpers()
+    {
+        $helpers = SubjectHelper::whereHas('type', function ($q) {
+            $q->where('key', 'plan_subject');
+        })->select(
+            'id',
+            'title',
+            'catalog_helper_type_id',
+        )->get()->pluck('title');
+
+        return response()->json(['data' => $helpers], 200);
+    }
 }
