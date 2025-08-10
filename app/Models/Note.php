@@ -10,7 +10,7 @@ class Note extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['abbreviation', 'explanation'];
+    protected $fillable = ['abbreviation', 'explanation', 'date'];
 
     protected static function booted()
     {

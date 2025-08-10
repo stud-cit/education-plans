@@ -25,7 +25,8 @@ class StoreNoteRequest extends FormRequest
     {
         return [
             'abbreviation' => 'required|string|unique:notes|max:7',
-            'explanation' => 'required|string|max:255'
+            'explanation' => 'required|string|max:255',
+            'date' => 'nullable|date_format:Y-m-d',
         ];
     }
 }

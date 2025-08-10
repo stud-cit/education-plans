@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use Illuminate\Support\Carbon;
 use App\Http\Resources\NoteResource;
-use App\Http\Requests\{ StoreNoteRequest, UpdateNoteRequest };
+use App\Http\Requests\{StoreNoteRequest, UpdateNoteRequest};
 
 class NoteController extends Controller
 {
@@ -20,7 +21,7 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = Note::select('id', 'abbreviation', 'explanation')->get();
+        $notes = Note::select('id', 'abbreviation', 'explanation', 'date')->get();
         return NoteResource::collection($notes);
     }
 
@@ -52,7 +53,7 @@ class NoteController extends Controller
 
         $note->update($validated);
 
-        return $this->success(__('messages.Updated'),201);
+        return $this->success(__('messages.Updated'), 201);
     }
 
     /**
@@ -73,27 +74,32 @@ class NoteController extends Controller
     }
 
 
-    public function rules()
+    public function rules($date)
     {
-        return response()->json(['data' => $this->getNotes()]);
+        return response()->json(['data' => $this->getNotes($date)]);
     }
 
     /**
-     * @param
+     * @param string $date
      * @return array
      */
 
-    public function getNotes(): array
+    public function getNotes($date): array
     {
-        $notes = Note::select('id', 'abbreviation', 'explanation')->get()->toArray();
+        $date = Carbon::parse($date . '-01-01')->format('Y-m-d');
+
+        $notes = Note::select('id', 'abbreviation', 'explanation')
+            ->where('date', null)
+            ->orWhereDate('date', '<', $date)
+            ->get()
+            ->toArray();
 
         $att = array_column($notes, 'abbreviation');
 
         $rule = implode(',', $att);
 
-
-        $arrayNotes = array_reduce($notes, function($result, $item) {
-            $result [] = "{$item['abbreviation']} – {$item['explanation']}";
+        $arrayNotes = array_reduce($notes, function ($result, $item) {
+            $result[] = "{$item['abbreviation']} - {$item['explanation']}";
             return $result;
         });
 

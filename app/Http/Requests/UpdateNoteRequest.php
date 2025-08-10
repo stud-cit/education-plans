@@ -31,7 +31,8 @@ class UpdateNoteRequest extends FormRequest
                 Rule::unique('notes')->ignore($this->abbreviation, 'abbreviation'),
                 'max:7'
             ],
-            'explanation' => 'required|string|max:255'
+            'explanation' => 'required|string|max:255',
+            'date' => 'nullable|date_format:Y-m-d',
         ];
     }
 }

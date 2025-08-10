@@ -104,7 +104,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('positions', PositionController::class);
         Route::apiResource('signatures', SignatureController::class)
             ->only('store', 'update', 'destroy');
-        Route::get('notes/rules', [NoteController::class, 'rules'])->name('notes.rules');
+        Route::get('notes/rules/{year}', [NoteController::class, 'rules'])->name('notes.rules'); // todo: add param year
         Route::apiResource('notes', NoteController::class)->except('show');
         Route::apiResource('list-cycles', ListCycleController::class)->only('index');
 
