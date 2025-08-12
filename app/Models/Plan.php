@@ -273,7 +273,8 @@ class Plan extends Model
     {
         if (! $this->profession_qualification_id) return 'не передбачено';
 
-        return 'Вказана професійна кваліфікація'; // todo temp
+        $qualifications = new Qualification();
+        return $qualifications->getTitle($this->profession_qualification_id);
     }
 
     public function getEducationProgramIdNameWithTypeAttribute()
