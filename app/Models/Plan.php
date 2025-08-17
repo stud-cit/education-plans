@@ -625,6 +625,36 @@ class Plan extends Model
         return array_filter($messages);
     }
 
+    public function getIndependentWorkErrors()
+    {
+
+        $independentWork = collect();
+
+        $this->load(['cycles' => function ($query) {
+            $query->with('subjects.subjects');
+        }]);
+
+        $this->cycles->each(function ($cycle) use ($independentWork) {
+            $this->collectIndependentWork($cycle->subjects, $independentWork);
+        });
+
+        return $independentWork->toArray();
+    }
+
+    private function collectIndependentWork($subjects, $collection)
+    {
+        $subjects->each(function ($subject) use ($collection) {
+            $independentWork = $subject->getIndependentWorkAttribute();
+            if ($independentWork) {
+                $collection->push($independentWork);
+            }
+
+            if ($subject->subjects->count() > 0) {
+                $this->collectIndependentWork($subject->subjects, $collection);
+            }
+        });
+    }
+
     public function sumSemestersCreditsHasErrors()
     {
         $result = [];

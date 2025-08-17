@@ -24,7 +24,7 @@ class CycleEditResource extends JsonResource
             "list_cycle_id" => $this->listCycle->id,
             "has_discipline" => $this->has_discipline,
             "subjects" => SubjectsEditResource::collection($this->subjects),
-            "cycles" => CycleEditResource::collection($this->cycles)
+            "cycles" => CycleEditResource::collection($this->cycles),
         ];
     }
 }

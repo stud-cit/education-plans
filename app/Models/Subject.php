@@ -37,6 +37,87 @@ class Subject extends Model
         'asu_id' => 'integer'
     ];
 
+    public function getGettingReadyLecturesAttribute(): float
+    {
+        return $this->hours * 0.25;
+    }
+
+    public function getGettingReadyPracticesAttribute(): float
+    {
+        return $this->practices * 0.25;
+    }
+
+    public function getGettingReadyLaboratoriesAttribute(): float
+    {
+        return $this->laboratories * 0.5;
+    }
+
+    public function getFinalFormAssessmentAttribute(): int
+    {
+        $formControl = $this->hoursModules->last(function ($value) {
+            return in_array($value->form_control_id, [
+                Constant::FORM_CONTROL['EXAM'],
+                Constant::FORM_CONTROL['DIFFERENTIAL_TEST'],
+            ]);
+        });
+
+        switch ($formControl?->form_control_id) {
+            case Constant::FORM_CONTROL['EXAM']:
+                return 30;
+            case Constant::FORM_CONTROL['DIFFERENTIAL_TEST']:
+                return 10;
+            default:
+                return 0;
+        }
+    }
+
+    public function getExtraIndividualTasksAttribute(): int
+    {
+        $individualTasks = $this->hoursModules->filter(function ($item) {
+            return in_array($item->individual_task_id, [
+                Constant::INDIVIDUAL_TASKS['CONTROL_WORK'],
+                Constant::INDIVIDUAL_TASKS['COURSE_WORK']
+            ]);
+        })->groupBy('individual_task_id');
+
+        $courseWork = $individualTasks->has(Constant::INDIVIDUAL_TASKS['COURSE_WORK']);
+        $controlWork = $individualTasks->has(Constant::INDIVIDUAL_TASKS['CONTROL_WORK']);
+
+        if ($courseWork) {
+            return count($individualTasks[Constant::INDIVIDUAL_TASKS['COURSE_WORK']]) * 30;
+        } else if ($controlWork) {
+            return count($individualTasks[Constant::INDIVIDUAL_TASKS['CONTROL_WORK']]) * 10;
+        }
+
+        return 0;
+    }
+
+    public function getIndependentWorkAttribute(): array
+    {
+        $allHours = $this->credits * 30;
+
+        $classroomWork = $this->hours + $this->practices + $this->laboratories;
+
+        $allIndependetWork = $this->gettingReadyLectures +
+            $this->gettingReadyPractices +
+            $this->gettingReadyLaboratories +
+            $this->finalFormAssessment +
+            $this->extraIndividualTasks;
+
+        $result = $allHours - $classroomWork - $allIndependetWork;
+        $rule = $allHours * 0.1;
+
+        if ($result < $rule) {
+            return [
+                'subject_id' => $this->id,
+                'error' => "Неправильно розподілено навчальне навантаження за дисципліною.",
+                'title' => empty($this->selective_discipline_id) ? $this->title : $this->selectiveDiscipline->title,
+            ];
+        }
+
+        return [];
+    }
+
     public function selectiveDiscipline()
     {
         return $this->belongsTo(SelectiveDiscipline::class);
