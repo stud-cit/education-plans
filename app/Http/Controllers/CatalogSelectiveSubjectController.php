@@ -184,6 +184,12 @@ class CatalogSelectiveSubjectController extends Controller
         $model->practice()->whereNotIn('id', $this->getIds($validated['practice']))->delete();
         $model->updateTeachers($validated['practice'], Teacher::PRACTICE);
 
+        UserActivityController::addToLog(
+            __('variables.updated'),
+            'Вибіркові дисципліни',
+            "Вибіркові дисципліна {$catalogSelectiveSubject->title} ({$catalogSelectiveSubject->id})"
+        );
+
         return $this->success(__('messages.Updated'));
     }
 
@@ -216,6 +222,12 @@ class CatalogSelectiveSubjectController extends Controller
         }
 
         $validated = $request->validated();
+
+        UserActivityController::addToLog(
+            $validated['comment'] ?? null ? __('variables.Rejected') : __('variables.Verified'),
+            'Вибіркові дисципліни',
+            "Вибіркові дисципліна {$catalogSelectiveSubject->title} ({$catalogSelectiveSubject->id})"
+        );
 
         if (array_key_exists('comment', $validated)) {
             if ($validated['comment'] !== null) {
