@@ -95,7 +95,7 @@ class PlanPolicy
      */
     public function delete(User $user, Plan $plan)
     {
-        if ($plan->forbiddenToRejectVerification) {
+        if (! empty($plan->forbiddenToRejectVerification)) {
             return false;
         }
 

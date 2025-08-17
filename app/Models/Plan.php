@@ -288,16 +288,16 @@ class Plan extends Model
         ];
     }
 
-    public function getForbiddenToRejectVerificationAttribute(): bool
+    public function getForbiddenToRejectVerificationAttribute(): ?array
     {
         if ($this->approvedPlan) {
             $op = new OP();
             $result = $op->getPublishedDocuments();
 
-            return $result->contains('plan_id', $this->id);
+            return $result->firstWhere('plan_id', $this->id) ?? null;
         }
 
-        return false;
+        return null;
     }
 
 
