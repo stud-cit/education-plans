@@ -58,6 +58,10 @@ class EducationProgramSubjectPolicy
             return true;
         }
 
+        if ($user->isOwner($educationProgramSubject->user_id)) {
+            return true;
+        }
+
         if ($user->isFacultyMine($educationProgramSubject->faculty_id) && $user->possibility(User::FACULTY_INSTITUTE)) {
             return true;
         }
@@ -93,6 +97,10 @@ class EducationProgramSubjectPolicy
      */
     public function delete(User $user, EducationProgramSubject $educationProgramSubject)
     {
+        if ($user->isOwner($educationProgramSubject->user_id)) {
+            return true;
+        }
+
         if ($user->isFacultyMine($educationProgramSubject->faculty_id) && $user->possibility(User::FACULTY_INSTITUTE)) {
             return true;
         }
