@@ -29,10 +29,10 @@ class StoreSpecialitySubjectRequest extends FormRequest
             'asu_id' => [
                 'required',
                 'numeric',
-                Rule::unique('catalog_selective_subjects')->where(function ($query) {
-                    return $query->where('asu_id', $this->asu_id)
-                        ->where('catalog_subject_id', $this->catalog_subject_id);
-                })
+                // Rule::unique('catalog_selective_subjects')->where(function ($query) {
+                //     return $query->where('asu_id', $this->asu_id)
+                //         ->where('catalog_subject_id', $this->catalog_subject_id);
+                // })
             ],
             'title' => 'required|string|max:255',
             'title_en' => 'nullable|string|max:255',
