@@ -23,6 +23,7 @@ use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Builder;
 use App\ExternalServices\Asu\Qualification;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\ExternalServices\Asu\ProfessionQualification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -273,7 +274,7 @@ class Plan extends Model
     {
         if (! $this->profession_qualification_id) return 'не передбачено';
 
-        $qualifications = new Qualification();
+        $qualifications = new ProfessionQualification();
         return $qualifications->getTitle($this->profession_qualification_id);
     }
 

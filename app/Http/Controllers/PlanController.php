@@ -54,6 +54,7 @@ use App\Http\Resources\Plan\SignedPlanResource;
 use App\Http\Requests\Plan\SignedPlanByIdRequest;
 use App\Http\Resources\Api\EducationPlanResource;
 use App\Http\Requests\StorePlanVerificationRequest;
+use App\ExternalServices\Asu\ProfessionQualification;
 use App\Http\Resources\Api\EducationPlanShowResource;
 use App\Http\Resources\Plan\SignedPlanIdSemesterResource;
 use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
@@ -143,6 +144,7 @@ class PlanController extends Controller
         $asu = new Department();
         $professions = new Profession();
         $qualifications = new Qualification();
+        $professionQualifications = new ProfessionQualification();
         $formStudy = new  FormStudyController();
         $studyTerm = new StudyTermController();
         $formOrganization = new FormOrganizationController();
@@ -152,6 +154,7 @@ class PlanController extends Controller
             'faculties' => FacultiesResource::collection($asu->getFaculties()),
             'fields_knowledge' => ProfessionsResource::collection($professions->getFieldKnowledge()),
             'qualifications' => ProfessionsResource::collection($qualifications->getQualifications()),
+            'professionQualifications' => ProfessionsResource::collection($professionQualifications->getQualifications()),
             'forms_study' => $formStudy->index(),
             'terms_study' => $studyTerm->index(),
             'forms_organizationStudy' => $formOrganization->index(),
