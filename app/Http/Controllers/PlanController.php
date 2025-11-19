@@ -959,7 +959,7 @@ class PlanController extends Controller
             'type_id',
         )->whereIn('type_id', [Plan::PLAN, Plan::PROJECT])
             ->where('department_id', $validated['department_id'])
-            ->whereIn('year', [$year, $year - 1])
+            ->whereIn('year', [$year + 1, $year, $year - 1])
             ->verified()
             ->get();
 
