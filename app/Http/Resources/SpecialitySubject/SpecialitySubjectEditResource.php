@@ -36,6 +36,7 @@ class SpecialitySubjectEditResource extends JsonResource
             'number_acquirers' => $this->number_acquirers,
             'limitation' => json_decode($this->limitation),
             'url' => $this->url,
+            'url_mix' => $this->url_mix,
             'published' => $this->published
         ];
     }

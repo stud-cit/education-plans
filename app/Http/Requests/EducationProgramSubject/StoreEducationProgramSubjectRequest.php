@@ -48,6 +48,7 @@ class StoreEducationProgramSubjectRequest extends FormRequest
             'number_acquirers' => 'required|max:255',
             'limitation' => 'required|json',
             'url' => 'nullable|url',
+            'url_mix' => 'required|url',
             'published' => 'nullable|boolean'
         ];
     }

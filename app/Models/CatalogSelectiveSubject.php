@@ -34,6 +34,7 @@ class CatalogSelectiveSubject extends Model
         'entry_requirements_applicants',
         'limitation',
         'url',
+        'url_mix',
         'published',
         'need_verification'
     ];

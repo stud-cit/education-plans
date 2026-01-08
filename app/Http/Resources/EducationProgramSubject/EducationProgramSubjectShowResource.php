@@ -34,6 +34,7 @@ class EducationProgramSubjectShowResource extends JsonResource
             'number_acquirers' => $this->number_acquirers,
             'limitation' => $this->limitationName,
             'url' => $this->url,
+            'url_mix' => $this->url_mix,
             'user_id' => $this->user_id,
         ];
     }
