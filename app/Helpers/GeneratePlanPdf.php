@@ -117,8 +117,19 @@ class GeneratePlanPdf
             ['key' => $this->model->professionQualificationName, 'acolspan' => 6],
         ];
 
-        $professions = $this->insertAtPossition($professions, 1, [], $this->model->year >= 2025);
-        $professions = $this->insertAtPossition($professions, 2, $newElement, $this->model->year >= 2025);
+        $isSetQualification = isset($this->model->profession_qualification_id);
+        $professions = $this->insertAtPossition(
+            $professions,
+            1,
+            [],
+            $this->model->year >= 2025 || $isSetQualification
+        );
+        $professions = $this->insertAtPossition(
+            $professions,
+            2,
+            $newElement,
+            $this->model->year >= 2025 || $isSetQualification
+        );
 
         $scheduleEducationProcess = json_decode($this->model->schedule_education_process, JSON_OBJECT_AS_ARRAY);
         $hoursWeeksSemesters = json_decode($this->model->hours_weeks_semesters, JSON_OBJECT_AS_ARRAY);

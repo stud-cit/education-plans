@@ -43,7 +43,8 @@ class ConsoleGeneratePlanPdf extends Command
     {
         $plans = Plan::with('verification')
             ->select('id', 'guid', 'updated_at')
-            ->where('year', '>=', 2024)
+            ->where('year', '<=', 2024)
+            ->whereNotNull('profession_qualification_id')
             ->whereIn('type_id', [Plan::SHORT, Plan::PROJECT, Plan::PLAN])
             ->verified()
             ->get();
