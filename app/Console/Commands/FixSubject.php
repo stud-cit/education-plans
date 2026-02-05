@@ -46,33 +46,34 @@ class FixSubject extends Command
         // 11036 Національна ідентичність
 
 
-        $subjects = Subject::where(['asu_id' => 11157, 'hours' => 38])->orWhere(['asu_id' => 11036, 'hours' => 38])
+        $subjects = Subject::where(['asu_id' => 11157])
             ->whereHas('cycle.plan', function ($query) {
                 $query->where(['form_organization_id' => MODULE_CYCLE, 'version' => 3, 'education_level_id' => 2])
-                    ->whereIn('year', [2024, 2025]);
+                    ->whereIn('year', [2026, 2025]);
             })
             ->with([
-                'hoursModules' => function ($query) {
-                    $query->where('hour', 2.334);
-                },
                 'cycle',
                 'cycle.plan' => function ($query) {
-                    $query->select(
-                        ['id', 'title', 'form_organization_id', 'updated_at', 'year', 'version']
-                    );
+                    $query->select(['id', 'title', 'form_organization_id', 'updated_at', 'year', 'version']);
                 }
             ])->get();
 
 
         $subjects = $this->withProgressBar($subjects, function ($subject) {
-            $subject->hours = 36;
-            $subject->hoursModules()->where('hour', 2.334)->update(['hour' => 2]); // module = 8 for full plan short 4
+            // Academic and Research Institute of Law    
+            $subject->faculty_id = 437;
+            // Department of Administrative, Commercialconomic Law and Financial Economic Security
+            $subject->department_id = 433;
+
             $subject->cycle->plan()->update(['updated_at' => now()]);
             $subject->save();
             if (isset($subject->cycle->plan->id)) {
                 Artisan::call('plan:generate-pdf-by-id ' . $subject->cycle->plan->id);
             } else {
-                Log::error('Plan ID not found for subject', ['subject_id' => $subject->id]);
+                Log::error('Plan ID not found for subject', [
+                    'subject_id' => $subject->id,
+                    'plan_id' => $subject->cycle->plan->id ?? null
+                ]);
             }
         });
 

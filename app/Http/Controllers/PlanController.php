@@ -81,7 +81,7 @@ class PlanController extends Controller
     public function index(IndexPlanRequest $request)
     {
         $validated = $request->validated();
-
+        clock($validated);
         $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
 
         $plans = Plan::select(
