@@ -29,6 +29,7 @@ use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\indexPlanRequest;
 use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
@@ -937,31 +938,33 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
+        // Cache::forget('signed_palan_' . $validated['department_id']);
         /*         $now = Carbon::now();
         $year = $now->year; */
-
-        $plans = Plan::with(
-            'verification:id,plan_id,status',
-            'cycles.cycles'
-        )->select(
-            'id',
-            'title',
-            'guid',
-            'year',
-            'education_program_id',
-            'faculty_id',
-            'department_id',
-            'qualification_id',
-            'profession_qualification_id',
-            'field_knowledge_id',
-            'speciality_id',
-            'education_level_id',
-            'type_id',
-        )->whereIn('type_id', [Plan::PLAN, Plan::PROJECT])
-            ->where('department_id', $validated['department_id'])
-            /* ->whereIn('year', [$year + 1, $year, $year - 1]) */
-            ->verified()
-            ->get();
+        $plans = Cache::remember('signed_plan_' . $validated['department_id'], now()->addMinutes(10), function () use ($validated) {
+            return Plan::with(
+                // 'verification:id,plan_id,status',
+                'cycles.cycles'
+            )->select(
+                'id',
+                'title',
+                'guid',
+                'year',
+                'education_program_id',
+                'faculty_id',
+                'department_id',
+                'qualification_id',
+                'profession_qualification_id',
+                'field_knowledge_id',
+                'speciality_id',
+                'education_level_id',
+                'type_id',
+            )->whereIn('type_id', [Plan::PLAN, Plan::PROJECT])
+                ->where('department_id', $validated['department_id'])
+                /* ->whereIn('year', [$year + 1, $year, $year - 1]) */
+                ->verified()
+                ->get();
+        });
 
         return SignedPlanResource::collection($plans);
     }
