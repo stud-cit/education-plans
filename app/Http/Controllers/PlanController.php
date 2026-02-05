@@ -941,7 +941,9 @@ class PlanController extends Controller
         // Cache::forget('signed_palan_' . $validated['department_id']);
         /*         $now = Carbon::now();
         $year = $now->year; */
-        $plans = Cache::remember('signed_plan_' . $validated['department_id'], now()->addMinutes(10), function () use ($validated) {
+        $key = 'signed_plan_' . $validated['department_id'] . '_' . ($validated['year'] ?? 'all');
+
+        $plans = Cache::remember($key, now()->addMinutes(10), function () use ($validated) {
             return Plan::with(
                 // 'verification:id,plan_id,status',
                 'cycles.cycles'
@@ -961,6 +963,9 @@ class PlanController extends Controller
                 'type_id',
             )->whereIn('type_id', [Plan::PLAN, Plan::PROJECT])
                 ->where('department_id', $validated['department_id'])
+                ->when($validated['year'] ?? false, function ($query) use ($validated) {
+                    return $query->where('year', $validated['year']);
+                })
                 /* ->whereIn('year', [$year + 1, $year, $year - 1]) */
                 ->verified()
                 ->get();
