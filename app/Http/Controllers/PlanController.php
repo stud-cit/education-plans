@@ -653,7 +653,8 @@ class PlanController extends Controller
                 "laboratories" => $subject['laboratories'],
                 "faculty_id" => $subject['faculty_id'],
                 "department_id" => $subject['department_id'],
-                "subject_id" => $subject_id
+                "subject_id" => $subject_id,
+                "note" => $subject['note'],
             ]);
 
             $semestersCreditsCollection = $subject->semestersCredits;
@@ -728,7 +729,8 @@ class PlanController extends Controller
                 "laboratories" => $subject['laboratories'],
                 "faculty_id" => $subject['faculty_id'],
                 "department_id" => $subject['department_id'],
-                "subject_id" => $subject_id
+                "subject_id" => $subject_id,
+                "note" => $subject['note'],
             ]);
 
             $hasSubSubjects = count($subject->subjects->toArray()) > 0;
