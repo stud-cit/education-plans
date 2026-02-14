@@ -45,7 +45,7 @@ class FixSubject extends Command
         // 11157 Базова загальновійськова підготовкa
         // 11036 Національна ідентичність
 
-        $subjects = Subject::where(['asu_id' => 11157])
+        $subjects = Subject::where(['asu_id' => 11157])->where('faculty_id', '!=', 437)
             ->whereHas('cycle.plan', function ($query) {
                 $query->where(['form_organization_id' => MODULE_CYCLE, /* 'version' => 3, */ 'education_level_id' => 2])
                     ->whereIn('year', [2026, 2025]);
