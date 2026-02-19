@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\ExternalServices\Asu\Subjects;
-use App\Traits\HasAsuDivisionsNameTrait;
 use App\Http\Constant;
+use App\Models\Cycle;
+use App\Traits\HasAsuDivisionsNameTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -94,6 +95,10 @@ class Subject extends Model
 
     public function getIndependentWorkAttribute(): array
     {
+        if ($this->cycle->list_cycle_id === Cycle::ATTESTATION) {
+            return [];
+        }
+
         $allHours = $this->credits * 30;
 
         $classroomWork = $this->hours + $this->practices + $this->laboratories;
