@@ -26,6 +26,7 @@ class PdfCatalogSubjectRequest extends FormRequest
         return [
             'year' => 'required|date_format:Y',
             'group_id' => 'required|integer',
+            'faculty' => 'nullable|integer',
         ];
     }
 

@@ -128,22 +128,31 @@ class CatalogSubjectController extends Controller
     public function generateSubjectsPDF(PdfCatalogSubjectRequest $request)
     {
         $validated = $request->validated();
+        $facultyId = $validated['faculty'] ?? null;
 
-        $data = CatalogSubject::with([
-            'group',
-            'subjects.languages.language',
-            'subjects.lecturers',
-            'subjects.practice',
-            'subjects.educationLevel',
-        ])
+        $subjectFilter = function ($query) use ($facultyId) {
+            $query->verified()
+                ->when($facultyId, fn($q) => $q->where('faculty_id', $facultyId));
+        };
+
+        $data = CatalogSubject::select('id', 'year', 'group_id')
             ->where('year', $validated['year'])
             ->where('group_id', $validated['group_id'])
-            ->select('id', 'year', 'group_id')
+            ->whereHas('subjects', $subjectFilter)
+            ->with([
+                'group',
+                'subjects' => function ($query) use ($subjectFilter) {
+                    $subjectFilter($query);
+                    $query->with([
+                        'languages.language',
+                        'lecturers',
+                        'practice',
+                        'educationLevel'
+                    ]);
+                },
+            ])
             ->first();
 
-        $result = new CatalogSubjectDisciplineResource($data);
-        $result->subjects = $result->subjects->filter(fn ($s) => $s->status === 'success');
-
-        return $result;
+        return new CatalogSubjectDisciplineResource($data);
     }
 }

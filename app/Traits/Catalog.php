@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
-use App\Models\EducationLevel;
-use App\Models\CatalogSelectiveSubject;
 use App\ExternalServices\Asu\Profession;
+use App\Models\CatalogSelectiveSubject;
+use App\Models\EducationLevel;
 
 trait Catalog
 {
