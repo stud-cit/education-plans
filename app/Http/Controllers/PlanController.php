@@ -505,6 +505,8 @@ class PlanController extends Controller
         $clonePlan->year = $year;
         $clonePlan->title = $clonePlan->generateTitle();
         $clonePlan->credits -= $credits * $this->shortedByYear;
+        $clonePlan->not_conventional = false;
+        $clonePlan->comment = null;
 
         $array = json_decode($clonePlan->schedule_education_process, JSON_OBJECT_AS_ARRAY);
         $newScheduleEducationProcess = [];
