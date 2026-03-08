@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Plan;
 use Illuminate\Console\Command;
-use App\Helpers\GenerateCatalogPdf;
-use Illuminate\Support\Facades\Log;
 use App\Helpers\GeneratePlanPdf as Generate;
 
 class ConsoleGeneratePlanPdf extends Command
@@ -41,10 +39,9 @@ class ConsoleGeneratePlanPdf extends Command
      */
     public function handle()
     {
-        $plans = Plan::with('verification')
-            ->select('id', 'guid', 'updated_at')
-            ->where('year', '<=', 2024)
-            ->whereNotNull('profession_qualification_id')
+        $plans = Plan::select('id', 'guid', 'updated_at')
+            ->where('year', '>=', 2026)
+            ->whereNull('profession_qualification_id')
             ->whereIn('type_id', [Plan::SHORT, Plan::PROJECT, Plan::PLAN])
             ->verified()
             ->get();

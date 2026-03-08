@@ -270,9 +270,9 @@ class Plan extends Model
         return $professions->getTitle($this->education_program_id, 'title', true, ['label' => 'after']);
     }
 
-    public function getProfessionQualificationNameAttribute(): string
+    public function getProfessionQualificationNameAttribute(): ?string
     {
-        if (! $this->profession_qualification_id) return 'не передбачено';
+        if (! $this->profession_qualification_id) return null;
 
         $qualifications = new ProfessionQualification();
         return $qualifications->getTitle($this->profession_qualification_id);
