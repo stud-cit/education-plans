@@ -941,15 +941,19 @@ class PlanController extends Controller
     public function getSignedPlans(SignedPlanRequest $request)
     {
         $validated = $request->validated();
+        $for_keys = $validated;
+        unset($for_keys['department_id']);
+        $key = "signed_plan_$validated[department_id]_";
 
-        // Cache::forget('signed_palan_' . $validated['department_id']);
-        /*         $now = Carbon::now();
-        $year = $now->year; */
-        $key = 'signed_plan_' . $validated['department_id'] . '_' . ($validated['year'] ?? 'all');
+        if (array_key_exists('years', $validated)) {
+            $key .= implode('_', $validated['years']);
+            unset($for_keys['years']);
+        }
+
+        $key .= implode('_', $for_keys);
 
         $plans = Cache::remember($key, now()->addMinutes(10), function () use ($validated) {
             return Plan::with(
-                // 'verification:id,plan_id,status',
                 'cycles.cycles'
             )->select(
                 'id',
@@ -970,7 +974,9 @@ class PlanController extends Controller
                 ->when($validated['year'] ?? false, function ($query) use ($validated) {
                     return $query->where('year', $validated['year']);
                 })
-                /* ->whereIn('year', [$year + 1, $year, $year - 1]) */
+                ->when(! empty($validated['years']), function ($query) use ($validated) {
+                    return $query->whereIn('year', $validated['years']);
+                })
                 ->verified()
                 ->get();
         });

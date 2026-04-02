@@ -26,6 +26,7 @@ class SignedPlanRequest extends FormRequest
         return [
             'department_id' => 'required|integer',
             'year' => 'nullable|numeric',
+            'years' => 'nullable|array|min:1',
         ];
     }
 }
