@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Degree;
 use App\Http\Constant;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Setting;
@@ -132,21 +133,19 @@ class SubjectsEditResource extends JsonResource
         return count($this->semestersCredits->where('credit', '!=', 0)) > 0 ? true : false; // перевіряємо ци є кредити хоча б в одному семестрі
     }
 
-    function minClassroomLoad()
+    function minClassroomLoad(): int
     {
-        $minClassroomLoad = null;
-
         switch ($this->cycle->plan->education_level_id) {
-            case 4:
-            case 10:
-            case 11:
-                $minClassroomLoad = $this->getOptions('min-classroom-load-masters');
+            case Degree::MAGISTER->value:
+            case Degree::BACHELOR_FOREIGN->value:
+            case Degree::BACHELOR_ENGLISH_PROGRAMS->value:
+                return $this->getOptions('min-classroom-load-masters');
+            case Degree::POSTGRADUATE->value:
+                return $this->getOptions('min-classroom-load-postgraduate');
                 break;
             default:
-                $minClassroomLoad = $this->getOptions('min-classroom-load');
+                return $this->getOptions('min-classroom-load');
         }
-
-        return $minClassroomLoad;
     }
 
     function getOptions($key)
