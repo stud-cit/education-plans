@@ -29,6 +29,7 @@ use App\Http\Resources\PlanResource;
 use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\indexPlanRequest;
 use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
@@ -504,6 +505,8 @@ class PlanController extends Controller
         $clonePlan->year = $year;
         $clonePlan->title = $clonePlan->generateTitle();
         $clonePlan->credits -= $credits * $this->shortedByYear;
+        $clonePlan->not_conventional = false;
+        $clonePlan->comment = null;
 
         $array = json_decode($clonePlan->schedule_education_process, JSON_OBJECT_AS_ARRAY);
         $newScheduleEducationProcess = [];
@@ -652,7 +655,8 @@ class PlanController extends Controller
                 "laboratories" => $subject['laboratories'],
                 "faculty_id" => $subject['faculty_id'],
                 "department_id" => $subject['department_id'],
-                "subject_id" => $subject_id
+                "subject_id" => $subject_id,
+                "note" => $subject['note'],
             ]);
 
             $semestersCreditsCollection = $subject->semestersCredits;
@@ -727,7 +731,8 @@ class PlanController extends Controller
                 "laboratories" => $subject['laboratories'],
                 "faculty_id" => $subject['faculty_id'],
                 "department_id" => $subject['department_id'],
-                "subject_id" => $subject_id
+                "subject_id" => $subject_id,
+                "note" => $subject['note'],
             ]);
 
             $hasSubSubjects = count($subject->subjects->toArray()) > 0;
@@ -936,32 +941,45 @@ class PlanController extends Controller
     public function getSignedPlans(SignedPlanRequest $request)
     {
         $validated = $request->validated();
+        $for_keys = $validated;
+        unset($for_keys['department_id']);
+        $key = "signed_plan_$validated[department_id]_";
 
-        $now = Carbon::now();
-        $year = $now->year;
+        if (array_key_exists('years', $validated)) {
+            $key .= implode('_', $validated['years']);
+            unset($for_keys['years']);
+        }
 
-        $plans = Plan::with(
-            'verification:id,plan_id,status',
-            'cycles.cycles'
-        )->select(
-            'id',
-            'title',
-            'guid',
-            'year',
-            'education_program_id',
-            'faculty_id',
-            'department_id',
-            'qualification_id',
-            'profession_qualification_id',
-            'field_knowledge_id',
-            'speciality_id',
-            'education_level_id',
-            'type_id',
-        )->whereIn('type_id', [Plan::PLAN, Plan::PROJECT])
-            ->where('department_id', $validated['department_id'])
-            ->whereIn('year', [$year + 1, $year, $year - 1])
-            ->verified()
-            ->get();
+        $key .= implode('_', $for_keys);
+
+        $plans = Cache::remember($key, now()->addMinutes(10), function () use ($validated) {
+            return Plan::with(
+                'cycles.cycles'
+            )->select(
+                'id',
+                'title',
+                'guid',
+                'year',
+                'education_program_id',
+                'faculty_id',
+                'department_id',
+                'qualification_id',
+                'profession_qualification_id',
+                'field_knowledge_id',
+                'speciality_id',
+                'education_level_id',
+                'type_id',
+            )->whereIn('type_id', [Plan::PLAN, Plan::PROJECT])
+                ->where('department_id', $validated['department_id'])
+                ->when($validated['year'] ?? false, function ($query) use ($validated) {
+                    return $query->where('year', $validated['year']);
+                })
+                ->when(! empty($validated['years']), function ($query) use ($validated) {
+                    return $query->whereIn('year', $validated['years']);
+                })
+                ->verified()
+                ->get();
+        });
 
         return SignedPlanResource::collection($plans);
     }

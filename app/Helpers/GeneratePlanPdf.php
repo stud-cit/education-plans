@@ -118,17 +118,18 @@ class GeneratePlanPdf
         ];
 
         $isSetQualification = isset($this->model->profession_qualification_id);
+
         $professions = $this->insertAtPossition(
             $professions,
             1,
             [],
-            $this->model->year >= 2025 || $isSetQualification
+            $isSetQualification
         );
         $professions = $this->insertAtPossition(
             $professions,
             2,
             $newElement,
-            $this->model->year >= 2025 || $isSetQualification
+            $isSetQualification
         );
 
         $scheduleEducationProcess = json_decode($this->model->schedule_education_process, JSON_OBJECT_AS_ARRAY);

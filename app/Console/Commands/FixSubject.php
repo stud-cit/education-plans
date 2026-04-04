@@ -41,15 +41,13 @@ class FixSubject extends Command
     public function handle()
     {
         define("MODULE_CYCLE", 1); // Модульно-циклова
+        $plans = [];
 
-        // 11157 Базова загальновійськова підготовкa
-        // 11036 Національна ідентичність
-
-
-        $subjects = Subject::where(['asu_id' => 11157])
+        $subjects = Subject::whereIn('asu_id', [11157, 1048, 9401, 8221])->whereNull('note')
             ->whereHas('cycle.plan', function ($query) {
-                $query->where(['form_organization_id' => MODULE_CYCLE, 'version' => 3, 'education_level_id' => 2])
-                    ->whereIn('year', [2026, 2025]);
+                $query
+                    //->where(['form_organization_id' => MODULE_CYCLE, /* 'version' => 3, */ 'education_level_id' => 2])
+                    ->whereIn('year', [2026]);
             })
             ->with([
                 'cycle',
@@ -59,28 +57,40 @@ class FixSubject extends Command
             ])->get();
 
 
-        $subjects = $this->withProgressBar($subjects, function ($subject) {
-            // Academic and Research Institute of Law    
-            $subject->faculty_id = 437;
-            // Department of Administrative, Commercialconomic Law and Financial Economic Security
-            $subject->department_id = 433;
+        $subjects = $this->withProgressBar($subjects, function ($subject) use (&$plans) {
+
+            $planId = $subject->cycle->plan->id ?? null;
+            $plans[] = $planId;
+
+            switch ($subject->asu_id) {
+                case 11157: // theoretical training BCMT
+                    $subject->note = 'Для здобувачів, які не вивчають дисципліну «Теоретична підготовка БЗВП», викладається навчальна дисципліна «Національна ідентичність»';
+                    break;
+                case 1048: // English Language
+                case 9401: // English Language (Professional Communication)
+                case 8221:
+                    $subject->note = 'Для іноземних здобувачів вищої освіти викладається навчальна дисципліна «Українська мова як іноземна»';
+                    break;
+            }
 
             $subject->cycle->plan()->update(['updated_at' => now()]);
             $subject->save();
-            if (isset($subject->cycle->plan->id)) {
-                Artisan::call('plan:generate-pdf-by-id ' . $subject->cycle->plan->id);
+
+            if (isset($planId)) {
+                Artisan::call('plan:generate-pdf-by-id ' . $planId);
             } else {
-                Log::error('Plan ID not found for subject', [
-                    'subject_id' => $subject->id,
-                    'plan_id' => $subject->cycle->plan->id ?? null
-                ]);
+                Log::error('Plan ID not found for subject', ['subject_id' => $subject->id, 'plan_id' => $planId]);
             }
         });
 
+        $subject_count = $subjects->count();
+        Log::info('updated subjecs:', ['count' => $subject_count, 'ids' => array_column($subjects->toArray(), 'id')]);
+        $this->info("\n count: " . $subject_count);
 
-        Log::info('updated subjecs:', ['count' => $subjects->count(), 'ids' => array_column($subjects->toArray(), 'id')]);
+        $uniquePlans = array_unique($plans);
+        $this->info("plans: " . implode(', ', $uniquePlans));
+        Log::info('updated plans:', ['plan_ids' => $uniquePlans]);
 
-        $this->info("\n count: " . $subjects->count());
         return 0;
     }
 }

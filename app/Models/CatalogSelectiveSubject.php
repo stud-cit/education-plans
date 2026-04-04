@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\Subject;
+use App\Helpers\Filters\FilterBuilder;
 use App\Models\EducationLevel;
 use App\Models\VerificationStatuses;
-use Illuminate\Support\Facades\Auth;
-use App\Helpers\Filters\FilterBuilder;
-use Illuminate\Database\Eloquent\Model;
-use App\Traits\HasAsuDivisionsNameTrait;
 use App\Policies\CatalogSelectiveSubjectPolicy;
+use App\Traits\HasAsuDivisionsNameTrait;
+use App\Traits\Subject;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class CatalogSelectiveSubject extends Model
 {
@@ -74,6 +75,13 @@ class CatalogSelectiveSubject extends Model
         return array_filter($data, function ($val) use ($id) {
             return $val === $id;
         });
+    }
+
+    public function scopeVerified($query)
+    {
+        $query->whereHas('verifications', function (Builder $query) {
+            $query->where('status', true);
+        }, '>=', 4);
     }
 
     public function educationLevel()
