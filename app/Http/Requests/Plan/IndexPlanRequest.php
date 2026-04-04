@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Plan;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class indexPlanRequest extends FormRequest
+class IndexPlanRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

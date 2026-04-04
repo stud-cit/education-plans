@@ -30,7 +30,7 @@ use App\Models\VerificationStatuses;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Requests\indexPlanRequest;
+use App\Http\Requests\Plan\IndexPlanRequest;
 use App\Models\CatalogEducationProgram;
 use App\ExternalServices\Asu\Department;
 use App\ExternalServices\Asu\Profession;
@@ -82,8 +82,8 @@ class PlanController extends Controller
     public function index(IndexPlanRequest $request)
     {
         $validated = $request->validated();
-        clock($validated);
-        $perPage = array_key_exists('items_per_page', $validated) ? $validated['items_per_page'] : Constant::PAGINATE;
+
+        $perPage = data_get($validated, 'items_per_page', Constant::PAGINATE);
 
         $plans = Plan::select(
             'id',
