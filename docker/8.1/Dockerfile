@@ -48,40 +48,31 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install wkhtmltopdf
+# Install wkhtmltopdf dependencies and package
 RUN apt-get update && apt-get install -y \
-    wget \
-    xfonts-75dpi \
-    xfonts-base \
-    libxrender1 \
-    libxext6 \
-    libfontconfig1 \
+    fontconfig \
+    libfreetype6 \
     libjpeg-turbo8 \
     libpng16-16 \
-    libssl3 \
     libx11-6 \
     libxcb1 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxrandr2 \
-    libxss1 \
-    libxtst6 \
-    fontconfig \
-    ca-certificates \
-    --no-install-recommends \
+    libxext6 \
+    libxrender1 \
+    xfonts-75dpi \
+    xfonts-base \
+    xfonts-encodings \
+    xfonts-utils \
     && rm -rf /var/lib/apt/lists/*
 
-# Завантажуємо та встановлюємо wkhtmltopdf
-RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-2/wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
-    apt-get install -y ./wkhtmltox_0.12.6.1-2.jammy_amd64.deb && \
-    rm wkhtmltox_0.12.6.1-2.jammy_amd64.deb
-
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN chmod +x /usr/local/bin/wkhtmltoimage 
-RUN chmod +x /usr/local/bin/wkhtmltopdf
-
+# Install wkhtmltopdf from Ubuntu repository or build from source
+RUN apt-get update && apt-get install -y wkhtmltopdf \
+    || (apt-get install -y wget ca-certificates && \
+        cd /tmp && \
+        wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox-0.12.6-1.jammy_linux-amd64.deb && \
+        dpkg -i wkhtmltox-0.12.6-1.jammy_linux-amd64.deb 2>&1 | grep -i error || true && \
+        apt-get install -y -f && \
+        rm wkhtmltox-0.12.6-1.jammy_linux-amd64.deb && \
+        rm -rf /var/lib/apt/lists/*)
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.1
 
 RUN groupadd --force -g $WWWGROUP sail
