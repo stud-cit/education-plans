@@ -15,11 +15,13 @@ class StudyTermObserver
      */
     public function created(StudyTerm $studyTerm)
     {
-        UserActivityController::addToLog(
-            __('variables.created'),
-            'Термін навчання',
-            "{$studyTerm->title} ({$studyTerm->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.created'),
+                'Термін навчання',
+                "{$studyTerm->title} ({$studyTerm->id})"
+            );
+        }
     }
 
     /**
@@ -30,11 +32,13 @@ class StudyTermObserver
      */
     public function updated(StudyTerm $studyTerm)
     {
-        UserActivityController::addToLog(
-            __('variables.updated'),
-            'Термін навчання',
-            "{$studyTerm->title} ({$studyTerm->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.updated'),
+                'Термін навчання',
+                "{$studyTerm->title} ({$studyTerm->id})"
+            );
+        }
     }
 
     /**
@@ -45,10 +49,12 @@ class StudyTermObserver
      */
     public function deleted(StudyTerm $studyTerm)
     {
-        UserActivityController::addToLog(
-            __('variables.deleted'),
-            'Термін навчання',
-            "{$studyTerm->title} ({$studyTerm->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.deleted'),
+                'Термін навчання',
+                "{$studyTerm->title} ({$studyTerm->id})"
+            );
+        }
     }
 }

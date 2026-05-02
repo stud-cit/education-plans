@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Setting;
 use App\Http\Controllers\UserActivityController;
+use Illuminate\Support\Facades\Auth;
 
 class SettingObserver
 {
@@ -15,11 +16,13 @@ class SettingObserver
      */
     public function created(Setting $setting)
     {
-        UserActivityController::addToLog(
-            __('variables.created'),
-            'Редактор обмежень',
-            "Створено ({$setting->title})"
-        );
+        if (Auth::check()) {
+            UserActivityController::addToLog(
+                __('variables.created'),
+                'Редактор обмежень',
+                "Створено ({$setting->title})"
+            );
+        }
     }
 
     /**
@@ -30,11 +33,13 @@ class SettingObserver
      */
     public function updated(Setting $setting)
     {
-        UserActivityController::addToLog(
-            __('variables.updated'),
-            'Редактор обмежень',
-            "Редаговано Редактор обмежень ({$setting->title})"
-        );
+        if (Auth::check()) {
+            UserActivityController::addToLog(
+                __('variables.updated'),
+                'Редактор обмежень',
+                "Редаговано Редактор обмежень ({$setting->title})"
+            );
+        }
     }
 
     /**
@@ -45,10 +50,12 @@ class SettingObserver
      */
     public function deleted(Setting $setting)
     {
-        UserActivityController::addToLog(
-            __('variables.deleted'),
-            'Редактор обмежень',
-            "Редактор обмежень ({$setting->id})"
-        );
+        if (Auth::check()) {
+            UserActivityController::addToLog(
+                __('variables.deleted'),
+                'Редактор обмежень',
+                "Редактор обмежень ({$setting->id})"
+            );
+        }
     }
 }

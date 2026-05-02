@@ -12,12 +12,19 @@ use App\Http\Requests\StoreEducationLevelRequest;
 
 class EducationLevelController extends Controller
 {
-    public function list()
+
+    public function __construct()
     {
-        return EducationLevelResource::collection(
-            EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')->get()
-        );
+        $this->authorizeResource(EducationLevel::class);
     }
+
+    // todo: remove if don't need
+    // public function list()
+    // {
+    //     return EducationLevelResource::collection(
+    //         EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')->get()
+    //     );
+    // }
 
     /**
      * Display a listing of the resource.
@@ -89,9 +96,11 @@ class EducationLevelController extends Controller
         }
     }
 
-    public function restore(Request $request)
+    public function restore(Request $request, EducationLevel $educationLevel)
     {
-        EducationLevel::withTrashed()->where('id', $request->id)->restore();
+        $this->authorize('restore', $educationLevel);
+
+        $educationLevel->restore();
 
         return $this->success(__('messages.Unzipped'), 201);
     }

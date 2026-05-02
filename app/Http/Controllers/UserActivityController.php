@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\IndexLogRequest;
 use Illuminate\Support\Facades\Request;
 use App\Http\Resources\UserActivityResource;
-use Illuminate\Support\Facades\Log;
 
 class UserActivityController extends Controller
 {

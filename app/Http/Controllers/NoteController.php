@@ -74,17 +74,12 @@ class NoteController extends Controller
     }
 
 
-    public function rules($date)
+    public function rules(string $date)
     {
         return response()->json(['data' => $this->getNotes($date)]);
     }
 
-    /**
-     * @param string $date
-     * @return array
-     */
-
-    public function getNotes($date): array
+    public function getNotes(string $date): array
     {
         $date = Carbon::parse($date . '-01-01')->format('Y-m-d');
 

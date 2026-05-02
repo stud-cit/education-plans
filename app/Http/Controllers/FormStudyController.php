@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFormStudyRequest;
 use App\Models\FormStudy;
-use Illuminate\Http\Request;
 use App\Http\Resources\FormStudyResource;
 
 class FormStudyController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(FormStudy::class);
+    }
+
+
     public function index()
     {
-        return FormStudyResource::collection(FormStudy::select('id' ,'title')->get());
+        return FormStudyResource::collection(FormStudy::select('id', 'title')->get());
     }
 
     /**
@@ -66,6 +72,5 @@ class FormStudyController extends Controller
             return $this->error(__('messages.Cannot_delete'), 403);
         }
         return $this->success(__('messages.Deleted'), 200);
-
     }
 }

@@ -13,10 +13,30 @@
 - `cp .env .env.testing` -- copy `.env` with new name `.env.testing`.
 - edit `.env.testing` db_connection && db_database.
 
+### For mock Authorisation
+
 ```
-DB_CONNECTION=sqlite
-DB_DATABASE=:memory:
+Http::fake([
+    '*' => Http::response([
+        'status' => 'OK',
+        'result' => [
+            'guid' => $user->asu_id,
+            'surname' => 'Іванов',
+            'name' => 'Іван',
+            'patronymic' => 'Іванович',
+            'email' => $user->email,
+        ],
+    ], 200),
+]);
 ```
+
+### For disable Authorisation
+
+`$this->withoutMiddleware(\App\Http\Middleware\EnsureCabinetTokenIsValid::class);`
+
+or
+
+`$this->withoutMiddleware('cabinetAuth');`
 
 Before run tests need run command `php artisan config:clear` <br/>
 After cleaning run `php artisan run test`

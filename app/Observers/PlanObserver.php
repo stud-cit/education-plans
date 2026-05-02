@@ -10,52 +10,47 @@ class PlanObserver
 {
     /**
      * Handle the Plan "created" event.
-     *
-     * @param  \App\Models\Plan  $plan
-     * @return void
      */
-    public function created(Plan $plan)
+    public function created(Plan $plan): void
     {
-        UserActivityController::addToLog(__('variables.created'), 'План', "План {$plan->id}");
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.created'), 'План', "План {$plan->id}");
+        }
     }
 
-    /**
-     * Handle the Plan "updated" event.
-     *
-     * @param  \App\Models\Plan  $plan
-     * @return void
-     */
-    public function updated(Plan $plan)
+    public function updated(Plan $plan): void
     {
-        UserActivityController::addToLog(__('variables.updated'), 'План', "План {$plan->id}");
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.updated'), 'План', "План {$plan->id}");
+        }
     }
 
     /**
      * Handle the Plan "deleted" event.
-     *
-     * @param  \App\Models\Plan  $plan
-     * @return void
      */
-    public function deleted(Plan $plan)
+    public function deleted(Plan $plan): void
     {
-        UserActivityController::addToLog(__('variables.deleted'), 'План', "План {$plan->id}");
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.deleted'), 'План', "План {$plan->id}");
+        }
     }
 
-    public function replicating(Plan $plan)
+    public function replicating(Plan $plan): void
     {
-        preg_match('/\d$/', Request::url(), $matches);
+        if (auth()->check()) {
+            preg_match('/\d$/', Request::url(), $matches);
 
-        UserActivityController::addToLog(__('variables.replicating'), 'План', "Початковий план {$matches[0]}");
+            UserActivityController::addToLog(__('variables.replicating'), 'План', "Початковий план {$matches[0]}");
+        }
     }
 
     /**
      * Handle the Plan "restored" event.
-     * 
-     * @param  \App\Models\Plan  $plan
-     * @return void
      */
-    public function restored(Plan $plan)
+    public function restored(Plan $plan): void
     {
-        UserActivityController::addToLog(__('variables.restored'), 'План', "План {$plan->id}");
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.restored'), 'План', "План {$plan->id}");
+        }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Setting;
+use App\Models\EducationLevel;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SettingPolicy
+class EducationLevelPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class SettingPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->possibility();
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\EducationLevel  $educationLevel
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Setting $setting)
+    public function view(User $user, EducationLevel $educationLevel)
     {
-        return $user->possibility(User::PRIVILEGED_ROLES);
+        return true;
     }
 
     /**
@@ -41,17 +41,17 @@ class SettingPolicy
      */
     public function create(User $user)
     {
-        return $user->possibility(User::ROOT);
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\EducationLevel  $educationLevel
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Setting $setting)
+    public function update(User $user, EducationLevel $educationLevel)
     {
         return $user->possibility(User::PRIVILEGED_ROLES);
     }
@@ -60,35 +60,35 @@ class SettingPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\EducationLevel  $educationLevel
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Setting $setting)
+    public function delete(User $user, EducationLevel $educationLevel)
     {
-        return $user->possibility(User::ROOT);
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\EducationLevel  $educationLevel
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Setting $setting)
+    public function restore(User $user, EducationLevel $educationLevel)
     {
-        //
+        return $user->possibility(User::PRIVILEGED_ROLES);
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Setting  $setting
+     * @param  \App\Models\EducationLevel  $educationLevel
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Setting $setting)
+    public function forceDelete(User $user, EducationLevel $educationLevel)
     {
-        //
+        return false;
     }
 }

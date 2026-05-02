@@ -15,11 +15,9 @@ class PositionObserver
      */
     public function created(Position $position)
     {
-        UserActivityController::addToLog(
-            __('variables.created'),
-            'Посади',
-            "({$position->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.created'), 'Посади', "({$position->id})");
+        }
     }
 
     /**
@@ -30,11 +28,9 @@ class PositionObserver
      */
     public function updated(Position $position)
     {
-        UserActivityController::addToLog(
-            __('variables.updated'),
-            'Посади',
-            "({$position->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.updated'), 'Посади', "({$position->id})");
+        }
     }
 
     /**
@@ -45,10 +41,8 @@ class PositionObserver
      */
     public function deleted(Position $position)
     {
-        UserActivityController::addToLog(
-            __('variables.deleted'),
-            'Посади',
-            "({$position->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.deleted'), 'Посади', "({$position->id})");
+        }
     }
 }

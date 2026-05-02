@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 class UserFactory extends Factory
 {
@@ -18,8 +19,9 @@ class UserFactory extends Factory
             'asu_id' => Str::random(10),
             'faculty_id' => $this->faker->randomDigit(),
             'department_id' => $this->faker->randomDigit(),
-            'role_id' => $this->faker->biasedNumberBetween(1,6),
+            'role_id' => $this->faker->biasedNumberBetween(1, 6),
             'email' => $this->faker->unique()->safeEmail(),
+            'name' => $this->faker->name(),
             // 'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
@@ -36,6 +38,33 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'email_verified_at' => null,
+            ];
+        });
+    }
+
+    public function withRole(int $roleId): Factory
+    {
+        return $this->state(function (array $attributes) use ($roleId) {
+            return [
+                'role_id' => $roleId,
+            ];
+        });
+    }
+
+    public function admin(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role_id' => User::ADMIN,
+            ];
+        });
+    }
+
+    public function guest(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role_id' => User::GUEST,
             ];
         });
     }

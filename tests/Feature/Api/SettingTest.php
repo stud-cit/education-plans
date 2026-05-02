@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\Setting;
 use App\Models\User;
+use Database\Seeders\RoleSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
-use App\Models\Setting;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SettingTest extends TestCase
 {
@@ -14,13 +16,20 @@ class SettingTest extends TestCase
 
     private $route = 'settings.';
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureCabinetTokenIsValid::class);
+        $this->seed([RoleSeeder::class]);
+    }
+
     public function testGetAllSettings(): void
     {
-        $this->actingAsUser();
-
+        $user = User::factory()->admin()->create();
         Setting::factory()->count(3)->create();
 
-        $response = $this->getJson(route("{$this->route}index"));
+        $this->actingAs($user);
+        $response = $this->getJson(route($this->route . "index"));
 
         $response->assertOk()->assertJsonStructure([
             'data' => [
@@ -31,10 +40,11 @@ class SettingTest extends TestCase
 
     public function testCanStoreSetting(): void
     {
-        $this->actingAsUser();
 
+        $user = User::factory()->withRole(User::ROOT)->create();
         $setting = Setting::factory()->make();
 
+        $this->actingAs($user);
         $response = $this->postJson(route("{$this->route}store"), $setting->toArray());
 
         $response->assertCreated();
@@ -44,7 +54,8 @@ class SettingTest extends TestCase
 
     public function testCanShowSetting(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
+        $this->actingAs($user);
 
         $existSetting = Setting::factory()->create();
 
@@ -63,13 +74,15 @@ class SettingTest extends TestCase
 
     public function testCanUpdateSetting(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
+        $this->actingAs($user);
 
         $existSetting = Setting::factory()->create();
         $setting = Setting::factory()->make();
 
         $response = $this->putJson(
-            route("{$this->route}update", $existSetting->id), $setting->toArray()
+            route("{$this->route}update", $existSetting->id),
+            $setting->toArray()
         );
 
         $response->assertStatus(200)->assertJson(['message' => __('messages.Updated')]);
@@ -77,7 +90,8 @@ class SettingTest extends TestCase
 
     public function testCanDeleteSetting(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->withRole(User::ROOT)->create();
+        $this->actingAs($user);
 
         $existSetting = Setting::factory()->create();
 

@@ -15,11 +15,13 @@ class ListCycleObserver
      */
     public function created(ListCycle $listCycle)
     {
-        UserActivityController::addToLog(
-            __('variables.created'),
-            'Цикли',
-            "({$listCycle->title})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.created'),
+                'Цикли',
+                "({$listCycle->title})"
+            );
+        }
     }
 
     /**
@@ -30,11 +32,13 @@ class ListCycleObserver
      */
     public function updated(ListCycle $listCycle)
     {
-        UserActivityController::addToLog(
-            __('variables.updated'),
-            'Цикли',
-            "id {$listCycle->id} ({$listCycle->title})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.updated'),
+                'Цикли',
+                "id {$listCycle->id} ({$listCycle->title})"
+            );
+        }
     }
 
     /**
@@ -45,10 +49,12 @@ class ListCycleObserver
      */
     public function deleted(ListCycle $listCycle)
     {
-        UserActivityController::addToLog(
-            __('variables.deleted'),
-            'Цикли',
-            "id {$listCycle->id}"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.deleted'),
+                'Цикли',
+                "id {$listCycle->id}"
+            );
+        }
     }
 }

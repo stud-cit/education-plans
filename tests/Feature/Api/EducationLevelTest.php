@@ -3,21 +3,51 @@
 namespace Tests\Feature\Api;
 
 use App\Models\EducationLevel;
+use App\Models\User;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class EducationLevelTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureCabinetTokenIsValid::class);
+        $this->seed([RoleSeeder::class]);
+    }
+
+    public function testGuestCannotRestoreTreshedEducationLevels(): void
+    {
+        $user = User::factory()->guest()->create();
+
+        $educationLevel = EducationLevel::factory()->trashed()->create();
+
+        $response = $this->actingAs($user)->patchJson(route('education-levels.restore', $educationLevel->id));
+
+        $response->assertStatus(403)->assertJsonStructure(['message']);
+    }
+
+    public function testAdminCanRestoreTreshedEducationLevels(): void
+    {
+        $user = User::factory()->admin()->create();
+
+        $educationLevel = EducationLevel::factory()->trashed()->create();
+
+        $response = $this->actingAs($user)->patchJson(route('education-levels.restore', $educationLevel->id));
+
+        $response->assertStatus(201)->assertJsonStructure(['message']);
+    }
+
     public function testCanGetAllEducationLevels(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
 
-        $educationLevels = EducationLevel::factory()->create();
+        EducationLevel::factory()->create();
 
-        $response = $this->get(route('education-levels.index'));
+        $response = $this->actingAs($user)->get(route('education-levels.index'));
 
         $response->assertStatus(200);
 
@@ -33,14 +63,11 @@ class EducationLevelTest extends TestCase
 
     public function testCanStoreEducationLevel(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
 
         $educationLevel = EducationLevel::factory()->make();
 
-        $response = $this->postJson(
-            route('education-levels.store'),
-            $educationLevel->toArray()
-        );
+        $response = $this->actingAs($user)->postJson(route('education-levels.store'), $educationLevel->toArray());
 
         $response->assertCreated();
 
@@ -49,13 +76,11 @@ class EducationLevelTest extends TestCase
 
     public function testCanShowEducationLevel(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
 
         $educationLevel = EducationLevel::factory()->create();
 
-        $response = $this->getJson(
-            route('education-levels.show', $educationLevel->id),
-        );
+        $response = $this->actingAs($user)->getJson(route('education-levels.show', $educationLevel->id));
 
         $response->assertok();
 
@@ -68,12 +93,12 @@ class EducationLevelTest extends TestCase
 
     public function testCanUpdateEducationLevel(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
 
         $educationLevel = EducationLevel::factory()->create();
         $newlyEducationLevel = EducationLevel::factory()->make();
 
-        $response = $this->putJson(
+        $response = $this->actingAs($user)->putJson(
             route('education-levels.update', $educationLevel->id),
             ['title' => $newlyEducationLevel->title]
         );
@@ -83,16 +108,16 @@ class EducationLevelTest extends TestCase
 
     public function  testCanDeleteEducationLevel(): void
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
 
         $educationLevel = EducationLevel::factory()->create();
 
-        $response = $this->deleteJson(
+        $response = $this->actingAs($user)->deleteJson(
             route('education-levels.destroy', $educationLevel->id),
             $educationLevel->toArray()
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(201);
 
         $this->assertDatabaseMissing('education_levels', $educationLevel->toArray());
     }

@@ -11,6 +11,13 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(RoleSeeder::class);
+    }
+
     /**
      * A basic unit test example.
      *
@@ -18,10 +25,6 @@ class UserTest extends TestCase
      */
     public function testCreateUser()
     {
-        $this->actingAsUser();
-
-        $this->seed(RoleSeeder::class);
-
         $user = User::factory()->create();
 
         $this->assertModelExists($user);
@@ -29,17 +32,13 @@ class UserTest extends TestCase
 
     public function testCanChangeRole ()
     {
-        $this->seed(RoleSeeder::class);
+        $user = User::factory()->withRole(User::FACULTY_INSTITUTE)->create();
 
-        $user = User::factory()->create(['role_id' => 1]);
-
-        $role = Role::find(2);
-        $user->assignRole($role);
+        $user->assignRole(User::ADMIN);
 
         $this->assertDatabaseHas('users', [
             'email' => $user->email,
-            'role_id' => 2
+            'role_id' => User::ADMIN
         ]);
-
     }
 }

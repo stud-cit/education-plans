@@ -15,11 +15,13 @@ class SelectiveDisciplineObserver
      */
     public function created(SelectiveDiscipline $selectiveDiscipline)
     {
-        UserActivityController::addToLog(
-            __('variables.created'),
-            'Вибіркові дисципліни',
-            "{$selectiveDiscipline->title} ({$selectiveDiscipline->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.created'),
+                'Вибіркові дисципліни',
+                "{$selectiveDiscipline->title} ({$selectiveDiscipline->id})"
+            );
+        }
     }
 
     /**
@@ -30,11 +32,13 @@ class SelectiveDisciplineObserver
      */
     public function updated(SelectiveDiscipline $selectiveDiscipline)
     {
-        UserActivityController::addToLog(
-            __('variables.updated'),
-            'Вибіркові дисципліни',
-            "{$selectiveDiscipline->title} ({$selectiveDiscipline->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.updated'),
+                'Вибіркові дисципліни',
+                "{$selectiveDiscipline->title} ({$selectiveDiscipline->id})"
+            );
+        }
     }
 
     /**
@@ -45,10 +49,12 @@ class SelectiveDisciplineObserver
      */
     public function deleted(SelectiveDiscipline $selectiveDiscipline)
     {
-        UserActivityController::addToLog(
-            __('variables.deleted'),
-            'Вибіркові дисципліни',
-            "{$selectiveDiscipline->title} ({$selectiveDiscipline->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(
+                __('variables.deleted'),
+                'Вибіркові дисципліни',
+                "{$selectiveDiscipline->title} ({$selectiveDiscipline->id})"
+            );
+        }
     }
 }

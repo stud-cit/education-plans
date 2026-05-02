@@ -24,6 +24,7 @@ services:
             - sail
         depends_on:
             - mysql
+            - mysql_testing
     mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
@@ -44,9 +45,31 @@ services:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 3
             timeout: 5s
+    mysql_testing:
+        image: 'mysql/mysql-server:8.0'
+        ports:
+            - '${FORWARD_DB_TEST_PORT:-3307}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_DATABASE: '${DB_TEST_DATABASE:-testing}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        volumes:
+            - 'sailmysql_testing:/var/lib/mysql'
+            - './docker/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+            retries: 3
+            timeout: 5s
+
 networks:
     sail:
         driver: bridge
 volumes:
     sail-mysql:
+        driver: local
+    sailmysql_testing:
         driver: local

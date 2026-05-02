@@ -15,14 +15,15 @@ class RoleSeeder extends Seeder
     public function run()
     {
         DB::table('roles')->insert([
-            ['title' => 'admin', 'label' => 'Адміністратор'],
-            ['title' => 'training-department', 'label' => 'Представник Навчального відділу'],
-            ['title' => 'practice-department', 'label' => 'Представник Відділу практики'],
-            ['title' => 'educational-department-deputy', 'label' => 'Заступник навчально-методичного відділу'],
-            ['title' => 'educational-department-chief', 'label' => 'Начальник навчально-методичного відділу'],
-            ['title' => 'faculty-institute', 'label' => 'Представники Факультету / Інституту'],
-            ['title' => 'department', 'label' => 'Представники кафедр'],
-            ['title' => 'root', 'label' => 'Розробник']
+            ['id' => 1, 'title' => 'admin', 'label' => 'Адміністратор'],
+            ['id' => 2, 'title' => 'training-department', 'label' => 'Представник Навчального відділу'],
+            ['id' => 3, 'title' => 'practice-department', 'label' => 'Представник Відділу практики'],
+            ['id' => 4, 'title' => 'educational-department-deputy', 'label' => 'Заступник навчально-методичного відділу'],
+            ['id' => 5, 'title' => 'educational-department-chief', 'label' => 'Начальник навчально-методичного відділу'],
+            ['id' => 6, 'title' => 'faculty-institute', 'label' => 'Представники Факультету / Інституту'],
+            ['id' => 7, 'title' => 'department', 'label' => 'Представники кафедр'],
+            ['id' => 8, 'title' => 'root', 'label' => 'Розробник'],
+            ['id' => 9, 'title' => 'guest', 'label' => 'Гість'],
         ]);
     }
 }

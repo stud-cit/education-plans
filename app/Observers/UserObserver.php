@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserActivityController;
 
 class UserObserver
@@ -15,11 +16,13 @@ class UserObserver
      */
     public function created(User $user)
     {
-        UserActivityController::addToLog(
-            __('variables.created'),
-            'Користувач',
-            "Користувач {$user->fullName} ({$user->id})"
-        );
+        if (Auth::check()) {
+            UserActivityController::addToLog(
+                __('variables.created'),
+                'Користувач',
+                "Користувач {$user->fullName} ({$user->id})"
+            );
+        }
     }
 
     /**
@@ -31,7 +34,9 @@ class UserObserver
     public function updated(User $user)
     {
         // TODO: !need refactor
-        UserActivityController::addToLogV2('Редагування', 'Користувач', $user);
+        if (Auth::check()) {
+            UserActivityController::addToLogV2('Редагування', 'Користувач', $user);
+        }
     }
 
     /**
@@ -42,6 +47,8 @@ class UserObserver
      */
     public function deleted(User $user)
     {
-        UserActivityController::addToLog('Видалення', 'Користувач', "Користувач {$user->fullName} ({$user->id})");
+        if (Auth::check()) {
+            UserActivityController::addToLog('Видалення', 'Користувач', "Користувач {$user->fullName} ({$user->id})");
+        }
     }
 }

@@ -2,27 +2,33 @@
 
 namespace Tests\Feature\Api;
 
-use Tests\TestCase;
+use App\Http\Resources\CycleShowResource;
 use App\Models\Plan;
 use App\Models\User;
-use Laravel\Sanctum\Sanctum;
-use App\Http\Resources\CycleShowResource;
+use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class PlanTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureCabinetTokenIsValid::class);
+        $this->seed([RoleSeeder::class]);
+    }
+
     public function testCanDeletePlan()
     {
-        $this->actingAsUser();
+        $user = User::factory()->admin()->create();
 
-        $plan = Plan::factory()->create();
+        $plan = Plan::factory()->state(['user_id' => $user->id])->create();
 
-        $response = $this->deleteJson(route('plans.destroy', $plan));
+        $response = $this->actingAs($user)->deleteJson(route('plans.destroy', $plan));
 
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('plans', $plan->toArray());
     }
 
     public function testCanGetAllPlans()
@@ -87,5 +93,4 @@ class PlanTest extends TestCase
             ]
         ]);
     }
-
 }

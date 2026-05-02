@@ -15,11 +15,9 @@ class NoteObserver
      */
     public function created(Note $note)
     {
-        UserActivityController::addToLog(
-            __('variables.created'),
-            'Примітки',
-            "({$note->abbreviation})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.created'), 'Примітки', "({$note->abbreviation})");
+        }
     }
 
     /**
@@ -30,11 +28,9 @@ class NoteObserver
      */
     public function updated(Note $note)
     {
-        UserActivityController::addToLog(
-            __('variables.updated'),
-            'Примітки',
-            "id ({$note->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.updated'), 'Примітки', "id ({$note->id})");
+        }
     }
 
     /**
@@ -45,10 +41,8 @@ class NoteObserver
      */
     public function deleted(Note $note)
     {
-        UserActivityController::addToLog(
-            __('variables.deleted'),
-            'Примітки',
-            "id ({$note->id})"
-        );
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.deleted'), 'Примітки', "id ({$note->id})");
+        }
     }
 }

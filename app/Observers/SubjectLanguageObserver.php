@@ -15,7 +15,9 @@ class SubjectLanguageObserver
      */
     public function created(SubjectLanguage $subjectLanguage)
     {
-        UserActivityController::addToLog(__('variables.created'), 'SubjectLanguage', "SubjectLanguage id:{$subjectLanguage->id}");
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.created'), 'SubjectLanguage', "SubjectLanguage id:{$subjectLanguage->id}");
+        }
     }
 
     /**
@@ -26,7 +28,9 @@ class SubjectLanguageObserver
      */
     public function updated(SubjectLanguage $subjectLanguage)
     {
-        UserActivityController::addToLog(__('variables.updated'), 'SubjectLanguage', "SubjectLanguage id:{$subjectLanguage->id}");
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.updated'), 'SubjectLanguage', "SubjectLanguage id:{$subjectLanguage->id}");
+        }
     }
 
     /**
@@ -37,6 +41,8 @@ class SubjectLanguageObserver
      */
     public function deleted(SubjectLanguage $subjectLanguage)
     {
-        UserActivityController::addToLog(__('variables.deleted'), 'SubjectLanguage', "SubjectLanguage id:{$subjectLanguage->id}");
+        if (auth()->check()) {
+            UserActivityController::addToLog(__('variables.deleted'), 'SubjectLanguage', "SubjectLanguage id:{$subjectLanguage->id}");
+        }
     }
 }

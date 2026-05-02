@@ -14,6 +14,10 @@ class VerificationObserver
      */
     public function created(PlanVerification $planVerification)
     {
+        if (! auth()->check()) {
+            return;
+        }
+
         if ($planVerification->status === true) {
             $plan = $planVerification->plan;
             $allVerification = $plan->isApprovedPlan();
@@ -32,11 +36,13 @@ class VerificationObserver
      */
     public function updated(PlanVerification $planVerification)
     {
-        
+        if (! auth()->check()) {
+            return;
+        }
         if ($planVerification->wasChanged('status') && $planVerification->status == true) {
             $plan = $planVerification->plan;
             $allVerification = $plan->approvedPlan;
-            
+
             if ($allVerification) {
                 $plan->touch();
             }
