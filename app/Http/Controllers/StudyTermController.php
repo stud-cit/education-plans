@@ -10,6 +10,11 @@ use App\Http\Resources\StudyTermSelectResource;
 
 class StudyTermController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(StudyTerm::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
