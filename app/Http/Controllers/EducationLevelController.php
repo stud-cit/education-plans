@@ -18,13 +18,12 @@ class EducationLevelController extends Controller
         $this->authorizeResource(EducationLevel::class);
     }
 
-    // todo: remove if don't need
-    // public function list()
-    // {
-    //     return EducationLevelResource::collection(
-    //         EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')->get()
-    //     );
-    // }
+    public function list()
+    {
+        return EducationLevelResource::collection(
+            EducationLevel::withTrashed()->select('id', 'title', 'deleted_at')->orderBy('deleted_at')->get()
+        );
+    }
 
     /**
      * Display a listing of the resource.
