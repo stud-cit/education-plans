@@ -53,19 +53,21 @@ class UserFactory extends Factory
 
     public function admin(): Factory
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'role_id' => User::ADMIN,
-            ];
-        });
+        return $this->state(fn() => ['role_id' => User::ADMIN]);
     }
 
     public function guest(): Factory
     {
-        return $this->state(function (array $attributes) {
-            return [
-                'role_id' => User::GUEST,
-            ];
-        });
+        return $this->state(fn() => ['role_id' => User::GUEST]);
+    }
+
+    public function department(): Factory
+    {
+        return $this->state(fn() => ['role_id' => User::DEPARTMENT]);
+    }
+
+    public function adminDepartmentPostgraduate(): Factory
+    {
+        return $this->state(fn() => ['role_id' => User::ADMIN_DEPARTMENT_POSTGRADUATE]);
     }
 }

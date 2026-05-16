@@ -11,9 +11,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ASU
 {
-    protected $asu_key;
-    private $expirationTime;
-    private $host;
+    protected string $asu_key;
+    private \Illuminate\Support\Carbon $expirationTime;
+    private string $host;
 
     protected const ID_INSTITUTE = 7;
     protected const ID_FACULTY = 9;
@@ -38,7 +38,7 @@ class ASU
         return $this->asu_key;
     }
 
-    protected function url($method): string
+    protected function url(string $method): string
     {
         return $this->host . $method;
     }
@@ -47,6 +47,7 @@ class ASU
     {
         return array_merge(['key' => $this->asu_key], $params ?? []);
     }
+
     /**
      * @param string $url
      * @param array|null $queryParams

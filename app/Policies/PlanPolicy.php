@@ -45,6 +45,10 @@ class PlanPolicy
             return true;
         }
 
+        if ($user->possibility(User::ADMIN_DEPARTMENT_POSTGRADUATE)) {
+            return true;
+        }
+
         if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES)) {
             return true;
         }
@@ -80,6 +84,12 @@ class PlanPolicy
                 $user->isDepartmentMine($plan->department_id)
             ) {
 
+                return true;
+            }
+
+            if ($user->possibility(User::ADMIN_DEPARTMENT_POSTGRADUATE) && (
+                $plan->isPostgraduate() || $plan->isMine()
+            )) {
                 return true;
             }
         }
@@ -122,6 +132,10 @@ class PlanPolicy
             if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $user->isPlanMine($plan->author_id)) {
                 return true;
             }
+
+            if ($user->possibility(User::ADMIN_DEPARTMENT_POSTGRADUATE) && $plan->isPostgraduate()) {
+                return true;
+            }
         }
         return false;
     }
@@ -156,6 +170,10 @@ class PlanPolicy
             }
 
             if ($user->possibility(User::REPRESENTATIVE_DEPARTMENT_ROLES) && $user->isPlanMine($plan->author_id)) {
+                return true;
+            }
+
+            if ($user->possibility(User::ADMIN_DEPARTMENT_POSTGRADUATE) && $plan->isPostgraduate()) {
                 return true;
             }
         }

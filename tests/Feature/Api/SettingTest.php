@@ -80,10 +80,7 @@ class SettingTest extends TestCase
         $existSetting = Setting::factory()->create();
         $setting = Setting::factory()->make();
 
-        $response = $this->putJson(
-            route("{$this->route}update", $existSetting->id),
-            $setting->toArray()
-        );
+        $response = $this->putJson(route("{$this->route}update", $existSetting->id), $setting->toArray());
 
         $response->assertStatus(200)->assertJson(['message' => __('messages.Updated')]);
     }
@@ -100,5 +97,51 @@ class SettingTest extends TestCase
         $response->assertOk()->assertJson(['message' => __('messages.Deleted')]);
 
         $this->assertDatabaseMissing('settings', $existSetting->toArray());
+    }
+
+    public function testGuestCannotPossibilityUpdateTettings()
+    {
+        $guest = User::factory()->guest()->create();
+        $this->actingAs($guest);
+
+        $validatedTypeField = 'key';
+
+        $existSetting = Setting::factory()->create();
+        $newSetting = Setting::factory()->make([$validatedTypeField => $existSetting->key]);
+
+        $this->patchJson(route("{$this->route}update", $existSetting), $newSetting->toArray())
+            ->assertForbidden();
+    }
+
+    public function testRootKeyUpdateNotRequired()
+    {
+        $root = User::factory()->withRole(User::ROOT)->create();
+        $this->actingAs($root);
+
+        $validatedTypeField = 'key';
+
+        $existSetting = Setting::factory()->create();
+        $newSetting = Setting::factory()->make([$validatedTypeField => $existSetting->key]);
+
+        $this->patchJson(
+            route("{$this->route}update", $existSetting),
+            $newSetting->toArray()
+        )->assertStatus(200);
+    }
+
+    public function testKeyTitleValueIsRequiredWhenStore()
+    {
+        $root = User::factory()->withRole(User::ROOT)->create();
+
+        $validatedTypeFields = ['key', 'title', 'value'];
+        $brokenRule = null;
+        $brokenArray = array_fill_keys($validatedTypeFields, $brokenRule);
+
+        $Setting = Setting::factory()->make($brokenArray);
+
+        $this->actingAs($root);
+        $this->postJson(route("{$this->route}store", $Setting->toArray()))
+            ->assertStatus(422)
+            ->assertJsonValidationErrors($validatedTypeFields);
     }
 }

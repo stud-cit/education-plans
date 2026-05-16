@@ -10,6 +10,34 @@ use App\Http\Resources\SignatureNoWrapResource;
 
 class SignatureController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(Signature::class);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $signatures = Signature::all();
+
+        return SignatureResource::collection($signatures);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Signature  $signature
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Signature $signature)
+    {
+        return new SignatureResource($signature);
+    }
     /**
      * Store a newly created resource in storage.
      *

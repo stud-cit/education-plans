@@ -33,8 +33,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::define('manage-study-terms', fn(User $user) => $user->possibility(User::PRIVILEGED_ROLES));
-
         Gate::define('generate-short-plan', function (User $user, Plan $plan) {
             if ($user->role_id === User::GUEST) return false;
 

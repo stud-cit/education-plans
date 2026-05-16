@@ -23,10 +23,11 @@ class PlanTest extends TestCase
     public function testCanDeletePlan()
     {
         $user = User::factory()->admin()->create();
+        $this->actingAs($user);
 
-        $plan = Plan::factory()->state(['user_id' => $user->id])->create();
+        $plan = Plan::factory()->create();
 
-        $response = $this->actingAs($user)->deleteJson(route('plans.destroy', $plan));
+        $response = $this->deleteJson(route('plans.destroy', $plan));
 
         $response->assertStatus(204);
     }

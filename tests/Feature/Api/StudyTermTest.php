@@ -94,11 +94,11 @@ class StudyTermTest extends TestCase
 
     public function testCanShowTermStudy(): void
     {
-        $this->actingAsUser();
+        $guest = User::factory()->guest()->create();
 
         $studyTerm = StudyTerm::factory()->create();
 
-        $response = $this->getJson(route("{$this->route}show", $studyTerm->id));
+        $response = $this->actingAs($guest)->getJson(route("{$this->route}show", $studyTerm->id));
 
         $response->assertOk()->assertExactJson([
             'data' => [

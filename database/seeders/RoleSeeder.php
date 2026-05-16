@@ -24,6 +24,7 @@ class RoleSeeder extends Seeder
             ['id' => 7, 'title' => 'department', 'label' => 'Представники кафедр'],
             ['id' => 8, 'title' => 'root', 'label' => 'Розробник'],
             ['id' => 9, 'title' => 'guest', 'label' => 'Гість'],
+            ['id' => 10, 'title' => 'admin_department_postgraduate', 'label' => 'Адміністратор підрозділу (ННЦ ПКВК)'],
         ]);
     }
 }

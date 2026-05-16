@@ -69,12 +69,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/plans/download/{plan}', [PlanController::class, 'downloadPdf']);
 
         Route::controller(PlanController::class)->group(function () {
-            Route::get('/plans', 'index');
-            Route::get('/plans/{plan}', 'show')->withTrashed();
+            Route::get('/plans', 'index')->name('plans.index');
+            Route::get('/plans/{plan}', 'show')->withTrashed()->name('plans.show');
             Route::post('/plans', 'store');
             Route::get('/plans/{plan}/edit', 'edit');
             Route::match(['put', 'patch'], '/plans/{plan}', 'update');
-            Route::delete('/plans/{plan}', 'destroy');
+            Route::delete('/plans/{plan}', 'destroy')->name('plans.destroy');
             Route::patch('/plans/restore/{plan}', [PlanController::class, 'restore'])->withTrashed();
         });
 
@@ -99,7 +99,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('users', UserController::class);
         Route::patch('set-user-role/{user}', [UserController::class, 'updateRole']);
         Route::get('/study-terms/select', [StudyTermController::class, 'select'])->name('study-terms.select');
-        Route::apiResource('study-terms', StudyTermController::class)->middleware('can:manage-study-terms');
+        Route::apiResource('study-terms', StudyTermController::class);
         Route::apiResource('settings', SettingController::class);
         Route::apiResource('positions', PositionController::class);
         Route::apiResource('signatures', SignatureController::class)

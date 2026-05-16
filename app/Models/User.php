@@ -59,9 +59,11 @@ class User extends Authenticatable
     public const DEPARTMENT = 7;
     public const ROOT = 8;
     public const GUEST = 9;
+    public const ADMIN_DEPARTMENT_POSTGRADUATE = 10;
 
     public const ALL_ROLES = [
         self::ADMIN,
+        self::ADMIN_DEPARTMENT_POSTGRADUATE,
         self::TRAINING_DEPARTMENT,
         self::PRACTICE_DEPARTMENT,
         self::EDUCATIONAL_DEPARTMENT_DEPUTY,

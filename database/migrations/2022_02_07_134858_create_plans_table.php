@@ -20,7 +20,6 @@ class CreatePlansTable extends Migration
             $table->foreignId('parent_id')->nullable()->constrained('plans', 'id');
             $table->integer('faculty_id')->nullable();
             $table->integer('department_id')->nullable();
-            // $table->foreignId('study_term_id')->nullable(true)->constrained('term_studies');
             $table->string('title');
             $table->integer('credits');
             $table->year('year');
@@ -31,7 +30,6 @@ class CreatePlansTable extends Migration
             $table->integer('program_op_id')->nullable(true);
             $table->integer('qualification_id')->nullable(true);
             $table->integer('field_knowledge_id')->nullable(true);
-            // $table->foreignId('form_organization_id')->nullable(true);
             $table->json('hours_weeks_semesters')->nullable(true);
             $table->json('summary_data_budget_time')->nullable(true);
             $table->json('practical_training')->nullable(true);

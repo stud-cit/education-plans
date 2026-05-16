@@ -12,6 +12,10 @@ class Setting extends Model
 
     protected $fillable = ['key', 'title', 'value'];
 
+    protected $casts = [
+        'value' => 'float',
+    ];
+
     protected static function booted()
     {
         Setting::observe(SettingObserver::class);

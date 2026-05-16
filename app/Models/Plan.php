@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Degree;
 use Carbon\Carbon;
 use App\Models\Setting;
 use App\Models\Subject;
@@ -39,6 +40,7 @@ class Plan extends Model
     protected $fillable = [
         'guid',
         'parent_id',
+        'author_id',
         'title',
         'faculty_id',
         'department_id',
@@ -405,7 +407,7 @@ class Plan extends Model
         return $this->hasOne(PlanType::class, 'id', 'type_id');
     }
 
-    public function scopeOfUserType($query, $type)
+    public function scopeOfUserType(Builder $query, int $type): Builder
     {
         switch ($type) {
             case User::TRAINING_DEPARTMENT:
@@ -431,34 +433,38 @@ class Plan extends Model
                 return $query->where('type_id', '!=', self::TEMPLATE)->whereHas('verification', function (Builder $query) {
                     $query->where('status', true);
                 }, '>=', $this->fullVerification());
+
+            case User::ADMIN_DEPARTMENT_POSTGRADUATE:
+                return $query
+                    ->whereEducationLevelId(Degree::POSTGRADUATE->value)->orWhereNull('education_level_id');
             default:
                 return $query;
         }
     }
 
-    public function scopeVerified($query)
+    public function scopeVerified(Builder $query)
     {
         $query->whereHas('verification', function (Builder $query) {
             $query->where('status', true);
         }, '>=', DB::raw(self::fullVerificationCase()));
     }
 
-    public function scopeMyFaculty($query)
+    public function scopeMyFaculty(Builder $query)
     {
         $query->where('faculty_id', '=', Auth::user()->faculty_id);
     }
 
-    public function scopePublished($query)
+    public function scopePublished(Builder $query): void
     {
         $query->where('published', 1);
     }
 
-    public function scopePlan($query)
+    public function scopePlan(Builder $query)
     {
         $query->where('type_id', self::PLAN);
     }
 
-    public function scopeWhereType($query, $type)
+    public function scopeWhereType(Builder $query, int $type)
     {
         $query->where('type_id', $type);
     }
@@ -492,12 +498,32 @@ class Plan extends Model
         return $this->type_id === self::PROJECT;
     }
 
+    public function isPostgraduate(): bool
+    {
+        return $this->education_level_id === Degree::POSTGRADUATE->value;
+    }
+
+    public function isMine(): bool
+    {
+        return $this->author_id === Auth::id();
+    }
+
+    public function isFacultyMine(): bool
+    {
+        return $this->faculty_id === Auth::user()->faculty_id;
+    }
+
+    public function isDepartmentMine(): bool
+    {
+        return $this->department_id === Auth::user()->department_id;
+    }
+
     public function archived(): bool
     {
         return isset($this->deleted_at);
     }
 
-    public function actions()
+    public function actions(): array
     {
         $policy = new PlanPolicy();
         $user = Auth::user();
@@ -517,7 +543,7 @@ class Plan extends Model
         return Gate::allows('generate-short-plan', $this);
     }
 
-    public function getCountExams()
+    public function getCountExams(): array
     {
         $result = [];
         for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
@@ -529,7 +555,7 @@ class Plan extends Model
         return $result;
     }
 
-    function getCountTests()
+    public function getCountTests(): array
     {
         $result = [];
         for ($i = 0; $i < $this->studyTerm->semesters; $i++) {
@@ -541,7 +567,7 @@ class Plan extends Model
         return $result;
     }
 
-    function getSubjectNotes()
+    public function getSubjectNotes(): \Illuminate\Database\Eloquent\Collection
     {
         $planId = $this->id;
         $result = Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
@@ -550,7 +576,7 @@ class Plan extends Model
         return $result;
     }
 
-    function getCountWorks($work, $semester)
+    public function getCountWorks($work, $semester)
     {
         $planId = $this->id;
         $count = HoursModules::with('subject')->whereHas('subject', function ($querySubject) use ($planId) {
@@ -626,7 +652,7 @@ class Plan extends Model
         return array_filter($messages);
     }
 
-    public function getIndependentWorkErrors()
+    public function getIndependentWorkErrors(): array
     {
 
         $independentWork = collect();

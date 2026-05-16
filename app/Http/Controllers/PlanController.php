@@ -104,7 +104,7 @@ class PlanController extends Controller
             'study_term_id',
             'deleted_at'
         )->with(['verification.role', 'verification', 'studyTerm'])
-            ->when(!$request->user()->possibility(User::PRIVILEGED_ROLES), fn($query) => $query->published())
+            ->when(!$request->user()->possibility(array_merge(User::PRIVILEGED_ROLES, [User::ADMIN_DEPARTMENT_POSTGRADUATE])), fn($query) => $query->published())
             ->ofUserType(Auth::user()->role_id)
             ->filterBy($validated)
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {

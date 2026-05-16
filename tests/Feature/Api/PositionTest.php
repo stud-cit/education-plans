@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api;
 
 use App\Models\Position;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,9 +14,17 @@ class PositionTest extends TestCase
     private $route = 'positions.';
     private $table = 'positions';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed(\Database\Seeders\RoleSeeder::class);
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureCabinetTokenIsValid::class);
+    }
+
     public function testCanGetAllPositions(): void
     {
-        $this->actingAsUser();
+        $guest = User::factory()->guest()->create();
+        $this->actingAs($guest);
 
         Position::factory()->count(10)->create();
 
@@ -30,7 +39,8 @@ class PositionTest extends TestCase
 
     public function testCanStorePosition(): void
     {
-        $this->actingAsUser();
+        $admin = User::factory()->admin()->create();
+        $this->actingAs($admin);
 
         $position = Position::factory()->make();
 
@@ -40,9 +50,23 @@ class PositionTest extends TestCase
         $this->assertDatabaseHas($this->table, $position->toArray());
     }
 
+    public function testGuestCanNotStorePosition(): void
+    {
+        $guest = User::factory()->guest()->create();
+        $this->actingAs($guest);
+
+        $position = Position::factory()->make();
+
+        $response = $this->postJson(route("{$this->route}store"), $position->toArray());
+
+        $response->assertForbidden();
+        $this->assertDatabaseMissing($this->table, $position->toArray());
+    }
+
     public function testCanUpdatePosition(): void
     {
-        $this->actingAsUser();
+        $admin = User::factory()->admin()->create();
+        $this->actingAs($admin);
 
         $oldPosition = Position::factory()->create();
         $newPosition = Position::factory()->make();
@@ -53,14 +77,15 @@ class PositionTest extends TestCase
         );
 
         $response->assertCreated()
-            ->assertJson([ 'message' => __('messages.Updated')]);
+            ->assertJson(['message' => __('messages.Updated')]);
 
         $this->assertDatabaseHas($this->table, $newPosition->toArray());
     }
 
     public function testCanDeletePosition(): void
     {
-        $this->actingAsUser();
+        $admin = User::factory()->admin()->create();
+        $this->actingAs($admin);
 
         $position = Position::factory()->create();
 

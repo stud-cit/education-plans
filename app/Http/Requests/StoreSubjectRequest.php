@@ -25,7 +25,7 @@ class StoreSubjectRequest extends FormRequest
     public function rules()
     {
         return [
-            'plan_id' => 'required',
+            'plan_id' => 'required|exists:App\Models\Plan,id',
             'asu_id' => [Rule::requiredIf($this->selectiveDiscipline === false)],
             'subject_id' => 'nullable',
             'cycle_id' => 'required|exists:App\Models\Cycle,id',

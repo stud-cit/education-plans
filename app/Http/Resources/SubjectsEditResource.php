@@ -148,7 +148,7 @@ class SubjectsEditResource extends JsonResource
         }
     }
 
-    function getOptions($key)
+    function getOptions(string $key)
     {
         // TODO: set cache options;
         $options = Setting::select('id', 'key', 'value')->pluck('value', 'key');

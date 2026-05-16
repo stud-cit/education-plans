@@ -37,14 +37,14 @@ class SubjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  App\Http\Requests\StoreSubjectRequest  $request
+     * @param  StoreSubjectRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreSubjectRequest $request)
     {
         $validated = $request->validated();
 
-        if ($request['selectiveDiscipline']) {
+        if (data_get($validated, 'selectiveDiscipline')) {
             $validated['asu_id'] = null;
         }
 
@@ -111,15 +111,15 @@ class SubjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  App\Http\Requests\StoreSubjectRequest  $request
-     * @param  App\Models\Subject  $subject
+     * @param  StoreSubjectRequest  $request
+     * @param  Subject  $subject
      * @return \Illuminate\Http\Response
      */
     public function update(StoreSubjectRequest $request, Subject $subject)
     {
         $validated = $request->validated();
 
-        if ($request['selectiveDiscipline']) {
+        if (data_get($validated, 'selectiveDiscipline')) {
             $validated['asu_id'] = null;
         } else {
             $validated['selective_discipline_id'] = null;
@@ -132,7 +132,7 @@ class SubjectController extends Controller
 
         $hoursModules = [];
         $semestersCredits = [];
-        foreach ($request['hours_modules'] as $key => $value) {
+        foreach (data_get($validated, 'hours_modules', []) as $value) {
             array_push($hoursModules, [
                 "course" => $value['course'],
                 "form_control_id" => $value['form_control_id'],
@@ -143,7 +143,7 @@ class SubjectController extends Controller
                 "subject_id" => $subject->id
             ]);
         }
-        foreach ($request['semesters_credits'] as $key => $value) {
+        foreach (data_get($validated, 'semesters_credits', []) as $value) {
             array_push($semestersCredits, [
                 "course" => $value['course'],
                 "credit" => $value['credit'],
@@ -165,8 +165,8 @@ class SubjectController extends Controller
             PlanVerification::where("plan_id", $validated['plan_id'])->delete();
         }
 
-        Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($request) {
-            $queryCycle->where('plan_id', $request['plan_id']);
+        Subject::with('cycle')->whereHas('cycle', function ($queryCycle) use ($validated) {
+            $queryCycle->where('plan_id', $validated['plan_id']);
         })->update([
             'verification' => 1
         ]);
@@ -177,7 +177,7 @@ class SubjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  App\Models\Subject  $subject
+     * @param  Subject  $subject
      * @return \Illuminate\Http\Response
      */
     public function destroy(Subject $subject)

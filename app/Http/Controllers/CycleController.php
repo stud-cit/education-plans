@@ -9,6 +9,11 @@ use App\Http\Requests\UpdateCycleRequest;
 
 class CycleController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Cycle::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
