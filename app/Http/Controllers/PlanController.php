@@ -110,6 +110,7 @@ class PlanController extends Controller
             ->when($validated['sort_by'] ?? false, function ($query) use ($validated) {
                 return $query->orderBy($validated['sort_by'], $this->ordering($validated['sort_desc']));
             })
+            ->customOrder()
             ->paginate($perPage);
 
         return PlanResource::collection($plans);

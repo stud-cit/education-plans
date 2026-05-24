@@ -469,6 +469,19 @@ class Plan extends Model
         $query->where('type_id', $type);
     }
 
+    public function scopeCustomOrder(Builder $query): Builder
+    {
+        return $query->orderByRaw(
+            '
+                CASE
+                    WHEN type_id = ' . self::TEMPLATE . ' THEN 1
+                    WHEN type_id = ' . self::PROJECT . ' THEN 2
+                    WHEN type_id = ' . self::PLAN . ' THEN 3
+                    ELSE 4
+                END, created_at desc'
+        );
+    }
+
     public function isNotTemplate()
     {
         return $this->type_id !== self::TEMPLATE ? true : false;
