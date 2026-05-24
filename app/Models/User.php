@@ -145,7 +145,7 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function assignRole($role)
+    public function assignRole(int $role)
     {
         return $this->role()->associate($role)->save();
     }

@@ -98,7 +98,12 @@ class NoteController extends Controller
             return $result;
         });
 
-        $listNotes = implode('; ', $arrayNotes) . '.';
+
+        if (empty($arrayNotes)) {
+            $listNotes = '';
+        } else {
+            $listNotes = implode('; ', $arrayNotes) . '.';
+        }
 
         return [
             'rule' => $rule,
