@@ -112,7 +112,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function except($roleId, $role): bool
+    public static function except(int $roleId, int $role): bool
     {
         $roles = array_filter(self::ALL_ROLES, fn($r) => $r != $role);
 
@@ -165,7 +165,7 @@ class User extends Authenticatable
         return $this->id === $plan_id ? true : false;
     }
 
-    public function isOwner($user_id): bool
+    public function isOwner(int $user_id): bool
     {
         return $this->id === $user_id;
     }

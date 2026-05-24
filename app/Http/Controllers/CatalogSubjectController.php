@@ -19,6 +19,11 @@ use App\Http\Resources\CatalogSubject\{
 
 class CatalogSubjectController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(CatalogSubject::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
