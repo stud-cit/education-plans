@@ -1,0 +1,36 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+.cursor-pointer {
+  cursor: pointer;
+  white-space: nowrap;
+}
+.swal2-html-container .help-title {
+  text-align: justify;
+  display: block;
+}
+.table-row-pointer table tbody tr {
+  cursor: pointer;
+}
+a {
+  text-decoration: none;
+}
+.v-input--radio-group__input .label {
+  font-size: 16px;
+}
+@media print {
+  /*@page {size: A4 landscape}*/
+  .print {
+    display: block;
+  }
+
+  .preview-plan tr {
+    line-height: 1.1;
+  }
+  .page-break-before {
+    page-break-before: always;
+  }
+  .no-print {
+    display: none;
+  }
+}

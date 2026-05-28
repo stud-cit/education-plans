@@ -1,18 +1,40 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build && node build-copy.js",
+        "build:only": "vue-cli-service build",
+        "lint": "vue-cli-service lint"
+    },
+    "dependencies": {
+        "@mdi/font": "5.9.55",
+        "axios": "^0.26.1",
+        "core-js": "^3.6.5",
+        "json-to-query-string": "^1.0.0",
+        "roboto-fontface": "*",
+        "vee-validate": "^3.4.14",
+        "vue": "^2.6.11",
+        "vue-pdf-app": "^2.1.0",
+        "vue-print-nb": "^1.7.5",
+        "vue-router": "^3.2.0",
+        "vue-sweetalert2": "^5.0.2",
+        "vuetify": "^2.4.0",
+        "vuex": "^3.4.0",
+        "xlsx": "^0.18.5"
     },
     "devDependencies": {
-        "axios": "^0.21",
-        "laravel-mix": "^6.0.6",
-        "lodash": "^4.17.19",
-        "postcss": "^8.1.14"
+        "@vue/cli-plugin-babel": "~4.5.0",
+        "@vue/cli-plugin-eslint": "~4.5.0",
+        "@vue/cli-plugin-router": "~4.5.0",
+        "@vue/cli-plugin-vuex": "~4.5.0",
+        "@vue/cli-service": "~4.5.0",
+        "babel-eslint": "^10.1.0",
+        "eslint": "^6.7.2",
+        "eslint-plugin-vue": "^6.2.2",
+        "sass": "~1.32.0",
+        "sass-loader": "^10.0.0",
+        "vue-cli-plugin-vuetify": "~2.4.5",
+        "vue-template-compiler": "^2.6.11",
+        "vuetify-loader": "^1.7.0"
     }
 }
