@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\CabinetController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\PlanController;
 
@@ -64,6 +65,8 @@ if (config('app.debug')) {
             ->update(['speciality_id' => null]);
     });
 }
+
+Route::get('/cabinet.php', [CabinetController::class, 'index']);
 
 Route::get('/{any}', function () {
     return view('app');

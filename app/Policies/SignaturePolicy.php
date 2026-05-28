@@ -41,7 +41,7 @@ class SignaturePolicy
      */
     public function create(User $user)
     {
-        return User::except($user->role_id, User::GUEST);
+        return User::isNotRole($user->role_id, User::GUEST);
     }
 
     /**
@@ -53,7 +53,7 @@ class SignaturePolicy
      */
     public function update(User $user, Signature $signature)
     {
-        return User::except($user->role_id, User::GUEST);
+        return User::isNotRole($user->role_id, User::GUEST);
     }
 
     /**
@@ -65,7 +65,7 @@ class SignaturePolicy
      */
     public function delete(User $user, Signature $signature)
     {
-        return User::except($user->role_id, User::GUEST);
+        return User::isNotRole($user->role_id, User::GUEST);
     }
 
     /**
@@ -77,7 +77,7 @@ class SignaturePolicy
      */
     public function restore(User $user, Signature $signature)
     {
-        return User::except($user->role_id, User::GUEST);
+        return User::isNotRole($user->role_id, User::GUEST);
     }
 
     /**

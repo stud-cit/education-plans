@@ -194,7 +194,7 @@ class PlanPolicy
 
     public function createProject(User $user, Plan $plan): bool
     {
-        return User::except($user->role_id, User::GUEST)
+        return User::isNotRole($user->role_id, User::GUEST)
             && in_array($plan->type_id, [Plan::TEMPLATE, Plan::PLAN])
             && $plan->isApprovedPlan()
             && ! $plan->archived();

@@ -112,7 +112,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public static function except(int $roleId, int $role): bool
+    public static function isNotRole(int $roleId, int $role): bool
     {
         $roles = array_filter(self::ALL_ROLES, fn($r) => $r != $role);
 

@@ -21,6 +21,15 @@ module.exports = {
       .maxAssetSize(10000000)
     // Don't copy files from public/ directory (Laravel's web root)
     config.plugins.delete('copy');
+
+    // Inject backend env vars into frontend as VUE_APP_* (avoids duplicating in .env)
+    config.plugin('define').tap(args => {
+      const env = args[0]['process.env'];
+      env.VUE_APP_CABINET_APP_URL = JSON.stringify(process.env.CABINET_APP_URL);
+      env.VUE_APP_CABINET_APP_TOKEN = JSON.stringify(process.env.CABINET_APP_TOKEN);
+      env.VUE_APP_CABINET_APP_SERVICE = JSON.stringify(process.env.CABINET_APP_SERVICE || 'index/service/');
+      return args;
+    });
   },
 
   configureWebpack: {
