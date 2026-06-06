@@ -9,6 +9,7 @@ class Department extends ASU
     private const MEDICAL_INSTITUTE = 383;
     private const POSTGRADUATE_MEDICAL_FACULTY = 382;
     private const REJECTED_DEPARTMENTS = [self::POSTGRADUATE_MEDICAL_FACULTY, 1746, 1741];
+    public const SHOSTKA_SUMDU = 345;
 
     public function getFaculties(): Collection
     {
