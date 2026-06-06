@@ -396,10 +396,14 @@ class PlanController extends Controller
         $present = false;
         $version = 1;
         $validated = $request->validated();
+        $user = Auth::user();
+        $idependentFacultys = [Department::SHOSTKA_SUMDU];
 
-        $copy = Plan::select('title')->where('id', $validated['id'])->firstOrFail(); // TODO: pass on wiht request
+        $copy = Plan::select('title')->where('id', $validated['id'])->firstOrFail();
 
         $plan = Plan::select('id', 'title', 'year', 'speciality_id', 'education_program_id', 'study_term_id', 'type_id', 'version')
+            ->when(in_array($user->faculty_id, $idependentFacultys), fn($q) => $q->where('faculty_id', $user->faculty_id))
+            ->when(! in_array($user->faculty_id, $idependentFacultys), fn($q) => $q->whereNotIn('faculty_id', $idependentFacultys))
             ->where([
                 ['year', $validated['year']],
                 ['speciality_id', $validated['speciality_id']],
