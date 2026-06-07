@@ -61,8 +61,8 @@ class StudyTermTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $existStudyTerm = StudyTerm::factory()->create();
-        $studyTerm = StudyTerm::factory()->make();
+        $existStudyTerm = StudyTerm::factory()->state(['year' => 2023])->create();
+        $studyTerm = StudyTerm::factory()->state(['year' => 2024])->make();
 
         $response = $this->actingAs($admin)->putJson(
             route("{$this->route}update", $existStudyTerm->id),
@@ -79,8 +79,8 @@ class StudyTermTest extends TestCase
     {
         $guest = User::factory()->guest()->create();
 
-        $existStudyTerm = StudyTerm::factory()->create();
-        $studyTerm = StudyTerm::factory()->make()->toArray();
+        $existStudyTerm = StudyTerm::factory()->state(['year' => 2023])->create();
+        $studyTerm = StudyTerm::factory()->state(['year' => 2024])->make()->toArray();
 
         $response = $this->actingAs($guest)->putJson(
             route("{$this->route}update", $existStudyTerm->id),
