@@ -1,56 +1,26 @@
 <template>
   <v-container>
-    <v-data-table
-      :headers="headers"
-      :items="items"
-      :options.sync="options"
-      :server-items-length="meta.total"
-      :footer-props="{ 'items-per-page-options': [15, 25, 50] }"
-      class="elevation-1"
-      :loading="itemsLoading"
-    >
+    <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="meta.total"
+      :footer-props="{ 'items-per-page-options': [15, 25, 50] }" class="elevation-1" :loading="itemsLoading">
       <template v-slot:top>
         <v-row class="px-4">
           <v-col cols="12" md="6">
             <v-text-field v-model="worker" label="Пошук по ПІБ"></v-text-field>
           </v-col>
           <v-col cols="12" md="6">
-            <v-autocomplete
-              v-model="role"
-              :items="roles"
-              item-text="label"
-              item-value="id"
-              label="Роль"
-              hide-details
-              clearable
-            ></v-autocomplete>
+            <v-autocomplete v-model="role" :items="roles" item-text="label" item-value="id" label="Роль" hide-details
+              clearable></v-autocomplete>
           </v-col>
         </v-row>
 
         <v-row class="px-4 pb-4">
           <v-col cols="12" lg="6">
-            <v-autocomplete
-              v-model="faculty"
-              :items="faculties"
-              item-text="name"
-              item-value="id"
-              label="Факультет"
-              :loading="facultiesLoading"
-              hide-details
-              clearable
-            ></v-autocomplete>
+            <v-autocomplete v-model="faculty" :items="faculties" item-text="name" item-value="id" label="Факультет"
+              :loading="facultiesLoading" hide-details clearable></v-autocomplete>
           </v-col>
           <v-col cols="12" lg="6">
-            <v-autocomplete
-              v-model="department"
-              :items="departments"
-              item-text="name"
-              item-value="id"
-              label="Кафедра"
-              hide-details
-              :loading="departmentsLoading"
-              clearable
-            ></v-autocomplete>
+            <v-autocomplete v-model="department" :items="departments" item-text="name" item-value="id" label="Кафедра"
+              hide-details :loading="departmentsLoading" clearable></v-autocomplete>
           </v-col>
         </v-row>
         <v-row class="px-4 pb-4">
@@ -66,7 +36,7 @@
       </template>
       <template v-slot:item.role="{ item }">
         <template v-if="roles.length">
-          {{ roles.find((el) => el.id === item.role_id).label }}
+          {{roles.find((el) => el.id === item.role_id).label}}
         </template>
       </template>
 
@@ -88,7 +58,8 @@
     <v-tooltip left color="info">
       <template v-slot:activator="{ on, attrs }">
         <v-fab-transition>
-          <v-btn color="primary" dark fixed bottom right fab v-bind="attrs" v-on="on" @click="showCreateOrEditDialog = true">
+          <v-btn color="primary" dark fixed bottom right fab v-bind="attrs" v-on="on"
+            @click="showCreateOrEditDialog = true">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-fab-transition>
@@ -96,17 +67,8 @@
       <span>Додати користувача</span>
     </v-tooltip>
 
-    <CreateOrUpdateUserModal
-      :dialog="showCreateOrEditDialog"
-      :workers="workers"
-      :item="user"
-      :roles="roles"
-      :faculties="faculties"
-      @close="closeDialog"
-      @store="create"
-      @update="update"
-      ref="createOrUpdateDialog"
-    />
+    <CreateOrUpdateUserModal :dialog="showCreateOrEditDialog" :workers="workers" :item="user" :roles="roles"
+      :faculties="faculties" @close="closeDialog" @store="create" @update="update" ref="createOrUpdateDialog" />
   </v-container>
 </template>
 
@@ -186,7 +148,7 @@ export default {
     apiGetDepartments(id) {
       this.departmentsLoading = true;
 
-      api.show(API.DEPARTMENTS, id).then(({data}) => {
+      api.show(API.DEPARTMENTS, id).then(({ data }) => {
         this.departments = data.data
         this.departmentsLoading = false;
       })
@@ -270,6 +232,7 @@ export default {
         });
     },
     clear() {
+      this.options.page = 1;
       this.options.worker = '';
       this.options.role = '';
       this.options.faculty = '';
@@ -277,6 +240,7 @@ export default {
       this.apiUsers();
     },
     search() {
+      this.options.page = 1;
       this.options.worker = this.worker;
       this.options.role = this.role;
       this.options.faculty = this.faculty;
