@@ -41,7 +41,7 @@ class CatalogSubjectPolicy
      */
     public function create(User $user)
     {
-        return $user->except($user->role_id, User::GUEST);
+        return $user->isNotRole($user->role_id, User::GUEST);
     }
 
     /**
