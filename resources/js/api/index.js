@@ -1,6 +1,5 @@
 import axios from 'axios';
 import vuexStore from '@/store';
-import router from '@/router';
 import jsonToQuery from 'json-to-query-string';
 
 const api = axios.create({
@@ -40,22 +39,19 @@ api.interceptors.response.use(
             process.env.VUE_APP_CABINET_APP_SERVICE +
             process.env.VUE_APP_CABINET_APP_TOKEN,
         );
-        //vuexStore.commit("auth/setUserData", null);
-        //localStorage.removeItem("authToken");
-        //router.push({ name: "Unauthorized" });
         break;
       }
       case 403: {
-        router.push({ name: 'Forbidden' });
+        window.location.href = '/403';
         break;
       }
       case 404: {
-        router.push({ name: 'NotFoundPage' });
+        window.location.href = '/404';
         break;
       }
       case 422: {
         console.log('this error', error.response);
-        vuexStore.commit('setErrors', error.response.data.errors); //TODO: this error preview
+        vuexStore.commit('setErrors', error.response.data.errors);
         break;
       }
       case 500: {
@@ -64,7 +60,7 @@ api.interceptors.response.use(
         break;
       }
       case 503: {
-        router.push({ name: 'MaintenanceMode' });
+        window.location.href = '/503';
         break;
       }
       default: {

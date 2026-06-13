@@ -5,7 +5,7 @@ export default {
     namespaced: true,
 
     state: {
-      userData: null
+      userData: JSON.parse(localStorage.getItem('user')) || null
     },
 
     getters: {

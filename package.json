@@ -1,10 +1,9 @@
 {
     "private": true,
     "scripts": {
-        "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build && node build-copy.js",
-        "build:only": "vue-cli-service build",
-        "lint": "vue-cli-service lint"
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint --ext .js,.vue resources/js"
     },
     "dependencies": {
         "@mdi/font": "5.9.55",
@@ -23,18 +22,11 @@
         "xlsx": "^0.18.5"
     },
     "devDependencies": {
-        "@vue/cli-plugin-babel": "~4.5.0",
-        "@vue/cli-plugin-eslint": "~4.5.0",
-        "@vue/cli-plugin-router": "~4.5.0",
-        "@vue/cli-plugin-vuex": "~4.5.0",
-        "@vue/cli-service": "~4.5.0",
-        "babel-eslint": "^10.1.0",
-        "eslint": "^6.7.2",
-        "eslint-plugin-vue": "^6.2.2",
+        "@vitejs/plugin-vue2": "^2.3.1",
+        "laravel-vite-plugin": "^1.2.0",
+        "vite": "^6.0.0",
         "sass": "~1.32.0",
-        "sass-loader": "^10.0.0",
-        "vue-cli-plugin-vuetify": "~2.4.5",
         "vue-template-compiler": "^2.6.11",
-        "vuetify-loader": "^1.7.0"
+        "vite-plugin-vuetify": "^1.0.2"
     }
 }

@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '@/store';
 import { ROLES } from '@/utils/constants';
 
 import Plans from '../views/pages/Plans.vue';
@@ -510,64 +509,6 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
-});
-
-const getUserRoleId = async () => {
-  let userRoleId = store.getters['auth/user'];
-
-  // if (userRoleId === null) {
-  await store.dispatch('auth/getUserData');
-  userRoleId = store.getters['auth/user'];
-  // }
-  return userRoleId.role_id;
-};
-
-// this method on to get cabinet token
-router.beforeEach(async (to, from, next) => {
-  const guest = to.matched.some((record) => record.meta.guest);
-
-  if (!guest) {
-    if (localStorage.getItem('cabinetToken')) {
-      await getUserRoleId();
-      next();
-    } else if ('key' in to.query && to.query.key != null) {
-      localStorage.setItem('cabinetToken', to.query.key);
-      await getUserRoleId();
-      next();
-    } else {
-      window.location.replace(
-        process.env.VUE_APP_CABINET_APP_URL +
-        process.env.VUE_APP_CABINET_APP_SERVICE +
-        process.env.VUE_APP_CABINET_APP_TOKEN,
-      );
-    }
-  }
-
-  next();
-});
-
-// this method to check user and role_id
-router.beforeEach(async (to, from, next) => {
-  const guest = to.matched.some((record) => record.meta.guest);
-
-  if (!guest) {
-    const accessIsAllowed = to.meta.accessIsAllowed;
-    const userRoleId = store.getters['auth/user'].role_id;
-
-    if (accessIsAllowed !== undefined) {
-      if (accessIsAllowed.includes(userRoleId)) {
-        next();
-      } else {
-        next({ name: 'Forbidden' });
-      }
-    } else {
-      if (!guest) {
-        next({ name: 'Forbidden' });
-      }
-      next();
-    }
-  }
-  next();
 });
 
 export default router;

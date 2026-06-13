@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router'
 import store from './store'
+import router from './router'
+import { registerGuards } from './router/guards'
 import vuetify from './plugins/vuetify'
+
 import '@/plugins/vee-validate'
 import '@/plugins/sweet-alert-2'
-import('@/assets/styles/base.css');
+import '@/assets/styles/base.css'
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import '@mdi/font/css/materialdesignicons.css'
 import GlobalMixin from "@/mixins/GlobalMixin";
@@ -18,9 +20,15 @@ Vue.mixin(GlobalMixin);
 
 export const eventBus = new Vue()
 
-new Vue({
+const app = new Vue({
   router,
   store,
   vuetify,
   render: h => h(App)
-}).$mount('#app')
+});
+
+// Register guards AFTER the Vue instance is created
+// to ensure router and store are fully initialized.
+registerGuards(router);
+
+app.$mount('#app')
