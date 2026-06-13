@@ -4,10 +4,22 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>КАТАЛОГ ВИБІРКОВИХ НАВЧАЛЬНИХ ДИСЦИПЛІН ЦИКЛУ ПРОФЕСІЙНОЇ ПІДГОТОВКИ ЗА СПЕЦІАЛЬНІСТЮ</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap">
+    {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Times+New+Roman:wght@400;700&display=swap"> --}}
     <style>
+        @font-face {
+            font-family: 'Times New Roman Custom';
+            src: url('{{ public_path('fonts/times.ttf') }}') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Times New Roman Custom';
+            src: url('{{ public_path('fonts/timesbd.ttf') }}') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
         body {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Times New Roman Custom', 'Times New Roman', Times, serif;
         }
 
         .table {

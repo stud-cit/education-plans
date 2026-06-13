@@ -35,15 +35,17 @@ return [
 
     'pdf' => [
         'enabled' => true,
-        'binary'  => env('WKHTML_TO_PDF', '"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf"'),
+        'binary'  => env('WKHTML_TO_PDF', base_path('vendor/h4cc/wkhtmltopdf-amd64/bin/wkhtmltopdf-amd64')),
         'timeout' => false,
-        'options' => [],
-        'env'     => [],
+        'options' => [
+            'enable-local-file-access' => true, // Allows accessing public_path() files
+    ],
+        'env' => [],
     ],
 
     'image' => [
         'enabled' => true,
-        'binary'  => env('WKHTML_TO_IMAGE', '"C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage"'),
+        'binary'  => env('WKHTML_TO_IMAGE', base_path('vendor/h4cc/wkhtmltoimage-amd64/bin/wkhtmltoimage-amd64')),
         'timeout' => false,
         'options' => [],
         'env'     => [],
