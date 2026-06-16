@@ -1,0 +1,1 @@
+import{n as t,a as n,A as s}from"./main-D6pi945I.js";const a={name:"Err",created(){this.apiFromStudies().then(r=>console.log(r))},methods:{apiFromStudies(){return n.get(s.ERR)}}};var o=function(){var e=this;return e._self._c,e._m(0)},_=[function(){var r=this,e=r._self._c;return e("div",[e("h1",[r._v("err test")])])}],i=t(a,o,_,!1,null,null);const m=i.exports;export{m as default};
