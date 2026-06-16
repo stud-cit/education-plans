@@ -9,6 +9,7 @@
 /public/plans
 /public/catalogs/*
 /public/storage
+/public/build
 /storage/*.key
 /vendor
 .env
