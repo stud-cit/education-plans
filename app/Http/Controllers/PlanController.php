@@ -999,28 +999,50 @@ class PlanController extends Controller
     {
         $validated = $request->validated();
 
-        $plan = Plan::select(
-            'id',
-            'title',
-            'guid',
-            'year',
-            'education_program_id',
-            'faculty_id',
-            'department_id',
-            'qualification_id',
-            'profession_qualification_id',
-            'field_knowledge_id',
-            'speciality_id',
-            'specialization_id',
-            'education_level_id',
-            'type_id',
-            'study_term_id'
-        )->with([
-            'studyTerm',
-            'verification',
-            'cycles.cycles',
-            'cycles.subjects.semestersCredits',
-        ])->where('id', $validated['id'])->verified()->first();
+        if ($request->mode == 1) {
+            $plan = Plan::select(
+                'id',
+                'title',
+                'guid',
+                'year',
+                'education_program_id',
+                'faculty_id',
+                'department_id',
+                'qualification_id',
+                'profession_qualification_id',
+                'field_knowledge_id',
+                'speciality_id',
+                'specialization_id',
+                'education_level_id',
+                'type_id',
+                'study_term_id'
+            );
+        } else {
+            $plan = Plan::select(
+                'id',
+                'title',
+                'guid',
+                'year',
+                'education_program_id',
+                'faculty_id',
+                'department_id',
+                'qualification_id',
+                'profession_qualification_id',
+                'field_knowledge_id',
+                'speciality_id',
+                'specialization_id',
+                'education_level_id',
+                'type_id',
+                'study_term_id'
+            )->with([
+                'studyTerm',
+                'verification',
+                'cycles.cycles',
+                'cycles.subjects.semestersCredits',
+            ]);
+        }
+
+        $plan = $plan->where('id', $validated['id'])->verified()->first();
 
         if (!$plan) return response(['message' => 'Plan does not approved!'], 200);
 
