@@ -1044,11 +1044,12 @@ class PlanController extends Controller
     {
         $validated = Validator::make($request->all(), [
             'days' => 'nullable|numeric',
+            'entry_year' => 'nullable|date_format:Y',
         ])->validate();
 
         $days = $validated['days'] ?? false;
 
-        $plans = Plan::with('verification')->selectRaw(
+        $plans = Plan::query()->selectRaw(
             "
             id,
             title,
@@ -1069,6 +1070,7 @@ class PlanController extends Controller
                 $dateThreshold = Carbon::now()->subDays($days);
                 return $query->where('updated_at', '>=', $dateThreshold);
             })
+            ->when(isset($validated['entry_year']), fn($q) => $q->where('year', $validated['entry_year']))
             ->verified()
             ->get();
 
