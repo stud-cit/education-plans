@@ -61,9 +61,9 @@ class CopyPlansCommand3 extends Command
             $bar->setMessage("Генерація PDF: {$clonedPlan->title}");
             $bar->display();
 
-            $pdf = new Generate;
-            $pdf($clonedPlan->id);
-            $pdf->consoleSave();
+//            $pdf = new Generate;
+//            $pdf($clonedPlan->id);
+//            $pdf->consoleSave();
 
             $bar->advance();
         }
