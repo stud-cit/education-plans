@@ -8,6 +8,7 @@ services:
                 WWWGROUP: '${WWWGROUP}'
                 NODE_VERSION: '20'
         image: sail-8.4/app
+        platform: linux/arm64/v8
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:

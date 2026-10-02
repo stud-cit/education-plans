@@ -184,12 +184,12 @@ class Plan extends Model
 
     protected static function fullVerificationCase()
     {
-        return "CASE 
-                WHEN type_id IN (" . implode(',', [self::TEMPLATE, self::PLAN, self::SHORT]) . ") 
+        return "CASE
+                WHEN type_id IN (" . implode(',', [self::TEMPLATE, self::PLAN, self::SHORT]) . ")
                 THEN " . PlanVerification::FULL_VERIFICATION . "
-                WHEN type_id = " . self::PROJECT . " 
+                WHEN type_id = " . self::PROJECT . "
                 THEN " . PlanVerification::PROJECT_VERIFICATION . "
-                ELSE 0 
+                ELSE 0
             END";
     }
 
@@ -631,7 +631,7 @@ class Plan extends Model
         }
 
         if ($this->version) {
-            $title .= " Версія {$this->version}";
+            $title .= "Версія {$this->version}";
         }
 
         if ($this->isProject()) {
@@ -902,22 +902,29 @@ class Plan extends Model
         parent::boot();
 
         static::creating(function ($plan) {
-            $plan->author_id = Auth::id();
+            $id = Auth::id();
+
+            if (! is_null($id)) {
+                $plan->author_id = Auth::id();
+            }
         });
 
         static::replicating(function ($plan) {
 
             $user = Auth::user();
             $plan->guid = Str::uuid();
-            $plan->author_id = $user->id;
+            if (! is_null($user)) {
+                $plan->author_id = $user->id;
 
-            if (!in_array($user->role_id, User::PRIVILEGED_ROLES)) {
-                $plan->faculty_id = $user->faculty_id;
-            }
+                if (!in_array($user->role_id, User::PRIVILEGED_ROLES)) {
+                    $plan->faculty_id = $user->faculty_id;
+                }
 
-            if ($user->role_id === User::DEPARTMENT) {
-                $plan->department_id = $user->department_id;
+                if ($user->role_id === User::DEPARTMENT) {
+                    $plan->department_id = $user->department_id;
+                }
             }
+            $plan->author_id = $plan->author_id;
         });
 
         Plan::observe(PlanObserver::class);

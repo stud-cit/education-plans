@@ -16,7 +16,7 @@ use App\Http\Controllers\PlanController;
 |
 */
 
-if (config('app.debug')) {
+/*if (config('app.debug')) {
     Route::get('/test-catalog-pdf', [PdfController::class, 'catalogPdf']);
     Route::get('/test-catalog-pdf1', [PdfController::class, 'catalogPdf1']);
     Route::get('/test', [PdfController::class, 'test']);
@@ -64,7 +64,7 @@ if (config('app.debug')) {
             ->where('education_program_id', '!=', null)
             ->update(['speciality_id' => null]);
     });
-}
+}*/
 
 Route::get('/cabinet.php', [CabinetController::class, 'index']);
 
