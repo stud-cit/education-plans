@@ -297,6 +297,10 @@ class Plan extends Model
             $op = new OP();
             $result = $op->getPublishedDocuments();
 
+            if ($result->isEmpty() && $this->isNotTemplate())  {
+                return 'Сервіс навчальні плани не відповідає';
+            }
+
             return $result->where('plan_id', $this->id)->pluck('education_program_name')->join(', ');
         }
 

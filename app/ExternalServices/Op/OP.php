@@ -37,8 +37,13 @@ class OP
             return Cache::get($cacheName);
         }
 
-        $results = Http::retry(3, 100)->get($url, $this->setQueryParams($queryParams))->json();
-
+        try {
+            $results = Http::retry(3, 100)->get($url, $this->setQueryParams($queryParams));
+            $results = $results->json();
+        } catch (\Throwable $exception) {
+            logger()->error('OP_ERROR', ['message' => $exception->getMessage(), 'code' => $exception->getCode(), 'trace' => $exception->getTraceAsString()]);
+            $results = [];
+        }
 
         if (!is_null($cacheName) && !Cache::has($cacheName)) {
             Cache::put($cacheName, collect($results), $this->expirationTime);
