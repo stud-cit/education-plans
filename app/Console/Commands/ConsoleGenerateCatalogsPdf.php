@@ -13,7 +13,7 @@ class ConsoleGenerateCatalogsPdf extends Command
      *
      * @var string
      */
-    protected $signature = 'plan:generateCatalogPdf';
+    protected $signature = 'plan:generateCatalogPdf {--id=}';
 
     /**
      * The console command description.
@@ -39,7 +39,11 @@ class ConsoleGenerateCatalogsPdf extends Command
      */
     public function handle()
     {
-        $plans = Plan::with('verification')->select('id')->plan()->verified()->get();
+        $id = $this->option('id');
+
+        $plans = Plan::with('verification')->select('id')->plan()->verified()
+            ->when($id, fn($q) => $q->where('id', $id))
+            ->get();
 
         $this->withProgressBar($plans, function ($plan) {
             $pdf = new GenerateCatalogPdf($plan->id);
