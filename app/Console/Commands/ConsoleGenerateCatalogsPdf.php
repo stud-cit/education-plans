@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Helpers\GenerateCatalogPdf;
 use App\Models\Plan;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class ConsoleGenerateCatalogsPdf extends Command
 {
@@ -13,7 +14,7 @@ class ConsoleGenerateCatalogsPdf extends Command
      *
      * @var string
      */
-    protected $signature = 'plan:generateCatalogPdf {--id=} {--guid=}';
+    protected $signature = 'plan:generateCatalogPdf {--id=} {--guid=} {--year_from=} {--force}';
 
     /**
      * The console command description.
@@ -41,16 +42,35 @@ class ConsoleGenerateCatalogsPdf extends Command
     {
         $id = $this->option('id');
         $guid = $this->option('guid');
+        $yearFrom = $this->option('year_from');
+        $force = $this->option('force');
 
-        $plans = Plan::with('verification')->select('id')->plan()->verified()
+        $plans = Plan::query()->select(['id', 'guid', 'title', 'year', 'created_at'])->verified()
             ->when($id, fn($q) => $q->where('id', $id))
             ->when($guid, fn($q) => $q->where('guid', $guid))
+            ->when($yearFrom, fn($q) => $q->where('year', '>=', $yearFrom))
+            ->orderBy('created_at')
             ->get();
 
-        $this->withProgressBar($plans, function ($plan) {
-            $pdf = new GenerateCatalogPdf($plan->id);
-            $pdf->generateCatalogSpecialityPdf();
-            $pdf->generateCatalogEducationPdf();
+        $this->info("Count {$plans->count()}");
+        $this->newLine();
+        $this->withProgressBar($plans, function ($plan) use ($force) {
+            if ($force) {
+                $pdf = new GenerateCatalogPdf($plan->id);
+                $pdf->generateCatalogSpecialityPdf();
+                $pdf->generateCatalogEducationPdf();
+            } else {
+                $fileName = "{$plan->guid}.pdf";
+                $catalogPdf = new GenerateCatalogPdf($plan->id);
+                if (!file_exists("catalogs/speciality/$fileName")) {
+                    Log::info("file generated catalogs/speciality/{$fileName}");
+                    $catalogPdf->generateCatalogSpecialityPdf();
+                }
+                if (!file_exists("catalogs/educationProgram/$fileName")) {
+                    Log::info("file generated catalogs/educationProgram/{$fileName}");
+                    $catalogPdf->generateCatalogEducationPdf();
+                }
+            }
         });
 
         return 0;
