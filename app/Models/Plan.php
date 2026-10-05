@@ -14,6 +14,8 @@ use App\Models\ShortenedPlan;
 use App\ExternalServices\Op\OP;
 use App\Observers\PlanObserver;
 use App\Models\SemestersCredits;
+use App\Http\Constant;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -762,22 +764,61 @@ class Plan extends Model
         }
     }
 
-    public function courseWorksHasErrors()
+    public function courseWorksHasErrors(): ?string
     {
         $result = [];
         $numberExams = $this->getOptions('coursework');
+        $semestersCount = $this->studyTerm ? $this->studyTerm->semesters : ($this->number_semesters ?? 0);
 
-        foreach ($this->getCountCoursework() as $index => $value) {
-            if ($value > $numberExams) {
-                $result[] = $index + 1;
+        for ($semester = 1; $semester <= $semestersCount; $semester++) {
+            $count = $this->getCountWorks(['individual_task_id' => Constant::INDIVIDUAL_TASKS['COURSE_WORK']], $semester);
+            $subjects = $this->getCourseWorkSubjects($semester);
+
+            if ($count > 0 || $subjects->isNotEmpty()) {
+                Log::info("Plan [ID: {$this->id}]: Курсові роботи у {$semester} семестрі (знайдено: {$count}, ліміт: {$numberExams}). Дисципліни: " . ($subjects->isNotEmpty() ? $subjects->implode(', ') : 'немає'));
+            }
+
+            if ($count > $numberExams) {
+                $titles = $subjects->isNotEmpty() ? $subjects->implode(', ') : 'дисципліни не вказані';
+                $result[] = "у {$semester} семестрі ({$titles})";
+
+                Log::warning("Plan [ID: {$this->id}]: Перевищена кількість курсових робіт у {$semester} семестрі! Знайдено {$count} (ліміт: {$numberExams}). Дисципліни: {$titles}");
             }
         }
 
         if (empty($result)) {
             return null;
         } else {
-            return "Перевищена кількість курсових робіт у " . implode(', ', $result) . " семестрі.";
+            return "Перевищена кількість курсових робіт " . implode(', ', $result) . ".";
         }
+    }
+
+    public function getCourseWorkSubjects(int $semester): \Illuminate\Support\Collection
+    {
+        $planId = $this->id;
+
+        $hoursModules = HoursModules::with(['subject.selectiveDiscipline'])
+            ->whereHas('subject', function ($querySubject) use ($planId) {
+                $querySubject->with('cycle')->whereHas('cycle', function ($queryCycle) use ($planId) {
+                    $queryCycle->where('plan_id', $planId);
+                });
+            })
+            ->where('individual_task_id', Constant::INDIVIDUAL_TASKS['COURSE_WORK'])
+            ->where('semester', $semester)
+            ->get();
+
+        return $hoursModules->groupBy(function ($hm) {
+            $subject = $hm->subject;
+            if (!$subject) {
+                return 'Невідома дисципліна';
+            }
+            return !empty($subject->selective_discipline_id) && $subject->selectiveDiscipline
+                ? $subject->selectiveDiscipline->title
+                : $subject->title;
+        })->map(function ($group, $title) {
+            $count = $group->count();
+            return $count > 1 ? "{$title} ({$count})" : $title;
+        })->values();
     }
 
     public function checkCredit(): ?string
