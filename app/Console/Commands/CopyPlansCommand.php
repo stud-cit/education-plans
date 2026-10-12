@@ -10,14 +10,17 @@ use Illuminate\Console\Command;
 
 class CopyPlansCommand extends Command
 {
-    protected $signature = 'plans:copy';
+    protected $signature = 'plans:copy {--id=}';
 
     protected $description = 'Command description';
 
     public function handle(): void
     {
+        $id = $this->option('id');
+
         $plans = Plan::query()
             ->where(['type_id' => Plan::PLAN, 'education_level_id' => Degree::BACHELOR->value, 'year' => '2025'])
+            ->when($id, fn($q) => $q->where('id', $id))
             ->verified()
             ->with('author')
             ->get()
