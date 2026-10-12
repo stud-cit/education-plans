@@ -10,14 +10,17 @@ use Illuminate\Console\Command;
 
 class CopyPlansCommand2 extends Command
 {
-    protected $signature = 'plans:copy2';
+    protected $signature = 'plans:copy2 {--id=}';
 
     protected $description = 'Command description';
 
     public function handle(): void
     {
+        $id = $this->option('id');
+
         $plans = Plan::query()
             ->where(['type_id' => Plan::PLAN, 'education_level_id' => Degree::BACHELOR->value, 'year' => '2026'])
+            ->when($id, fn($q) => $q->where('id', $id))
             ->verified()
             ->with('author')
             ->get()
@@ -43,6 +46,7 @@ class CopyPlansCommand2 extends Command
         $total = count($plans);
         $this->info("Plans: {$total}");
         $this->newLine();
+
         $service = app(PlanCloneService::class);
         $clonedPlans = [];
 
