@@ -133,9 +133,13 @@ class AuthServiceProvider extends ServiceProvider
             'toggle-need-verification-speciality-catalog',
             function (User $user, CatalogSpeciality $catalogSpeciality) {
 
-                if ($user->isDepartmentMine($catalogSpeciality->department_id)) return true;
+                if ($user->isDepartmentMine($catalogSpeciality->department_id)) {
+                    return true;
+                }
 
-                if ($catalogSpeciality->department_id === $user->id) return true;
+                if ($catalogSpeciality->department_id === $user->id) {
+                    return true;
+                }
 
                 return $user->possibility([User::ROOT, User::ADMIN]);
             }

@@ -165,9 +165,9 @@ class User extends Authenticatable
         return $this->id === $plan_id ? true : false;
     }
 
-    public function isOwner(int $user_id): bool
+    public function isOwner(?int $user_id): bool
     {
-        return $this->id === $user_id;
+        return $user_id !== null && $this->id === $user_id;
     }
 
     protected static function booted()

@@ -33,7 +33,7 @@ class SpecialitySubjectController extends Controller
 
         $perPage = Helpers::getPerPage('items_per_page', $validated);
 
-        $subject = SpecialitySubject::select(
+        $subject = SpecialitySubject::select([
             'id',
             'catalog_subject_id',
             'department_id',
@@ -41,7 +41,7 @@ class SpecialitySubjectController extends Controller
             'user_id',
             'title',
             'published',
-        )
+        ])
             ->filterBy($validated)
             ->paginate($perPage);
 
@@ -58,7 +58,7 @@ class SpecialitySubjectController extends Controller
                 'department' => $catalog->departmentName,
                 'faculty_id' => $catalog->faculty_id,
                 'department_id' => $catalog->department_id,
-                'owners' => $catalog->owners->map(fn ($owner) => ['id' => $owner->department_id]),
+                'owners' => $catalog->owners->map(fn($owner) => ['id' => $owner->department_id]),
                 'can_create' => Gate::allows('create-speciality-subject', $catalog->id),
                 'can_verification' => Gate::allows('can-verification-speciality-catalog', $catalog),
                 'toggle_to_verification' => Gate::allows('toggle-need-verification-speciality-catalog', $catalog),
@@ -79,11 +79,11 @@ class SpecialitySubjectController extends Controller
     {
         $asu = new AsuController();
         $language = new SubjectLanguageController();
-        $helpers = SubjectHelper::with('type')->select(
+        $helpers = SubjectHelper::with('type')->select([
             'id',
             'title',
-            'catalog_helper_type_id',
-        )->get();
+            'catalog_helper_type_id'
+        ])->get();
 
         $data = [
             'subjects' => $asu->getSubjects(),
@@ -202,7 +202,6 @@ class SpecialitySubjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(SpecialitySubject $specialitySubject)

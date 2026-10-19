@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Helpers\Helpers;
-use App\Models\CatalogSpeciality;
-use App\Models\VerificationStatuses;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use App\ExternalServices\Asu\Department;
-use App\Http\Resources\FacultiesResource;
-use App\Policies\CatalogSpecialityPolicy;
-use App\Http\Resources\ProfessionsResource;
+use App\Helpers\Helpers;
 use App\Http\Requests\CatalogSpeciality\CopyRequest;
 use App\Http\Requests\CatalogSpeciality\IndexRequest;
 use App\Http\Requests\CatalogSpeciality\OwnerRequest;
-use App\Http\Requests\CatalogSpeciality\StoreRequest;
-use App\Http\Requests\CatalogSpeciality\UpdateRequest;
-use App\Http\Requests\CatalogSpeciality\StoreSignatureRequest;
-use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
 use App\Http\Requests\CatalogSpeciality\PdfCatalogSpecialityRequest;
-use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
 use App\Http\Requests\CatalogSpeciality\StoreCatalogSpecialityVerificationRequest;
+use App\Http\Requests\CatalogSpeciality\StoreRequest;
+use App\Http\Requests\CatalogSpeciality\StoreSignatureRequest;
 use App\Http\Requests\CatalogSpeciality\ToggleCatalogSpecialityVerificationRequest;
+use App\Http\Requests\CatalogSpeciality\UpdateRequest;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityPdfResource;
+use App\Http\Resources\CatalogSpeciality\CatalogSpecialityResource;
+use App\Http\Resources\FacultiesResource;
+use App\Http\Resources\ProfessionsResource;
+use App\Models\CatalogSpeciality;
+use App\Models\User;
+use App\Models\VerificationStatuses;
+use App\Policies\CatalogSpecialityPolicy;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 
 class CatalogSpecialityController extends Controller
 {
@@ -281,6 +282,7 @@ class CatalogSpecialityController extends Controller
     ) {
 
         if (!Gate::allows('can-verification-speciality-catalog', $catalogSpeciality)) {
+            Log::warning('User tried to verify catalog speciality  without permission.', ['user' =>  Auth::id(), 'catalog_speciality_id' => $catalogSpeciality->id]);
             abort(403);
         }
 
