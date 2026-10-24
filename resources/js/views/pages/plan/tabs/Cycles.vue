@@ -72,7 +72,8 @@
 
             <v-alert dense outlined type="error" class="mb-2"
               v-if="cycleForm.has_discipline && !checkCountHoursModules">
-              Кількість розподілених годин {{ sumHoursWeeksSemesters.toFixed(2) }} має відповідати сумі годин лекцій,
+              Кількість розподілених годин {{ Math.round(sumHoursWeeksSemesters.toFixed(2)) }} має відповідати сумі
+              годин лекцій,
               практичних, лабораторних {{ sumHours.toFixed(2) }}.
             </v-alert>
 
@@ -123,7 +124,7 @@
                       </v-text-field>
                     </template>
                     <span>Години * тижнів = {{ (+subject.hour * +plan.hours_weeks_semesters[index].week).toFixed(2)
-                      }}</span>
+                    }}</span>
                   </v-tooltip>
                 </td>
               </tr>
@@ -378,7 +379,7 @@ export default {
 
       const sumHoursWeeksSemesters = (Math.round(this.sumHoursWeeksSemesters * 100) / 100);
       const sumHours = (Math.round(this.sumHours * 100) / 100)
-      return sumHoursWeeksSemesters == sumHours;
+      return Math.round(sumHoursWeeksSemesters) == sumHours;
     },
     checkCountHours() {
       let sumHours = +this.subjectForm.hours + +this.subjectForm.practices + +this.subjectForm.laboratories;
@@ -535,7 +536,7 @@ export default {
         this.finalFormAssessment +
         this.extraIndividualTasks;
 
-      const result = allHours - classroomWork - allIndependetWork;
+      const result = Math.round(allHours - classroomWork - allIndependetWork);
 
       const rule = allHours * 0.1;
       const isNotAttestacionCycle = this.cycleForm.list_cycle_id != 10;

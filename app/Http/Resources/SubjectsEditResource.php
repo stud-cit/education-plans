@@ -56,7 +56,7 @@ class SubjectsEditResource extends JsonResource
             $sumHoursModules += $hours_weeks_semesters[$key]->week * $value->hour; // перемножаємо кількість тижнів на години для кожного модуля і сумуємо результат
         }
 
-        return round($sumHoursModules, 2) == round($sumHours, 2);
+        return round($sumHoursModules) == $sumHours;
     }
 
     function checkCountHours()

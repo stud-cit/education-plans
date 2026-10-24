@@ -109,7 +109,7 @@ class Subject extends Model
             $this->finalFormAssessment +
             $this->extraIndividualTasks;
 
-        $result = $allHours - $classroomWork - $allIndependetWork;
+        $result = round($allHours - $classroomWork - $allIndependetWork);
         $rule = $allHours * 0.1;
 
         if ($result < $rule) {

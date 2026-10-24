@@ -299,7 +299,7 @@ class Plan extends Model
             $op = new OP();
             $result = $op->getPublishedDocuments();
 
-            if ($result->isEmpty() && $this->isNotTemplate())  {
+            if ($result->isEmpty() && $this->isNotTemplate()) {
                 return 'Сервіс навчальні плани не відповідає';
             }
 
