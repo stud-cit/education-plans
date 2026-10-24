@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\Degree;
+use App\Helpers\GenerateCatalogPdf;
 use App\Helpers\GeneratePlanPdf as Generate;
 use App\Models\Plan;
 use App\Services\PlanCloneService2 as PlanCloneService;
@@ -10,27 +11,31 @@ use Illuminate\Console\Command;
 
 class CopyPlansCommand4 extends Command
 {
-    protected $signature = 'plans:copy4';
+    protected $signature = 'plans:copy4 {--dry-run} {--id=}';
 
     protected $description = 'Command description';
 
     public function handle(): void
     {
+        $id = $this->option('id');
+
         $plans = Plan::query()
-            ->where(['type_id' => Plan::SHORT, 'education_level_id' => Degree::BACHELOR->value, 'year' => '2026'])
+            ->when($id, fn($q) => $q->where('id', $id))
+            ->when(! $id, function ($q) {
+                return $q->where(['type_id' => Plan::SHORT, 'education_level_id' => Degree::BACHELOR->value, 'year' => '2026']);
+            })
             ->verified()
             ->with('author')
             ->get()
-            ->groupBy(fn ($plan) => Plan::removeVersionFromTitle($plan->title))
+            ->groupBy(fn($plan) => Plan::removeVersionFromTitle($plan->title))
             ->map(function ($group) {
-                return $group->sortByDesc(fn ($plan) => (int) ($plan->version ?? 1))->first();
+                return $group->sortByDesc(fn($plan) => (int) ($plan->version ?? 1))->first();
             })
             ->values();
 
-        $this->info("1: Модульно-циклова, 3: Модульно-семестрові (form_organization_id)");
         $this->table(
             ['id', 'title', 'form_organization_id', 'version',  'year'],
-            $plans->map(fn ($p) => [
+            $plans->map(fn($p) => [
                 $p->id,
                 $p->title,
                 $p->form_organization_id,
@@ -39,6 +44,11 @@ class CopyPlansCommand4 extends Command
             ])
         );
         $this->newLine();
+
+        if ($this->option('dry-run')) {
+            $this->info('Dry run mode. No plans will be copied.');
+            return;
+        }
 
         $total = count($plans);
         $this->info("Plans: {$total}");
@@ -63,6 +73,9 @@ class CopyPlansCommand4 extends Command
             $pdf($clonedPlan->id);
             $pdf->consoleSave();
 
+            $pdfVatalog = new GenerateCatalogPdf($clonedPlan->id);
+            $pdfVatalog->generateCatalogSpecialityPdf();
+            $pdfVatalog->generateCatalogEducationPdf();
             $bar->advance();
         }
 

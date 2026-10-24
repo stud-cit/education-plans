@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Enums\Degree;
-use App\Helpers\GeneratePlanPdf as Generate;
 use App\Models\Plan;
 use App\Services\PlanCloneService2 as PlanCloneService;
 use Illuminate\Console\Command;
@@ -22,16 +21,16 @@ class CopyPlansCommand3 extends Command
             ->verified()
             ->with('author')
             ->get()
-            ->groupBy(fn ($plan) => Plan::removeVersionFromTitle($plan->title))
+            ->groupBy(fn($plan) => Plan::removeVersionFromTitle($plan->title))
             ->map(function ($group) {
-                return $group->sortByDesc(fn ($plan) => (int) ($plan->version ?? 1))->first();
+                return $group->sortByDesc(fn($plan) => (int) ($plan->version ?? 1))->first();
             })
             ->values();
 
         $this->info("1: Модульно-циклова, 3: Модульно-семестрові (form_organization_id)");
         $this->table(
             ['id', 'title', 'form_organization_id', 'version',  'year'],
-            $plans->map(fn ($p) => [
+            $plans->map(fn($p) => [
                 $p->id,
                 $p->title,
                 $p->form_organization_id,
@@ -58,12 +57,7 @@ class CopyPlansCommand3 extends Command
 
             $clonedPlan = $service->clone($plan, copyVerification: false);
             $clonedPlans[] = $clonedPlan->id;
-            $bar->setMessage("Генерація PDF: {$clonedPlan->title}");
             $bar->display();
-
-//            $pdf = new Generate;
-//            $pdf($clonedPlan->id);
-//            $pdf->consoleSave();
 
             $bar->advance();
         }

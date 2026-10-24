@@ -45,6 +45,10 @@ class PlanCloneService2
                 $relations[] = 'verification';
             }
 
+            if ($plan->type_id === Plan::SHORT) {
+                $relations[] = 'basePlan';
+            }
+
             $model = $plan->load($relations);
 
             $result = Plan::removeVersionFromTitle($plan->title);
@@ -56,6 +60,17 @@ class PlanCloneService2
             $plan->need_verification = $shouldCopyVerification ? $originalNeedVerification : false;
 
             $clonePlan = $plan->duplicate();
+
+            if ($clonePlan->basePlan) {
+                $basePlans = $clonePlan->basePlan instanceof \Illuminate\Database\Eloquent\Collection
+                    ? $clonePlan->basePlan
+                    : [$clonePlan->basePlan];
+
+                foreach ($basePlans as $basePlan) {
+                    $basePlan->plan_id = $clonePlan->id;
+                    $basePlan->save();
+                }
+            }
 
             // Restore in-memory attributes of original plan
             $plan->title = $originalTitle;
@@ -249,8 +264,8 @@ class PlanCloneService2
     {
         foreach ($subjects as $subject) {
             $bsvp = 11157; // 11157- Теоретична підготовка БЗВП
-//            8225 - Демократія: цінності, принципи, механізми
-//            1: Модульно-циклова, 3: Модульно-семестрові (form_organization_id)"
+            //            8225 - Демократія: цінності, принципи, механізми
+            //            1: Модульно-циклова, 3: Модульно-семестрові (form_organization_id)"
             if (in_array($subject['asu_id'], [$bsvp, 8225])) {
                 continue;
             } else if ($subject['asu_id'] == 11037) {  // 11037 - Соціально-політичні студії
@@ -324,7 +339,7 @@ class PlanCloneService2
                             'semester' => $hoursModule['semester'],
                         ]);
                     } else if ($hoursModule['module'] == 4 && $hoursModule['semester'] == 2 && $form_organization_id == 1) {
-                         HoursModules::create([
+                        HoursModules::create([
                             'course' => $hoursModule['course'],
                             'hour' => 6.33,
                             'subject_id' => $extraSubject->id,
@@ -333,7 +348,6 @@ class PlanCloneService2
                             'module' => $hoursModule['module'],
                             'semester' => $hoursModule['semester'],
                         ]);
-
                     } else if ($hoursModule['semester'] == 2 && $form_organization_id == 3) {
                         HoursModules::create([
                             'course' => $hoursModule['course'],
@@ -374,7 +388,6 @@ class PlanCloneService2
                         ]);
                     }
                 }
-
             } else {
                 $cloneSubject = Subject::create([
                     'asu_id' => $subject['asu_id'],
