@@ -16,7 +16,8 @@
         "itsgoingd/clockwork": "^5.1",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.10"
+        "laravel/tinker": "^2.10",
+        "spatie/browsershot": "^5.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

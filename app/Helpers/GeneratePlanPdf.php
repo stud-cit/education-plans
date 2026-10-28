@@ -9,7 +9,7 @@ use App\Models\HoursModules;
 use App\Services\RuleService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Spatie\Browsershot\Browsershot;
 
 class GeneratePlanPdf
 {
@@ -176,8 +176,40 @@ class GeneratePlanPdf
             'individual_task_semester' => $this->model->getIndividualTaskSemester($this->model->cycles),
         ];
 
-        $this->pdf = SnappyPdf::loadView('pdf.plan', $data);
-        $this->pdf->setPaper('a4')->setOrientation('landscape');
+        $html = view('pdf.plan', $data)->render();
+
+        $this->pdf = Browsershot::html($html)
+            ->format('A4')
+            ->landscape()
+            ->margins(10, 10, 10, 10)
+            ->showBackground()
+            ->waitUntilNetworkIdle()
+            ->noSandbox()
+            ->addChromiumArguments([
+                'allow-file-access-from-files',
+                'disable-web-security',
+            ]);
+
+        if ($nodeBinary = env('BROWSERSHOT_NODE_BINARY', env('NODE_BINARY'))) {
+            $this->pdf->setNodeBinary($nodeBinary);
+        }
+
+        if ($npmBinary = env('BROWSERSHOT_NPM_BINARY', env('NPM_BINARY'))) {
+            $this->pdf->setNpmBinary($npmBinary);
+        }
+
+        if ($chromePath = env('BROWSERSHOT_CHROME_PATH', env('CHROME_PATH'))) {
+            $this->pdf->setChromePath($chromePath);
+        }
+
+        $nodeModulePath = env('BROWSERSHOT_NODE_MODULE_PATH', env('NODE_MODULES_PATH', base_path('node_modules')));
+        if ($nodeModulePath) {
+            $this->pdf->setNodeModulePath($nodeModulePath);
+        }
+
+        if ($timeout = env('BROWSERSHOT_TIMEOUT')) {
+            $this->pdf->timeout((int) $timeout);
+        }
 
         $this->code = 1;
         return $this->code;
@@ -185,27 +217,60 @@ class GeneratePlanPdf
 
     public function consoleSave()
     {
-        $path = 'plans/';
-        $fileName = "{$this->model->guid}.pdf";
-        $publicPath = public_path("{$path}{$fileName}");
-
-        $this->pdf->save($publicPath, true);
+        $this->save();
     }
 
-    public function save()
+    public function save(?string $path = null)
     {
-        $path = 'plans/';
+        if (!$this->pdf) {
+            throw new \RuntimeException('PDF has not been generated.');
+        }
+
+        if ($path) {
+            $this->pdf->save($path);
+            return;
+        }
+
+        $dir = public_path('plans');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
         $fileName = "{$this->model->guid}.pdf";
-
-        $this->pdf->save("{$path}{$fileName}", true);
+        $this->pdf->save("{$dir}/{$fileName}");
     }
 
-    public function download()
+    public function download(?string $filename = null)
     {
-        return $this->pdf->download("{$this->model->title}.pdf");
+        if (!$this->pdf) {
+            throw new \RuntimeException('PDF has not been generated.');
+        }
+
+        $fileName = $filename ?? "{$this->model->title}.pdf";
+        $pdfContent = $this->pdf->pdf();
+
+        return response()->streamDownload(function () use ($pdfContent) {
+            echo $pdfContent;
+        }, $fileName, [
+            'Content-Type' => 'application/pdf',
+        ]);
     }
 
-    private function fill($length): array
+    public function getPdf(): ?Browsershot
+    {
+        return $this->pdf;
+    }
+
+    public function output(): string
+    {
+        if (!$this->pdf) {
+            throw new \RuntimeException('PDF has not been generated.');
+        }
+
+        return $this->pdf->pdf();
+    }
+
+    private function fill(int $length): array
     {
         return array_fill(0, $length, 0);
     }

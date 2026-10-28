@@ -95,7 +95,8 @@
         }
 
         tr {
-            page-break-inside: avoid;
+            page-break-inside: auto;
+            break-inside: auto;
         }
 
         tbody {
@@ -104,6 +105,10 @@
 
         th {
             width: 8%;
+        }
+
+        th[colspan="2"] {
+            width: 16%;
         }
 
         .limit {

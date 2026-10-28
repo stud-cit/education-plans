@@ -9,32 +9,24 @@ use App\Models\CatalogSpeciality;
 use Illuminate\Support\Collection;
 use App\ExternalServices\Asu\Worker;
 use App\Models\CatalogEducationProgram;
-use Mccarlosen\LaravelMpdf\Facades\LaravelMpdf;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Spatie\Browsershot\Browsershot;
 
 class GenerateCatalogPdf
 {
-    private int $id;
     private int $endYear;
     private Plan $plan;
 
     public function __construct(int $id)
     {
-        $this->id = $id;
-        $this->plan = $this->findPlan();
+        $this->plan = $this->findPlan($id);
         $this->endYear = Helpers::calculateEndYear($this->plan->year, $this->plan->studyTerm);
         ini_set('memory_limit', '512M');
     }
 
-    public function GenerateCatalogSpecialityPdf()
+    public function generateCatalogSpecialityPdf(): void
     {
-        $catalog = CatalogSpeciality::with(['subjects', 'verifications', 'educationLevel'])
-            ->where('selective_discipline_id', CatalogSpeciality::SPECIALITY)
-            ->where('speciality_id', $this->plan['speciality_id'])
-            ->where('catalog_education_level_id', $this->plan['education_level_id'])
-            ->whereBetween('year', [$this->plan['year'],  $this->endYear])
-            ->verified()
-            ->orderBy('year', 'asc')
-            ->get();
+        $catalog = $this->specialityCatalog();
 
         if ($catalog->isEmpty()) {
             return;
@@ -42,16 +34,67 @@ class GenerateCatalogPdf
 
         $data = $this->prepareDate($catalog);
 
-        $path = $this->createDirIfNotExists('//catalogs//speciality//');
-        $fileName = "{$this->plan->guid}.pdf";
-
-        $pdf = LaravelMpdf::loadView('pdf.speciality', ['data' => $data]);
-        $pdf->save("{$path}{$fileName}");
+        $this->renderCatalog('pdf.speciality', $data)
+            ->save($this->catalogPath('speciality'));
     }
 
-    public function generateCatalogEducationPdf()
+    public function generateCatalogEducationPdf(): void
     {
-        $catalog = CatalogEducationProgram::with(['subjects', 'verifications', 'educationLevel'])
+        $catalog = $this->educationProgramCatalog();
+
+        if ($catalog->isEmpty()) {
+            return;
+        }
+
+        $data = $this->prepareDate($catalog);
+
+        $this->renderCatalog('pdf.educationProgram', $data)
+            ->save($this->catalogPath('educationProgram'));
+    }
+
+    public function downloadCatalogSpecialityPdf(): StreamedResponse
+    {
+        return $this->downloadCatalog('pdf.speciality', $this->specialityCatalog());
+    }
+
+    public function downloadCatalogEducationPdf(): StreamedResponse
+    {
+        return $this->downloadCatalog('pdf.educationProgram', $this->educationProgramCatalog());
+    }
+
+    private function findPlan(int $id): Plan
+    {
+        return Plan::with('studyTerm')
+            ->select('id', 'guid', 'year', 'speciality_id', 'education_level_id', 'education_program_id', 'study_term_id')
+            ->where('id', $id)->firstOrFail();
+    }
+
+    private function downloadCatalog(string $view, Collection $catalog): StreamedResponse
+    {
+        $pdfContent = $this->renderCatalog($view, $this->prepareDate($catalog))->pdf();
+
+        return response()->streamDownload(function () use ($pdfContent) {
+            echo $pdfContent;
+        }, "{$this->plan->guid}.pdf", [
+            'Content-Type' => 'application/pdf',
+        ]);
+    }
+
+    private function specialityCatalog(): Collection
+    {
+        return CatalogSpeciality::with(['subjects', 'verifications', 'educationLevel'])
+            ->where('selective_discipline_id', CatalogSpeciality::SPECIALITY)
+            ->where('speciality_id', $this->plan['speciality_id'])
+            ->where('catalog_education_level_id', $this->plan['education_level_id'])
+            ->whereBetween('year', [$this->plan['year'], $this->endYear])
+            ->verified()
+            ->orderBy('year', 'asc')
+            ->get();
+    }
+
+    private function educationProgramCatalog(): Collection
+    {
+        return CatalogEducationProgram::with(['subjects', 'verifications', 'educationLevel'])
             ->where('selective_discipline_id', CatalogEducationProgram::EDUCATION_PROGRAM)
             ->where('education_program_id', $this->plan['education_program_id'])
             ->where('catalog_education_level_id', $this->plan['education_level_id'])
@@ -59,25 +102,55 @@ class GenerateCatalogPdf
             ->verified()
             ->orderBy('year', 'asc')
             ->get();
-
-        if ($catalog->isEmpty()) {
-            return;
-        }
-
-        $data = $this->prepareDate($catalog);
-
-        $path = $this->createDirIfNotExists('//catalogs//educationProgram//');
-        $fileName = "{$this->plan->guid}.pdf";
-
-        $pdf = LaravelMpdf::loadView('pdf.educationProgram', ['data' => $data]);
-        $pdf->save("{$path}{$fileName}");
     }
 
-    private function findPlan()
+    private function renderCatalog(string $view, array $data): Browsershot
     {
-        return Plan::with('studyTerm')
-            ->select('id', 'guid', 'year', 'speciality_id', 'education_level_id', 'education_program_id', 'study_term_id')
-            ->where('id', $this->id)->first();
+        $pdf = Browsershot::html(view($view, ['data' => $data])->render())
+            ->format('A4')
+            ->landscape()
+            ->margins(15, 15, 15, 15)
+            ->showBackground()
+            ->waitUntilNetworkIdle()
+            ->noSandbox()
+            ->addChromiumArguments([
+                'allow-file-access-from-files',
+                'disable-web-security',
+            ]);
+
+        if ($nodeBinary = env('BROWSERSHOT_NODE_BINARY', env('NODE_BINARY'))) {
+            $pdf->setNodeBinary($nodeBinary);
+        }
+
+        if ($npmBinary = env('BROWSERSHOT_NPM_BINARY', env('NPM_BINARY'))) {
+            $pdf->setNpmBinary($npmBinary);
+        }
+
+        if ($chromePath = env('BROWSERSHOT_CHROME_PATH', env('CHROME_PATH'))) {
+            $pdf->setChromePath($chromePath);
+        }
+
+        $nodeModulePath = env('BROWSERSHOT_NODE_MODULE_PATH', env('NODE_MODULES_PATH', base_path('node_modules')));
+        if ($nodeModulePath) {
+            $pdf->setNodeModulePath($nodeModulePath);
+        }
+
+        if ($timeout = env('BROWSERSHOT_TIMEOUT')) {
+            $pdf->timeout((int) $timeout);
+        }
+
+        return $pdf;
+    }
+
+    private function catalogPath(string $catalogType): string
+    {
+        $directory = public_path("catalogs/{$catalogType}");
+
+        if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+            throw new \RuntimeException("Unable to create catalog directory: {$directory}");
+        }
+
+        return "{$directory}/{$this->plan->guid}.pdf";
     }
 
     protected function getShortNames($listNames)
@@ -127,14 +200,4 @@ class GenerateCatalogPdf
         return $collection->toArray();
     }
 
-    private function createDirIfNotExists($dir)
-    {
-        $path = public_path() . $dir;
-        $isEducationProgram = is_dir($path);
-
-        if (!$isEducationProgram) {
-            mkdir($path);
-        }
-        return $path;
-    }
 }
