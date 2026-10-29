@@ -118,24 +118,23 @@ class GenerateCatalogPdf
                 'disable-web-security',
             ]);
 
-        if ($nodeBinary = env('BROWSERSHOT_NODE_BINARY', env('NODE_BINARY'))) {
+        if ($nodeBinary = config('browsershot.node_binary')) {
             $pdf->setNodeBinary($nodeBinary);
         }
 
-        if ($npmBinary = env('BROWSERSHOT_NPM_BINARY', env('NPM_BINARY'))) {
+        if ($npmBinary = config('browsershot.npm_binary')) {
             $pdf->setNpmBinary($npmBinary);
         }
 
-        if ($chromePath = env('BROWSERSHOT_CHROME_PATH', env('CHROME_PATH'))) {
+        if ($chromePath = config('browsershot.chrome_path')) {
             $pdf->setChromePath($chromePath);
         }
 
-        $nodeModulePath = env('BROWSERSHOT_NODE_MODULE_PATH', env('NODE_MODULES_PATH', base_path('node_modules')));
-        if ($nodeModulePath) {
+        if ($nodeModulePath = config('browsershot.node_module_path')) {
             $pdf->setNodeModulePath($nodeModulePath);
         }
 
-        if ($timeout = env('BROWSERSHOT_TIMEOUT')) {
+        if ($timeout = config('browsershot.timeout')) {
             $pdf->timeout((int) $timeout);
         }
 
@@ -144,7 +143,8 @@ class GenerateCatalogPdf
 
     private function catalogPath(string $catalogType): string
     {
-        $directory = public_path("catalogs/{$catalogType}");
+        $catalogsDirectory = config('browsershot.paths.catalogs', public_path('catalogs'));
+        $directory = rtrim($catalogsDirectory, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $catalogType;
 
         if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
             throw new \RuntimeException("Unable to create catalog directory: {$directory}");

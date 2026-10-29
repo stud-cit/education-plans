@@ -190,24 +190,23 @@ class GeneratePlanPdf
                 'disable-web-security',
             ]);
 
-        if ($nodeBinary = env('BROWSERSHOT_NODE_BINARY', env('NODE_BINARY'))) {
+        if ($nodeBinary = config('browsershot.node_binary')) {
             $this->pdf->setNodeBinary($nodeBinary);
         }
 
-        if ($npmBinary = env('BROWSERSHOT_NPM_BINARY', env('NPM_BINARY'))) {
+        if ($npmBinary = config('browsershot.npm_binary')) {
             $this->pdf->setNpmBinary($npmBinary);
         }
 
-        if ($chromePath = env('BROWSERSHOT_CHROME_PATH', env('CHROME_PATH'))) {
+        if ($chromePath = config('browsershot.chrome_path')) {
             $this->pdf->setChromePath($chromePath);
         }
 
-        $nodeModulePath = env('BROWSERSHOT_NODE_MODULE_PATH', env('NODE_MODULES_PATH', base_path('node_modules')));
-        if ($nodeModulePath) {
+        if ($nodeModulePath = config('browsershot.node_module_path')) {
             $this->pdf->setNodeModulePath($nodeModulePath);
         }
 
-        if ($timeout = env('BROWSERSHOT_TIMEOUT')) {
+        if ($timeout = config('browsershot.timeout')) {
             $this->pdf->timeout((int) $timeout);
         }
 
@@ -231,7 +230,7 @@ class GeneratePlanPdf
             return;
         }
 
-        $dir = public_path('plans');
+        $dir = config('browsershot.paths.plans', public_path('plans'));
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
